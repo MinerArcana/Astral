@@ -1,5 +1,6 @@
 package com.alan199921.astral;
 
+import com.alan199921.astral.items.Snowberry;
 import com.alan199921.astral.setup.ClientProxy;
 import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
@@ -54,6 +55,7 @@ public class Astral {
                     .group(setup.itemGroup);
             // register a new block here
             event.getRegistry().register(new BlockItem(ModBlocks.snowberryBush, new Item.Properties()).setRegistryName("snowberry_bush"));
+            event.getRegistry().register(new Snowberry());
         }
     }
 }
