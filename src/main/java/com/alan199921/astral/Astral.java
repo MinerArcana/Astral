@@ -2,10 +2,12 @@ package com.alan199921.astral;
 
 import com.alan199921.astral.setup.ClientProxy;
 import com.alan199921.astral.setup.IProxy;
+import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import com.alan199921.blocks.ModBlocks;
 import com.alan199921.blocks.SnowberryBush;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -21,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 @Mod("astral")
 public class Astral {
     public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+    public static ModSetup setup = new ModSetup();
 
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
@@ -31,7 +34,6 @@ public class Astral {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -45,9 +47,9 @@ public class Astral {
         }
 
         @SubscribeEvent
-        public static void onItemRegistry (final RegistryEvent.Register<Item> event) {
+        public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
             // register a new block here
-            event.getRegistry().register(new BlockItem(ModBlocks.SNOWBERRY_BUSH, new Item.Properties()).setRegistryName("snowberry_bush"));
+            event.getRegistry().register(new BlockItem(ModBlocks.snowberryBush, new Item.Properties()).setRegistryName("snowberry_bush"));
         }
     }
 }
