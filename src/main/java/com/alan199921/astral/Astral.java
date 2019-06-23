@@ -34,6 +34,8 @@ public class Astral {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+        setup.init();
+        proxy.init();
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -48,6 +50,8 @@ public class Astral {
 
         @SubscribeEvent
         public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
+            Item.Properties properties = new Item.Properties()
+                    .group(setup.itemGroup);
             // register a new block here
             event.getRegistry().register(new BlockItem(ModBlocks.snowberryBush, new Item.Properties()).setRegistryName("snowberry_bush"));
         }
