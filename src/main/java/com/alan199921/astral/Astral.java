@@ -5,11 +5,8 @@ import com.alan199921.astral.setup.ClientProxy;
 import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
-import com.alan199921.blocks.ModBlocks;
 import com.alan199921.blocks.SnowberryBush;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,7 +51,6 @@ public class Astral {
             Item.Properties properties = new Item.Properties()
                     .group(setup.itemGroup);
             // register a new block here
-            event.getRegistry().register(new BlockItem(ModBlocks.snowberryBush, new Item.Properties()).setRegistryName("snowberry_bush"));
             event.getRegistry().register(new Snowberry());
         }
     }

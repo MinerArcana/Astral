@@ -1,14 +1,16 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.blocks.ModBlocks;
+import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
-public class Snowberry extends Item {
+public class Snowberry extends BlockNamedItem {
     public Snowberry() {
-        super(new Properties()
+        super(ModBlocks.snowberryBush.getBlock(), new Item.Properties()
                 .group(Astral.setup.itemGroup)
                 .food(new Food.Builder()
                         .setAlwaysEdible()

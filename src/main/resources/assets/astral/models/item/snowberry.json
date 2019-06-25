@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "item/sweet_berries"
+    "layer0": "astral:item/snowberries"
   }
 }

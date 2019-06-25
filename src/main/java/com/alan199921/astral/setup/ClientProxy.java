@@ -1,8 +1,6 @@
 package com.alan199921.astral.setup;
 
-import com.alan199921.blocks.ModBlocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.world.World;
 
 public class ClientProxy implements IProxy {
