@@ -5,4 +5,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModItems {
     @ObjectHolder("astral:snowberry")
     public static Snowberry snowberry;
+
+    @ObjectHolder("astral:feverweed")
+    public static Feverweed feverweed;
 }

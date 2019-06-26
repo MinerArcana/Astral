@@ -6,4 +6,7 @@ public class ModBlocks {
 
     @ObjectHolder("astral:snowberry_bush")
     public static SnowberryBush snowberryBush;
+
+    @ObjectHolder("astral:feverweed_block")
+    public static FeverweedBlock feverweedBlock;
 }
