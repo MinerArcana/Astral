@@ -11,7 +11,7 @@ public class FeverweedBlock extends BushBlock {
                 .sound(SoundType.PLANT)
                 .tickRandomly()
                 .doesNotBlockMovement()
-                .hardnessAndResistance(1f)
+                .hardnessAndResistance(0f)
         );
         setRegistryName("feverweed_block");
     }

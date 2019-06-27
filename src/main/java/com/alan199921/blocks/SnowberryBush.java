@@ -57,9 +57,4 @@ public class SnowberryBush extends SweetBerryBushBlock {
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         }
     }
-
-    @Override
-    public OffsetType getOffsetType() {
-        return OffsetType.XZ;
-    }
 }

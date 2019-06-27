@@ -2,6 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
+      "name": "ripe",
       "rolls": 1.0,
       "entries": [
         {
@@ -38,6 +39,7 @@
       ]
     },
     {
+      "name": "unripe",
       "rolls": 1.0,
       "entries": [
         {

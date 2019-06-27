@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModSetup {
 
@@ -16,5 +18,6 @@ public class ModSetup {
     };
 
     public void init() {
+
     }
 }

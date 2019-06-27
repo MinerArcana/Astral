@@ -1,5 +1,7 @@
 {
   "block.astral.snowberry_bush": "Snowberry Bush",
   "itemGroup.astral": "Astral",
-  "item.astral.snowberry": "Snowberry"
+  "item.astral.snowberry": "Snowberry",
+  "block.astral.feverweed_block": "Feverweed",
+  "item.astral.feverweed": "Feverweed"
 }
