@@ -11,7 +11,9 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +26,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, NoFeatureConfig config) {
+    public boolean place(@Nonnull IWorld worldIn, @NonNull ChunkGenerator<? extends GenerationSettings> generator, @NonNull Random rand, @NonNull BlockPos pos, @NonNull NoFeatureConfig config) {
         /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
@@ -46,7 +48,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         }
         for (int i = 0; i < numberOfBushesInFeature; i++){
             for (BlockPos adjacentPos : getAdjacentBlocks(positionsToGen.get(i))) {
-                int layerLevel = rand.nextInt(8);
+                int layerLevel = rand.nextInt(4);
                 if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)){
                     worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
                 }
