@@ -5,9 +5,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+
+import java.util.Objects;
 
 public class IntrospectionMedicine extends Item {
     public IntrospectionMedicine() {
@@ -23,17 +24,7 @@ public class IntrospectionMedicine extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote){
-            entityLiving.sendMessage(new TextComponent() {
-                @Override
-                public String getUnformattedComponentText() {
-                    return "The Inner Realm is under construction. Please check back later.";
-                }
-
-                @Override
-                public ITextComponent shallowCopy() {
-                    return null;
-                }
-            });
+            entityLiving.changeDimension(Objects.requireNonNull(worldIn.getDimension().getType() == DimensionType.OVERWORLD ? DimensionType.byName(Astral.MINING_DIM) : DimensionType.OVERWORLD));
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
