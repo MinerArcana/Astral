@@ -24,17 +24,17 @@ public class SnowberryBush extends SweetBerryBushBlock {
         setRegistryName("snowberry_bush");
     }
 
-    @Override
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        Block block = state.getBlock();
-        return block == Blocks.SNOW_BLOCK;
-    }
-
-    @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        BlockPos blockpos = pos.down();
-        return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
-    }
+//    @Override
+//    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+//        Block block = state.getBlock();
+//        return block == Blocks.SNOW_BLOCK;
+//    }
+//
+//    @Override
+//    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+//        BlockPos blockpos = pos.down();
+//        return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
+//    }
 
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {

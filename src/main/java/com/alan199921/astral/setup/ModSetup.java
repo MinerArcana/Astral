@@ -1,12 +1,10 @@
 package com.alan199921.astral.setup;
 
+import com.alan199921.astral.worldgen.OverworldVegetation;
 import com.alan199921.blocks.ModBlocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.DeferredWorkQueue;
 
 public class ModSetup {
 
@@ -18,6 +16,6 @@ public class ModSetup {
     };
 
     public void init() {
-
+        DeferredWorkQueue.runLater(OverworldVegetation::addOverworldVegetation);
     }
 }
