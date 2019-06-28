@@ -73,10 +73,10 @@ public class Astral {
             event.getRegistry().register(new IntrospectionMedicine());
         }
 
-        @SubscribeEvent
-        public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
-            event.getRegistry().register(innerRealm);
-            DimensionManager.registerDimension(new ResourceLocation("minecraft", "inner_realm"), innerRealm, null, true);
-        }
+//        @SubscribeEvent
+//        public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
+//            event.getRegistry().register(innerRealm);
+//            DimensionManager.registerDimension(new ResourceLocation("minecraft", "inner_realm"), innerRealm, null, true);
+//        }
     }
 }

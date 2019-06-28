@@ -12,7 +12,11 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SnowberryBush extends SweetBerryBushBlock {
     public SnowberryBush() {
@@ -23,17 +27,18 @@ public class SnowberryBush extends SweetBerryBushBlock {
         setRegistryName("snowberry_bush");
     }
 
-//    @Override
-//    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-//        Block block = state.getBlock();
-//        return block == Blocks.SNOW_BLOCK;
-//    }
-//
-//    @Override
-//    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-//        BlockPos blockpos = pos.down();
-//        return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
-//    }
+    @Override
+    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+        Block block = state.getBlock();
+        ArrayList<Block> sustainsSnowberry = new ArrayList<>(Arrays.asList(Blocks.SNOW_BLOCK, Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.GRAVEL, Blocks.PACKED_ICE));
+        return sustainsSnowberry.contains(block);
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos blockpos = pos.down();
+        return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
+    }
 
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
