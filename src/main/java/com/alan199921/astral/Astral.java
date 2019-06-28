@@ -1,13 +1,14 @@
 package com.alan199921.astral;
 
 import com.alan199921.astral.items.Feverweed;
+import com.alan199921.astral.items.IntrospectionMedicine;
 import com.alan199921.astral.items.Snowberry;
 import com.alan199921.astral.setup.ClientProxy;
 import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
-import com.alan199921.blocks.FeverweedBlock;
-import com.alan199921.blocks.SnowberryBush;
+import com.alan199921.astral.blocks.FeverweedBlock;
+import com.alan199921.astral.blocks.SnowberryBush;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -51,11 +52,11 @@ public class Astral {
 
         @SubscribeEvent
         public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
-            Item.Properties properties = new Item.Properties()
-                    .group(setup.itemGroup);
+            new Item.Properties().group(setup.itemGroup);
             // register a new block here
             event.getRegistry().register(new Snowberry());
             event.getRegistry().register(new Feverweed());
+            event.getRegistry().register(new IntrospectionMedicine());
         }
     }
 }

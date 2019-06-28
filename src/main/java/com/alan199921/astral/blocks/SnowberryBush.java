@@ -1,4 +1,4 @@
-package com.alan199921.blocks;
+package com.alan199921.astral.blocks;
 
 import com.alan199921.astral.items.ModItems;
 import net.minecraft.block.*;
@@ -12,7 +12,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class SnowberryBush extends SweetBerryBushBlock {

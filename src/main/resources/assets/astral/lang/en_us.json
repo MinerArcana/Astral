@@ -1,7 +1,8 @@
 {
-  "block.astral.snowberry_bush": "Snowberry Bush",
-  "itemGroup.astral": "Astral",
+  "item.astral.introspection_medicine": "Introspection Medicine",
+  "item.astral.feverweed": "Feverweed",
   "item.astral.snowberry": "Snowberry",
   "block.astral.feverweed_block": "Feverweed",
-  "item.astral.feverweed": "Feverweed"
+  "block.astral.snowberry_bush": "Snowberry Bush",
+  "itemGroup.astral": "Astral"
 }

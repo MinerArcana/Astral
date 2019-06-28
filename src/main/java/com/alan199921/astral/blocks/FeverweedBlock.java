@@ -1,4 +1,4 @@
-package com.alan199921.blocks;
+package com.alan199921.astral.blocks;
 
 import net.minecraft.block.BushBlock;
 import net.minecraft.block.SoundType;

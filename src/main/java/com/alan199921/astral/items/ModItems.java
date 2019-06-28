@@ -8,4 +8,7 @@ public class ModItems {
 
     @ObjectHolder("astral:feverweed")
     public static Feverweed feverweed;
+
+    @ObjectHolder("astral:introspection_medicine")
+    public static IntrospectionMedicine introspectionMedicine;
 }

@@ -1,7 +1,7 @@
 package com.alan199921.astral.setup;
 
 import com.alan199921.astral.worldgen.OverworldVegetation;
-import com.alan199921.blocks.ModBlocks;
+import com.alan199921.astral.blocks.ModBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.DeferredWorkQueue;

@@ -1,6 +1,6 @@
 package com.alan199921.astral.worldgen;
 
-import com.alan199921.blocks.ModBlocks;
+import com.alan199921.astral.blocks.ModBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.BushConfig;
