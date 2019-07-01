@@ -11,7 +11,7 @@ import net.minecraft.world.gen.placement.ChanceConfig;
 import net.minecraft.world.gen.placement.Placement;
 
 public class OverworldVegetation {
-    public static final Feature<NoFeatureConfig> SNOWBERRY = new SnowberryFeature(NoFeatureConfig::deserialize);
+    private static final Feature<NoFeatureConfig> SNOWBERRY = new SnowberryFeature(NoFeatureConfig::deserialize);
 
     public static void addOverworldVegetation() {
         for (Biome biome : Biome.BIOMES) {

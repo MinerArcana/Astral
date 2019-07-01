@@ -1,6 +1,7 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.dimensions.ModDimensions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -24,7 +25,7 @@ public class IntrospectionMedicine extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote){
-            entityLiving.changeDimension(Objects.requireNonNull(worldIn.getDimension().getType() == DimensionType.OVERWORLD ? DimensionType.byName(Astral.MINING_DIM) : DimensionType.OVERWORLD));
+            entityLiving.changeDimension(Objects.requireNonNull(worldIn.getDimension().getType() == DimensionType.OVERWORLD ? DimensionType.byName(ModDimensions.INNER_REALM) : DimensionType.OVERWORLD));
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
