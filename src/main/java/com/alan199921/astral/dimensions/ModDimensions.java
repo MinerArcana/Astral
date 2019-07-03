@@ -17,13 +17,15 @@ import net.minecraftforge.common.ModDimension;
 import java.util.function.BiFunction;
 
 public class ModDimensions {
-    public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID + "inner_realm");
+    public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID + ":" + "inner_realm");
     public static ModDimension innerRealm = new ModDimension() {
         @Override
         public BiFunction<World, DimensionType, ? extends Dimension> getFactory() {
             return InnerRealmDimension::new;
         }
     }.setRegistryName("astral:inner_realm");
+
     public static ChunkGeneratorType<GenerationSettings, InnerRealmChunkGenerator> generatorType = new ChunkGeneratorType<>(InnerRealmChunkGenerator::new, false, GenerationSettings::new);
+
     public static BiomeProviderType<SingleBiomeProviderSettings, InnerRealmBiomeProvider> biomeProviderType = new BiomeProviderType<>(InnerRealmBiomeProvider::new, SingleBiomeProviderSettings::new);
 }

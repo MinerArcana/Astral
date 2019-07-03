@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class IntrospectionMedicine extends Item {
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .build())
-                .group(Astral.setup.itemGroup)
+                .group(Astral.setup.astralItems)
         );
         setRegistryName("introspection_medicine");
     }
@@ -25,7 +26,12 @@ public class IntrospectionMedicine extends Item {
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         if (!worldIn.isRemote){
-            entityLiving.changeDimension(Objects.requireNonNull(worldIn.getDimension().getType() == DimensionType.OVERWORLD ? DimensionType.byName(ModDimensions.INNER_REALM) : DimensionType.OVERWORLD));
+            if (worldIn.getDimension().getType() != DimensionType.byName(ModDimensions.INNER_REALM)){
+                entityLiving.changeDimension(Objects.requireNonNull(DimensionType.byName(ModDimensions.INNER_REALM)));
+            }
+            else{
+                entityLiving.changeDimension(DimensionType.OVERWORLD);
+            }
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }

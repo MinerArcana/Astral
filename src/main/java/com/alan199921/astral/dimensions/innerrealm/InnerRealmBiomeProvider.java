@@ -1,5 +1,6 @@
 package com.alan199921.astral.dimensions.innerrealm;
 
+import com.google.common.collect.Sets;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -9,16 +10,19 @@ import net.minecraft.world.biome.provider.SingleBiomeProviderSettings;
 import net.minecraft.world.gen.feature.structure.Structure;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class InnerRealmBiomeProvider extends BiomeProvider {
-    private Biome biome;
     private static final List<Biome> SPAWN = Collections.singletonList(Biomes.PLAINS);
-    public InnerRealmBiomeProvider(SingleBiomeProviderSettings settings){
-        biome = settings.getBiome();
+    private final Biome biome;
+
+    public InnerRealmBiomeProvider(SingleBiomeProviderSettings settings) {
+        this.biome = settings.getBiome();
+    }
+
+    @Override
+    public List<Biome> getBiomesToSpawnIn() {
+        return SPAWN;
     }
 
     @Override
@@ -28,18 +32,15 @@ public class InnerRealmBiomeProvider extends BiomeProvider {
 
     @Override
     public Biome[] getBiomes(int x, int z, int width, int length, boolean cacheFlag) {
-        return new Biome[0];
+        Biome[] abiome = new Biome[width * length];
+        Arrays.fill(abiome, 0, width * length, this.biome);
+        return abiome;
     }
 
     @Override
-    public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
-        return null;
-    }
-
     @Nullable
-    @Override
     public BlockPos findBiomePosition(int x, int z, int range, List<Biome> biomes, Random random) {
-        return null;
+        return biomes.contains(this.biome) ? new BlockPos(x - range + random.nextInt(range * 2 + 1), 0, z - range + random.nextInt(range * 2 + 1)) : null;
     }
 
     @Override
@@ -49,6 +50,14 @@ public class InnerRealmBiomeProvider extends BiomeProvider {
 
     @Override
     public Set<BlockState> getSurfaceBlocks() {
-        return null;
+        if (this.topBlocksCache.isEmpty()) {
+            this.topBlocksCache.add(this.biome.getSurfaceBuilderConfig().getTop());
+        }
+
+        return this.topBlocksCache;
     }
-}
+
+    @Override
+    public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
+        return Sets.newHashSet(this.biome);
+    }}

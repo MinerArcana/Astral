@@ -8,7 +8,7 @@ import net.minecraftforge.fml.DeferredWorkQueue;
 
 public class ModSetup {
 
-    public ItemGroup itemGroup = new ItemGroup("astral") {
+    public final ItemGroup astralItems = new ItemGroup("astral") {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModBlocks.snowberryBush);

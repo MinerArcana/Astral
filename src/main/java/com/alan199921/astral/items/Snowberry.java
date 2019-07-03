@@ -11,7 +11,7 @@ import net.minecraft.potion.Effects;
 public class Snowberry extends BlockNamedItem {
     public Snowberry() {
         super(ModBlocks.snowberryBush.getBlock(), new Item.Properties()
-                .group(Astral.setup.itemGroup)
+                .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .saturation(1)

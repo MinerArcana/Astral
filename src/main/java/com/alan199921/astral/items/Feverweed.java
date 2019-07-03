@@ -11,7 +11,7 @@ import net.minecraft.potion.Effects;
 public class Feverweed extends BlockNamedItem  {
     public Feverweed() {
         super(ModBlocks.feverweedBlock.getBlock(), new Item.Properties()
-                .group(Astral.setup.itemGroup)
+                .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .saturation(1)

@@ -27,7 +27,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class Astral {
     public static final String MOD_ID = "astral";
 
-    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static ModSetup setup = new ModSetup();
 
     public Astral() {
@@ -53,7 +53,7 @@ public class Astral {
 
         @SubscribeEvent
         public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
-            new Item.Properties().group(setup.itemGroup);
+            new Item.Properties().group(setup.astralItems);
             // register a new block here
             event.getRegistry().register(new Snowberry());
             event.getRegistry().register(new Feverweed());
