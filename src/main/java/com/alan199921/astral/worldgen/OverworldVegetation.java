@@ -27,7 +27,7 @@ public class OverworldVegetation {
     }
 
     private static void generateSnowberries(Biome biome) {
-        if (biome.getTempCategory() == Biome.TempCategory.COLD) {
+        if (biome.getCategory() == Biome.Category.TAIGA || biome.getCategory() == Biome.Category.ICY) {
             biome.addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Biome.createDecoratedFeature(SNOWBERRY, IFeatureConfig.NO_FEATURE_CONFIG, Placement.CHANCE_HEIGHTMAP, new ChanceConfig(25)));
         }
     }

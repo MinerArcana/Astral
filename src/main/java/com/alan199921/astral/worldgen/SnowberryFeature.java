@@ -35,15 +35,19 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         BlockState blockstate = ModBlocks.snowberryBush.getDefaultState();
         for(int tries = 0; tries < 32; ++tries) {
             BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
+            //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
             if (worldIn.isAirBlock(blockpos) && (!worldIn.getDimension().isNether() || blockpos.getY() < worldIn.getWorld().getDimension().getHeight()) && blockstate.isValidPosition(worldIn, blockpos)) {
                 positionsToGen.add(blockpos);
+            }
+            else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+                positionsToGen.add(blockpos.down());
             }
         }
 
         int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
         for (int i = 0; i < numberOfBushesInFeature; i++){
-            worldIn.setBlockState(positionsToGen.get(i), ModBlocks.snowberryBush.getDefaultState(), 2);
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
+            worldIn.setBlockState(positionsToGen.get(i), ModBlocks.snowberryBush.getDefaultState(), 2);
             generatedSomething = true;
         }
         for (int i = 0; i < numberOfBushesInFeature; i++){
