@@ -9,4 +9,7 @@ public class ModBlocks {
 
     @ObjectHolder("astral:feverweed_block")
     public static FeverweedBlock feverweedBlock;
+
+    @ObjectHolder("astral:ego_membrane")
+    public static EgoMembrane egoMembrane;
 }

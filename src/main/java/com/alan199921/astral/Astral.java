@@ -1,5 +1,6 @@
 package com.alan199921.astral;
 
+import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
 import com.alan199921.astral.dimensions.ModDimensions;
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class Astral {
     public static final String MOD_ID = "astral";
 
-    public static IProxy proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static ModSetup setup = new ModSetup();
 
     public Astral() {
@@ -49,6 +50,7 @@ public class Astral {
             // register a new block here
             event.getRegistry().register(new SnowberryBush());
             event.getRegistry().register(new FeverweedBlock());
+            event.getRegistry().register(new EgoMembrane());
         }
 
         @SubscribeEvent
@@ -58,6 +60,7 @@ public class Astral {
             event.getRegistry().register(new Snowberry());
             event.getRegistry().register(new Feverweed());
             event.getRegistry().register(new IntrospectionMedicine());
+            event.getRegistry().register(new EgoMembrane().asItem());
         }
 
         @SubscribeEvent
