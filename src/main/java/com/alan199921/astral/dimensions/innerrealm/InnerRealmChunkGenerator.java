@@ -1,13 +1,18 @@
 package com.alan199921.astral.dimensions.innerrealm;
 
+import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.ModBlocks;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.gen.*;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.structure.Structure;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings> {
@@ -17,41 +22,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
 
     @Override
     public void generateSurface(@NonNull IChunk chunk) {
-//        BlockState bedrock = Blocks.BEDROCK.getDefaultState();
-//        BlockState stone = Blocks.STONE.getDefaultState();
-//        BlockState dirt = Blocks.DIRT.getDefaultState();
-//        BlockState grass = Blocks.GRASS_BLOCK.getDefaultState();
-//        int x1, y1, z1;
-//        int worldHeight = 256;
-//
-//        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-//
-//        for (x1 = 0; x1 < 16; x1++) {
-//            for (z1 = 0; z1 < 16; z1++) {
-//                chunk.setBlockState(pos.setPos(x1, 0, z1), bedrock, false);
-//            }
-//        }
-//        for (x1 = 0; x1 < 16; x1++) {
-//            for (y1 = 1; y1 < worldHeight - 3; y1++) {
-//                for (z1 = 0; z1 < 16; z1++) {
-//                    chunk.setBlockState(pos.setPos(x1, y1, z1), stone, false);
-//                }
-//            }
-//        }
-//        for (x1 = 0; x1 < 16; x1++) {
-//            for (y1 = worldHeight - 3; y1 < worldHeight - 1; y1++) {
-//                for (z1 = 0; z1 < 16; z1++) {
-//                    chunk.setBlockState(pos.setPos(x1, y1, z1), dirt, false);
-//                }
-//            }
-//        }
-//        for (x1 = 0; x1 < 16; x1++) {
-//            for (y1 = worldHeight - 1; y1 < worldHeight; y1++) {
-//                for (z1 = 0; z1 < 16; z1++) {
-//                    chunk.setBlockState(pos.setPos(x1, y1, z1), grass, false);
-//                }
-//            }
-//        }
+        //This is a void world!
     }
 
     @Override
@@ -61,23 +32,43 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
 
     @Override
     public void makeBase(IWorld iWorld, IChunk iChunk) {
-        int x, y, z;
-        for (x = 0; x < 16; x++){
-            for (z = 0; z < 16; z++){
+        int x;
+        int y;
+        int z;
+        //Make 15 block cubes with an Astral Meridian block in the center, except on the XZ plane
+
+        //XZ plane
+        for (x = 0; x < 15; x++) {
+            for (z = 0; z < 15; z++) {
                 iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel(), z), ModBlocks.egoMembrane.getDefaultState(), false);
                 iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, z), ModBlocks.egoMembrane.getDefaultState(), false);
+
             }
         }
-        for (x = 0; x < 16; x++){
-            for (y = 0; y < 16; y++){
-                iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.egoMembrane.getDefaultState(), false);
-                iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, 16), ModBlocks.egoMembrane.getDefaultState(), false);
+
+        //XY Plane
+        for (x = 0; x < 15; x++) {
+            for (y = 0; y < 15; y++) {
+                if (x == 7 && y == 7) {
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, 16), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
+                } else {
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, 16), ModBlocks.egoMembrane.getDefaultState(), false);
+                }
             }
         }
-        for (z = 0; z < 16; z++){
-            for (y = 0; y < 16; y++){
-                iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
-                iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + 15, z), ModBlocks.egoMembrane.getDefaultState(), false);
+
+        //YZ Plane
+        for (z = 0; z < 15; z++) {
+            for (y = 0; y < 15; y++) {
+                if (y == 7 && z == 7) {
+                    iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
+                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + 15, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
+                } else {
+                    iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + 15, z), ModBlocks.egoMembrane.getDefaultState(), false);
+                }
             }
         }
     }
@@ -85,5 +76,10 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     @Override
     public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type p_222529_3_) {
         return 0;
+    }
+
+    @Override
+    public boolean hasStructure(Biome biomeIn, @NonNull Structure<? extends IFeatureConfig> structureIn) {
+        return false;
     }
 }

@@ -1,9 +1,11 @@
 package com.alan199921.astral;
 
+import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
 import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
 import com.alan199921.astral.items.Snowberry;
@@ -51,6 +53,7 @@ public class Astral {
             event.getRegistry().register(new SnowberryBush());
             event.getRegistry().register(new FeverweedBlock());
             event.getRegistry().register(new EgoMembrane());
+            event.getRegistry().register(new AstralMeridian());
         }
 
         @SubscribeEvent
@@ -61,6 +64,7 @@ public class Astral {
             event.getRegistry().register(new Feverweed());
             event.getRegistry().register(new IntrospectionMedicine());
             event.getRegistry().register(new EgoMembrane().asItem());
+            event.getRegistry().register(new EnlightenmentKey());
         }
 
         @SubscribeEvent

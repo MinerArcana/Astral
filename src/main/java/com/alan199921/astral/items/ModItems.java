@@ -11,4 +11,7 @@ public class ModItems {
 
     @ObjectHolder("astral:introspection_medicine")
     public static IntrospectionMedicine introspectionMedicine;
+
+    @ObjectHolder("astral:enlightenment_key")
+    public static EnlightenmentKey enlightenmentKey;
 }

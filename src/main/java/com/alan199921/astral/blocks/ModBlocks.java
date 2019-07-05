@@ -12,4 +12,7 @@ public class ModBlocks {
 
     @ObjectHolder("astral:ego_membrane")
     public static EgoMembrane egoMembrane;
+
+    @ObjectHolder("astral:astral_meridian")
+    public static AstralMeridian astralMeridian;
 }

@@ -10,19 +10,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nullable;
 
 public class EgoMembrane extends Block {
     public EgoMembrane() {
-        super(Properties.create(Material.PORTAL)
+        super(Properties.create(Material.DRAGON_EGG)
                 .hardnessAndResistance(2f)
                 .lightValue(14));
         setRegistryName("ego_membrane");
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity te, ItemStack stack) {
+    public void harvestBlock(World worldIn, PlayerEntity player, @NonNull BlockPos pos, BlockState state, @Nullable TileEntity te, @NonNull ItemStack stack) {
         worldIn.setBlockState(pos, ModBlocks.egoMembrane.getDefaultState(), 2);
         if (!worldIn.isRemote()){
             TeleportationTools.changeDim((ServerPlayerEntity) player, pos, player.getSpawnDimension());
