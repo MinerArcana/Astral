@@ -38,36 +38,36 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
         //Make 15 block cubes with an Astral Meridian block in the center, except on the XZ plane
 
         //XZ plane
-        for (x = 0; x < 15; x++) {
-            for (z = 0; z < 15; z++) {
+        for (x = 0; x < 16; x++) {
+            for (z = 0; z < 16; z++) {
                 iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel(), z), ModBlocks.egoMembrane.getDefaultState(), false);
-                iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, z), ModBlocks.egoMembrane.getDefaultState(), false);
+                iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 16, z), ModBlocks.egoMembrane.getDefaultState(), false);
 
             }
         }
 
         //XY Plane
-        for (x = 0; x < 15; x++) {
-            for (y = 0; y < 15; y++) {
-                if (x == 7 && y == 7) {
+        for (x = 0; x < 16; x++) {
+            for (y = 0; y < 16; y++) {
+                if (x == 8 && y == 8) {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
-                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 16), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
                 } else {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.egoMembrane.getDefaultState(), false);
-                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 16), ModBlocks.egoMembrane.getDefaultState(), false);
                 }
             }
         }
 
         //YZ Plane
-        for (z = 0; z < 15; z++) {
-            for (y = 0; y < 15; y++) {
-                if (y == 7 && z == 7) {
+        for (z = 0; z < 16; z++) {
+            for (y = 0; y < 16; y++) {
+                if (y == 8 && z == 8) {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
-                    iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
+                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
                 } else {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
-                    iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
                 }
             }
         }

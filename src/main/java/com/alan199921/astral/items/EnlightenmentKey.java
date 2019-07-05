@@ -22,8 +22,8 @@ public class EnlightenmentKey extends Item {
 
             //XY Plane
             if (meridianPlane == 0){
-                for (int i = -7; i < 7; i++){
-                    for (int j = -7; j < 7; j++){
+                for (int i = -7; i < 8; i++){
+                    for (int j = -7; j < 8; j++){
                         context.getWorld().destroyBlock(context.getPos().add(i, j, 0), false);
                     }
                 }
@@ -31,8 +31,8 @@ public class EnlightenmentKey extends Item {
 
             //YZ Plane
             else if (meridianPlane == 1){
-                for (int i = -7; i < 7; i++){
-                    for (int j = -7; j < 7; j++){
+                for (int i = -7; i < 8; i++){
+                    for (int j = -7; j < 8; j++){
                         context.getWorld().destroyBlock(context.getPos().add(0, i, j), false);
                     }
                 }
@@ -40,8 +40,8 @@ public class EnlightenmentKey extends Item {
 
             //XZ Plane
             else if (meridianPlane == 2){
-                for (int i = -7; i < 7; i++){
-                    for (int j = -7; j < 7; j++){
+                for (int i = -7; i < 8; i++){
+                    for (int j = -7; j < 8; j++){
                         context.getWorld().destroyBlock(context.getPos().add(i, 0, j), false);
                     }
                 }

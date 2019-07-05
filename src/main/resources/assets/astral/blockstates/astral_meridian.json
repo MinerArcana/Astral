@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "astral:block/astral_meridian" }
+  }
+}
