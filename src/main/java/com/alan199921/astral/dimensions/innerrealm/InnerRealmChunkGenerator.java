@@ -51,10 +51,10 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
             for (y = 0; y < 15; y++) {
                 if (x == 7 && y == 7) {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
-                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, 16), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 0), false);
                 } else {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), ModBlocks.egoMembrane.getDefaultState(), false);
-                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + 15, 16), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), ModBlocks.egoMembrane.getDefaultState(), false);
                 }
             }
         }
@@ -64,10 +64,10 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
             for (y = 0; y < 15; y++) {
                 if (y == 7 && z == 7) {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
-                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + 15, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
+                    iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), ModBlocks.astralMeridian.getDefaultState().with(AstralMeridian.PLANE, 1), false);
                 } else {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
-                    iChunk.setBlockState(new BlockPos(16, iWorld.getSeaLevel() + 15, z), ModBlocks.egoMembrane.getDefaultState(), false);
+                    iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), ModBlocks.egoMembrane.getDefaultState(), false);
                 }
             }
         }
