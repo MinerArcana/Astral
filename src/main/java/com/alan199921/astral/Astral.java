@@ -5,6 +5,7 @@ import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
 import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
@@ -14,16 +15,30 @@ import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.UUID;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -71,6 +86,28 @@ public class Astral {
         public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
             event.getRegistry().register(ModDimensions.innerRealm);
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
+        }
+
+        @SubscribeEvent
+        public static void onAttachWorldCapabilities(final AttachCapabilitiesEvent<World> event){
+            event.addCapability(new ResourceLocation(MOD_ID, "inner_realm"), new ICapabilityProvider() {
+                private HashMap<UUID, BlockPos> spawnLocations = new HashMap<>();
+                private int spawnCounter = 0;
+                private int distanceBetweenBoxes = 256;
+
+                @Nonnull
+                @Override
+                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+
+                }
+
+                public void withdrawal(ServerPlayerEntity player){
+                    if (!spawnLocations.containsKey(player.getUniqueID())){
+                        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnCounter * distanceBetweenBoxes, event.getObject().getSeaLevel()+1, 0));
+                    }
+                    TeleportationTools.changeDim(player, spawnLocations.get(player.getUniqueID()), DimensionType.byName(ModDimensions.INNER_REALM));
+                }
+            });
         }
     }
 }

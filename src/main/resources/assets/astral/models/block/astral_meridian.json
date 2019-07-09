@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "block/end_portal"
+    "all": "astral:block/astral_meridian"
   }
 }
