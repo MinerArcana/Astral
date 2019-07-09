@@ -4,6 +4,7 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
+import com.alan199921.astral.capabilities.InnerRealmCapability;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.items.EnlightenmentKey;
@@ -91,22 +92,15 @@ public class Astral {
         @SubscribeEvent
         public static void onAttachWorldCapabilities(final AttachCapabilitiesEvent<World> event){
             event.addCapability(new ResourceLocation(MOD_ID, "inner_realm"), new ICapabilityProvider() {
-                private HashMap<UUID, BlockPos> spawnLocations = new HashMap<>();
-                private int spawnCounter = 0;
-                private int distanceBetweenBoxes = 256;
+
+                private final InnerRealmCapability innerRealmCapability= new InnerRealmCapability();
 
                 @Nonnull
                 @Override
                 public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-
+                    return null;;
                 }
 
-                public void withdrawal(ServerPlayerEntity player){
-                    if (!spawnLocations.containsKey(player.getUniqueID())){
-                        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnCounter * distanceBetweenBoxes, event.getObject().getSeaLevel()+1, 0));
-                    }
-                    TeleportationTools.changeDim(player, spawnLocations.get(player.getUniqueID()), DimensionType.byName(ModDimensions.INNER_REALM));
-                }
             });
         }
     }
