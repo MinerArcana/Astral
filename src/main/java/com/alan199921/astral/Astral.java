@@ -4,9 +4,8 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
-import com.alan199921.astral.capabilities.InnerRealmCapability;
+import com.alan199921.astral.capabilities.InnerRealmTeleporter;
 import com.alan199921.astral.dimensions.ModDimensions;
-import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
@@ -16,13 +15,10 @@ import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.Capability;
@@ -38,8 +34,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.UUID;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -93,12 +87,13 @@ public class Astral {
         public static void onAttachWorldCapabilities(final AttachCapabilitiesEvent<World> event){
             event.addCapability(new ResourceLocation(MOD_ID, "inner_realm"), new ICapabilityProvider() {
 
-                private final InnerRealmCapability innerRealmCapability= new InnerRealmCapability();
+                private final InnerRealmTeleporter innerRealmTeleporter = new InnerRealmTeleporter();
 
                 @Nonnull
                 @Override
                 public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                    return null;;
+                    LazyOptional lazyOptional = new LazyOptional<>(() -> cap);
+                    return lazyOptional;
                 }
 
             });
