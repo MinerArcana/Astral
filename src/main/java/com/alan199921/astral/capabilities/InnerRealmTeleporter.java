@@ -39,4 +39,9 @@ public class InnerRealmTeleporter implements IPocketDimTeleporter {
     public HashMap<UUID, BlockPos> getSpawnList() {
         return spawnLocations;
     }
+
+    @Override
+    public void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap) {
+        spawnLocations = uuidBlockPosHashMap;
+    }
 }

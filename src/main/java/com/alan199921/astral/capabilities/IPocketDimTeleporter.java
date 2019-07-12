@@ -13,4 +13,5 @@ public interface IPocketDimTeleporter {
     void teleport(ServerPlayerEntity player, DimensionType dimension);
     BlockPos getSpawn();
     HashMap<UUID, BlockPos> getSpawnList();
+    void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
 }
