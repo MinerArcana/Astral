@@ -4,9 +4,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class InnerRealmStorage implements Capability.IStorage<IPocketDimTeleporter> {
@@ -23,6 +25,13 @@ public class InnerRealmStorage implements Capability.IStorage<IPocketDimTeleport
 
     @Override
     public void readNBT(Capability<IPocketDimTeleporter> capability, IPocketDimTeleporter instance, Direction side, INBT nbt) {
-        NBTUtil.readBlockPos();
+        HashMap<UUID, BlockPos> spawnList = new HashMap<>();
+        CompoundNBT compoundNBT = (CompoundNBT) nbt;
+        CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
+        assert spawnLocations != null;
+        for (String id: spawnLocations.keySet()) {
+            spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocations.getCompound(id)));
+        }
+        instance.setSpawnList(spawnList);
     }
 }
