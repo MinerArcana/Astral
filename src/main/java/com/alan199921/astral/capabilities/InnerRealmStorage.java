@@ -13,7 +13,7 @@ public class InnerRealmStorage implements Capability.IStorage<IPocketDimTeleport
     @Nullable
     @Override
     public INBT writeNBT(Capability<IPocketDimTeleporter> capability, IPocketDimTeleporter instance, Direction side) {
-        return NBTUtil.writeBlockPos(instance.getSpawn());
+        return null;
     }
 
     @Override
