@@ -7,11 +7,10 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.HashMap;
 import java.util.UUID;
 
-public interface IPocketDimTeleporter {
-    void setSpawn(BlockPos pos);
+public interface IInnerRealmTeleporter {
     void newPlayer(ServerPlayerEntity player);
     void teleport(ServerPlayerEntity player, DimensionType dimension);
-    BlockPos getSpawn();
+    BlockPos getSpawn(UUID uniqueID);
     HashMap<UUID, BlockPos> getSpawnList();
     void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
 }

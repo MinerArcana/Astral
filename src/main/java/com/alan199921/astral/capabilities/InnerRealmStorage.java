@@ -11,11 +11,11 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class InnerRealmStorage implements Capability.IStorage<IPocketDimTeleporter> {
+public class InnerRealmStorage implements Capability.IStorage<IInnerRealmTeleporter> {
 
     @Nullable
     @Override
-    public INBT writeNBT(Capability<IPocketDimTeleporter> capability, IPocketDimTeleporter instance, Direction side) {
+    public INBT writeNBT(Capability<IInnerRealmTeleporter> capability, IInnerRealmTeleporter instance, Direction side) {
         CompoundNBT spawnLocationTag = new CompoundNBT();
         for (UUID uuid: instance.getSpawnList().keySet()) {
             spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(instance.getSpawnList().get(uuid)));
@@ -24,7 +24,7 @@ public class InnerRealmStorage implements Capability.IStorage<IPocketDimTeleport
     }
 
     @Override
-    public void readNBT(Capability<IPocketDimTeleporter> capability, IPocketDimTeleporter instance, Direction side, INBT nbt) {
+    public void readNBT(Capability<IInnerRealmTeleporter> capability, IInnerRealmTeleporter instance, Direction side, INBT nbt) {
         HashMap<UUID, BlockPos> spawnList = new HashMap<>();
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
         CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");

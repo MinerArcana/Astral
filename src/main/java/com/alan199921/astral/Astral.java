@@ -4,10 +4,9 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
-import com.alan199921.astral.capabilities.IPocketDimTeleporter;
+import com.alan199921.astral.capabilities.IInnerRealmTeleporter;
 import com.alan199921.astral.capabilities.InnerRealmStorage;
 import com.alan199921.astral.capabilities.InnerRealmTeleporter;
-import com.alan199921.astral.capabilities.TeleporterProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
@@ -19,25 +18,16 @@ import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -89,7 +79,7 @@ public class Astral {
 
         @SubscribeEvent
         public static void onAttachWorldCapabilities(){
-            CapabilityManager.INSTANCE.register(IPocketDimTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
+            CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
         }
     }
 }

@@ -9,30 +9,26 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class InnerRealmTeleporter implements IPocketDimTeleporter {
+public class InnerRealmTeleporter implements IInnerRealmTeleporter {
     private HashMap<UUID, BlockPos> spawnLocations = new HashMap<>();
-    private int spawnCounter = 0;
-
-    @Override
-    public void setSpawn(BlockPos pos) {
-
-    }
 
     @Override
     public void newPlayer(ServerPlayerEntity player) {
         int distanceBetweenBoxes = 256;
-        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnCounter * distanceBetweenBoxes, player.getServerWorld().getSeaLevel()+1, 0));
-        spawnCounter++;
+        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnLocations.size() * distanceBetweenBoxes, player.getServerWorld().getSeaLevel()+1, 0));
     }
 
     @Override
     public void teleport(ServerPlayerEntity player, DimensionType dimension) {
+        if (!spawnLocations.containsKey(player.getUniqueID())){
+            newPlayer(player);
+        }
         TeleportationTools.changeDim(player, spawnLocations.get(player.getUniqueID()), DimensionType.byName(ModDimensions.INNER_REALM));
     }
 
     @Override
-    public BlockPos getSpawn() {
-        return null;
+    public BlockPos getSpawn(UUID uniqueID) {
+        return spawnLocations.get(uniqueID);
     }
 
     @Override

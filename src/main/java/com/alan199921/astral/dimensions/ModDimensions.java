@@ -18,6 +18,7 @@ import java.util.function.BiFunction;
 
 public class ModDimensions {
     public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID + ":" + "inner_realm");
+    public static final DimensionType INNER_REAML_DIMENSION = DimensionType.byName(INNER_REALM);
     public static ModDimension innerRealm = new ModDimension() {
         @Override
         public BiFunction<World, DimensionType, ? extends Dimension> getFactory() {

@@ -10,12 +10,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TeleporterProvider implements ICapabilitySerializable<INBT> {
+public class InnerRealmTeleporterProvider implements ICapabilitySerializable<INBT> {
 
-    @CapabilityInject(IPocketDimTeleporter.class)
-    public static final Capability<IPocketDimTeleporter> TELEPORTER_CAPABILITY = null;
+    @CapabilityInject(IInnerRealmTeleporter.class)
+    public static final Capability<IInnerRealmTeleporter> TELEPORTER_CAPABILITY = null;
 
-    private IPocketDimTeleporter instance = TELEPORTER_CAPABILITY.getDefaultInstance();
+    private IInnerRealmTeleporter instance = TELEPORTER_CAPABILITY.getDefaultInstance();
 
     @Nonnull
     @Override
