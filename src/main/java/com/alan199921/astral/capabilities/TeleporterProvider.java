@@ -20,16 +20,16 @@ public class TeleporterProvider implements ICapabilitySerializable<INBT> {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return null;
+        return new LazyOptional<>(cap::getDefaultInstance);
     }
 
     @Override
     public INBT serializeNBT() {
-        return null;
+        return TELEPORTER_CAPABILITY.getStorage().writeNBT(TELEPORTER_CAPABILITY, this.instance, null);
     }
 
     @Override
     public void deserializeNBT(INBT nbt) {
-
+        TELEPORTER_CAPABILITY.getStorage().readNBT(TELEPORTER_CAPABILITY, this.instance, null, nbt);
     }
 }

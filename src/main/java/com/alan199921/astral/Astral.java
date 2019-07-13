@@ -4,7 +4,10 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
+import com.alan199921.astral.capabilities.IPocketDimTeleporter;
+import com.alan199921.astral.capabilities.InnerRealmStorage;
 import com.alan199921.astral.capabilities.InnerRealmTeleporter;
+import com.alan199921.astral.capabilities.TeleporterProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
@@ -22,6 +25,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -84,19 +88,8 @@ public class Astral {
         }
 
         @SubscribeEvent
-        public static void onAttachWorldCapabilities(final AttachCapabilitiesEvent<World> event){
-            event.addCapability(new ResourceLocation(MOD_ID, "inner_realm"), new ICapabilityProvider() {
-
-                private final InnerRealmTeleporter innerRealmTeleporter = new InnerRealmTeleporter();
-
-                @Nonnull
-                @Override
-                public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-                    LazyOptional lazyOptional = new LazyOptional<>(() -> cap);
-                    return lazyOptional;
-                }
-
-            });
+        public static void onAttachWorldCapabilities(){
+            CapabilityManager.INSTANCE.register(IPocketDimTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
         }
     }
 }
