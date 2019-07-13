@@ -2,7 +2,6 @@ package com.alan199921.astral.dimensions.innerrealm;
 
 import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.ModBlocks;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;

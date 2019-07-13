@@ -10,7 +10,6 @@ import net.minecraftforge.common.util.NonNullSupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 public class InnerRealmTeleporterProvider implements ICapabilitySerializable<INBT> {
 

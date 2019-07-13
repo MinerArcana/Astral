@@ -21,7 +21,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -45,6 +47,7 @@ public class Astral {
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
         proxy.init();
+
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -75,11 +78,6 @@ public class Astral {
         public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
             event.getRegistry().register(ModDimensions.innerRealm);
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
-        }
-
-        @SubscribeEvent
-        public static void onAttachWorldCapabilities(){
-            CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
         }
     }
 }

@@ -17,5 +17,6 @@ public class ModSetup {
 
     public void init() {
         DeferredWorkQueue.runLater(OverworldVegetation::addOverworldVegetation);
+//        CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
     }
 }
