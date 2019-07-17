@@ -1,13 +1,9 @@
 package com.alan199921.astral.setup;
 
 import com.alan199921.astral.blocks.ModBlocks;
-import com.alan199921.astral.capabilities.IInnerRealmTeleporter;
-import com.alan199921.astral.capabilities.InnerRealmStorage;
-import com.alan199921.astral.capabilities.InnerRealmTeleporter;
 import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.DeferredWorkQueue;
 
 public class ModSetup {
@@ -21,6 +17,5 @@ public class ModSetup {
 
     public void init() {
         DeferredWorkQueue.runLater(OverworldVegetation::addOverworldVegetation);
-        CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new InnerRealmStorage(), InnerRealmTeleporter::new);
     }
 }

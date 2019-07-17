@@ -1,8 +1,9 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.capabilities.IInnerRealmTeleporter;
-import com.alan199921.astral.capabilities.InnerRealmTeleporterProvider;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.IInnerRealmTeleporterCapability;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterCapability;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,8 +30,8 @@ public class IntrospectionMedicine extends Item {
     public ItemStack onItemUseFinish(@NonNull ItemStack stack, World worldIn, @NonNull LivingEntity entityLiving) {
         if(!worldIn.isRemote && entityLiving.dimension != DimensionType.byName(ModDimensions.INNER_REALM)) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entityLiving;
-            IInnerRealmTeleporter teleporterCapability = worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY, null).orElse(null);
-            teleporterCapability.teleport(playerEntity, DimensionType.byName(ModDimensions.INNER_REALM));
+//            IInnerRealmTeleporterCapability innerRealmTeleporterCapability = worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).orElse(null);
+            worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(playerEntity, DimensionType.byName(ModDimensions.INNER_REALM)));
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }

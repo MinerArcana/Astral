@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities;
+package com.alan199921.astral.capabilities.inner_realm_teleporter;
 
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
@@ -9,7 +9,7 @@ import net.minecraft.world.dimension.DimensionType;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class InnerRealmTeleporter implements IInnerRealmTeleporter {
+public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapability {
     private HashMap<UUID, BlockPos> spawnLocations = new HashMap<>();
 
     @Override

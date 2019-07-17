@@ -4,6 +4,9 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.IInnerRealmTeleporterCapability;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterCapability;
+import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
@@ -18,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -48,6 +52,12 @@ public class Astral {
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
+
+        @SubscribeEvent
+        public static void init(final FMLCommonSetupEvent event){
+            CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
+        }
+
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
             // register a new block here

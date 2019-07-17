@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities;
+package com.alan199921.astral.capabilities.inner_realm_teleporter;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -11,11 +11,11 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class InnerRealmStorage implements Capability.IStorage<IInnerRealmTeleporter> {
+public class InnerRealmTeleporterStorage implements Capability.IStorage<IInnerRealmTeleporterCapability> {
 
     @Nullable
     @Override
-    public INBT writeNBT(Capability<IInnerRealmTeleporter> capability, IInnerRealmTeleporter instance, Direction side) {
+    public INBT writeNBT(Capability<IInnerRealmTeleporterCapability> capability, IInnerRealmTeleporterCapability instance, Direction side) {
         CompoundNBT spawnLocationTag = new CompoundNBT();
         for (UUID uuid: instance.getSpawnList().keySet()) {
             spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(instance.getSpawnList().get(uuid)));
@@ -24,7 +24,7 @@ public class InnerRealmStorage implements Capability.IStorage<IInnerRealmTelepor
     }
 
     @Override
-    public void readNBT(Capability<IInnerRealmTeleporter> capability, IInnerRealmTeleporter instance, Direction side, INBT nbt) {
+    public void readNBT(Capability<IInnerRealmTeleporterCapability> capability, IInnerRealmTeleporterCapability instance, Direction side, INBT nbt) {
         HashMap<UUID, BlockPos> spawnList = new HashMap<>();
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
         CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
