@@ -1,8 +1,6 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.capabilities.inner_realm_teleporter.IInnerRealmTeleporterCapability;
-import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import net.minecraft.entity.LivingEntity;
@@ -32,6 +30,7 @@ public class IntrospectionMedicine extends Item {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entityLiving;
 //            IInnerRealmTeleporterCapability innerRealmTeleporterCapability = worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).orElse(null);
             worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(playerEntity, DimensionType.byName(ModDimensions.INNER_REALM)));
+
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
