@@ -88,17 +88,6 @@ public class Astral {
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
         }
 
-        private static final ResourceLocation INNER_REALM_TELEPORTER = new ResourceLocation(Astral.MOD_ID, "inner_realm_teleporter");
 
-        @SubscribeEvent
-        public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e)
-        {
-            World world = e.getObject();
-            if (world != null)
-            {
-                e.addCapability(INNER_REALM_TELEPORTER, new InnerRealmTeleporterProvider());
-                System.out.println("Attached inner realm teleporter capability!");
-            }
-        }
     }
 }
