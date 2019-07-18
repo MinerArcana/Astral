@@ -15,11 +15,11 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void newPlayer(ServerPlayerEntity player) {
         int distanceBetweenBoxes = 256;
-        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnLocations.size() * distanceBetweenBoxes, player.getServerWorld().getSeaLevel()+1, 0));
+        spawnLocations.put(player.getUniqueID(), new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getServerWorld().getSeaLevel()+1, 8));
     }
 
     @Override
-    public void teleport(ServerPlayerEntity player, DimensionType dimension) {
+    public void teleport(ServerPlayerEntity player) {
         if (!spawnLocations.containsKey(player.getUniqueID())){
             newPlayer(player);
         }

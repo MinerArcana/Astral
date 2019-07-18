@@ -6,7 +6,6 @@ import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.IInnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterCapability;
-import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.items.EnlightenmentKey;
@@ -20,11 +19,9 @@ import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -57,7 +54,7 @@ public class Astral {
     public static class RegistryEvents {
 
         @SubscribeEvent
-        public static void init(final FMLCommonSetupEvent event){
+        public static void init(final FMLCommonSetupEvent event) {
             System.out.println("Registering capability!");
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
         }

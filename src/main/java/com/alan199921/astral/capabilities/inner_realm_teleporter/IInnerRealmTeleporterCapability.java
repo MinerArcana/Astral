@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface IInnerRealmTeleporterCapability {
     void newPlayer(ServerPlayerEntity player);
-    void teleport(ServerPlayerEntity player, DimensionType dimension);
+    void teleport(ServerPlayerEntity player);
     BlockPos getSpawn(UUID uniqueID);
     HashMap<UUID, BlockPos> getSpawnList();
     void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
