@@ -1,4 +1,4 @@
-package com.alan199921.astral.potions;
+package com.alan199921.astral.effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

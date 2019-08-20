@@ -1,6 +1,6 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.potions.Travelling;
+import com.alan199921.astral.effects.Travelling;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;

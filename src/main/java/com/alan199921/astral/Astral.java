@@ -85,6 +85,5 @@ public class Astral {
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
         }
 
-
     }
 }
