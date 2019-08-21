@@ -18,6 +18,7 @@ import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
@@ -85,5 +86,9 @@ public class Astral {
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
         }
 
+//        @SubscribeEvent
+//        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event){
+//            event.getRegistry().register(new Potion());
+//        }
     }
 }
