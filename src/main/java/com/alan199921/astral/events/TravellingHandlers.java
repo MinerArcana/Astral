@@ -1,7 +1,6 @@
 package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.util.MobHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
@@ -18,7 +17,7 @@ public class TravellingHandlers {
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
         if (isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
 //            System.out.println(event.getEntityLiving().getName().getString() + " is no longer targetting you!");
-            event.getEntityLiving().setRevengeTarget(null);
+            event.getTarget().setRevengeTarget(null);
         }
     }
 
