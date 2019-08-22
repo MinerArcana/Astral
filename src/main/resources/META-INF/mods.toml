@@ -10,6 +10,4 @@ displayURL="https://github.com/Alan19/Astral" #optional
 logoFile="examplemod.png" #optional
 credits="Thanks to Divineaspect for designing and planning the mod!" #optional
 authors="Alan199921"
-description='''
-A mod about out-of-body experiences.
-'''
+description='''A mod about out-of-body experiences.'''

@@ -8,7 +8,7 @@ import net.minecraft.potion.EffectType;
 public class AstralEffect extends Effect {
     public AstralEffect() {
         super(EffectType.NEUTRAL, 13158600);
-        setRegistryName("astral_effect");
+        setRegistryName("astral_travel");
     }
 
     @Override

@@ -1,8 +1,10 @@
 {
   "item.astral.introspection_medicine": "Introspection Medicine",
+  "item.astral.enlightenment_key": "Key of Enlightenment",
   "item.astral.feverweed": "Feverweed",
   "item.astral.snowberry": "Snowberry",
   "block.astral.feverweed_block": "Feverweed",
   "block.astral.snowberry_bush": "Snowberry Bush",
-  "itemGroup.astral": "Astral"
+  "itemGroup.astral": "Astral",
+  "effect.astral.astral_travel": "Astral Travel"
 }
