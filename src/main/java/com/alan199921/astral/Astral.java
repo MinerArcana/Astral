@@ -8,6 +8,7 @@ import com.alan199921.astral.capabilities.inner_realm_teleporter.IInnerRealmTele
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.effects.AstralEffect;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
@@ -18,7 +19,7 @@ import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.Effect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
@@ -86,9 +87,9 @@ public class Astral {
             DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
         }
 
-//        @SubscribeEvent
-//        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event){
-//            event.getRegistry().register(new Potion());
-//        }
+        @SubscribeEvent
+        public static void onEffectRegistry(final RegistryEvent.Register<Effect> event){
+            event.getRegistry().register(new AstralEffect());
+        }
     }
 }

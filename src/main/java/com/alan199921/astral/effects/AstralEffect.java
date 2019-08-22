@@ -5,9 +5,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
 
-public class Travelling extends Effect {
-    protected Travelling(EffectType typeIn, int liquidColorIn) {
-        super(typeIn, liquidColorIn);
+public class AstralEffect extends Effect {
+    public AstralEffect() {
+        super(EffectType.NEUTRAL, 13158600);
+        setRegistryName("astral_effect");
     }
 
     @Override
