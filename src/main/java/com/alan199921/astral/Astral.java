@@ -9,10 +9,12 @@ import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTelep
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.effects.AstralEffect;
+import com.alan199921.astral.effects.ModEffects;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
 import com.alan199921.astral.items.Snowberry;
+import com.alan199921.astral.potions.AstralTravelPotion;
 import com.alan199921.astral.setup.ClientProxy;
 import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
@@ -20,9 +22,12 @@ import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,6 +35,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -90,6 +96,11 @@ public class Astral {
         @SubscribeEvent
         public static void onEffectRegistry(final RegistryEvent.Register<Effect> event){
             event.getRegistry().register(new AstralEffect());
+        }
+
+        @SubscribeEvent
+        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event){
+            event.getRegistry().register(new AstralTravelPotion());
         }
     }
 }
