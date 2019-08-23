@@ -6,10 +6,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -77,6 +80,13 @@ public class TravellingHandlers {
                 p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
                 p.sendPlayerAbilities();
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralBreakBlock(PlayerEvent.BreakSpeed event){
+        if (event.getState().getProperties().contains(BlockStateProperties.IN_WALL)){
+            event.setNewSpeed(0f);
         }
     }
 }
