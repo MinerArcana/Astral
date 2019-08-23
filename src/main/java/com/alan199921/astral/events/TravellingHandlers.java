@@ -1,18 +1,19 @@
 package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.effects.ModEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.storage.loot.conditions.BlockStateProperty;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.GetCollisionBoxesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -85,7 +86,8 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void astralBreakBlock(PlayerEvent.BreakSpeed event){
-        if (event.getState().getProperties().contains(BlockStateProperties.IN_WALL)){
+        //Placeholder properties
+        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(ModEffects.astralEffect)){
             event.setNewSpeed(0f);
         }
     }

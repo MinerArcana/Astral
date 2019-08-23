@@ -3,6 +3,7 @@ package com.alan199921.astral.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 
@@ -15,6 +16,7 @@ public class AstralMeridian extends Block {
      * 2 = XZ Plane
      */
     public static final IntegerProperty PLANE = IntegerProperty.create("plane", 0, 2);
+    public static final BooleanProperty ASTRAL_BLOCK = BooleanProperty.create("astral_block");
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
