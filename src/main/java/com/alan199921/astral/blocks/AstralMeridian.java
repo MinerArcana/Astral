@@ -10,24 +10,25 @@ import net.minecraft.state.StateContainer;
 public class AstralMeridian extends Block {
 
     /**
-     * Plane IntegerProperty:
-     * 0 = XY Plane
-     * 1 = YZ Plane
-     * 2 = XZ Plane
+     * Direction IntegerProperty:
+     * 0 = North
+     * 1 = East
+     * 2 = South
+     * 3 = West
      */
-    public static final IntegerProperty PLANE = IntegerProperty.create("plane", 0, 2);
+    public static final IntegerProperty DIRECTION = IntegerProperty.create("direction", 0, 3);
     public static final BooleanProperty ASTRAL_BLOCK = BooleanProperty.create("astral_block");
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
         .hardnessAndResistance(99F));
 
-        this.setDefaultState(this.getStateContainer().getBaseState().with(PLANE, 0));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
         setRegistryName("astral_meridian");
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(PLANE));
+        super.fillStateContainer(builder.add(DIRECTION));
     }
 }
