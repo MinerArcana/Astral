@@ -3,7 +3,7 @@ package com.alan199921.astral.items;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.ModBlocks;
-import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
+import com.alan199921.astral.capabilities.inner_realm_chunk_claim.InnerRealmChunkClaimProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
@@ -30,8 +30,7 @@ public class EnlightenmentKey extends Item {
             int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
             destroyPlaneMeridian(world, meridianChunk, meridianDirection);
             IChunk chunkToGenerateBoxIn = getAdjacentChunk(context.getPos(), meridianDirection, world);
-            final InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
-            innerRealmUtils.generateInnerRealmChunk(world, chunkToGenerateBoxIn);
+            context.getWorld().getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.claimChunk(context.getPlayer(), chunkToGenerateBoxIn.getPos()));
             destroyPlaneMeridian(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
         }
         return super.onItemUse(context);

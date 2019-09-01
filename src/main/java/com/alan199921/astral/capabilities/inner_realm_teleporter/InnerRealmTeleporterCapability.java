@@ -1,5 +1,6 @@
 package com.alan199921.astral.capabilities.inner_realm_teleporter;
 
+import com.alan199921.astral.capabilities.inner_realm_chunk_claim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
@@ -20,7 +21,8 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
         int distanceBetweenBoxes = 256;
         BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getServerWorld().getSeaLevel() + 1, 8);
         IChunk spawnChunk = player.server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM)).getChunk(spawnLocation);
-        innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
+        player.getEntityWorld().getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.claimChunk(player, spawnChunk.getPos()));
+        innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk.getPos());
         spawnLocations.put(player.getUniqueID(), spawnLocation);
     }
 
