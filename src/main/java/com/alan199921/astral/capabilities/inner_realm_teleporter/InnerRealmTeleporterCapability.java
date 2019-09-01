@@ -20,7 +20,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
         int distanceBetweenBoxes = 256;
         BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getServerWorld().getSeaLevel() + 1, 8);
         IChunk spawnChunk = player.server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM)).getChunk(spawnLocation);
-        innerRealmUtils.generateInnerRealmSpawnChunk(player.world, spawnChunk);
+        innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
         spawnLocations.put(player.getUniqueID(), spawnLocation);
     }
 

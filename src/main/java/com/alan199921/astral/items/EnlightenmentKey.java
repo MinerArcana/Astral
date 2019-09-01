@@ -5,7 +5,6 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.ModBlocks;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
@@ -32,7 +31,7 @@ public class EnlightenmentKey extends Item {
             destroyPlaneMeridian(world, meridianChunk, meridianDirection);
             IChunk chunkToGenerateBoxIn = getAdjacentChunk(context.getPos(), meridianDirection, world);
             final InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
-            innerRealmUtils.generateInnerRealmSpawnChunk(world, chunkToGenerateBoxIn);
+            innerRealmUtils.generateInnerRealmChunk(world, chunkToGenerateBoxIn);
             destroyPlaneMeridian(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
         }
         return super.onItemUse(context);
@@ -60,7 +59,7 @@ public class EnlightenmentKey extends Item {
         if (meridianDirection == 0){
             for (int x = 1; x < 15; x++) {
                 for (int y = 1; y < 15; y++) {
-                    meridianChunk.setBlockState(new BlockPos(x, world.getSeaLevel() + y, 0), Blocks.AIR.getDefaultState(), false);
+                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), true);
                 }
             }
         }
@@ -69,7 +68,7 @@ public class EnlightenmentKey extends Item {
         if (meridianDirection == 2){
             for (int x = 1; x < 15; x++) {
                 for (int y = 1; y < 15; y++) {
-                    meridianChunk.setBlockState(new BlockPos(x, world.getSeaLevel() + y, 15), Blocks.AIR.getDefaultState(), false);
+                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), true);
                 }
             }
         }
@@ -78,7 +77,7 @@ public class EnlightenmentKey extends Item {
         else if (meridianDirection == 1){
             for (int y = 1; y < 15; y++) {
                 for (int z = 1; z < 15; z++) {
-                    meridianChunk.setBlockState(new BlockPos(0, world.getSeaLevel() + y, z), Blocks.AIR.getDefaultState(), false);
+                    world.destroyBlock(meridianChunk.getPos().getBlock(0, world.getSeaLevel() + y, z), true);
                 }
             }
         }
@@ -87,10 +86,9 @@ public class EnlightenmentKey extends Item {
         else if (meridianDirection == 3){
             for (int y = 1; y < 15; y++) {
                 for (int z = 1; z < 15; z++) {
-                    meridianChunk.setBlockState(new BlockPos(15, world.getSeaLevel() + y, z), Blocks.AIR.getDefaultState(), false);
+                    world.destroyBlock(meridianChunk.getPos().getBlock(15, world.getSeaLevel() + y, z), true);
                 }
             }
         }
-
     }
 }

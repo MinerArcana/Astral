@@ -1,5 +1,6 @@
 package com.alan199921.astral;
 
+import com.alan199921.astral.capabilities.inner_realm_chunk_claim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid=Astral.MOD_ID, bus= Mod.EventBusSubscriber.Bus.FORGE)
 public class CapabilitiesEventHandler {
     private static final ResourceLocation INNER_REALM_TELEPORTER = new ResourceLocation(Astral.MOD_ID, "inner_realm_teleporter");
+    private static final ResourceLocation INNER_REALM_CHUNK_CLAIM = new ResourceLocation(Astral.MOD_ID, "inner_realm_chunk_claim");
 
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e)
@@ -18,7 +20,7 @@ public class CapabilitiesEventHandler {
         if (world != null)
         {
             e.addCapability(INNER_REALM_TELEPORTER, new InnerRealmTeleporterProvider());
-            System.out.println("Attached inner realm teleporter capability!");
+            e.addCapability(INNER_REALM_CHUNK_CLAIM, new InnerRealmChunkClaimProvider());
         }
     }
 }

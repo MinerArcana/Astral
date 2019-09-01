@@ -7,10 +7,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.chunk.IChunk;
 
 public class InnerRealmUtils {
-    public InnerRealmUtils() {
-    }
-
-    public void generateInnerRealmSpawnChunk(IWorld iWorld, IChunk iChunk) {
+    public void generateInnerRealmChunk(IWorld iWorld, IChunk iChunk) {
         int x;
         int y;
         int z;

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -29,5 +30,10 @@ public class EgoMembrane extends Block {
             TeleportationTools.changeDim((ServerPlayerEntity) player, pos, player.getSpawnDimension());
         }
         super.harvestBlock(worldIn, player, pos, state, te, stack);
+    }
+
+    @Override
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.east()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.west()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.north()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.south()).getBlock().equals(ModBlocks.egoMembrane);
     }
 }
