@@ -2,8 +2,13 @@ package com.alan199921.astral.capabilities.inner_realm_chunk_claim;
 
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.IChunk;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,5 +67,32 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
             claimedChunks.add(chunk);
             this.claimedChunksMap.put(playerID, claimedChunks);
         }
+    }
+
+    @Override
+    public INBT serializeNBT() {
+        CompoundNBT playerChunkMap = new CompoundNBT();
+        for (UUID uuid : claimedChunksMap.keySet()) {
+            ListNBT claimedChunks = new ListNBT();
+            claimedChunksMap.get(uuid)
+                    .forEach(chunkPos -> claimedChunks.add(NBTUtil.writeBlockPos(chunkPos.asBlockPos())));
+            playerChunkMap.put(uuid.toString(), claimedChunks);
+        }
+        return new CompoundNBT().put("claimedChunks", playerChunkMap);
+    }
+
+    @Override
+    public void deserializeNBT(INBT nbt) {
+        HashMap<UUID, ArrayList<ChunkPos>> claimedChunkMap = new HashMap<>();
+        CompoundNBT compoundNBT = (CompoundNBT) nbt;
+        CompoundNBT claimedChunks = (CompoundNBT) compoundNBT.get("claimedChunks");
+        for (String id : claimedChunks.keySet()) {
+            ArrayList<ChunkPos> chunkPosArrayList = new ArrayList<>();
+            for (INBT locationTag : claimedChunks.getList(id, Constants.NBT.TAG_COMPOUND)) {
+                chunkPosArrayList.add(new ChunkPos(NBTUtil.readBlockPos((CompoundNBT) locationTag)));
+            }
+            claimedChunkMap.put(UUID.fromString(id), chunkPosArrayList);
+        }
+        setClaimedChunkMap(claimedChunkMap);
     }
 }

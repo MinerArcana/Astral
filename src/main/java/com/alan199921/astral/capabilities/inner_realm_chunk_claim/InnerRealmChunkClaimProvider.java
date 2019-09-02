@@ -1,15 +1,16 @@
 package com.alan199921.astral.capabilities.inner_realm_chunk_claim;
 
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmChunkClaimProvider implements ICapabilityProvider {
+public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
     @CapabilityInject(IInnerRealmChunkClaimCapability.class)
     public static final Capability<IInnerRealmChunkClaimCapability> CHUNK_CLAIM_CAPABILITY = null;
 
@@ -28,4 +29,16 @@ public class InnerRealmChunkClaimProvider implements ICapabilityProvider {
             return LazyOptional.empty();
         }
     }
+
+
+    @Override
+    public INBT serializeNBT() {
+        return instance.serializeNBT();
+    }
+
+    @Override
+    public void deserializeNBT(INBT nbt) {
+        instance.deserializeNBT(nbt);
+    }
+
 }

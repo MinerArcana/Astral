@@ -1,6 +1,7 @@
 package com.alan199921.astral.capabilities.inner_realm_chunk_claim;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.IChunk;
 
@@ -14,4 +15,7 @@ public interface IInnerRealmChunkClaimCapability {
     HashMap<UUID, ArrayList<ChunkPos>> getClaimedChunkMap();
     void setClaimedChunkMap(HashMap<UUID, ArrayList<ChunkPos>> claimedChunkMap);
     void addChunkToPlayerClaims(PlayerEntity player, ChunkPos chunk);
+
+    INBT serializeNBT();
+    void deserializeNBT(INBT nbt);
 }
