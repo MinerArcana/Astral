@@ -73,12 +73,14 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
     public INBT serializeNBT() {
         CompoundNBT playerChunkMap = new CompoundNBT();
         for (UUID uuid : claimedChunksMap.keySet()) {
-            ListNBT claimedChunks = new ListNBT();
+            ListNBT claimedChunksList = new ListNBT();
             claimedChunksMap.get(uuid)
-                    .forEach(chunkPos -> claimedChunks.add(NBTUtil.writeBlockPos(chunkPos.asBlockPos())));
-            playerChunkMap.put(uuid.toString(), claimedChunks);
+                    .forEach(chunkPos -> claimedChunksList.add(NBTUtil.writeBlockPos(chunkPos.asBlockPos())));
+            playerChunkMap.put(uuid.toString(), claimedChunksList);
         }
-        return new CompoundNBT().put("claimedChunks", playerChunkMap);
+        CompoundNBT claimedChunks = new CompoundNBT();
+        claimedChunks.put("claimedChunks", playerChunkMap);
+        return claimedChunks;
     }
 
     @Override
