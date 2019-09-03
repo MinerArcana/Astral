@@ -29,7 +29,6 @@ public class IntrospectionMedicine extends Item {
         if(!worldIn.isRemote && entityLiving.dimension != DimensionType.byName(ModDimensions.INNER_REALM)) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entityLiving;
             worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(playerEntity));
-
         }
         return super.onItemUseFinish(stack, worldIn, entityLiving);
     }

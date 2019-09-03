@@ -5,6 +5,9 @@ import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.dimension.DimensionType;
@@ -47,5 +50,28 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap) {
         spawnLocations = uuidBlockPosHashMap;
+    }
+
+    @Override
+    public void deserializeNBT(INBT nbt) {
+        HashMap<UUID, BlockPos> spawnList = new HashMap<>();
+        CompoundNBT compoundNBT = (CompoundNBT) nbt;
+        CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
+        assert spawnLocations != null;
+        for (String id: spawnLocations.keySet()) {
+            spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocations.getCompound(id)));
+        }
+        setSpawnList(spawnList);
+    }
+
+    @Override
+    public INBT serializeNBT() {
+        CompoundNBT spawnLocationTag = new CompoundNBT();
+        for (UUID uuid: getSpawnList().keySet()) {
+            spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(getSpawnList().get(uuid)));
+        }
+        CompoundNBT spawnLocationsNBT = new CompoundNBT();
+        spawnLocationsNBT.put("spawnLocations", spawnLocationsNBT);
+        return spawnLocationsNBT;
     }
 }

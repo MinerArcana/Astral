@@ -25,7 +25,9 @@ public class InnerRealmChunkClaimStorage implements Capability.IStorage<IInnerRe
                     .forEach(chunkPos -> claimedChunks.add(NBTUtil.writeBlockPos(chunkPos.asBlockPos())));
             playerChunkMap.put(uuid.toString(), claimedChunks);
         }
-        return new CompoundNBT().put("claimedChunks", playerChunkMap);
+        CompoundNBT claimedChunks = new CompoundNBT();
+        claimedChunks.put("claimedChunks", playerChunkMap);
+        return claimedChunks;
     }
 
     @Override

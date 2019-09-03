@@ -1,6 +1,7 @@
 package com.alan199921.astral.capabilities.inner_realm_teleporter;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.INBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -13,4 +14,7 @@ public interface IInnerRealmTeleporterCapability {
     BlockPos getSpawn(UUID uniqueID);
     HashMap<UUID, BlockPos> getSpawnList();
     void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
+
+    void deserializeNBT(INBT nbt);
+    INBT serializeNBT();
 }
