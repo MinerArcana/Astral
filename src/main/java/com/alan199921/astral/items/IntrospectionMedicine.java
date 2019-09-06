@@ -1,7 +1,7 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.capabilities.inner_realm_teleporter.InnerRealmTeleporterProvider;
+import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

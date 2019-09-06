@@ -1,12 +1,19 @@
 package com.alan199921.astral.blocks;
 
+import com.alan199921.astral.Astral;
 import com.alan199921.astral.items.ModItems;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -14,12 +21,11 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SnowberryBush extends SweetBerryBushBlock {
+
+    public static final Tag<Block> SUSTAINS_SNOWBERRY_TAG = new BlockTags.Wrapper(new ResourceLocation(Astral.MOD_ID, "snowberry_sustain"));
+
     public SnowberryBush() {
         super(Properties.create(Material.PLANTS)
                 .sound(SoundType.PLANT)
@@ -31,8 +37,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
     @Override
     protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
         Block block = state.getBlock();
-        ArrayList<Block> sustainsSnowberry = new ArrayList<>(Arrays.asList(Blocks.SNOW_BLOCK, Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.GRASS_BLOCK, Blocks.GRAVEL, Blocks.PACKED_ICE));
-        return sustainsSnowberry.contains(block);
+        return SUSTAINS_SNOWBERRY_TAG.contains(block);
     }
 
     @Override

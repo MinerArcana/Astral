@@ -1,6 +1,6 @@
-package com.alan199921.astral.capabilities.inner_realm_teleporter;
+package com.alan199921.astral.capabilities.innerrealmteleporter;
 
-import com.alan199921.astral.capabilities.inner_realm_chunk_claim.InnerRealmChunkClaimProvider;
+import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -23,8 +24,9 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     public void newPlayer(ServerPlayerEntity player) {
         int distanceBetweenBoxes = 256;
         BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getServerWorld().getSeaLevel() + 1, 8);
-        IChunk spawnChunk = player.server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM)).getChunk(spawnLocation);
-        player.getEntityWorld().getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
+        ServerWorld innerRealmWorld = player.server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM));
+        IChunk spawnChunk = innerRealmWorld.getChunk(spawnLocation);
+        innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
         innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
         spawnLocations.put(player.getUniqueID(), spawnLocation);
     }
@@ -71,7 +73,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
             spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(getSpawnList().get(uuid)));
         }
         CompoundNBT spawnLocationsNBT = new CompoundNBT();
-        spawnLocationsNBT.put("spawnLocations", spawnLocationsNBT);
+        spawnLocationsNBT.put("spawnLocations", spawnLocationTag);
         return spawnLocationsNBT;
     }
 }

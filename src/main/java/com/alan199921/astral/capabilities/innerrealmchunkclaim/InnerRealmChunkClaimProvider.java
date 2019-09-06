@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.inner_realm_teleporter;
+package com.alan199921.astral.capabilities.innerrealmchunkclaim;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -10,25 +10,24 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmTeleporterProvider implements ICapabilitySerializable {
+public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
+    @CapabilityInject(IInnerRealmChunkClaimCapability.class)
+    public static final Capability<IInnerRealmChunkClaimCapability> CHUNK_CLAIM_CAPABILITY = null;
 
-    @CapabilityInject(IInnerRealmTeleporterCapability.class)
-    public static final Capability<IInnerRealmTeleporterCapability> TELEPORTER_CAPABILITY = null;
+    private IInnerRealmChunkClaimCapability instance = CHUNK_CLAIM_CAPABILITY.getDefaultInstance();
 
-    private IInnerRealmTeleporterCapability instance = TELEPORTER_CAPABILITY.getDefaultInstance();
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == TELEPORTER_CAPABILITY)
-        {
+        if (cap == CHUNK_CLAIM_CAPABILITY) {
             return LazyOptional.of(() -> instance).cast();
         }
-        else
-        {
+        else {
             return LazyOptional.empty();
         }
     }
+
 
     @Override
     public INBT serializeNBT() {
@@ -39,4 +38,5 @@ public class InnerRealmTeleporterProvider implements ICapabilitySerializable {
     public void deserializeNBT(INBT nbt) {
         instance.deserializeNBT(nbt);
     }
+
 }

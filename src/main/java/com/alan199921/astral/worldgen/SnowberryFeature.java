@@ -11,7 +11,6 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
     }
 
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @NonNull ChunkGenerator<? extends GenerationSettings> generator, @NonNull Random rand, @NonNull BlockPos pos, @NonNull NoFeatureConfig config) {
+    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull NoFeatureConfig config) {
         /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */

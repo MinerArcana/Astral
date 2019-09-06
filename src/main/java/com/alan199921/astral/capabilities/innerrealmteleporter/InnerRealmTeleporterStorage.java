@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.inner_realm_teleporter;
+package com.alan199921.astral.capabilities.innerrealmteleporter;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
