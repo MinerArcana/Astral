@@ -30,13 +30,9 @@ public class EnlightenmentKey extends Item {
             InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
             innerRealmUtils.destroyPlaneMeridian(world, meridianChunk, meridianDirection);
             IChunk chunkToGenerateBoxIn = innerRealmUtils.getAdjacentChunk(context.getPos(), meridianDirection, world);
-            context.getWorld().getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.handleChunkClaim(context.getPlayer(), chunkToGenerateBoxIn));
+            world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.handleChunkClaim(context.getPlayer(), chunkToGenerateBoxIn));
             innerRealmUtils.destroyPlaneMeridian(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
         }
         return super.onItemUse(context);
     }
-
-
-
-
 }

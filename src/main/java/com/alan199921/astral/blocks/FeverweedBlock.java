@@ -34,6 +34,7 @@ public class FeverweedBlock extends BushBlock {
         return OffsetType.XYZ;
     }
 
+    //Mushroom spread code
     @Override
     public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
