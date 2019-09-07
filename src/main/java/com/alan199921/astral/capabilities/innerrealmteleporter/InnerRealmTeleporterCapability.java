@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -23,22 +24,29 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
 
     @Override
     public void newPlayer(PlayerEntity player) {
-        int distanceBetweenBoxes = 256;
-        BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getEntityWorld().getSeaLevel() + 1, 8);
+        BlockPos spawnLocation = addPlayerToHashMap(player);
         World innerRealmWorld = player.getEntityWorld();
         IChunk spawnChunk = innerRealmWorld.getChunk(spawnLocation);
         innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
         innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
+    }
+
+    private BlockPos addPlayerToHashMap(PlayerEntity player) {
+        int distanceBetweenBoxes = 256;
+        BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getEntityWorld().getSeaLevel() + 1, 8);
         spawnLocations.put(player.getUniqueID(), spawnLocation);
+        return spawnLocation;
     }
 
     @Override
     public void teleport(PlayerEntity player) {
-        TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(0, 1000, 0), DimensionType.byName(ModDimensions.INNER_REALM));
+        ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM));
+        innerRealmWorld.getChunk(getSpawn(player));
+        ((ServerPlayerEntity) player).teleport(innerRealmWorld, 0, 1000, 0, player.rotationYaw, player.rotationPitch);
         if (!spawnLocations.containsKey(player.getUniqueID())) {
             newPlayer(player);
         }
-        BlockPos playerSpawn = getSpawn(player.getUniqueID());
+        BlockPos playerSpawn = getSpawn(player);
         if (!player.world.isRemote()){
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
             serverPlayerEntity.teleport(serverPlayerEntity.getServerWorld(), playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ(), player.rotationYaw, player.rotationPitch);
@@ -46,8 +54,14 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     }
 
     @Override
-    public BlockPos getSpawn(UUID uniqueID) {
-        return spawnLocations.get(uniqueID);
+    public BlockPos getSpawn(PlayerEntity player) {
+        UUID uniqueID = player.getUniqueID();
+        if (spawnLocations.containsKey(uniqueID)){
+            return spawnLocations.get(uniqueID);
+        }
+        else{
+            return addPlayerToHashMap(player);
+        }
     }
 
     @Override

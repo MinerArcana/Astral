@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface IInnerRealmTeleporterCapability extends INBTSerializable {
     void newPlayer(PlayerEntity player);
     void teleport(PlayerEntity player);
-    BlockPos getSpawn(UUID uniqueID);
+    BlockPos getSpawn(PlayerEntity player);
     HashMap<UUID, BlockPos> getSpawnList();
     void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
 
