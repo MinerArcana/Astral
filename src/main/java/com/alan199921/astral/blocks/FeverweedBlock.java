@@ -7,8 +7,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class FeverweedBlock extends BushBlock {
@@ -22,13 +22,13 @@ public class FeverweedBlock extends BushBlock {
         setRegistryName("feverweed_block");
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public OffsetType getOffsetType() {
         return OffsetType.XYZ;

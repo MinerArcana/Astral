@@ -11,7 +11,8 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class EnlightenmentKey extends Item {
     public EnlightenmentKey() {
@@ -20,7 +21,7 @@ public class EnlightenmentKey extends Item {
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public ActionResultType onItemUse(ItemUseContext context) {
         World world = context.getWorld();
         IChunk meridianChunk = world.getChunk(context.getPos());
@@ -28,10 +29,10 @@ public class EnlightenmentKey extends Item {
             BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
             int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
             InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
-            innerRealmUtils.destroyPlaneMeridian(world, meridianChunk, meridianDirection);
+            innerRealmUtils.destroyWall(world, meridianChunk, meridianDirection);
             IChunk chunkToGenerateBoxIn = innerRealmUtils.getAdjacentChunk(context.getPos(), meridianDirection, world);
             world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.handleChunkClaim(context.getPlayer(), chunkToGenerateBoxIn));
-            innerRealmUtils.destroyPlaneMeridian(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
+            innerRealmUtils.destroyWall(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
         }
         return super.onItemUse(context);
     }

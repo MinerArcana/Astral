@@ -30,8 +30,6 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
         innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
         innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
         spawnLocations.put(player.getUniqueID(), spawnLocation);
-        BlockPos playerSpawn = getSpawn(player.getUniqueID());
-        player.moveToBlockPosAndAngles(playerSpawn, player.rotationYaw, player.rotationPitch);
     }
 
     @Override
@@ -39,6 +37,11 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
         TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(0, 1000, 0), DimensionType.byName(ModDimensions.INNER_REALM));
         if (!spawnLocations.containsKey(player.getUniqueID())) {
             newPlayer(player);
+        }
+        BlockPos playerSpawn = getSpawn(player.getUniqueID());
+        if (!player.world.isRemote()){
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
+            serverPlayerEntity.teleport(serverPlayerEntity.getServerWorld(), playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ(), player.rotationYaw, player.rotationPitch);
         }
     }
 

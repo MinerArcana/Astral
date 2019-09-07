@@ -8,7 +8,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class PhysicalBodyEntity extends LivingEntity {
 
@@ -20,13 +21,13 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public Iterable<ItemStack> getArmorInventoryList() {
         return player.getArmorInventoryList();
     }
 
     @Override
-    @NonNull
+    @Nonnull
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
         return player.getItemStackFromSlot(slotIn);
     }

@@ -9,7 +9,8 @@ import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
-import org.checkerframework.checker.nullness.qual.NonNull;
+
+import javax.annotation.Nonnull;
 
 public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings> {
     public InnerRealmChunkGenerator(IWorld worldIn, BiomeProvider provider, GenerationSettings settingsIn) {
@@ -17,7 +18,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public void generateSurface(@NonNull IChunk chunk) {
+    public void generateSurface(@Nonnull IChunk chunk) {
         //This is a void world!
     }
 
@@ -27,7 +28,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public void makeBase(@NonNull IWorld iWorld, @NonNull IChunk iChunk) {
+    public void makeBase(@Nonnull IWorld iWorld, @Nonnull IChunk iChunk) {
         //Chunks are created as players spawn and unlock rooms
     }
 
@@ -38,7 +39,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public boolean hasStructure(Biome biomeIn, @NonNull Structure<? extends IFeatureConfig> structureIn) {
+    public boolean hasStructure(Biome biomeIn, @Nonnull Structure<? extends IFeatureConfig> structureIn) {
         return false;
     }
 }

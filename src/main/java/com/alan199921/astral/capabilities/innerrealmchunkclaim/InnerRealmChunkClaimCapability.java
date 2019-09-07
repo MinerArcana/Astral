@@ -29,8 +29,8 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
         for (int i = 0; i < 4; i++){
             IChunk adjacentChunk = innerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
             if (playerHasClaimedChunk(player, adjacentChunk.getPos())){
-                innerRealmUtils.destroyPlaneMeridian(player.getEntityWorld(), chunk, i);
-                innerRealmUtils.destroyPlaneMeridian(player.getEntityWorld(), adjacentChunk, (i + 2) % 4);
+                innerRealmUtils.destroyWall(player.getEntityWorld(), chunk, i);
+                innerRealmUtils.destroyWall(player.getEntityWorld(), adjacentChunk, (i + 2) % 4);
             }
         }
     }

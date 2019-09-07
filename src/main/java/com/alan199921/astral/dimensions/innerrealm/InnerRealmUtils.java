@@ -70,7 +70,7 @@ public class InnerRealmUtils {
         return compare >= a && compare <= b;
     }
 
-    public void destroyPlaneMeridian(World world, IChunk meridianChunk, int meridianDirection) {
+    public void destroyWall(World world, IChunk meridianChunk, int meridianDirection) {
         //North
         if (meridianDirection == 0){
             for (int x = 1; x < 15; x++) {
