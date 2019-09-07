@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public interface IInnerRealmTeleporterCapability extends INBTSerializable {
-    void newPlayer(PlayerEntity player);
+    void prepareSpawnChunk(PlayerEntity player);
     void teleport(PlayerEntity player);
     BlockPos getSpawn(PlayerEntity player);
     HashMap<UUID, BlockPos> getSpawnList();
