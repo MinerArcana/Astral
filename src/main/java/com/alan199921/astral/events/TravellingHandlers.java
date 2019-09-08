@@ -3,9 +3,13 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.effects.ModEffects;
+import com.alan199921.astral.entities.PhysicalBodyEntity;
+import com.alan199921.astral.entities.PhysicalBodyRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -14,6 +18,9 @@ import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.FMLPlayMessages;
+
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravellingHandlers {
@@ -76,6 +83,11 @@ public class TravellingHandlers {
                 p.noClip = true;
                 p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
                 p.sendPlayerAbilities();
+            }
+            if (!p.getEntityWorld().isRemote()){
+                Entity physicalBodyEntity = PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
+                UUID entityID = physicalBodyEntity.getUniqueID();
+                System.out.println(entityID);
             }
         }
     }
