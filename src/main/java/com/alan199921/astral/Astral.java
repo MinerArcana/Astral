@@ -4,6 +4,9 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.EgoMembrane;
 import com.alan199921.astral.blocks.FeverweedBlock;
 import com.alan199921.astral.blocks.SnowberryBush;
+import com.alan199921.astral.capabilities.bodylink.BodyLinkCapability;
+import com.alan199921.astral.capabilities.bodylink.BodyLinkStorage;
+import com.alan199921.astral.capabilities.bodylink.IBodyLinkCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimStorage;
@@ -64,9 +67,9 @@ public class Astral {
 
         @SubscribeEvent
         public static void init(final FMLCommonSetupEvent event) {
-            System.out.println("Registering capability!");
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
+            CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
         }
 
         @SubscribeEvent

@@ -2,6 +2,7 @@ package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralMeridian;
+import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.effects.ModEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyRegistry;
@@ -11,6 +12,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -71,12 +74,17 @@ public class TravellingHandlers {
                 p.abilities.setFlySpeed(.05F);
                 p.sendPlayerAbilities();
             }
+            if (!p.getEntityWorld().isRemote()){
+                ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) p;
+                ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
+                p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.killEntity(serverWorld));
+            }
         }
     }
 
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
-        if (event.getPotionEffect().getPotion().equals(ModEffects.astralEffect) && event.getEntityLiving() instanceof PlayerEntity) {
+        if (event.getPotionEffect().getPotion().equals(ModEffects.astralEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(ModEffects.astralEffect)) {
             PlayerEntity p = (PlayerEntity) event.getEntityLiving();
             if (!p.abilities.isCreativeMode) {
                 p.abilities.allowFlying = true;
@@ -87,7 +95,7 @@ public class TravellingHandlers {
             if (!p.getEntityWorld().isRemote()){
                 Entity physicalBodyEntity = PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 UUID entityID = physicalBodyEntity.getUniqueID();
-                System.out.println(entityID);
+                p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
             }
         }
     }
