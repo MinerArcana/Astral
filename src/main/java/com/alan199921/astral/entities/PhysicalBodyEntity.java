@@ -9,28 +9,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-
 public class PhysicalBodyEntity extends LivingEntity {
-
-    private PlayerEntity player;
-
-    public PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World p_i48577_2_, PlayerEntity player) {
-        super(type, p_i48577_2_);
-        this.player = player;
+    protected PhysicalBodyEntity(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {
+        super(p_i48577_1_, p_i48577_2_);
     }
 
-    @Override
-    @Nonnull
-    public Iterable<ItemStack> getArmorInventoryList() {
-        return player.getArmorInventoryList();
-    }
+
 
     @Override
-    @Nonnull
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
-        return player.getItemStackFromSlot(slotIn);
+        return null;
     }
+
 
     @Override
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
@@ -39,12 +29,18 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     @Override
     public HandSide getPrimaryHand() {
-        return player.getPrimaryHand();
+        return HandSide.LEFT;
     }
+
 
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(player.getMaxHealth());
+        getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorInventoryList() {
+        return null;
     }
 }
