@@ -93,9 +93,10 @@ public class TravellingHandlers {
                 p.sendPlayerAbilities();
             }
             if (!p.getEntityWorld().isRemote()){
-                Entity physicalBodyEntity = PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
+                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 UUID entityID = physicalBodyEntity.getUniqueID();
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
+                physicalBodyEntity.setName(event.getEntity().getScoreboardName());
             }
         }
     }
