@@ -41,6 +41,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
         try {
             PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) world.getEntityByUuid(linkedBodyID);
             NonNullList<ItemStack> inventory = physicalBodyEntity.getInventory();
+            physicalBodyEntity.onKillCommand();
             physicalBodyEntity.attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
             return inventory;
         }

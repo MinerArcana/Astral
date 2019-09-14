@@ -13,6 +13,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.NonNullList;
@@ -104,9 +105,11 @@ public class TravellingHandlers {
 
                     //Get the inventory and transfer items
                     NonNullList<ItemStack> bodyInventory = cap.killEntity(serverWorld);
+                    PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     for (ItemStack stack : bodyInventory) {
                         playerEntity.addItemStackToInventory(stack);
                     }
+                    physicalBodyEntity.getArmorInventoryList().forEach(itemStack -> playerEntity.setItemStackToSlot(itemStack.getEquipmentSlot(), itemStack));
                 });
             }
         }
@@ -131,6 +134,11 @@ public class TravellingHandlers {
                 for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
                     physicalBodyEntity.insertItem(i++, stack, false);
                 }
+                ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
+                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory){
+                    physicalBodyEntity.setItemStackToSlot(stack.getEquipmentSlot(), stack);
+                }
+                ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
             }
         }
     }
