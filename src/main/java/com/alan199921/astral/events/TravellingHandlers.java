@@ -13,6 +13,9 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Effect;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -21,7 +24,6 @@ import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.FMLPlayMessages;
 
 import java.util.UUID;
 
@@ -41,9 +43,7 @@ public class TravellingHandlers {
             event.setCanceled(true);
         }
         if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()) {
-            LivingEntity livingSource = (LivingEntity) event.getSource().getImmediateSource();
-
-            if (isAstralVsNonAstral(livingSource, event.getEntityLiving())) {
+            if (isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
                 event.setCanceled(true);
             }
         }
@@ -65,19 +65,49 @@ public class TravellingHandlers {
     }
 
     @SubscribeEvent
-    public static void travelEffectExpire(PotionEvent.PotionRemoveEvent event) {
-        if (event.getPotionEffect().getPotion().equals(ModEffects.astralEffect) && event.getEntityLiving() instanceof PlayerEntity) {
-            PlayerEntity p = (PlayerEntity) event.getEntityLiving();
-            if (!p.abilities.isCreativeMode){
-                p.abilities.allowFlying = false;
-                p.noClip = false;
-                p.abilities.setFlySpeed(.05F);
-                p.sendPlayerAbilities();
+    public static void travelEffectExpire(PotionEvent.PotionExpiryEvent event) {
+        handleAstralEffectEnd(event.getPotionEffect().getPotion(), event.getEntityLiving());
+    }
+
+    @SubscribeEvent
+    public static void travelEffectRemove(PotionEvent.PotionRemoveEvent event){
+        handleAstralEffectEnd(event.getPotionEffect().getPotion(), event.getEntityLiving());
+    }
+
+    /**
+     * When the Astral Travel potion effect ends, remove the player's flying abilities, teleport them to the body,
+     * transfer the body's inventory into the player's inventory, and then kill it.
+     * @param potionEffect The potion effect that is ending
+     * @param entityLiving The entity that with the potion effect
+     */
+    private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
+        if (potionEffect.equals(ModEffects.astralEffect) && entityLiving instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) entityLiving;
+            if (!playerEntity.abilities.isCreativeMode){
+                playerEntity.abilities.allowFlying = false;
+                playerEntity.noClip = false;
+                playerEntity.abilities.setFlySpeed(.05F);
+                playerEntity.sendPlayerAbilities();
             }
-            if (!p.getEntityWorld().isRemote()){
-                ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) p;
+            //Only run serverside
+            if (!playerEntity.getEntityWorld().isRemote()){
+                //Get server versions of world and player
+                ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-                p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.killEntity(serverWorld));
+
+                //Retrieve the body entity object  from the capability
+                playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
+                    PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
+
+                    //Teleport the player
+                    serverPlayerEntity.teleport(serverWorld, body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
+
+                    //Get the inventory and transfer items
+                    NonNullList<ItemStack> bodyInventory = cap.killEntity(serverWorld);
+                    for (ItemStack stack : bodyInventory) {
+                        playerEntity.addItemStackToInventory(stack);
+                    }
+                });
             }
         }
     }
@@ -97,6 +127,10 @@ public class TravellingHandlers {
                 UUID entityID = physicalBodyEntity.getUniqueID();
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
                 physicalBodyEntity.setName(event.getEntity().getScoreboardName());
+                int i = 0;
+                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
+                    physicalBodyEntity.insertItem(i++, stack, false);
+                }
             }
         }
     }

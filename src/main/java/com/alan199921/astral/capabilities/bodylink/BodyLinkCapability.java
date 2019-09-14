@@ -1,10 +1,13 @@
 package com.alan199921.astral.capabilities.bodylink;
 
+import com.alan199921.astral.entities.PhysicalBodyEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Objects;
@@ -34,12 +37,16 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     }
 
     @Override
-    public void killEntity(ServerWorld world){
+    public NonNullList<ItemStack> killEntity(ServerWorld world){
         try {
-            Objects.requireNonNull(world.getEntityByUuid(linkedBodyID)).attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
+            PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) world.getEntityByUuid(linkedBodyID);
+            NonNullList<ItemStack> inventory = physicalBodyEntity.getInventory();
+            physicalBodyEntity.attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
+            return inventory;
         }
         catch (NullPointerException e){
             System.out.println("Entity is already dead!");
         }
+        return NonNullList.withSize(6*7, ItemStack.EMPTY);
     }
 }
