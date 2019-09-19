@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 public class ClientProxy implements IProxy {
     @Override
     public void init() {
-        RenderingRegistry.registerEntityRenderingHandler(PhysicalBodyEntity.class, (IRenderFactory<Entity>) manager -> new PhysicalBodyEntityRenderer(manager, new PlayerModel(0.5f, false), 0.5f));
+
     }
 
     @Override

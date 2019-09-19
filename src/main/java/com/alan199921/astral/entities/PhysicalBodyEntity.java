@@ -1,5 +1,6 @@
 package com.alan199921.astral.entities;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -81,5 +82,9 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
 
     public NonNullList<ItemStack> getInventory() {
         return mainInventory;
+    }
+
+    public GameProfile getGameProfile() {
+        return null;
     }
 }

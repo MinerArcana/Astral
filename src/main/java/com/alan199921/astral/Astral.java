@@ -15,6 +15,8 @@ import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTelepor
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.effects.AstralEffect;
+import com.alan199921.astral.entities.PhysicalBodyEntity;
+import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.items.EnlightenmentKey;
 import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
@@ -31,13 +33,17 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -106,6 +112,14 @@ public class Astral {
         @SubscribeEvent
         public static void onPotionRegistry(final RegistryEvent.Register<Potion> event){
             event.getRegistry().register(new AstralTravelPotion());
+        }
+    }
+
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    public static class ClientEvents{
+        @SubscribeEvent
+        public static void registerModels(FMLClientSetupEvent event){
+            RenderingRegistry.registerEntityRenderingHandler(PhysicalBodyEntity.class, renderer -> new PhysicalBodyEntityRenderer(renderer, 0.5f));
         }
     }
 }
