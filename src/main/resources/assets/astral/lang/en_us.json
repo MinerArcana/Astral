@@ -6,5 +6,9 @@
   "block.astral.feverweed_block": "Feverweed",
   "block.astral.snowberry_bush": "Snowberry Bush",
   "itemGroup.astral": "Astral",
-  "effect.astral.astral_travel": "Astral Travel"
+  "effect.astral.astral_travel": "Astral Travel",
+  "item.minecraft.potion.effect.astral_travel_potion": "Potion of Astral Travel",
+  "item.minecraft.splash_potion.effect.astral_travel_potion": "Splash Potion of Astral Travel",
+  "item.minecraft.tipped_arrow.effect.astral_travel_potion": "Arrow of Astral Travel",
+  "item.minecraft.lingering_potion.effect.astral_travel_potion": "Lingering Potion of Astral Travel"
 }
