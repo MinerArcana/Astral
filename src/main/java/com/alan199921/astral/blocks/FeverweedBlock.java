@@ -40,7 +40,7 @@ public class FeverweedBlock extends BushBlock {
         if (random.nextInt(25) == 0) {
             int i = 5;
 
-            for(BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
+            for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
                 if (worldIn.getBlockState(blockpos).getBlock() == this) {
                     --i;
                     if (i <= 0) {
@@ -51,7 +51,7 @@ public class FeverweedBlock extends BushBlock {
 
             BlockPos blockpos1 = pos.add(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
 
-            for(int k = 0; k < 4; ++k) {
+            for (int k = 0; k < 4; ++k) {
                 if (worldIn.isAirBlock(blockpos1) && state.isValidPosition(worldIn, blockpos1)) {
                     pos = blockpos1;
                 }

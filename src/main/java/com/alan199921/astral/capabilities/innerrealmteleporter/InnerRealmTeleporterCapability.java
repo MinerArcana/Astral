@@ -29,7 +29,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
         World innerRealmWorld = player.getEntityWorld();
-        if (!innerRealmWorld.dimension.getType().equals(DimensionType.byName(ModDimensions.INNER_REALM))){
+        if (!innerRealmWorld.dimension.getType().equals(DimensionType.byName(ModDimensions.INNER_REALM))) {
             System.out.println("Player is not in the inner realm!");
         }
         IChunk spawnChunk = innerRealmWorld.getChunk(getSpawn(player));
@@ -73,7 +73,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
             prepareSpawnChunk(player);
         }
 
-        if (!innerRealmWorld.isRemote()){
+        if (!innerRealmWorld.isRemote()) {
             ((ServerPlayerEntity) player).teleport((ServerWorld) innerRealmWorld, playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ(), player.rotationYaw, player.rotationPitch);
         }
 

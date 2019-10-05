@@ -26,7 +26,7 @@ public class EgoMembrane extends Block {
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
         worldIn.setBlockState(pos, ModBlocks.egoMembrane.getDefaultState(), 2);
-        if (!worldIn.isRemote()){
+        if (!worldIn.isRemote()) {
             TeleportationTools.changeDim((ServerPlayerEntity) player, pos, player.getSpawnDimension());
         }
         super.harvestBlock(worldIn, player, pos, state, te, stack);

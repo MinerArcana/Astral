@@ -17,7 +17,7 @@ public class InnerRealmTeleporterStorage implements Capability.IStorage<IInnerRe
     @Override
     public INBT writeNBT(Capability<IInnerRealmTeleporterCapability> capability, IInnerRealmTeleporterCapability instance, Direction side) {
         CompoundNBT spawnLocationTag = new CompoundNBT();
-        for (UUID uuid: instance.getSpawnList().keySet()) {
+        for (UUID uuid : instance.getSpawnList().keySet()) {
             spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(instance.getSpawnList().get(uuid)));
         }
         return new CompoundNBT().put("spawnLocations", spawnLocationTag);
@@ -29,7 +29,7 @@ public class InnerRealmTeleporterStorage implements Capability.IStorage<IInnerRe
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
         CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
         assert spawnLocations != null;
-        for (String id: spawnLocations.keySet()) {
+        for (String id : spawnLocations.keySet()) {
             spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocations.getCompound(id)));
         }
         instance.setSpawnList(spawnList);

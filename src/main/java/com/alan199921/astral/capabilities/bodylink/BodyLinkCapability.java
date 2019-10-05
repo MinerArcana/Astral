@@ -10,7 +10,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.server.ServerWorld;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class BodyLinkCapability implements IBodyLinkCapability {
@@ -37,17 +36,16 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     }
 
     @Override
-    public NonNullList<ItemStack> killEntity(ServerWorld world){
+    public NonNullList<ItemStack> killEntity(ServerWorld world) {
         try {
             PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) world.getEntityByUuid(linkedBodyID);
             NonNullList<ItemStack> inventory = physicalBodyEntity.getInventory();
             physicalBodyEntity.onKillCommand();
             physicalBodyEntity.attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
             return inventory;
-        }
-        catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("Entity is already dead!");
         }
-        return NonNullList.withSize(6*7, ItemStack.EMPTY);
+        return NonNullList.withSize(6 * 7, ItemStack.EMPTY);
     }
 }

@@ -27,8 +27,6 @@ import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
 import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
@@ -40,7 +38,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -58,12 +56,12 @@ public class Astral {
     public Astral() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        Config.register(ModLoadingContext.get());
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
         proxy.init();
-
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -105,20 +103,20 @@ public class Astral {
         }
 
         @SubscribeEvent
-        public static void onEffectRegistry(final RegistryEvent.Register<Effect> event){
+        public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
             event.getRegistry().register(new AstralEffect());
         }
 
         @SubscribeEvent
-        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event){
+        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
             event.getRegistry().register(new AstralTravelPotion());
         }
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientEvents{
+    public static class ClientEvents {
         @SubscribeEvent
-        public static void registerModels(FMLClientSetupEvent event){
+        public static void registerModels(FMLClientSetupEvent event) {
             RenderingRegistry.registerEntityRenderingHandler(PhysicalBodyEntity.class, renderer -> new PhysicalBodyEntityRenderer(renderer, 0.5f));
         }
     }

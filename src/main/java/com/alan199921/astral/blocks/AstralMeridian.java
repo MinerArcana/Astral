@@ -21,7 +21,7 @@ public class AstralMeridian extends Block {
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
-        .hardnessAndResistance(99F));
+                .hardnessAndResistance(99F));
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
         setRegistryName("astral_meridian");

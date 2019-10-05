@@ -7,13 +7,11 @@ import com.alan199921.astral.effects.ModEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.NonNullList;
@@ -71,27 +69,28 @@ public class TravellingHandlers {
     }
 
     @SubscribeEvent
-    public static void travelEffectRemove(PotionEvent.PotionRemoveEvent event){
+    public static void travelEffectRemove(PotionEvent.PotionRemoveEvent event) {
         handleAstralEffectEnd(event.getPotionEffect().getPotion(), event.getEntityLiving());
     }
 
     /**
      * When the Astral Travel potion effect ends, remove the player's flying abilities, teleport them to the body,
      * transfer the body's inventory into the player's inventory, and then kill it.
+     *
      * @param potionEffect The potion effect that is ending
      * @param entityLiving The entity that with the potion effect
      */
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
         if (potionEffect.equals(ModEffects.astralEffect) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            if (!playerEntity.abilities.isCreativeMode){
+            if (!playerEntity.abilities.isCreativeMode) {
                 playerEntity.abilities.allowFlying = false;
                 playerEntity.noClip = false;
                 playerEntity.abilities.setFlySpeed(.05F);
                 playerEntity.sendPlayerAbilities();
             }
             //Only run serverside
-            if (!playerEntity.getEntityWorld().isRemote()){
+            if (!playerEntity.getEntityWorld().isRemote()) {
                 //Get server versions of world and player
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
@@ -125,7 +124,7 @@ public class TravellingHandlers {
                 p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
                 p.sendPlayerAbilities();
             }
-            if (!p.getEntityWorld().isRemote()){
+            if (!p.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 UUID entityID = physicalBodyEntity.getUniqueID();
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
@@ -135,7 +134,7 @@ public class TravellingHandlers {
                     physicalBodyEntity.insertItem(i++, stack, false);
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
-                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory){
+                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory) {
                     physicalBodyEntity.setItemStackToSlot(stack.getEquipmentSlot(), stack);
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
@@ -144,9 +143,9 @@ public class TravellingHandlers {
     }
 
     @SubscribeEvent
-    public static void astralBreakBlock(PlayerEvent.BreakSpeed event){
+    public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
         //Placeholder properties
-        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(ModEffects.astralEffect)){
+        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(ModEffects.astralEffect)) {
             event.setNewSpeed(0f);
         }
     }

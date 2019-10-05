@@ -45,7 +45,7 @@ public class TeleportationTools {
         playerlist.sendWorldInfo(player, serverworld1);
         playerlist.sendInventory(player);
 
-        for(EffectInstance effectinstance : player.getActivePotionEffects()) {
+        for (EffectInstance effectinstance : player.getActivePotionEffects()) {
             player.connection.sendPacket(new SPlayEntityEffectPacket(player.getEntityId(), effectinstance));
         }
 

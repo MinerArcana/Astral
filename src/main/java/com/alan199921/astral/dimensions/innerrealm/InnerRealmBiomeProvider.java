@@ -60,4 +60,5 @@ public class InnerRealmBiomeProvider extends BiomeProvider {
     @Override
     public Set<Biome> getBiomesInSquare(int centerX, int centerZ, int sideLength) {
         return Sets.newHashSet(this.biome);
-    }}
+    }
+}

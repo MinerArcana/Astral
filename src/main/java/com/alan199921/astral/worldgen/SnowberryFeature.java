@@ -32,27 +32,26 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         boolean generatedSomething = false;
         ArrayList<BlockPos> positionsToGen = new ArrayList<>();
         BlockState blockstate = ModBlocks.snowberryBush.getDefaultState();
-        for(int tries = 0; tries < 32; ++tries) {
+        for (int tries = 0; tries < 32; ++tries) {
             BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
             //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
             if (worldIn.isAirBlock(blockpos) && (!worldIn.getDimension().isNether() || blockpos.getY() < worldIn.getWorld().getDimension().getHeight()) && blockstate.isValidPosition(worldIn, blockpos)) {
                 positionsToGen.add(blockpos);
-            }
-            else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+            } else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                 positionsToGen.add(blockpos.down());
             }
         }
 
         int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
-        for (int i = 0; i < numberOfBushesInFeature; i++){
+        for (int i = 0; i < numberOfBushesInFeature; i++) {
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
             worldIn.setBlockState(positionsToGen.get(i), ModBlocks.snowberryBush.getDefaultState(), 2);
             generatedSomething = true;
         }
-        for (int i = 0; i < numberOfBushesInFeature; i++){
+        for (int i = 0; i < numberOfBushesInFeature; i++) {
             for (BlockPos adjacentPos : getAdjacentBlocks(positionsToGen.get(i))) {
                 int layerLevel = rand.nextInt(4);
-                if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)){
+                if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
                     worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
                 }
             }
@@ -60,7 +59,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         return generatedSomething;
     }
 
-    private List<BlockPos> getAdjacentBlocks(BlockPos blockpos){
+    private List<BlockPos> getAdjacentBlocks(BlockPos blockpos) {
         return new ArrayList<>(Arrays.asList(blockpos.east(), blockpos.west(), blockpos.north(), blockpos.south(), blockpos.north().east(), blockpos.north().west(), blockpos.south().east(), blockpos.south().west()));
     }
 }

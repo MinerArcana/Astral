@@ -8,6 +8,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public interface IBodyLinkCapability extends INBTSerializable {
     Entity getLinkedEntity(ServerWorld world);
+
     void setLinkedBodyID(Entity entity);
+
     NonNullList<ItemStack> killEntity(ServerWorld world);
 }

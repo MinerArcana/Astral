@@ -20,12 +20,9 @@ public class InnerRealmTeleporterProvider implements ICapabilitySerializable {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == TELEPORTER_CAPABILITY)
-        {
+        if (cap == TELEPORTER_CAPABILITY) {
             return LazyOptional.of(() -> instance).cast();
-        }
-        else
-        {
+        } else {
             return LazyOptional.empty();
         }
     }

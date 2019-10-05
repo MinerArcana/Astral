@@ -12,11 +12,16 @@ import java.util.UUID;
 
 public interface IInnerRealmChunkClaimCapability extends INBTSerializable {
     void handleChunkClaim(PlayerEntity player, IChunk chunk);
+
     boolean playerHasClaimedChunk(PlayerEntity player, ChunkPos chunk);
+
     HashMap<UUID, ArrayList<ChunkPos>> getClaimedChunkMap();
+
     void setClaimedChunkMap(HashMap<UUID, ArrayList<ChunkPos>> claimedChunkMap);
+
     void addChunkToPlayerClaims(PlayerEntity player, ChunkPos chunk);
 
     INBT serializeNBT();
+
     void deserializeNBT(INBT nbt);
 }

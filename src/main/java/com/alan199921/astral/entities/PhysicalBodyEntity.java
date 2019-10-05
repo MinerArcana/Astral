@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
-    private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6*7, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
 
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {
         super(p_i48577_1_, p_i48577_2_);
@@ -43,7 +43,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     }
 
 
-    public void setName(String name){
+    public void setName(String name) {
         this.setCustomName(new StringTextComponent(name + "'s Body"));
     }
 

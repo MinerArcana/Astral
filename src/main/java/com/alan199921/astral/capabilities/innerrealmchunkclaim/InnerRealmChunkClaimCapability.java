@@ -22,13 +22,13 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
         //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
         //break down the appropriate walls
         InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
-        if (!playerHasClaimedChunk(player, chunk.getPos())){
+        if (!playerHasClaimedChunk(player, chunk.getPos())) {
             innerRealmUtils.generateInnerRealmChunk(player.getEntityWorld(), chunk);
         }
         addChunkToPlayerClaims(player, chunk.getPos());
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 4; i++) {
             IChunk adjacentChunk = innerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
-            if (playerHasClaimedChunk(player, adjacentChunk.getPos())){
+            if (playerHasClaimedChunk(player, adjacentChunk.getPos())) {
                 innerRealmUtils.destroyWall(player.getEntityWorld(), chunk, i);
                 innerRealmUtils.destroyWall(player.getEntityWorld(), adjacentChunk, (i + 2) % 4);
             }
@@ -38,7 +38,7 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
     @Override
     public boolean playerHasClaimedChunk(PlayerEntity player, ChunkPos chunk) {
         for (ArrayList<ChunkPos> claimedChunks : claimedChunksMap.values()) {
-            if (claimedChunks.contains(chunk)){
+            if (claimedChunks.contains(chunk)) {
                 return true;
             }
         }
@@ -59,10 +59,9 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
     public void addChunkToPlayerClaims(PlayerEntity player, ChunkPos chunk) {
         UUID playerID = player.getUniqueID();
         //Add player to HashMap
-        if (claimedChunksMap.containsKey(playerID)){
+        if (claimedChunksMap.containsKey(playerID)) {
             claimedChunksMap.get(playerID).add(chunk);
-        }
-        else{
+        } else {
             ArrayList<ChunkPos> claimedChunks = new ArrayList<>();
             claimedChunks.add(chunk);
             this.claimedChunksMap.put(playerID, claimedChunks);

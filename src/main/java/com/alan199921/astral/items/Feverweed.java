@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
-public class Feverweed extends BlockNamedItem  {
+public class Feverweed extends BlockNamedItem {
     public Feverweed() {
         super(ModBlocks.feverweedBlock.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)

@@ -1,7 +1,5 @@
 package com.alan199921.astral.entities;
 
-import com.alan199921.astral.Astral;
-import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
@@ -39,9 +37,9 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer {
 
     @Override
     protected void renderLivingAt(LivingEntity e, double x, double y, double z) {
-        super.renderLivingAt(e,x,y,z); // translation
-        GlStateManager.rotated(90,1F,0F,0F); // face-down
-        GlStateManager.rotated(e.getRotationYawHead(),0F,0F,1F); // turn
+        super.renderLivingAt(e, x, y, z); // translation
+        GlStateManager.rotated(90, 1F, 0F, 0F); // face-down
+        GlStateManager.rotated(e.getRotationYawHead(), 0F, 0F, 1F); // turn
         GlStateManager.translated(0F, -0.85F, -0.125F); // center
     }
 }

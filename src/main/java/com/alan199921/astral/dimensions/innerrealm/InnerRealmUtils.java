@@ -8,17 +8,17 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
 
 public class InnerRealmUtils {
-    public IChunk getAdjacentChunk(BlockPos blockPos, int direction, IWorld world){
-        if (direction == 0){
+    public IChunk getAdjacentChunk(BlockPos blockPos, int direction, IWorld world) {
+        if (direction == 0) {
             return world.getChunk(blockPos.add(0, 0, -16));
         }
-        if (direction == 1){
+        if (direction == 1) {
             return world.getChunk(blockPos.add(-16, 0, 0));
         }
-        if (direction == 2){
+        if (direction == 2) {
             return world.getChunk(blockPos.add(0, 0, 16));
         }
-        if (direction == 3){
+        if (direction == 3) {
             return world.getChunk(blockPos.add(16, 0, 0));
         }
         System.out.println("Invalid direction, returning north!");
@@ -72,7 +72,7 @@ public class InnerRealmUtils {
 
     public void destroyWall(World world, IChunk meridianChunk, int meridianDirection) {
         //North
-        if (meridianDirection == 0){
+        if (meridianDirection == 0) {
             for (int x = 1; x < 15; x++) {
                 for (int y = 1; y < 15; y++) {
                     world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), false);
@@ -81,7 +81,7 @@ public class InnerRealmUtils {
         }
 
         //South
-        if (meridianDirection == 2){
+        if (meridianDirection == 2) {
             for (int x = 1; x < 15; x++) {
                 for (int y = 1; y < 15; y++) {
                     world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), false);
@@ -90,7 +90,7 @@ public class InnerRealmUtils {
         }
 
         //East
-        else if (meridianDirection == 1){
+        else if (meridianDirection == 1) {
             for (int y = 1; y < 15; y++) {
                 for (int z = 1; z < 15; z++) {
                     world.destroyBlock(meridianChunk.getPos().getBlock(0, world.getSeaLevel() + y, z), false);
@@ -99,7 +99,7 @@ public class InnerRealmUtils {
         }
 
         //West
-        else if (meridianDirection == 3){
+        else if (meridianDirection == 3) {
             for (int y = 1; y < 15; y++) {
                 for (int z = 1; z < 15; z++) {
                     world.destroyBlock(meridianChunk.getPos().getBlock(15, world.getSeaLevel() + y, z), false);
