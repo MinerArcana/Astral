@@ -1,6 +1,7 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.Config;
 import com.alan199921.astral.blocks.ModBlocks;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Food;
@@ -17,8 +18,8 @@ public class Feverweed extends BlockNamedItem {
                         .saturation(1)
                         .hunger(1)
                         .fastToEat()
-                        .effect(new EffectInstance(Effects.LUCK, 15 * 20, 1), 1)
-                        .effect(new EffectInstance(Effects.HUNGER, 15 * 20, 1), 1)
+                        .effect(new EffectInstance(Effects.LUCK, Config.COMMON.feverweedLuckDuration.get(), 1), 1)
+                        .effect(new EffectInstance(Effects.HUNGER, Config.COMMON.feverweedHungerDuration.get(), 1), 1)
                         .build()));
         setRegistryName("feverweed");
     }
