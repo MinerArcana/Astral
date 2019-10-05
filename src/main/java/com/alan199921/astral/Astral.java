@@ -13,6 +13,7 @@ import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkCl
 import com.alan199921.astral.capabilities.innerrealmteleporter.IInnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterStorage;
+import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.dimensions.ModDimensions;
 import com.alan199921.astral.effects.AstralEffect;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
@@ -33,6 +34,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -41,6 +43,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -57,8 +60,9 @@ public class Astral {
     public Astral() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        Config.register(ModLoadingContext.get());
-        Config.loadConfig(Config.commonSpec, FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
+        ForgeConfigSpec astralConfigSpec = AstralConfig.initialize();
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, astralConfigSpec);
+        AstralConfig.loadConfig(astralConfigSpec, FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
     }
 
     private void setup(final FMLCommonSetupEvent event) {
