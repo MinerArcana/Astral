@@ -54,12 +54,13 @@ import net.minecraftforge.fml.loading.FMLPaths;
 public class Astral {
     public static final String MOD_ID = "astral";
 
-    public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
     public static ModSetup setup = new ModSetup();
 
     public Astral() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+
+        // Register and load configs
         ForgeConfigSpec astralConfigSpec = AstralConfig.initialize();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, astralConfigSpec);
         AstralConfig.loadConfig(astralConfigSpec, FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
@@ -67,7 +68,6 @@ public class Astral {
 
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
-        proxy.init();
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
