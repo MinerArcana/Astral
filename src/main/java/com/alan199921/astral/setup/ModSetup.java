@@ -1,6 +1,6 @@
 package com.alan199921.astral.setup;
 
-import com.alan199921.astral.blocks.ModBlocks;
+import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -12,7 +12,7 @@ public class ModSetup {
     public final ItemGroup astralItems = new ItemGroup("astral") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.snowberryBush);
+            return new ItemStack(AstralBlocks.snowberryBush);
         }
     };
 

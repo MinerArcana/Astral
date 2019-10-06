@@ -2,9 +2,9 @@ package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralMeridian;
-import com.alan199921.astral.blocks.ModBlocks;
+import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
-import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -25,9 +25,9 @@ public class EnlightenmentKey extends Item {
     @Nonnull
     public ActionResultType onItemUse(ItemUseContext context) {
         World world = context.getWorld();
-        if (world.dimension.getType().equals(DimensionType.byName(ModDimensions.INNER_REALM))) {
+        if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
             IChunk meridianChunk = world.getChunk(context.getPos());
-            if (world.getBlockState(context.getPos()).getBlock() == ModBlocks.astralMeridian) {
+            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.astralMeridian) {
                 BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
                 int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
                 InnerRealmUtils innerRealmUtils = new InnerRealmUtils();

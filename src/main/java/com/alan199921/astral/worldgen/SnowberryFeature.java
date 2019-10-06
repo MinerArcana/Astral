@@ -1,6 +1,6 @@
 package com.alan199921.astral.worldgen;
 
-import com.alan199921.astral.blocks.ModBlocks;
+import com.alan199921.astral.blocks.AstralBlocks;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +31,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
          */
         boolean generatedSomething = false;
         ArrayList<BlockPos> positionsToGen = new ArrayList<>();
-        BlockState blockstate = ModBlocks.snowberryBush.getDefaultState();
+        BlockState blockstate = AstralBlocks.snowberryBush.getDefaultState();
         for (int tries = 0; tries < 32; ++tries) {
             BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
             //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
@@ -45,7 +45,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
         for (int i = 0; i < numberOfBushesInFeature; i++) {
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-            worldIn.setBlockState(positionsToGen.get(i), ModBlocks.snowberryBush.getDefaultState(), 2);
+            worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.snowberryBush.getDefaultState(), 2);
             generatedSomething = true;
         }
         for (int i = 0; i < numberOfBushesInFeature; i++) {

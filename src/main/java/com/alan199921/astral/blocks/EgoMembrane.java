@@ -24,7 +24,7 @@ public class EgoMembrane extends Block {
 
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
-        worldIn.setBlockState(pos, ModBlocks.egoMembrane.getDefaultState(), 2);
+        worldIn.setBlockState(pos, AstralBlocks.egoMembrane.getDefaultState(), 2);
         if (!worldIn.isRemote()) {
             TeleportationTools.changeDim((ServerPlayerEntity) player, pos, player.getSpawnDimension());
         }
@@ -33,6 +33,6 @@ public class EgoMembrane extends Block {
 
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.east()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.west()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.north()).getBlock().equals(ModBlocks.egoMembrane) || worldIn.getBlockState(pos.south()).getBlock().equals(ModBlocks.egoMembrane);
+        return worldIn.getBlockState(pos.east()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.west()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.north()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.south()).getBlock().equals(AstralBlocks.egoMembrane);
     }
 }

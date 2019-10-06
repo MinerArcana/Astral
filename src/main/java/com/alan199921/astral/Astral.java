@@ -1,9 +1,5 @@
 package com.alan199921.astral;
 
-import com.alan199921.astral.blocks.AstralMeridian;
-import com.alan199921.astral.blocks.EgoMembrane;
-import com.alan199921.astral.blocks.FeverweedBlock;
-import com.alan199921.astral.blocks.SnowberryBush;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkCapability;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkStorage;
 import com.alan199921.astral.capabilities.bodylink.IBodyLinkCapability;
@@ -14,18 +10,12 @@ import com.alan199921.astral.capabilities.innerrealmteleporter.IInnerRealmTelepo
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.configs.AstralConfig;
-import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.effects.AstralEffect;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
-import com.alan199921.astral.items.EnlightenmentKey;
-import com.alan199921.astral.items.Feverweed;
-import com.alan199921.astral.items.IntrospectionMedicine;
-import com.alan199921.astral.items.Snowberry;
 import com.alan199921.astral.potions.AstralTravelPotion;
 import com.alan199921.astral.setup.ModSetup;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -74,32 +64,6 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
-        }
-
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-            // register a new block here
-            event.getRegistry().register(new SnowberryBush().setRegistryName("snowberry_bush"));
-            event.getRegistry().register(new FeverweedBlock().setRegistryName("feverweed_block"));
-            event.getRegistry().register(new EgoMembrane().setRegistryName("ego_membrane"));
-            event.getRegistry().register(new AstralMeridian().setRegistryName("astral_meridian"));
-        }
-
-        @SubscribeEvent
-        public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
-            new Item.Properties().group(setup.astralItems);
-            // register a new block here
-            event.getRegistry().register(new Snowberry().setRegistryName("snowberry"));
-            event.getRegistry().register(new Feverweed().setRegistryName("feverweed"));
-            event.getRegistry().register(new IntrospectionMedicine().setRegistryName("introspection_medicine"));
-            event.getRegistry().register(new EgoMembrane().asItem().setRegistryName("ego_membrane"));
-            event.getRegistry().register(new EnlightenmentKey().setRegistryName("enlightenment_key"));
-        }
-
-        @SubscribeEvent
-        public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
-            event.getRegistry().register(ModDimensions.innerRealm);
-            DimensionManager.registerDimension(new ResourceLocation(MOD_ID, "inner_realm"), ModDimensions.innerRealm, null, true);
         }
 
         @SubscribeEvent

@@ -12,11 +12,16 @@ import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGeneratorType;
 import net.minecraft.world.gen.GenerationSettings;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ModDimension;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.function.BiFunction;
 
-public class ModDimensions {
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+public class AstralDimensions {
     public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID + ":" + "inner_realm");
     public static ModDimension innerRealm = new ModDimension() {
         @Override
@@ -28,4 +33,11 @@ public class ModDimensions {
     public static ChunkGeneratorType<GenerationSettings, InnerRealmChunkGenerator> generatorType = new ChunkGeneratorType<>(InnerRealmChunkGenerator::new, false, GenerationSettings::new);
 
     public static BiomeProviderType<SingleBiomeProviderSettings, InnerRealmBiomeProvider> biomeProviderType = new BiomeProviderType<>(InnerRealmBiomeProvider::new, SingleBiomeProviderSettings::new);
+
+    @SubscribeEvent
+    public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
+        event.getRegistry().register(AstralDimensions.innerRealm);
+        DimensionManager.registerDimension(new ResourceLocation(Astral.MOD_ID, "inner_realm"), AstralDimensions.innerRealm, null, true);
+    }
+
 }

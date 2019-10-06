@@ -1,7 +1,7 @@
 package com.alan199921.astral.capabilities.innerrealmteleporter;
 
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
-import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -29,7 +29,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
         World innerRealmWorld = player.getEntityWorld();
-        if (!innerRealmWorld.dimension.getType().equals(DimensionType.byName(ModDimensions.INNER_REALM))) {
+        if (!innerRealmWorld.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
             System.out.println("Player is not in the inner realm!");
         }
         IChunk spawnChunk = innerRealmWorld.getChunk(getSpawn(player));
@@ -55,7 +55,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void teleport(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(ModDimensions.INNER_REALM));
+            ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
             innerRealmWorld.getChunk(new BlockPos(0, 0, 0));
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
             serverPlayerEntity.teleport(innerRealmWorld, 1, 1000, 1, player.rotationYaw, player.rotationPitch);

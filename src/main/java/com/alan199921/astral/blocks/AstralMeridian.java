@@ -24,7 +24,6 @@ public class AstralMeridian extends Block {
                 .hardnessAndResistance(99F));
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
-        setRegistryName("astral_meridian");
     }
 
     @Override

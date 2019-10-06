@@ -2,7 +2,7 @@ package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.configs.AstralConfig;
-import com.alan199921.astral.blocks.ModBlocks;
+import com.alan199921.astral.blocks.AstralBlocks;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -15,7 +15,7 @@ public class Snowberry extends BlockNamedItem {
      * Gives regeneration 2 and nausea 2 for 15 seconds (depends on configs)
      */
     public Snowberry() {
-        super(ModBlocks.snowberryBush.getBlock(), new Item.Properties()
+        super(AstralBlocks.snowberryBush.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()

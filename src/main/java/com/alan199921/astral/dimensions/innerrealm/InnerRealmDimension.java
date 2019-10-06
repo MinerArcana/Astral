@@ -1,6 +1,6 @@
 package com.alan199921.astral.dimensions.innerrealm;
 
-import com.alan199921.astral.dimensions.ModDimensions;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -22,7 +22,7 @@ public class InnerRealmDimension extends Dimension {
 
     @Override
     public ChunkGenerator<?> createChunkGenerator() {
-        return ModDimensions.generatorType.create(this.world, ModDimensions.biomeProviderType.create(ModDimensions.biomeProviderType.createSettings().setBiome(Biomes.PLAINS)), ModDimensions.generatorType.createSettings());
+        return AstralDimensions.generatorType.create(this.world, AstralDimensions.biomeProviderType.create(AstralDimensions.biomeProviderType.createSettings().setBiome(Biomes.PLAINS)), AstralDimensions.generatorType.createSettings());
     }
 
     @Nullable
