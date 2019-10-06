@@ -19,7 +19,6 @@ public class FeverweedBlock extends BushBlock {
                 .doesNotBlockMovement()
                 .hardnessAndResistance(0f)
         );
-        setRegistryName("feverweed_block");
     }
 
     @Nonnull

@@ -10,6 +10,11 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
 public class Feverweed extends BlockNamedItem {
+
+    /**
+     * Feverweed heals 1 saturation and hunger
+     * Gives luck 2 and hunger 2 for 15 seconds by default (duration is affected by configs)
+     */
     public Feverweed() {
         super(ModBlocks.feverweedBlock.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)
@@ -21,6 +26,5 @@ public class Feverweed extends BlockNamedItem {
                         .effect(new EffectInstance(Effects.LUCK, AstralConfig.getHerbEffectDurations().getFeverweedLuckDuration(), 1), 1)
                         .effect(new EffectInstance(Effects.HUNGER, AstralConfig.getHerbEffectDurations().getFeverweedHungerDuration(), 1), 1)
                         .build()));
-        setRegistryName("feverweed");
     }
 }

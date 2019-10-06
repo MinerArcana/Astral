@@ -10,6 +10,10 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
 public class Snowberry extends BlockNamedItem {
+    /**
+     * Snowberries heal 1 saturation and hunger
+     * Gives regeneration 2 and nausea 2 for 15 seconds (depends on configs)
+     */
     public Snowberry() {
         super(ModBlocks.snowberryBush.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)
@@ -21,8 +25,5 @@ public class Snowberry extends BlockNamedItem {
                         .effect(new EffectInstance(Effects.NAUSEA, AstralConfig.getHerbEffectDurations().getSnowberryNauseaDuration(), 1), 1)
                         .effect(new EffectInstance(Effects.REGENERATION, AstralConfig.getHerbEffectDurations().getSnowberryRegenerationDuration(), 1), 1)
                         .build()));
-        setRegistryName("snowberry");
     }
-
-
 }

@@ -20,7 +20,6 @@ public class EgoMembrane extends Block {
         super(Properties.create(Material.DRAGON_EGG)
                 .hardnessAndResistance(2f)
                 .lightValue(14));
-        setRegistryName("ego_membrane");
     }
 
     @Override

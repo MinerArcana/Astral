@@ -21,13 +21,11 @@ import net.minecraft.world.World;
 
 public class SnowberryBush extends SweetBerryBushBlock {
 
-
     public SnowberryBush() {
         super(Properties.create(Material.PLANTS)
                 .sound(SoundType.PLANT)
                 .tickRandomly()
                 .hardnessAndResistance(0.2f));
-        setRegistryName("snowberry_bush");
     }
 
     @Override
@@ -47,6 +45,21 @@ public class SnowberryBush extends SweetBerryBushBlock {
         return new ItemStack(ModItems.snowberry.asItem());
     }
 
+    /**
+     * When the block is right clicked, check if the bush is ready to harvest (age 3), and if it is, drop a snowberry
+     * item and lower it's age to age 2.
+     *
+     * If the player right clicks with bone meal, increase the age by one //TODO May not be implemented yet
+     *
+     * Copied from SnowBerrtBushBlock.java
+     * @param state The blockstate of the block
+     * @param worldIn The world object
+     * @param pos The BlockPos of the block
+     * @param player The player
+     * @param handIn The item being held
+     * @param hit Where the block was hit
+     * @return Whether the interaction was successful or not
+     */
     @Override
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         int age = state.get(AGE);

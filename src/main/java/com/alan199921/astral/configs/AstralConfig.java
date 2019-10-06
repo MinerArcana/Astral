@@ -18,24 +18,45 @@ public class AstralConfig {
         this.spec = builder.build();
     }
 
+    /**
+     * Initializes AstralConfig
+     * @return An instance of the ForgeConfigSpec
+     */
     public static ForgeConfigSpec initialize() {
         AstralConfig astralConfig = new AstralConfig(new ForgeConfigSpec.Builder());
         instance = astralConfig;
         return astralConfig.getSpec();
     }
 
+    /**
+     * Static getter for an instance of AstralConfig
+     * @return An instance of AstralConfig
+     */
     public static AstralConfig getInstance() {
         return Objects.requireNonNull(instance, "Called for Config before it's Initialization");
     }
 
+    /**
+     * Getter for an instance of HerbEffectDurations
+     * @return An instance of HerbEffectDurations
+     */
     public static HerbEffectDurations getHerbEffectDurations() {
         return instance.herbEffectDurations;
     }
 
+    /**
+     * Getter for the ForceConfigSpec. Needs to be accessed through getInstance() since function is not static.
+     * @return The ForceConfigSpec object for the mod
+     */
     public ForgeConfigSpec getSpec() {
         return spec;
     }
 
+    /**
+     * Function to load the config information from disk
+     * @param spec The spec that the disk config is being loaded into
+     * @param path The path of the config file
+     */
     public static void loadConfig(ForgeConfigSpec spec, Path path) {
         final CommentedFileConfig configData = CommentedFileConfig.builder(path)
                 .sync()
@@ -47,6 +68,10 @@ public class AstralConfig {
         spec.setConfig(configData);
     }
 
+    /**
+     * Inner class that holds configs for worldgen herb potion effect durations
+     * Contains getters for each of the config values
+     */
     public static class HerbEffectDurations {
         private final ForgeConfigSpec.ConfigValue<Integer> feverweedLuckDuration;
         private final ForgeConfigSpec.ConfigValue<Integer> feverweedHungerDuration;

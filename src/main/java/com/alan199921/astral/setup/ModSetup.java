@@ -8,6 +8,7 @@ import net.minecraftforge.fml.DeferredWorkQueue;
 
 public class ModSetup {
 
+    //Astral ItemGroup using  a Snowberry Bush as an icon
     public final ItemGroup astralItems = new ItemGroup("astral") {
         @Override
         public ItemStack createIcon() {
@@ -16,6 +17,7 @@ public class ModSetup {
     };
 
     public void init() {
+        //Initializes worldgen
         DeferredWorkQueue.runLater(OverworldVegetation::addOverworldVegetation);
     }
 }

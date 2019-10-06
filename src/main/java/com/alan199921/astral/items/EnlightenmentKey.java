@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 public class EnlightenmentKey extends Item {
     public EnlightenmentKey() {
         super(new Item.Properties().group(Astral.setup.astralItems));
-        setRegistryName("enlightenment_key");
     }
 
     @Override

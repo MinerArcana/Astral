@@ -19,7 +19,6 @@ public class IntrospectionMedicine extends Item {
                         .build())
                 .group(Astral.setup.astralItems)
         );
-        setRegistryName("introspection_medicine");
     }
 
     @Nonnull

@@ -23,10 +23,7 @@ import com.alan199921.astral.items.Feverweed;
 import com.alan199921.astral.items.IntrospectionMedicine;
 import com.alan199921.astral.items.Snowberry;
 import com.alan199921.astral.potions.AstralTravelPotion;
-import com.alan199921.astral.setup.ClientProxy;
-import com.alan199921.astral.setup.IProxy;
 import com.alan199921.astral.setup.ModSetup;
-import com.alan199921.astral.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
@@ -34,12 +31,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -61,9 +56,8 @@ public class Astral {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 
         // Register and load configs
-        ForgeConfigSpec astralConfigSpec = AstralConfig.initialize();
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, astralConfigSpec);
-        AstralConfig.loadConfig(astralConfigSpec, FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
+        AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -85,21 +79,21 @@ public class Astral {
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
             // register a new block here
-            event.getRegistry().register(new SnowberryBush());
-            event.getRegistry().register(new FeverweedBlock());
-            event.getRegistry().register(new EgoMembrane());
-            event.getRegistry().register(new AstralMeridian());
+            event.getRegistry().register(new SnowberryBush().setRegistryName("snowberry_bush"));
+            event.getRegistry().register(new FeverweedBlock().setRegistryName("feverweed_block"));
+            event.getRegistry().register(new EgoMembrane().setRegistryName("ego_membrane"));
+            event.getRegistry().register(new AstralMeridian().setRegistryName("astral_meridian"));
         }
 
         @SubscribeEvent
         public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
             new Item.Properties().group(setup.astralItems);
             // register a new block here
-            event.getRegistry().register(new Snowberry());
-            event.getRegistry().register(new Feverweed());
-            event.getRegistry().register(new IntrospectionMedicine());
-            event.getRegistry().register(new EgoMembrane().asItem());
-            event.getRegistry().register(new EnlightenmentKey());
+            event.getRegistry().register(new Snowberry().setRegistryName("snowberry"));
+            event.getRegistry().register(new Feverweed().setRegistryName("feverweed"));
+            event.getRegistry().register(new IntrospectionMedicine().setRegistryName("introspection_medicine"));
+            event.getRegistry().register(new EgoMembrane().asItem().setRegistryName("ego_membrane"));
+            event.getRegistry().register(new EnlightenmentKey().setRegistryName("enlightenment_key"));
         }
 
         @SubscribeEvent
@@ -110,12 +104,12 @@ public class Astral {
 
         @SubscribeEvent
         public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
-            event.getRegistry().register(new AstralEffect());
+            event.getRegistry().register(new AstralEffect().setRegistryName("astral_travel"));
         }
 
         @SubscribeEvent
         public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
-            event.getRegistry().register(new AstralTravelPotion());
+            event.getRegistry().register(new AstralTravelPotion().setRegistryName("astral_travel_potion"));
         }
     }
 
