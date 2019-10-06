@@ -11,10 +11,12 @@ public class AstralConfig {
     private static AstralConfig instance;
 
     private final HerbEffectDurations herbEffectDurations;
+    private final PotionEffectDurations potionEffectDurations;
     private final ForgeConfigSpec spec;
 
     private AstralConfig(ForgeConfigSpec.Builder builder) {
         this.herbEffectDurations = new HerbEffectDurations(builder);
+        this.potionEffectDurations = new PotionEffectDurations(builder);
         this.spec = builder.build();
     }
 
@@ -45,6 +47,14 @@ public class AstralConfig {
      */
     public static HerbEffectDurations getHerbEffectDurations() {
         return instance.herbEffectDurations;
+    }
+
+    /**
+     * Getter for PotionEffectDurations
+     * @return An instance of PotionEffectDurations
+     */
+    public static PotionEffectDurations getPotionEffectDurations() {
+        return instance.potionEffectDurations;
     }
 
     /**
@@ -119,6 +129,22 @@ public class AstralConfig {
 
         public int getSnowberryNauseaDuration() {
             return snowberryNauseaDuration.get();
+        }
+    }
+
+    public static class PotionEffectDurations {
+        private final ForgeConfigSpec.ConfigValue<Integer> astralTravelDuration;
+
+        PotionEffectDurations(ForgeConfigSpec.Builder builder) {
+            builder.push("Astral potion duration settings");
+
+            astralTravelDuration = builder.comment("Controls the duration of the Astral Travel potion duration, in ticks")
+                    .translation("astral.config.common.astralTravelPotionDuration")
+                    .define("astralTravelPotionDuration", 1200);
+        }
+
+        public int getAstralTravelDuration() {
+            return astralTravelDuration.get();
         }
     }
 }

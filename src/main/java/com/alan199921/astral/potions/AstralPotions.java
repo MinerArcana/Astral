@@ -1,5 +1,6 @@
 package com.alan199921.astral.potions;
 
+import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -18,8 +19,7 @@ public class AstralPotions {
 
     @SubscribeEvent
     public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
-        //TODO Have durations be based on configs
-        int baseAstralTravelDuration = 1200;
+        int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
         astralTravelPotion = registerPotion(AstralEffects.astralTravelEffect, "astral_travel_potion", baseAstralTravelDuration, 0);
         longAstralTravelPotion = registerPotion(AstralEffects.astralTravelEffect, "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
         strongAstralTravelPotion = registerPotion(AstralEffects.astralTravelEffect, "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
