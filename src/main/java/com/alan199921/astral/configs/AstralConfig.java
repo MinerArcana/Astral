@@ -95,7 +95,7 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Integer> travellingMedicineDuration;
 
         HerbEffectDurations(ForgeConfigSpec.Builder builder) {
-            builder.comment("Astral herb potion effect settings").push("common");
+            builder.comment("Astral herb potion effect settings").push("herbSettings");
 
             feverweedLuckDuration = builder.comment("Controls the duration of luck from Feverweed, in ticks.")
                     .translation("astral.config.common.feverweedLuckDuration")
@@ -145,7 +145,7 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Integer> astralTravelDuration;
 
         PotionEffectDurations(ForgeConfigSpec.Builder builder) {
-            builder.push("Astral potion duration settings");
+            builder.comment("Astral potion settings").push("potionSettings");
 
             astralTravelDuration = builder.comment("Controls the duration of the Astral Travel potion duration, in ticks")
                     .translation("astral.config.common.astralTravelPotionDuration")
