@@ -92,6 +92,7 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Integer> feverweedHungerDuration;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryRegenerationDuration;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryNauseaDuration;
+        private final ForgeConfigSpec.ConfigValue<Integer> travellingMedicineDuration;
 
         HerbEffectDurations(ForgeConfigSpec.Builder builder) {
             builder.comment("Astral herb potion effect settings").push("common");
@@ -112,6 +113,10 @@ public class AstralConfig {
                     .translation("astral.config.common.snowberriesNauseaDuration")
                     .define("snowberriesNauseaDuration", 300);
 
+            travellingMedicineDuration = builder.comment("Controls the duration of Astral Travel from Travelling Medicine, in ticks.")
+                    .translation("astral.config.common.travellingMedicineAstralTravelDuration")
+                    .define("travellingMedicineAstralTravelDuration", 1200);
+
             builder.pop();
         }
 
@@ -130,6 +135,10 @@ public class AstralConfig {
         public int getSnowberryNauseaDuration() {
             return snowberryNauseaDuration.get();
         }
+
+        public int getTravellingMedicineDuration() {
+            return travellingMedicineDuration.get();
+        }
     }
 
     public static class PotionEffectDurations {
@@ -140,7 +149,9 @@ public class AstralConfig {
 
             astralTravelDuration = builder.comment("Controls the duration of the Astral Travel potion duration, in ticks")
                     .translation("astral.config.common.astralTravelPotionDuration")
-                    .define("astralTravelPotionDuration", 1200);
+                    .define("astralTravelPotionDuration", 6000);
+
+            builder.pop();
         }
 
         public int getAstralTravelDuration() {
