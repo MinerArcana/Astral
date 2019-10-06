@@ -51,6 +51,7 @@ public class AstralConfig {
 
     /**
      * Getter for PotionEffectDurations
+     *
      * @return An instance of PotionEffectDurations
      */
     public static PotionEffectDurations getPotionEffectDurations() {

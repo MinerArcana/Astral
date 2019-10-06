@@ -28,12 +28,11 @@ public class AstralPotions {
     /**
      * Function to create and register a potion with only one effect
      *
-     *
-     * @param eventRegistry
-     * @param effect    What effect should the potion apply
-     * @param name      The registry name of the potion
-     * @param duration  The duration of the potion, in ticks
-     * @param amplifier The level of the effect
+     * @param eventRegistry The registry to register the potion to
+     * @param effect        What effect should the potion apply
+     * @param name          The registry name of the potion
+     * @param duration      The duration of the potion, in ticks
+     * @param amplifier     The level of the effect
      * @return A potion object
      */
     public static Potion registerPotion(IForgeRegistry<Potion> eventRegistry, Effect effect, String name, int duration, int amplifier) {
