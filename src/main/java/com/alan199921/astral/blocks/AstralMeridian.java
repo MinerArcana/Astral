@@ -15,6 +15,9 @@ public class AstralMeridian extends Block {
      * 1 = East
      * 2 = South
      * 3 = West
+     * <p>
+     * Each Astral Meridian have a cardinal direction associated with it when it is right clicked with a Key of
+     * Enlightenment for the direction to break blocks in
      */
     public static final IntegerProperty DIRECTION = IntegerProperty.create("direction", 0, 3);
     public static final BooleanProperty ASTRAL_BLOCK = BooleanProperty.create("astral_block");

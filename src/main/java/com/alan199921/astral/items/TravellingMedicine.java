@@ -1,7 +1,7 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.effects.ModEffects;
+import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
@@ -17,7 +17,7 @@ public class TravellingMedicine extends Item {
                 .food(new Food.Builder()
                         .fastToEat()
                         .setAlwaysEdible()
-                        .effect(new EffectInstance(ModEffects.astralEffect, 1200, 1), 1)
+                        .effect(new EffectInstance(AstralEffects.astralTravelEffect, 1200, 1), 1)
                         .build()));
     }
 }

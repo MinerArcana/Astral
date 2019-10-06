@@ -1,8 +1,8 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.blocks.AstralBlocks;
+import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;

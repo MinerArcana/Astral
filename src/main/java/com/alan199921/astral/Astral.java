@@ -10,20 +10,11 @@ import com.alan199921.astral.capabilities.innerrealmteleporter.IInnerRealmTelepo
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.configs.AstralConfig;
-import com.alan199921.astral.dimensions.AstralDimensions;
-import com.alan199921.astral.effects.AstralEffect;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
-import com.alan199921.astral.potions.AstralTravelPotion;
 import com.alan199921.astral.setup.ModSetup;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ModDimension;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -64,16 +55,6 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
-        }
-
-        @SubscribeEvent
-        public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
-            event.getRegistry().register(new AstralEffect().setRegistryName("astral_travel"));
-        }
-
-        @SubscribeEvent
-        public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
-            event.getRegistry().register(new AstralTravelPotion().setRegistryName("astral_travel_potion"));
         }
     }
 

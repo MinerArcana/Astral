@@ -20,6 +20,7 @@ public class AstralConfig {
 
     /**
      * Initializes AstralConfig
+     *
      * @return An instance of the ForgeConfigSpec
      */
     public static ForgeConfigSpec initialize() {
@@ -30,6 +31,7 @@ public class AstralConfig {
 
     /**
      * Static getter for an instance of AstralConfig
+     *
      * @return An instance of AstralConfig
      */
     public static AstralConfig getInstance() {
@@ -38,6 +40,7 @@ public class AstralConfig {
 
     /**
      * Getter for an instance of HerbEffectDurations
+     *
      * @return An instance of HerbEffectDurations
      */
     public static HerbEffectDurations getHerbEffectDurations() {
@@ -45,15 +48,8 @@ public class AstralConfig {
     }
 
     /**
-     * Getter for the ForceConfigSpec. Needs to be accessed through getInstance() since function is not static.
-     * @return The ForceConfigSpec object for the mod
-     */
-    public ForgeConfigSpec getSpec() {
-        return spec;
-    }
-
-    /**
      * Function to load the config information from disk
+     *
      * @param spec The spec that the disk config is being loaded into
      * @param path The path of the config file
      */
@@ -69,6 +65,15 @@ public class AstralConfig {
     }
 
     /**
+     * Getter for the ForceConfigSpec. Needs to be accessed through getInstance() since function is not static.
+     *
+     * @return The ForceConfigSpec object for the mod
+     */
+    public ForgeConfigSpec getSpec() {
+        return spec;
+    }
+
+    /**
      * Inner class that holds configs for worldgen herb potion effect durations
      * Contains getters for each of the config values
      */
@@ -77,22 +82,6 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Integer> feverweedHungerDuration;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryRegenerationDuration;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryNauseaDuration;
-
-        public int getFeverweedLuckDuration() {
-            return feverweedLuckDuration.get();
-        }
-
-        public int getFeverweedHungerDuration() {
-            return feverweedHungerDuration.get();
-        }
-
-        public int getSnowberryRegenerationDuration() {
-            return snowberryRegenerationDuration.get();
-        }
-
-        public int getSnowberryNauseaDuration() {
-            return snowberryNauseaDuration.get();
-        }
 
         HerbEffectDurations(ForgeConfigSpec.Builder builder) {
             builder.comment("Astral herb potion effect settings").push("common");
@@ -114,6 +103,22 @@ public class AstralConfig {
                     .define("snowberriesNauseaDuration", 300);
 
             builder.pop();
+        }
+
+        public int getFeverweedLuckDuration() {
+            return feverweedLuckDuration.get();
+        }
+
+        public int getFeverweedHungerDuration() {
+            return feverweedHungerDuration.get();
+        }
+
+        public int getSnowberryRegenerationDuration() {
+            return snowberryRegenerationDuration.get();
+        }
+
+        public int getSnowberryNauseaDuration() {
+            return snowberryNauseaDuration.get();
         }
     }
 }

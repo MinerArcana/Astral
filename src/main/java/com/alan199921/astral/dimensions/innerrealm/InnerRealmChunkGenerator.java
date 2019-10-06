@@ -12,6 +12,9 @@ import net.minecraft.world.gen.feature.structure.Structure;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Generates a void world, no chunks are generated naturally
+ */
 public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings> {
     public InnerRealmChunkGenerator(IWorld worldIn, BiomeProvider provider, GenerationSettings settingsIn) {
         super(worldIn, provider, settingsIn);

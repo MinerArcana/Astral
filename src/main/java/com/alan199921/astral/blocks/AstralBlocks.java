@@ -28,14 +28,15 @@ public class AstralBlocks {
 
     /**
      * Creates a block and puts it in the Astral item tab
-     * @param block A Block object
-     * @param name The registry name of the block
+     *
+     * @param block           A Block object
+     * @param name            The registry name of the block
      * @param createBlockItem Whether an item version of the block should be created (for items that the player should
      *                        not be able to access)
      * @return A Block object
      */
     private static Block registerBlock(Block block, String name, boolean createBlockItem) {
-        if (createBlockItem){
+        if (createBlockItem) {
             BlockItem itemBlock = new BlockItem(block, new Item.Properties().group(Astral.setup.astralItems));
             itemBlock.setRegistryName(name);
             ForgeRegistries.ITEMS.register(itemBlock);

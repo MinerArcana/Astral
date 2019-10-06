@@ -1,8 +1,8 @@
 package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.blocks.AstralBlocks;
+import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;

@@ -3,7 +3,7 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
-import com.alan199921.astral.effects.ModEffects;
+import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyRegistry;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void nullifyAstralDamage(LivingAttackEvent event) {
-        if (event.getSource().getTrueSource() != null && !event.getSource().getTrueSource().isLiving() && !event.getSource().getDamageType().equals("astral") && event.getEntityLiving().isPotionActive(ModEffects.astralEffect)) {
+        if (event.getSource().getTrueSource() != null && !event.getSource().getTrueSource().isLiving() && !event.getSource().getDamageType().equals("astral") && event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }
         if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()) {
@@ -53,12 +53,12 @@ public class TravellingHandlers {
         if (mobA == null || mobB == null) {
             return false;
         }
-        return mobA.isPotionActive(ModEffects.astralEffect) && !mobB.isPotionActive(ModEffects.astralEffect) || !mobA.isPotionActive(ModEffects.astralEffect) && mobB.isPotionActive(ModEffects.astralEffect);
+        return mobA.isPotionActive(AstralEffects.astralTravelEffect) && !mobB.isPotionActive(AstralEffects.astralTravelEffect) || !mobA.isPotionActive(AstralEffects.astralTravelEffect) && mobB.isPotionActive(AstralEffects.astralTravelEffect);
     }
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
-        if (!Minecraft.getInstance().player.isPotionActive(ModEffects.astralEffect) && event.getEntity().isPotionActive(ModEffects.astralEffect)) {
+        if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.astralTravelEffect) && event.getEntity().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }
     }
@@ -81,7 +81,7 @@ public class TravellingHandlers {
      * @param entityLiving The entity that with the potion effect
      */
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
-        if (potionEffect.equals(ModEffects.astralEffect) && entityLiving instanceof PlayerEntity) {
+        if (potionEffect.equals(AstralEffects.astralTravelEffect) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             if (!playerEntity.abilities.isCreativeMode) {
                 playerEntity.abilities.allowFlying = false;
@@ -116,7 +116,7 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
-        if (event.getPotionEffect().getPotion().equals(ModEffects.astralEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(ModEffects.astralEffect)) {
+        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
             PlayerEntity p = (PlayerEntity) event.getEntityLiving();
             if (!p.abilities.isCreativeMode) {
                 p.abilities.allowFlying = true;
@@ -145,7 +145,7 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
         //Placeholder properties
-        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(ModEffects.astralEffect)) {
+        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setNewSpeed(0f);
         }
     }
