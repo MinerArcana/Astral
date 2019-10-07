@@ -113,6 +113,7 @@ public class TravellingHandlers {
                             playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
                         }
                     }
+                    physicalBodyEntity.onKillCommand();
                 });
             }
         }
@@ -154,7 +155,6 @@ public class TravellingHandlers {
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
                 ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
-                physicalBodyEntity.onKillCommand();
             }
         }
     }
