@@ -125,6 +125,7 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
+            //Give player flight and stuff
             PlayerEntity p = (PlayerEntity) event.getEntityLiving();
             if (!p.abilities.isCreativeMode) {
                 p.abilities.allowFlying = true;
@@ -147,6 +148,7 @@ public class TravellingHandlers {
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
                 ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
+                physicalBodyEntity.onKillCommand();
             }
         }
     }
