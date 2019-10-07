@@ -1,6 +1,7 @@
 package com.alan199921.astral.entities;
 
 import com.mojang.authlib.GameProfile;
+import jdk.nashorn.internal.runtime.PropertyAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -16,25 +17,45 @@ import java.util.ArrayList;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
 
-    protected PhysicalBodyEntity(EntityType<? extends LivingEntity> p_i48577_1_, World p_i48577_2_) {
-        super(p_i48577_1_, p_i48577_2_);
+    protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
+        super(type, world);
     }
 
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
-        return new ArrayList<>();
+        return inventoryArmor;
+    }
+
+    public NonNullList<ItemStack> getInventoryHands() {
+        return inventoryHands;
     }
 
     @Override
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
-        return ItemStack.EMPTY;
+        switch(slotIn.getSlotType()) {
+            case HAND:
+                return this.inventoryHands.get(slotIn.getIndex());
+            case ARMOR:
+                return this.inventoryArmor.get(slotIn.getIndex());
+            default:
+                return ItemStack.EMPTY;
+        }
     }
 
     @Override
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
-
+        switch(slotIn.getSlotType()) {
+            case HAND:
+                this.inventoryArmor.set(slotIn.getIndex(), stack);
+                break;
+            case ARMOR:
+                this.inventoryArmor.set(slotIn.getIndex(), stack);
+        }
     }
+
 
     @Nonnull
     @Override

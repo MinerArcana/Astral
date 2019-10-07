@@ -12,6 +12,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.NonNullList;
@@ -81,6 +82,7 @@ public class TravellingHandlers {
      * @param entityLiving The entity that with the potion effect
      */
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
+
         if (potionEffect.equals(AstralEffects.astralTravelEffect) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             if (!playerEntity.abilities.isCreativeMode) {
@@ -103,17 +105,21 @@ public class TravellingHandlers {
                     serverPlayerEntity.teleport(serverWorld, body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
 
                     //Get the inventory and transfer items
-                    NonNullList<ItemStack> bodyInventory = cap.killEntity(serverWorld);
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                    for (ItemStack stack : bodyInventory) {
-                        playerEntity.addItemStackToInventory(stack);
+                    physicalBodyEntity.getInventory().forEach(playerEntity::addItemStackToInventory);
+                    for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+                        playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
                     }
-                    physicalBodyEntity.getArmorInventoryList().forEach(itemStack -> playerEntity.setItemStackToSlot(itemStack.getEquipmentSlot(), itemStack));
                 });
             }
         }
     }
 
+    /**
+     * When the player gets access to the Astral travel effect, give them the ability to fly, and transfer their
+     * inventory into the physical body mob
+     * @param event The event that contains information about the player and the effect applied
+     */
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
@@ -125,7 +131,7 @@ public class TravellingHandlers {
                 p.sendPlayerAbilities();
             }
             if (!p.getEntityWorld().isRemote()) {
-                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), p.inventory.getItemStack(), p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
+                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 UUID entityID = physicalBodyEntity.getUniqueID();
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
                 physicalBodyEntity.setName(event.getEntity().getScoreboardName());
@@ -134,10 +140,11 @@ public class TravellingHandlers {
                     physicalBodyEntity.insertItem(i++, stack, false);
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
-                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory) {
-                    physicalBodyEntity.setItemStackToSlot(stack.getEquipmentSlot(), stack);
+                for (EquipmentSlotType slotType : EquipmentSlotType.values()){
+                    physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
+                ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
             }
         }
     }
