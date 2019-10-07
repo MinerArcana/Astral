@@ -85,6 +85,7 @@ public class TravellingHandlers {
 
         if (potionEffect.equals(AstralEffects.astralTravelEffect) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
+            //Revoke flight mode capabilities
             if (!playerEntity.abilities.isCreativeMode) {
                 playerEntity.abilities.allowFlying = false;
                 playerEntity.noClip = false;
@@ -125,7 +126,7 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
-            //Give player flight and stuff
+            //Give player flight
             PlayerEntity p = (PlayerEntity) event.getEntityLiving();
             if (!p.abilities.isCreativeMode) {
                 p.abilities.allowFlying = true;
@@ -136,13 +137,18 @@ public class TravellingHandlers {
             if (!p.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 UUID entityID = physicalBodyEntity.getUniqueID();
+                //Store player UUID to body entity and give it a name
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> cap.setLinkedBodyID(physicalBodyEntity));
                 physicalBodyEntity.setName(event.getEntity().getScoreboardName());
+
+                //Insert main inventory to body and clear
                 int i = 0;
                 for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
                     physicalBodyEntity.insertItem(i++, stack, false);
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
+
+                //Insert armor and offhand to entity
                 for (EquipmentSlotType slotType : EquipmentSlotType.values()){
                     physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
                 }
