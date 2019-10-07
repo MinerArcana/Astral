@@ -108,7 +108,9 @@ public class TravellingHandlers {
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     physicalBodyEntity.getInventory().forEach(playerEntity::addItemStackToInventory);
                     for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                        playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
+                        if (!slot.equals(EquipmentSlotType.MAINHAND)){
+                            playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
+                        }
                     }
                 });
             }

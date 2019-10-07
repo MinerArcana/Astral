@@ -1,7 +1,6 @@
 package com.alan199921.astral.entities;
 
 import com.mojang.authlib.GameProfile;
-import jdk.nashorn.internal.runtime.PropertyAccess;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -13,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
@@ -49,7 +47,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
         switch(slotIn.getSlotType()) {
             case HAND:
-                this.inventoryArmor.set(slotIn.getIndex(), stack);
+                this.inventoryHands.set(slotIn.getIndex(), stack);
                 break;
             case ARMOR:
                 this.inventoryArmor.set(slotIn.getIndex(), stack);
