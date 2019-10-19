@@ -22,11 +22,12 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
 
     @Override
     public void handleChunkClaim(PlayerEntity player, IChunk chunk) {
-        //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
-        //break down the appropriate walls
+        //Send sync message to client
         if (!player.getEntityWorld().isRemote()){
             Astral.channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage((CompoundNBT) serializeNBT()));
         }
+        //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
+        //break down the appropriate walls
         InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
         if (!playerHasClaimedChunk(player, chunk.getPos())) {
             innerRealmUtils.generateInnerRealmChunk(player.getEntityWorld(), chunk);

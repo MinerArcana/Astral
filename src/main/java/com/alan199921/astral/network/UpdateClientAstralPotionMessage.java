@@ -9,6 +9,10 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * Packet to send the Astral travel effect to mobs on the client
+ * Not implemented yet
+ */
 public class UpdateClientAstralPotionMessage {
     public UpdateClientAstralPotionMessage(LivingEntity entityLiving, EffectInstance potionEffect) {
         System.out.println("Applying astral travel");
