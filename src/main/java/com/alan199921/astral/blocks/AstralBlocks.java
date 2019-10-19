@@ -1,26 +1,35 @@
 package com.alan199921.astral.blocks;
 
+import com.alan199921.astral.Astral;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralBlocks {
 
     //Astral blocks
-    public static Block snowberryBush;
-    public static Block feverweedBlock;
-    public static Block egoMembrane;
-    public static Block astralMeridian;
+    @ObjectHolder("astral:snowberry_bush")
+    public static final Block snowberryBush = null;
+
+    @ObjectHolder("astral:feverweed_block")
+    public static final Block feverweedBlock = null;
+
+    @ObjectHolder("astral:ego_membrane")
+    public static final Block egoMembrane = null;
+
+    @ObjectHolder("astral:astral_meridian")
+    public static final Block astralMeridian = null;
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-        snowberryBush = registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
-        feverweedBlock = registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
-        egoMembrane = registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
-        astralMeridian = registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
+        registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
+        registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
+        registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
+        registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
     }
 
     /**

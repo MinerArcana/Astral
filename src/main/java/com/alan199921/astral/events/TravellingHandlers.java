@@ -15,7 +15,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -59,6 +58,7 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
+        System.out.println(event.getEntity().getName().getString() + " " + event.getEntity().isPotionActive(AstralEffects.astralTravelEffect));
         if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.astralTravelEffect) && event.getEntity().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }
@@ -82,7 +82,6 @@ public class TravellingHandlers {
      * @param entityLiving The entity that with the potion effect
      */
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
-
         if (potionEffect.equals(AstralEffects.astralTravelEffect) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             //Revoke flight mode capabilities

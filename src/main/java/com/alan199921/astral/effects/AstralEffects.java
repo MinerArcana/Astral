@@ -5,15 +5,18 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEffects {
-    public static Effect astralTravelEffect;
+
+    @ObjectHolder("astral:astral_travel")
+    public static final Effect astralTravelEffect = null;
 
 
     @SubscribeEvent
     public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
-        astralTravelEffect = registerEffect(event.getRegistry(), new AstralTravelEffect(), "astral_travel");
+        registerEffect(event.getRegistry(), new AstralTravelEffect(), "astral_travel");
     }
 
     /**
@@ -22,12 +25,10 @@ public class AstralEffects {
      * @param registry The registry to register the effect in
      * @param effect   An instance of an effect
      * @param name     The registry name of the effect
-     * @return A registered effect object
      */
-    private static Effect registerEffect(IForgeRegistry<Effect> registry, Effect effect, String name) {
+    private static void registerEffect(IForgeRegistry<Effect> registry, Effect effect, String name) {
         Effect namedEffect = effect.setRegistryName(name);
         registry.register(namedEffect);
-        return namedEffect;
     }
 
 }
