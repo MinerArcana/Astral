@@ -12,6 +12,7 @@ import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTelepor
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
+import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.setup.ModSetup;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -31,7 +33,7 @@ public class Astral {
     public static final String MOD_ID = "astral";
 
     public static ModSetup setup = new ModSetup();
-
+    public static final SimpleChannel channel = AstralNetwork.getNetworkChannel();
     public Astral() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

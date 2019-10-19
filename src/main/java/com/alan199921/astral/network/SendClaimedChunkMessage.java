@@ -1,34 +1,29 @@
 package com.alan199921.astral.network;
 
-import com.alan199921.astral.capabilities.innerrealmchunkclaim.ChunkClaimCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
+import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SendClaimedChunkMessage {
-    private final ChunkPos chunkPos;
-    private final UUID uuid;
+    private final CompoundNBT nbt;
 
-    public SendClaimedChunkMessage(ChunkPos chunkPos, UUID uuid) {
-        this.chunkPos = chunkPos;
-        this.uuid = uuid;
+    public SendClaimedChunkMessage(CompoundNBT nbt) {
+        this.nbt = nbt;
     }
 
     public static SendClaimedChunkMessage decode(PacketBuffer packetBuffer) {
-        return new SendClaimedChunkMessage(new ChunkPos(packetBuffer.readInt(), packetBuffer.readInt()), packetBuffer.readUniqueId());
+        return new SendClaimedChunkMessage(packetBuffer.readCompoundTag());
     }
 
     public static void encode(SendClaimedChunkMessage sendClaimedChunkMessage, PacketBuffer packetBuffer) {
-        packetBuffer.writeInt(sendClaimedChunkMessage.chunkPos.x);
-        packetBuffer.writeInt(sendClaimedChunkMessage.chunkPos.z);
-        packetBuffer.writeUniqueId(sendClaimedChunkMessage.uuid);
+        packetBuffer.writeCompoundTag(sendClaimedChunkMessage.nbt);
     }
 
     public static void handle(SendClaimedChunkMessage sendClaimedChunkMessage, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -36,10 +31,9 @@ public class SendClaimedChunkMessage {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world ->
-                    ChunkClaimCapability.getCapability(world).ifPresent(chunkPressure -> {
-                        if (!(chunkPressure instanceof InnerRealmChunkClaimCapability)) return;
-
-                        ((InnerRealmChunkClaimCapability) chunkPressure).handleChunkClaim(world.getPlayerByUuid(sendClaimedChunkMessage.uuid), world.getChunk(sendClaimedChunkMessage.chunkPos.asBlockPos()));
+                    world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(innerRealmChunkClaimCapability -> {
+                        if (!(innerRealmChunkClaimCapability instanceof InnerRealmChunkClaimCapability)) return;
+                        innerRealmChunkClaimCapability.deserializeNBT(sendClaimedChunkMessage.nbt);
                     })
             );
         });

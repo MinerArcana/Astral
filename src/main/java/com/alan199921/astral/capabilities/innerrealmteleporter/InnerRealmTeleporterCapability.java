@@ -76,7 +76,6 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
         if (!innerRealmWorld.isRemote()) {
             ((ServerPlayerEntity) player).teleport((ServerWorld) innerRealmWorld, playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ(), player.rotationYaw, player.rotationPitch);
         }
-
     }
 
     @Override
