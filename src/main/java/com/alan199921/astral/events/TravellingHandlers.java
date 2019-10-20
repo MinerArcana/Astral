@@ -58,7 +58,7 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
-        System.out.println(event.getEntity().getName().getString() + " " + event.getEntity().isPotionActive(AstralEffects.astralTravelEffect));
+//        System.out.println(event.getEntity().getName().getString() + " " + event.getEntity().isPotionActive(AstralEffects.astralTravelEffect));
         if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.astralTravelEffect) && event.getEntity().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }

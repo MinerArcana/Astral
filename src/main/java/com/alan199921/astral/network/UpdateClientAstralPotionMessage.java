@@ -1,7 +1,5 @@
 package com.alan199921.astral.network;
 
-import com.alan199921.astral.effects.AstralEffects;
-import com.alan199921.astral.events.TravellingHandlers;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.potion.EffectInstance;
