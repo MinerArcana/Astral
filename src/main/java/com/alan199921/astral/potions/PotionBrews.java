@@ -19,36 +19,63 @@ import java.util.stream.Stream;
 public class PotionBrews {
     @SubscribeEvent
     public static void createPotionRecipes(final FMLCommonSetupEvent event) {
-        Ingredient awkwardPotion = new PotionIngredient(Potions.AWKWARD);
-        Ingredient redstoneIngredient = Ingredient.fromStacks(new ItemStack(Items.REDSTONE));
-        Ingredient glowstoneIngredient = Ingredient.fromStacks(new ItemStack(Items.GLOWSTONE_DUST));
-        Ingredient snowberryBrewIngredient = new PotionIngredient(AstralPotions.snowberryBrew);
-        Ingredient feverweedBrewIngredient = new PotionIngredient(AstralPotions.feverweedBrew);
+        //Astral Travel recipe
+        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.travellingMedicine);
+        createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.astralTravelPotion, AstralPotions.longAstralTravelPotion, AstralPotions.strongAstralTravelPotion);
 
         //Snowberry brew recipe
         Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.snowberry));
-        BrewingRecipeRegistry.addRecipe(awkwardPotion, snowberryIngredient, potionToItemStack(AstralPotions.snowberryBrew));
-        BrewingRecipeRegistry.addRecipe(snowberryBrewIngredient, redstoneIngredient, potionToItemStack(AstralPotions.longSnowberryBrew));
-        BrewingRecipeRegistry.addRecipe(snowberryBrewIngredient, glowstoneIngredient, potionToItemStack(AstralPotions.strongSnowberryBrew));
+        createBrewingRecipes(Potions.THICK, snowberryIngredient, AstralPotions.snowberryBrew, AstralPotions.longSnowberryBrew, AstralPotions.strongSnowberryBrew);
 
         //Feverweed brew recipe
         Ingredient feverweedIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.feverweed));
-        BrewingRecipeRegistry.addRecipe(awkwardPotion, feverweedIngredient, potionToItemStack(AstralPotions.feverweedBrew));
-        BrewingRecipeRegistry.addRecipe(feverweedBrewIngredient, redstoneIngredient, potionToItemStack(AstralPotions.longFeverweedBrew));
-        BrewingRecipeRegistry.addRecipe(feverweedBrewIngredient, glowstoneIngredient, potionToItemStack(AstralPotions.strongFeverweedBrew));
+        createBrewingRecipes(Potions.THICK, feverweedIngredient, AstralPotions.feverweedBrew, AstralPotions.longFeverweedBrew, AstralPotions.strongFeverweedBrew);
     }
 
     private static ItemStack potionToItemStack(Potion potion) {
         return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), potion);
     }
 
+    private static ItemStack potionToSplashPotionItemStack(Potion potion) {
+        return PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potion);
+    }
+
+    /**
+     * Registers potion recipes for each form of potion (regular, splash)
+     *
+     * @param base    The potion that is used to create the desired output (usually awkward potion)
+     * @param reagent The ingredient that is used with the base ot create the output
+     * @param result  The potion that is created from the output
+     */
+    private static void createBrewingRecipes(Potion base, Ingredient reagent, Potion result, Potion longResult, Potion strongResult) {
+        //Regular
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(base), reagent, potionToItemStack(result));
+        Ingredient redstoneIngredient = Ingredient.fromItems(Items.REDSTONE);
+        Ingredient glowstoneIngredient = Ingredient.fromItems(Items.GLOWSTONE_DUST);
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(result), redstoneIngredient, potionToItemStack(longResult));
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(result), glowstoneIngredient, potionToItemStack(strongResult));
+
+        //Splash
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(base), reagent, potionToSplashPotionItemStack(result));
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(result), redstoneIngredient, potionToSplashPotionItemStack(longResult));
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(result), glowstoneIngredient, potionToSplashPotionItemStack(strongResult));
+    }
+
     public static class PotionIngredient extends Ingredient {
 
         private ItemStack stack;
 
-        PotionIngredient(Potion potion) {
-            super(Stream.of(new SingleItemList(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), potion))));
-            this.stack = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), potion);
+        private PotionIngredient(Potion potion, ItemStack stack) {
+            super(Stream.of(new SingleItemList(PotionUtils.addPotionToItemStack(stack, potion))));
+            this.stack = PotionUtils.addPotionToItemStack(stack, potion);
+        }
+
+        public static PotionIngredient asSplashPotion(Potion potion) {
+            return new PotionIngredient(potion, new ItemStack(Items.SPLASH_POTION));
+        }
+
+        public static PotionIngredient asPotion(Potion potion) {
+            return new PotionIngredient(potion, new ItemStack(Items.POTION));
         }
 
         @Override
