@@ -1,7 +1,7 @@
 package com.alan199921.astral.capabilities.innerrealmchunkclaim;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
+import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.network.SendClaimedChunkMessage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +24,7 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
     public void handleChunkClaim(PlayerEntity player, IChunk chunk) {
         //Send sync message to client
         if (!player.getEntityWorld().isRemote()){
-            Astral.channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage((CompoundNBT) serializeNBT()));
+            AstralNetwork.channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage((CompoundNBT) serializeNBT()));
         }
         //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
         //break down the appropriate walls

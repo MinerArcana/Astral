@@ -1,5 +1,6 @@
 package com.alan199921.astral.blocks;
 
+import com.alan199921.astral.tags.SustainBlockTags;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockRenderLayer;
@@ -33,7 +34,7 @@ public class FeverweedBlock extends BushBlock {
         return OffsetType.XYZ;
     }
 
-    //Mushroom spread code
+    //Mushroom spread code but ignores light levels
     @Override
     public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
@@ -69,15 +70,16 @@ public class FeverweedBlock extends BushBlock {
         return state.isOpaqueCube(worldIn, pos);
     }
 
+    //Feverweed is not sustained by mycelium nor podzol
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();
-        if (block != Blocks.MYCELIUM && block != Blocks.PODZOL) {
+        if (SustainBlockTags.FEVERWEED_DOES_NOT_SUSTAIN.contains(block)) {
             return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
         } else {
-            return true;
+            return false;
         }
     }
 }

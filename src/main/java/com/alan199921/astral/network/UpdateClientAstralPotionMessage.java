@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 public class UpdateClientAstralPotionMessage {
     public UpdateClientAstralPotionMessage(LivingEntity entityLiving, EffectInstance potionEffect) {
         System.out.println("Applying astral travel");
-        entityLiving.addPotionEffect(potionEffect);
     }
 
     public static UpdateClientAstralPotionMessage decode(PacketBuffer packetBuffer) {

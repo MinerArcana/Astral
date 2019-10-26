@@ -8,8 +8,9 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class AstralNetwork {
     public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Astral.MOD_ID, "network");
     public static final String NETWORK_VERSION = new ResourceLocation(Astral.MOD_ID, "1").toString();
+    public static final SimpleChannel channel = getNetworkChannel();
 
-    public static SimpleChannel getNetworkChannel() {
+    private static SimpleChannel getNetworkChannel() {
         final SimpleChannel channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
                 .clientAcceptedVersions(version -> true)
                 .serverAcceptedVersions(version -> true)

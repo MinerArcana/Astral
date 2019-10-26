@@ -8,12 +8,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-
-import javax.annotation.Nullable;
-import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PotionBrews {
@@ -61,13 +59,10 @@ public class PotionBrews {
         BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(result), glowstoneIngredient, potionToSplashPotionItemStack(strongResult));
     }
 
-    public static class PotionIngredient extends Ingredient {
-
-        private ItemStack stack;
+    public static class PotionIngredient extends IngredientNBT {
 
         private PotionIngredient(Potion potion, ItemStack stack) {
-            super(Stream.of(new SingleItemList(PotionUtils.addPotionToItemStack(stack, potion))));
-            this.stack = PotionUtils.addPotionToItemStack(stack, potion);
+            super(PotionUtils.addPotionToItemStack(stack, potion));
         }
 
         public static PotionIngredient asSplashPotion(Potion potion) {
@@ -76,15 +71,6 @@ public class PotionBrews {
 
         public static PotionIngredient asPotion(Potion potion) {
             return new PotionIngredient(potion, new ItemStack(Items.POTION));
-        }
-
-        @Override
-        public boolean test(@Nullable ItemStack input) {
-            if (input == null) {
-                return false;
-            } else {
-                return this.stack.getItem() == input.getItem() && this.stack.getDamage() == input.getDamage() && this.stack.areShareTagsEqual(input);
-            }
         }
     }
 }
