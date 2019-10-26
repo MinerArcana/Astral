@@ -1,8 +1,10 @@
 package com.alan199921.astral.network;
 
 import com.alan199921.astral.Astral;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class AstralNetwork {
@@ -30,5 +32,9 @@ public class AstralNetwork {
                 .add();
 
         return channel;
+    }
+
+    public static void sendClaimedChunksToPlayers(CompoundNBT claimedChunksMapNBT){
+        channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage(claimedChunksMapNBT));
     }
 }
