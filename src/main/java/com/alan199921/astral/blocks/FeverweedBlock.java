@@ -70,16 +70,16 @@ public class FeverweedBlock extends BushBlock {
         return state.isOpaqueCube(worldIn, pos);
     }
 
-    //Feverweed is not sustained by mycelium nor podzol
+    //Feverweed is sustained by mycelium nor podzol
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();
-        if (SustainBlockTags.FEVERWEED_DOES_NOT_SUSTAIN.contains(block)) {
-            return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
+        if (SustainBlockTags.FEVERWEED_SUSTAIN.contains(block)) {
+            return true;
         } else {
-            return false;
+            return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
         }
     }
 }
