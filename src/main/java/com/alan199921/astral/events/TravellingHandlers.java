@@ -38,16 +38,15 @@ public class TravellingHandlers {
     }
 
     /**
-     * An Astral entity only takes damage form other Astral Entities or Magic/Astral damage
+     * An Astral entity only takes damage form other Astral Entities or Magic/Astral damage. An Astral entity can only damage non-astral entities
      *
      * @param event The LivingAttackEvent
      */
     @SubscribeEvent
     public static void nullifyAstralDamage(LivingAttackEvent event) {
         boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
-        boolean isLivingEntityAstral = event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect);
         boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
-        if (isLivingEntityAstral && isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
+        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())){
             event.setCanceled(true);
         }
     }
@@ -118,6 +117,9 @@ public class TravellingHandlers {
                     physicalBodyEntity.onKillCommand();
                 });
             }
+        }
+        if (potionEffect.equals(AstralEffects.astralTravelEffect) && !entityLiving.getEntityWorld().isRemote()){
+            AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
     }
 

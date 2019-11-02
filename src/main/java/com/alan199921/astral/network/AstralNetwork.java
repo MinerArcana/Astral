@@ -13,9 +13,8 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class AstralNetwork {
     public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Astral.MOD_ID, "network");
     public static final String NETWORK_VERSION = new ResourceLocation(Astral.MOD_ID, "1").toString();
-    public static final SimpleChannel channel = getNetworkChannel();
 
-    private static SimpleChannel getNetworkChannel() {
+    public static SimpleChannel getNetworkChannel() {
         final SimpleChannel channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
                 .clientAcceptedVersions(version -> true)
                 .serverAcceptedVersions(version -> true)
@@ -42,14 +41,14 @@ public class AstralNetwork {
     }
 
     public static void sendClaimedChunksToPlayers(CompoundNBT claimedChunksMapNBT) {
-        channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage(claimedChunksMapNBT));
+        Astral.INSTANCE.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage(claimedChunksMapNBT));
     }
 
     public static void sendAstralEffectStarting(EffectInstance effectInstance, Entity astralEntity) {
-        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
+        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
     }
 
-    public static void sendAstralEffectEnding(EffectInstance effectInstance, Entity astralEntity) {
-        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
+    public static void sendAstralEffectEnding(Entity astralEntity) {
+        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getEntityId()));
     }
 }

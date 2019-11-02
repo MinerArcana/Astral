@@ -14,22 +14,17 @@ import java.util.function.Supplier;
 
 public class StopTrackingAstralPotionMessage {
     private final int entityID;
-    private final EffectInstance potionEffect;
 
-    public StopTrackingAstralPotionMessage(int entityID, EffectInstance potionEffect) {
+    public StopTrackingAstralPotionMessage(int entityID) {
         this.entityID = entityID;
-        this.potionEffect = potionEffect;
-        System.out.println("Sending message to player");
     }
 
     public static StopTrackingAstralPotionMessage decode(PacketBuffer packetBuffer){
-        return new StopTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.astralTravelEffect, packetBuffer.readInt(), packetBuffer.readInt()));
+        return new StopTrackingAstralPotionMessage(packetBuffer.readInt());
     }
 
     public static void encode(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, PacketBuffer packetBuffer){
         packetBuffer.writeInt(startTrackingAstralPotionMessage.entityID);
-        packetBuffer.writeInt(startTrackingAstralPotionMessage.potionEffect.getDuration());
-        packetBuffer.writeInt(startTrackingAstralPotionMessage.potionEffect.getAmplifier());
     }
 
     public static void handle(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, Supplier<NetworkEvent.Context> contextSupplier){
@@ -41,7 +36,7 @@ public class StopTrackingAstralPotionMessage {
                         assert clientEntity != null;
                         if (clientEntity.isLiving()) {
                             LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(startTrackingAstralPotionMessage.entityID);
-                            AstralEffects.astralTravelEffect.removeAttributesModifiersFromEntity(clientLivingEntity, clientLivingEntity.getAttributes(), startTrackingAstralPotionMessage.potionEffect.getAmplifier());
+                            clientLivingEntity.removeActivePotionEffect(AstralEffects.astralTravelEffect);
                         }
                     }
             );
