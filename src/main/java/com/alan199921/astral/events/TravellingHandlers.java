@@ -6,6 +6,7 @@ import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyRegistry;
+import com.alan199921.astral.network.AstralNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -36,15 +37,18 @@ public class TravellingHandlers {
         }
     }
 
+    /**
+     * An Astral entity only takes damage form other Astral Entities or Magic/Astral damage
+     *
+     * @param event The LivingAttackEvent
+     */
     @SubscribeEvent
     public static void nullifyAstralDamage(LivingAttackEvent event) {
-        if (event.getSource().getTrueSource() != null && !event.getSource().getTrueSource().isLiving() && !event.getSource().getDamageType().equals("astral") && event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
+        boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
+        boolean isLivingEntityAstral = event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect);
+        boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
+        if (isLivingEntityAstral && isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
             event.setCanceled(true);
-        }
-        if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()) {
-            if (isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
-                event.setCanceled(true);
-            }
         }
     }
 
@@ -58,7 +62,6 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
-//        System.out.println(event.getEntity().getName().getString() + " " + event.getEntity().isPotionActive(AstralEffects.astralTravelEffect));
         if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.astralTravelEffect) && event.getEntity().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }
@@ -108,7 +111,7 @@ public class TravellingHandlers {
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     physicalBodyEntity.getInventory().forEach(playerEntity::addItemStackToInventory);
                     for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                        if (!slot.equals(EquipmentSlotType.MAINHAND)){
+                        if (!slot.equals(EquipmentSlotType.MAINHAND)) {
                             playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
                         }
                     }
@@ -121,6 +124,7 @@ public class TravellingHandlers {
     /**
      * When the player gets access to the Astral travel effect, give them the ability to fly, and transfer their
      * inventory into the physical body mob
+     *
      * @param event The event that contains information about the player and the effect applied
      */
     @SubscribeEvent
@@ -149,11 +153,12 @@ public class TravellingHandlers {
                 ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
 
                 //Insert armor and offhand to entity
-                for (EquipmentSlotType slotType : EquipmentSlotType.values()){
+                for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
                     physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
                 ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
+                AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
             }
         }
     }
@@ -163,6 +168,16 @@ public class TravellingHandlers {
         //Placeholder properties
         if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setNewSpeed(0f);
+        }
+    }
+
+    @SubscribeEvent
+    public static void startTrackingAstralEntity(PlayerEvent.StartTracking event) {
+        if (event.getTarget().isLiving()) {
+            LivingEntity livingTarget = event.getEntityLiving();
+            if (livingTarget.isPotionActive(AstralEffects.astralTravelEffect)) {
+                AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.astralTravelEffect), event.getEntity());
+            }
         }
     }
 }

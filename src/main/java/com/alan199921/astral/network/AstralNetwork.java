@@ -1,11 +1,14 @@
 package com.alan199921.astral.network;
 
 import com.alan199921.astral.Astral;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+
 
 public class AstralNetwork {
     public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Astral.MOD_ID, "network");
@@ -25,16 +28,28 @@ public class AstralNetwork {
                 .consumer(SendClaimedChunkMessage::handle)
                 .add();
 
-        channel.messageBuilder(UpdateClientAstralPotionMessage.class, 2)
-                .decoder(UpdateClientAstralPotionMessage::decode)
-                .encoder(UpdateClientAstralPotionMessage::encode)
-                .consumer(UpdateClientAstralPotionMessage::handle)
+        channel.messageBuilder(StartTrackingAstralPotionMessage.class, 2)
+                .decoder(StartTrackingAstralPotionMessage::decode)
+                .encoder(StartTrackingAstralPotionMessage::encode)
+                .consumer(StartTrackingAstralPotionMessage::handle)
                 .add();
-
+        channel.messageBuilder(StopTrackingAstralPotionMessage.class, 3)
+                .decoder(StopTrackingAstralPotionMessage::decode)
+                .encoder(StopTrackingAstralPotionMessage::encode)
+                .consumer(StopTrackingAstralPotionMessage::handle)
+                .add();
         return channel;
     }
 
-    public static void sendClaimedChunksToPlayers(CompoundNBT claimedChunksMapNBT){
+    public static void sendClaimedChunksToPlayers(CompoundNBT claimedChunksMapNBT) {
         channel.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage(claimedChunksMapNBT));
+    }
+
+    public static void sendAstralEffectStarting(EffectInstance effectInstance, Entity astralEntity) {
+        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
+    }
+
+    public static void sendAstralEffectEnding(EffectInstance effectInstance, Entity astralEntity) {
+        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
     }
 }
