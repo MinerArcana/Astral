@@ -50,6 +50,6 @@ public class AstralNetwork {
     }
 
     public static void sendAstralEffectEnding(EffectInstance effectInstance, Entity astralEntity) {
-        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
+        channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
     }
 }

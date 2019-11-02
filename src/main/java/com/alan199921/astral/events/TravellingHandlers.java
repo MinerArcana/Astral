@@ -158,8 +158,10 @@ public class TravellingHandlers {
                 }
                 ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
                 ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
-                AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
             }
+        }
+        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && !event.getEntityLiving().getEntityWorld().isRemote()){
+            AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
     }
 
