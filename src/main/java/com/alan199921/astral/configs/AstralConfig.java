@@ -144,6 +144,10 @@ public class AstralConfig {
 
     public static class PotionEffectDurations {
         private final ForgeConfigSpec.ConfigValue<Integer> astralTravelDuration;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedBrewLuckDuration;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedBrewHungerDuration;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberryBrewRegenerationDuration;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberryBrewNauseaDuration;
 
         PotionEffectDurations(ForgeConfigSpec.Builder builder) {
             builder.comment("Astral potion settings").push("potionSettings");
@@ -151,8 +155,39 @@ public class AstralConfig {
             astralTravelDuration = builder.comment("Controls the duration of the Astral Travel potion duration, in ticks")
                     .translation("astral.config.common.astralTravelPotionDuration")
                     .define("astralTravelPotionDuration", 6000);
+            feverweedBrewLuckDuration = builder.comment("Controls the duration of luck from Feverweed Brew, in ticks.")
+                    .translation("astral.config.common.feverweedBrewLuckDuration")
+                    .define("feverweedBrewLuckDuration", 600);
+
+            feverweedBrewHungerDuration = builder.comment("Controls the duration of hunger from Feverweed Brew, in ticks.")
+                    .translation("astral.config.common.feverweedBrewHungerDuration")
+                    .define("feverweedBrewHungerDuration", 600);
+
+            snowberryBrewRegenerationDuration = builder.comment("Controls the duration of regeneration from Snowberry Brew, in ticks.")
+                    .translation("astral.config.common.snowberryBrewRegenerationDuration")
+                    .define("snowberryBrewRegenerationDuration", 600);
+
+            snowberryBrewNauseaDuration = builder.comment("Controls the duration of nausea from Snowberry Brew, in ticks.")
+                    .translation("astral.config.common.snowberryBrewNauseaDuration")
+                    .define("snowberryBrewNauseaDuration", 600);
 
             builder.pop();
+        }
+
+        public int getFeverweedBrewLuckDuration() {
+            return feverweedBrewLuckDuration.get();
+        }
+
+        public int getFeverweedBrewHungerDuration() {
+            return feverweedBrewHungerDuration.get();
+        }
+
+        public int getSnowberryBrewRegenerationDuration() {
+            return snowberryBrewRegenerationDuration.get();
+        }
+
+        public int getSnowberryBrewNauseaDuration() {
+            return snowberryBrewNauseaDuration.get();
         }
 
         public int getAstralTravelDuration() {
