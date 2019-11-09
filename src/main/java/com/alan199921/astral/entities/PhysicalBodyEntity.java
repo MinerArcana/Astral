@@ -9,6 +9,7 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -105,5 +106,14 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
 
     public GameProfile getGameProfile() {
         return null;
+    }
+
+    @Override
+    public void tick() {
+        if (!world.isRemote()){
+            ServerWorld serverWorld = (ServerWorld) world;
+            serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
+        }
+        super.tick();
     }
 }
