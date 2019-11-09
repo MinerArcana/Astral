@@ -110,7 +110,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
 
     @Override
     public void tick() {
-        if (!world.isRemote()){
+        if (!world.isRemote() && isServerWorld()){
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
         }
