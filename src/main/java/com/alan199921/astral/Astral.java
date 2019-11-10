@@ -39,7 +39,8 @@ public class Astral {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
 
         // Register and load configs
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
+        ModLoadingContext modLoadingContext = ModLoadingContext.get();
+        modLoadingContext.registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
 
     }
