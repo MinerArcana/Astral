@@ -14,14 +14,14 @@ import javax.annotation.Nullable;
 
 public class PhysicalBodyEntityRenderer extends LivingRenderer {
 
-    public PhysicalBodyEntityRenderer(EntityRendererManager p_i50965_1_, float p_i50965_3_) {
-        super(p_i50965_1_, new PlayerModel<>(0.0f, true), p_i50965_3_);
+    public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager, float shadowSizeIn) {
+        super(rendererManager, new PhysicalBodyModel(0.0f, true), shadowSizeIn);
     }
 
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(@Nonnull Entity entity) {
-        return new ResourceLocation("minecraft" + ":textures/entity/zombie/zombie.png");
+        return new ResourceLocation("minecraft" + ":textures/entity/steve.png");
     }
 
     @Nonnull
@@ -36,10 +36,15 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer {
     }
 
     @Override
+    protected void applyRotations(LivingEntity p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_) {
+        super.applyRotations(p_77043_1_, 0, 0, 0);
+    }
+
+    @Override
     protected void renderLivingAt(LivingEntity e, double x, double y, double z) {
         super.renderLivingAt(e, x, y, z); // translation
         GlStateManager.rotated(90, 1F, 0F, 0F); // face-down
-        GlStateManager.rotated(e.getRotationYawHead(), 0F, 0F, 1F); // turn
+        GlStateManager.rotated(e.rotationPitch, 0F, 0F, 1F); // turn
         GlStateManager.translated(0F, -0.85F, -0.125F); // center
     }
 }
