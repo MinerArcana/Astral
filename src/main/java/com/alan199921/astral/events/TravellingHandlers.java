@@ -143,6 +143,7 @@ public class TravellingHandlers {
             }
             if (!p.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
+                physicalBodyEntity.setPlayerUUID(p.getGameProfile().getId());
                 //Store player UUID to body entity and give it a name
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
                     cap.setLinkedBodyID(physicalBodyEntity);
