@@ -18,15 +18,15 @@ public class PotionBrews {
     @SubscribeEvent
     public static void createPotionRecipes(final FMLCommonSetupEvent event) {
         //Astral Travel recipe
-        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.travellingMedicine);
+        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.TRAVELLING_MEDICINE);
         createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.astralTravelPotion, AstralPotions.longAstralTravelPotion, AstralPotions.strongAstralTravelPotion);
 
         //Snowberry brew recipe
-        Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.snowberry));
+        Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.SNOWBERRY));
         createBrewingRecipes(Potions.THICK, snowberryIngredient, AstralPotions.snowberryBrew, AstralPotions.longSnowberryBrew, AstralPotions.strongSnowberryBrew);
 
         //Feverweed brew recipe
-        Ingredient feverweedIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.feverweed));
+        Ingredient feverweedIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.FEVERWEED));
         createBrewingRecipes(Potions.THICK, feverweedIngredient, AstralPotions.feverweedBrew, AstralPotions.longFeverweedBrew, AstralPotions.strongFeverweedBrew);
     }
 
