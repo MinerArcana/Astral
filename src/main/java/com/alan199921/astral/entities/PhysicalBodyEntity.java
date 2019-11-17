@@ -55,12 +55,10 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
 
     @Override
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
-        switch (slotIn.getSlotType()) {
-            case HAND:
-                this.inventoryHands.set(slotIn.getIndex(), stack);
-                break;
-            case ARMOR:
-                this.inventoryArmor.set(slotIn.getIndex(), stack);
+        if (slotIn.getSlotType() == EquipmentSlotType.Group.HAND) {
+            this.inventoryHands.set(slotIn.getIndex(), stack);
+        } else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+            this.inventoryArmor.set(slotIn.getIndex(), stack);
         }
     }
 
@@ -115,6 +113,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     protected void registerData() {
         super.registerData();
         dataManager.register(playerUUID, Optional.empty());
+        // Approximately 5% of the storage mobs will be facedown
         dataManager.register(faceDown, Math.random() < .05);
     }
 
