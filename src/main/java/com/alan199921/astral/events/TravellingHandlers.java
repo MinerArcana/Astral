@@ -7,6 +7,8 @@ import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyRegistry;
 import com.alan199921.astral.network.AstralNetwork;
+import com.alan199921.astral.tags.AstralBlockTags;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -23,10 +25,9 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravellingHandlers {
@@ -47,7 +48,7 @@ public class TravellingHandlers {
     public static void nullifyAstralDamage(LivingAttackEvent event) {
         boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
         boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
-        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())){
+        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
             event.setCanceled(true);
         }
     }
@@ -92,6 +93,7 @@ public class TravellingHandlers {
                 playerEntity.abilities.allowFlying = false;
                 playerEntity.noClip = false;
                 playerEntity.abilities.setFlySpeed(.05F);
+                playerEntity.abilities.allowEdit = true;
                 playerEntity.sendPlayerAbilities();
             }
             //Only run serverside
@@ -119,7 +121,7 @@ public class TravellingHandlers {
                 });
             }
         }
-        if (potionEffect.equals(AstralEffects.astralTravelEffect) && !entityLiving.getEntityWorld().isRemote()){
+        if (potionEffect.equals(AstralEffects.astralTravelEffect) && !entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
     }
@@ -139,6 +141,7 @@ public class TravellingHandlers {
                 p.abilities.allowFlying = true;
                 p.noClip = true;
                 p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
+                p.abilities.allowEdit = false;
                 p.sendPlayerAbilities();
             }
             if (!p.getEntityWorld().isRemote()) {
@@ -152,22 +155,34 @@ public class TravellingHandlers {
                 physicalBodyEntity.setName(event.getEntity().getScoreboardName());
 
                 //Insert main inventory to body and clear
-                int i = 0;
-                for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
-                    physicalBodyEntity.insertItem(i++, stack, false);
-                }
-                ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
-
-                //Insert armor and offhand to entity
-                for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-                    physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
-                }
-                ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
-                ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
+                moveInventoryToMob(event, physicalBodyEntity);
             }
         }
-        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && !event.getEntityLiving().getEntityWorld().isRemote()){
+        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && !event.getEntityLiving().getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
+        }
+    }
+
+    private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
+        int i = 0;
+        for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
+            physicalBodyEntity.insertItem(i++, stack, false);
+        }
+        ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
+
+        //Insert armor and offhand to entity
+        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
+            physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
+        }
+        ((PlayerEntity) event.getEntityLiving()).inventory.armorInventory.clear();
+        ((PlayerEntity) event.getEntityLiving()).inventory.offHandInventory.clear();
+    }
+
+    @SubscribeEvent
+    public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
+            Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
+            event.setCanceled(!AstralBlockTags.ASTRAL_INTERACT.contains(targetedBlock));
         }
     }
 
