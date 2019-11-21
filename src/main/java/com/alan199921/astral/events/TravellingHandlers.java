@@ -5,7 +5,7 @@ import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
-import com.alan199921.astral.entities.PhysicalBodyRegistry;
+import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralBlockTags;
 import net.minecraft.block.Block;
@@ -145,7 +145,7 @@ public class TravellingHandlers {
                 p.sendPlayerAbilities();
             }
             if (!p.getEntityWorld().isRemote()) {
-                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) PhysicalBodyRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
+                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
                 physicalBodyEntity.setPlayerUUID(p.getGameProfile().getId());
                 //Store player UUID to body entity and give it a name
                 p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {

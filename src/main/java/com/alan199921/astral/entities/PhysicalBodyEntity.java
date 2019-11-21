@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -51,6 +53,62 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
             default:
                 return ItemStack.EMPTY;
         }
+    }
+
+    @Override
+    public void read(CompoundNBT compound) {
+        super.read(compound);
+        ListNBT mainInventoryTag = compound.getList("mainInventoryTag", 10);
+        for (int i = 0; i < mainInventoryTag.size(); i++){
+            mainInventory.set(i, ItemStack.read(mainInventoryTag.getCompound(i)));
+        }
+
+        ListNBT armorInventoryTag = compound.getList("armorInventoryTag", 10);
+        for (int i = 0; i < armorInventoryTag.size(); i++){
+            inventoryArmor.set(i, ItemStack.read(armorInventoryTag.getCompound(i)));
+        }
+
+        ListNBT handsInventoryTag = compound.getList("handsInventoryTag", 10);
+        for (int i = 0; i < handsInventoryTag.size(); i++){
+            inventoryHands.set(i, ItemStack.read(handsInventoryTag.getCompound(i)));
+        }
+
+        dataManager.set(playerUUID, Optional.of(compound.getUniqueId("playerUUID")));
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        ListNBT mainInventoryTag = new ListNBT();
+        for (int i = 0; i < mainInventory.size(); i++){
+            CompoundNBT slotNBT = new CompoundNBT();
+            mainInventory.get(i).write(slotNBT);
+            mainInventoryTag.add(i, slotNBT);
+        }
+        compound.put("mainInventoryTag", mainInventoryTag);
+
+        ListNBT armorInventoryTag = new ListNBT();
+        for (int i = 0; i < inventoryArmor.size(); i++){
+            CompoundNBT slotNBT = new CompoundNBT();
+            inventoryArmor.get(i).write(slotNBT);
+            armorInventoryTag.add(i, slotNBT);
+        }
+        compound.put("armorInventoryTag", armorInventoryTag);
+
+        ListNBT handsInventoryTag = new ListNBT();
+        for (int i = 0; i < inventoryHands.size(); i++){
+            CompoundNBT slotNBT = new CompoundNBT();
+            inventoryHands.get(i).write(slotNBT);
+            handsInventoryTag.add(i, slotNBT);
+        }
+        compound.put("handsInventoryTag", handsInventoryTag);
+        compound.putUniqueId("playerUUID", dataManager.get(playerUUID).get());
+
+        super.writeAdditional(compound);
+    }
+
+    @Override
+    protected void dropInventory() {
+        super.dropInventory();
     }
 
     @Override
