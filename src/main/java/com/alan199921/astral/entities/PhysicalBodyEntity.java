@@ -1,13 +1,13 @@
 package com.alan199921.astral.entities;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -19,16 +19,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
-import java.util.UUID;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
     private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
     private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
-    private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
-    private GameProfile gameProfile;
+    private static final DataParameter<CompoundNBT> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.COMPOUND_NBT);
 
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
@@ -73,7 +70,8 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
             inventoryHands.set(i, ItemStack.read(handsInventoryTag.getCompound(i)));
         }
 
-        dataManager.set(playerUUID, Optional.of(compound.getUniqueId("playerUUID")));
+        dataManager.set(gameProfile, compound.getCompound("gameProfile"));
+        dataManager.set(faceDown, compound.getBoolean("facedown"));
     }
 
     @Override
@@ -101,7 +99,8 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
             handsInventoryTag.add(i, slotNBT);
         }
         compound.put("handsInventoryTag", handsInventoryTag);
-        compound.putUniqueId("playerUUID", dataManager.get(playerUUID).get());
+        compound.put("gameProfile", dataManager.get(gameProfile));
+        compound.putBoolean("faceDown", dataManager.get(faceDown));
 
         super.writeAdditional(compound);
     }
@@ -170,17 +169,9 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     @Override
     protected void registerData() {
         super.registerData();
-        dataManager.register(playerUUID, Optional.empty());
+        dataManager.register(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), new GameProfile(null, "test")));
         // Approximately 5% of the storage mobs will be facedown
         dataManager.register(faceDown, Math.random() < .05);
-    }
-
-    public UUID getPlayerUUID() {
-        return dataManager.get(playerUUID).get();
-    }
-
-    public void setPlayerUUID(UUID uuid) {
-        dataManager.set(playerUUID, Optional.of(uuid));
     }
 
     @Override
@@ -197,9 +188,10 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     }
 
     public GameProfile getGameProfile(){
-        if (gameProfile == null){
-            gameProfile = Minecraft.getInstance().getSessionService().fillProfileProperties(new GameProfile(getPlayerUUID(), null), false);
-        }
-        return gameProfile;
+        return NBTUtil.readGameProfile(dataManager.get(gameProfile));
+    }
+
+    public void setGameProfile(GameProfile playerProfile){
+        dataManager.set(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), playerProfile));
     }
 }
