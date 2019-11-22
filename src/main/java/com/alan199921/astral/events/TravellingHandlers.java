@@ -1,11 +1,10 @@
 package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.blocks.AstralMeridian;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.effects.AstralEffects;
-import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.AstralEntityRegistry;
+import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralBlockTags;
 import net.minecraft.block.Block;
@@ -17,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -111,10 +111,21 @@ public class TravellingHandlers {
 
                     //Get the inventory and transfer items
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                    physicalBodyEntity.getInventory().forEach(playerEntity::addItemStackToInventory);
+                    physicalBodyEntity.getInventory().forEach(item -> {
+                        if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                            playerEntity.addItemStackToInventory(item);
+                        } else {
+                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), item);
+                        }
+                    });
                     for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                        if (!slot.equals(EquipmentSlotType.MAINHAND)) {
-                            playerEntity.setItemStackToSlot(slot, physicalBodyEntity.getItemStackFromSlot(slot));
+                        ItemStack corporeaArmorSlotStack = physicalBodyEntity.getItemStackFromSlot(slot);
+                        if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.getStackInSlot(slot.getIndex()).getItem() == Items.AIR) {
+                            playerEntity.setItemStackToSlot(slot, corporeaArmorSlotStack);
+                        } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                            playerEntity.inventory.addItemStackToInventory(corporeaArmorSlotStack);
+                        } else {
+                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), corporeaArmorSlotStack);
                         }
                     }
                     physicalBodyEntity.onKillCommand();
@@ -189,8 +200,8 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
         //Placeholder properties
-        if (!event.getState().getProperties().contains(AstralMeridian.ASTRAL_BLOCK) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
-            event.setNewSpeed(0f);
+        if (AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
+            event.setCanceled(true);
         }
     }
 
