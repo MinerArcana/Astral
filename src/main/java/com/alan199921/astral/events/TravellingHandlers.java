@@ -56,7 +56,8 @@ public class TravellingHandlers {
     public static void nullifyAstralDamage(LivingAttackEvent event) {
         boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
         boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
-        if (isDamageSourceNotMagic && isDamageTypeNotAstral) {
+        boolean isDamageSourceNotVoid = !event.getSource().damageType.equals("outOfWorld");
+        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isDamageSourceNotVoid) {
             event.setCanceled(true);
         }
     }
