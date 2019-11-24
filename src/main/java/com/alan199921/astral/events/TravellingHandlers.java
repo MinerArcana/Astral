@@ -120,7 +120,7 @@ public class TravellingHandlers {
                     });
                     for (EquipmentSlotType slot : EquipmentSlotType.values()) {
                         ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
-                        if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.getStackInSlot(slot.getIndex()).getItem() == Items.AIR) {
+                        if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()).getItem() == Items.AIR) {
                             playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
                         } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
                             playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
