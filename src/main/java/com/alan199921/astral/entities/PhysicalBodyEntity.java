@@ -1,11 +1,9 @@
 package com.alan199921.astral.entities;
 
-import com.google.common.collect.HashMultimap;
+import com.alan199921.astral.events.TravellingHandlers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -24,7 +22,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.UUID;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
@@ -180,17 +177,14 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         dataManager.register(faceDown, Math.random() < .05);
     }
 
-    private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
-
     @Override
     public void tick() {
         if (!world.isRemote() && isServerWorld()) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
-            PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());
-            HashMultimap<String, AttributeModifier> multimap = HashMultimap.create();
-            multimap.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(healthId, "physical_body_modifier", this.getHealth(), AttributeModifier.Operation.ADDITION));
-            playerEntity.getAttributes().applyAttributeModifiers(multimap);
+            if (getGameProfile() != null && isAlive() && world.getPlayerByUuid(getGameProfile().getId()) != null) {
+                TravellingHandlers.setPlayerMaxHealthTo(world.getPlayerByUuid(getGameProfile().getId()), getHealth());
+            }
         }
         super.tick();
     }
@@ -207,12 +201,20 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         dataManager.set(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), playerProfile));
     }
 
+    /**
+     * Kill player if the cause of death is not falling out of the world
+     *
+     * @param cause
+     */
     @Override
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
-        if (!world.isRemote() && !cause.getDamageType().equals("outOfWorld")){
+        if (!world.isRemote()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());
-            playerEntity.onKillCommand();
+            if (!cause.getDamageType().equals("outOfWorld")) {
+                playerEntity.onKillCommand();
+            }
         }
     }
+
 }

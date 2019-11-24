@@ -11,7 +11,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -24,13 +26,18 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.UUID;
+
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravellingHandlers {
+    private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
+
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
         if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
@@ -128,6 +135,7 @@ public class TravellingHandlers {
                             Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
                         }
                     }
+                    resetPlayerHealth(playerEntity, physicalBodyEntity);
                     physicalBodyEntity.onKillCommand();
                 });
             }
@@ -213,5 +221,20 @@ public class TravellingHandlers {
                 AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.astralTravelEffect), event.getEntity());
             }
         }
+    }
+
+    public static void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth){
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
+        float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+    }
+
+    public static void resetPlayerHealth(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity){
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
+        playerEntity.setHealth(physicalBodyEntity.getHealth());
+    }
+
+    @SubscribeEvent
+    public static void astralPickupEvent(EntityItemPickupEvent event){
     }
 }
