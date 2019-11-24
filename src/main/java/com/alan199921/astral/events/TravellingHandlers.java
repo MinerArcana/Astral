@@ -119,13 +119,13 @@ public class TravellingHandlers {
                         }
                     });
                     for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                        ItemStack corporeaArmorSlotStack = physicalBodyEntity.getItemStackFromSlot(slot);
+                        ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
                         if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.getStackInSlot(slot.getIndex()).getItem() == Items.AIR) {
-                            playerEntity.setItemStackToSlot(slot, corporeaArmorSlotStack);
+                            playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
                         } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                            playerEntity.inventory.addItemStackToInventory(corporeaArmorSlotStack);
+                            playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
                         } else {
-                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), corporeaArmorSlotStack);
+                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
                         }
                     }
                     physicalBodyEntity.onKillCommand();

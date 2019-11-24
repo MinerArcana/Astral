@@ -1,8 +1,12 @@
 package com.alan199921.astral.entities;
 
+import com.google.common.collect.HashMultimap;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -11,6 +15,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
@@ -19,6 +24,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 
 public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
@@ -56,17 +62,17 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     public void read(CompoundNBT compound) {
         super.read(compound);
         ListNBT mainInventoryTag = compound.getList("mainInventoryTag", 10);
-        for (int i = 0; i < mainInventoryTag.size(); i++){
+        for (int i = 0; i < mainInventoryTag.size(); i++) {
             mainInventory.set(i, ItemStack.read(mainInventoryTag.getCompound(i)));
         }
 
         ListNBT armorInventoryTag = compound.getList("armorInventoryTag", 10);
-        for (int i = 0; i < armorInventoryTag.size(); i++){
+        for (int i = 0; i < armorInventoryTag.size(); i++) {
             inventoryArmor.set(i, ItemStack.read(armorInventoryTag.getCompound(i)));
         }
 
         ListNBT handsInventoryTag = compound.getList("handsInventoryTag", 10);
-        for (int i = 0; i < handsInventoryTag.size(); i++){
+        for (int i = 0; i < handsInventoryTag.size(); i++) {
             inventoryHands.set(i, ItemStack.read(handsInventoryTag.getCompound(i)));
         }
 
@@ -77,7 +83,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     @Override
     public void writeAdditional(CompoundNBT compound) {
         ListNBT mainInventoryTag = new ListNBT();
-        for (int i = 0; i < mainInventory.size(); i++){
+        for (int i = 0; i < mainInventory.size(); i++) {
             CompoundNBT slotNBT = new CompoundNBT();
             mainInventory.get(i).write(slotNBT);
             mainInventoryTag.add(i, slotNBT);
@@ -85,7 +91,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         compound.put("mainInventoryTag", mainInventoryTag);
 
         ListNBT armorInventoryTag = new ListNBT();
-        for (int i = 0; i < inventoryArmor.size(); i++){
+        for (int i = 0; i < inventoryArmor.size(); i++) {
             CompoundNBT slotNBT = new CompoundNBT();
             inventoryArmor.get(i).write(slotNBT);
             armorInventoryTag.add(i, slotNBT);
@@ -93,7 +99,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         compound.put("armorInventoryTag", armorInventoryTag);
 
         ListNBT handsInventoryTag = new ListNBT();
-        for (int i = 0; i < inventoryHands.size(); i++){
+        for (int i = 0; i < inventoryHands.size(); i++) {
             CompoundNBT slotNBT = new CompoundNBT();
             inventoryHands.get(i).write(slotNBT);
             handsInventoryTag.add(i, slotNBT);
@@ -174,24 +180,39 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         dataManager.register(faceDown, Math.random() < .05);
     }
 
+    private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
+
     @Override
     public void tick() {
         if (!world.isRemote() && isServerWorld()) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
+            PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());
+            HashMultimap<String, AttributeModifier> multimap = HashMultimap.create();
+            multimap.put(SharedMonsterAttributes.MAX_HEALTH.getName(), new AttributeModifier(healthId, "physical_body_modifier", this.getHealth(), AttributeModifier.Operation.ADDITION));
+            playerEntity.getAttributes().applyAttributeModifiers(multimap);
         }
         super.tick();
     }
 
-    public boolean isFaceDown(){
+    public boolean isFaceDown() {
         return dataManager.get(faceDown);
     }
 
-    public GameProfile getGameProfile(){
+    public GameProfile getGameProfile() {
         return NBTUtil.readGameProfile(dataManager.get(gameProfile));
     }
 
-    public void setGameProfile(GameProfile playerProfile){
+    public void setGameProfile(GameProfile playerProfile) {
         dataManager.set(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), playerProfile));
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (!world.isRemote() && !cause.getDamageType().equals("outOfWorld")){
+            PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());
+            playerEntity.onKillCommand();
+        }
     }
 }
