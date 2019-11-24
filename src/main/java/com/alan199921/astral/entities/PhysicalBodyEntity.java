@@ -2,6 +2,7 @@ package com.alan199921.astral.entities;
 
 import com.alan199921.astral.events.TravellingHandlers;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -111,6 +112,8 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     @Override
     protected void dropInventory() {
         super.dropInventory();
+        mainInventory.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
+        inventoryArmor.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
     }
 
     @Override
@@ -213,6 +216,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());
             if (!cause.getDamageType().equals("outOfWorld")) {
                 playerEntity.onKillCommand();
+                dropInventory();
             }
         }
     }

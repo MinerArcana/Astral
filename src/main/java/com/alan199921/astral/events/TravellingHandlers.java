@@ -20,6 +20,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
+import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -55,7 +56,7 @@ public class TravellingHandlers {
     public static void nullifyAstralDamage(LivingAttackEvent event) {
         boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
         boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
-        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isAstralVsNonAstral((LivingEntity) event.getSource().getTrueSource(), event.getEntityLiving())) {
+        if (isDamageSourceNotMagic && isDamageTypeNotAstral) {
             event.setCanceled(true);
         }
     }
@@ -175,6 +176,7 @@ public class TravellingHandlers {
 
                 //Insert main inventory to body and clear
                 moveInventoryToMob(event, physicalBodyEntity);
+                physicalBodyEntity.setHealth(p.getHealth());
             }
         }
         if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && !event.getEntityLiving().getEntityWorld().isRemote()) {
@@ -208,7 +210,7 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
         //Placeholder properties
-        if (AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
+        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
             event.setCanceled(true);
         }
     }
@@ -223,18 +225,22 @@ public class TravellingHandlers {
         }
     }
 
-    public static void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth){
+    public static void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth) {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
     }
 
-    public static void resetPlayerHealth(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity){
+    public static void resetPlayerHealth(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         playerEntity.setHealth(physicalBodyEntity.getHealth());
     }
 
     @SubscribeEvent
-    public static void astralPickupEvent(EntityItemPickupEvent event){
+    public static void astralPickupEvent(EntityItemPickupEvent event) {
+        World world = event.getEntityLiving().world;
+        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect) && !AstralBlockTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+            event.setCanceled(true);
+        }
     }
 }
