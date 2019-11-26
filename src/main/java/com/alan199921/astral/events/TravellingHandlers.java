@@ -20,13 +20,12 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -48,17 +47,26 @@ public class TravellingHandlers {
     }
 
     /**
-     * An Astral entity only takes damage form other Astral Entities or Magic/Astral damage. An Astral entity can only damage non-astral entities
-     *
-     * @param event The LivingAttackEvent
+     * Non Astral entities do not take damage from Astral damage
+     * Astral entities have their physical damage replaced with Astral damage
+     * @param event
      */
     @SubscribeEvent
-    public static void nullifyAstralDamage(LivingAttackEvent event) {
-        boolean isDamageTypeNotAstral = !event.getSource().getDamageType().equals("astral");
-        boolean isDamageSourceNotMagic = !event.getSource().isMagicDamage();
-        boolean isDamageSourceNotVoid = !event.getSource().damageType.equals("outOfWorld");
-        if (isDamageSourceNotMagic && isDamageTypeNotAstral && isDamageSourceNotVoid) {
-            event.setCanceled(true);
+    public static void replacePhysicalWithAstralDamage(LivingAttackEvent event){
+        if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()){
+            LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
+            LivingEntity target = event.getEntityLiving();
+            String damageType = event.getSource().damageType;
+            if (!target.isPotionActive(AstralEffects.astralTravelEffect) && AstralDamage.isAstralDamage(damageType)){
+                event.setCanceled(true);
+            }
+            else if (trueSource.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
+                event.setCanceled(true);
+                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.astralTravelEffect).getAmplifier() + 1);
+            }
+            else if (target.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
+                event.setCanceled(true);
+            }
         }
     }
 
