@@ -62,7 +62,7 @@ public class TravellingHandlers {
             }
             else if (trueSource.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
                 event.setCanceled(true);
-                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.astralTravelEffect).getAmplifier() + 1);
+                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.astralTravelEffect).getAmplifier() + 1.0F);
             }
             else if (target.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
                 event.setCanceled(true);
