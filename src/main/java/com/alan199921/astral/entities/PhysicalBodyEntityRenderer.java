@@ -66,7 +66,7 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer {
     protected void renderLivingAt(LivingEntity e, double x, double y, double z) {
         super.renderLivingAt(e, x, y, z); // translation
         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) e;
-        GlStateManager.rotated(270, 1F, 0F, 0F); // face-down
+        GlStateManager.rotated(physicalBodyEntity.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
         GlStateManager.rotated(e.rotationPitch, 0F, 0F, 1F); // turn
         GlStateManager.translated(0F, -0.85F, physicalBodyEntity.isFaceDown() ? -0.125F : 0.125F); // center
     }

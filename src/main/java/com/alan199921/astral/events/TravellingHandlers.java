@@ -20,12 +20,14 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -49,7 +51,7 @@ public class TravellingHandlers {
     /**
      * Non Astral entities do not take damage from Astral damage
      * Astral entities have their physical damage replaced with Astral damage
-     * @param event
+     * @param event The LivingAttackEvent supplying the target, source, and damage
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event){
@@ -250,6 +252,14 @@ public class TravellingHandlers {
         World world = event.getEntityLiving().world;
         if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect) && !AstralBlockTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralDeath(LivingDeathEvent event) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity) {
+            event.setCanceled(true);
+            event.getEntityLiving().removeActivePotionEffect(AstralEffects.astralTravelEffect);
         }
     }
 }
