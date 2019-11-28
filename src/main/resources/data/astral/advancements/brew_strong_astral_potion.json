@@ -3,7 +3,7 @@
     "brew_strong_astral_potion": {
       "trigger": "minecraft:brewed_potion",
       "conditions": {
-        "potion": "astral:strong_astral_travel"
+        "potion": "astral:strong_astral_travel_potion"
       }
     }
   },
@@ -18,5 +18,8 @@
       "item": "minecraft:potion"
     }
   },
-  "parent": "astral:craft_travelling_medicine"
+  "parent": "astral:craft_travelling_medicine",
+  "rewards": {
+    "function": "astral:give_key"
+  }
 }
