@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "astral:enlightenment_key"
+    },
+    "title": {
+      "translate": "astral.advancement.inner_realm.name"
+    },
+    "description": {
+      "translate": "astral.advancement.inner_realm.desc"
+    }
+  },
+  "criteria": {
+    "entered_inner_realm": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "astral:inner_realm"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "entered_inner_realm"
+    ]
+  ],
+  "parent": "astral:craft_introspection_medicine"
+}

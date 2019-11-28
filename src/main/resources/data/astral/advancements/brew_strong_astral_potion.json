@@ -1,0 +1,22 @@
+{
+  "criteria": {
+    "brew_strong_astral_potion": {
+      "trigger": "minecraft:brewed_potion",
+      "conditions": {
+        "potion": "astral:strong_astral_travel"
+      }
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "astral.advancement.brew_strong_astral_potion.desc"
+    },
+    "title": {
+      "translate": "astral.advancement.brew_strong_astral_potion.name"
+    },
+    "icon": {
+      "item": "minecraft:potion"
+    }
+  },
+  "parent": "astral:craft_travelling_medicine"
+}

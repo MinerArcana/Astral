@@ -1,0 +1,1 @@
+give @p astral:enlightenment_key
