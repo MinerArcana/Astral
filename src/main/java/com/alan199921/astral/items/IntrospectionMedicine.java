@@ -16,6 +16,8 @@ public class IntrospectionMedicine extends Item {
         super(new Properties()
                 .food(new Food.Builder()
                         .setAlwaysEdible()
+                        .hunger(1)
+                        .saturation(-2F)
                         .build())
                 .group(Astral.setup.astralItems)
         );

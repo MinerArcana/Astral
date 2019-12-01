@@ -18,6 +18,8 @@ public class TravellingMedicine extends Item {
                 .food(new Food.Builder()
                         .fastToEat()
                         .setAlwaysEdible()
+                        .saturation(-2F)
+                        .hunger(1)
                         .effect(new EffectInstance(AstralEffects.astralTravelEffect, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 1), 1)
                         .build()));
     }

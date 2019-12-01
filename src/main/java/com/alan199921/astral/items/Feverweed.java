@@ -20,7 +20,7 @@ public class Feverweed extends BlockNamedItem {
                 .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
-                        .saturation(1)
+                        .saturation(-1F)
                         .hunger(1)
                         .fastToEat()
                         .effect(new EffectInstance(Effects.LUCK, AstralConfig.getHerbEffectDurations().getFeverweedLuckDuration(), 1), 1)
