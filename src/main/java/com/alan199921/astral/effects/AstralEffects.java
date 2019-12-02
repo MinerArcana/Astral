@@ -7,6 +7,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import static com.alan199921.astral.util.InjectionUtil.Null;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEffects {
 
@@ -15,7 +17,7 @@ public class AstralEffects {
     on Travelling Medicine would be null
     */
     @ObjectHolder("astral:astral_travel")
-    public static final Effect astralTravelEffect = new AstralTravelEffect();
+    public static final Effect astralTravelEffect = Null();
 
 
     @SubscribeEvent
