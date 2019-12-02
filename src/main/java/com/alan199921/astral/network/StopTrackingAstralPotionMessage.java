@@ -4,7 +4,6 @@ import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -36,7 +35,7 @@ public class StopTrackingAstralPotionMessage {
                         assert clientEntity != null;
                         if (clientEntity.isLiving()) {
                             LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(startTrackingAstralPotionMessage.entityID);
-                            clientLivingEntity.removeActivePotionEffect(AstralEffects.astralTravelEffect);
+                            clientLivingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT);
                         }
                     }
             );

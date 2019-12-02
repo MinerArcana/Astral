@@ -3,12 +3,9 @@ package com.alan199921.astral.items;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.effects.AstralEffects;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.world.World;
 
 public class TravellingMedicine extends Item {
 
@@ -23,12 +20,7 @@ public class TravellingMedicine extends Item {
                         .setAlwaysEdible()
                         .saturation(-2F)
                         .hunger(1)
+                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL_EFFECT, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 1), 1)
                         .build()));
-    }
-
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        entityLiving.addPotionEffect(new EffectInstance(AstralEffects.astralTravelEffect, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 1));
-        return super.onItemUseFinish(stack, worldIn, entityLiving);
     }
 }

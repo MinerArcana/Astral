@@ -59,14 +59,12 @@ public class TravellingHandlers {
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
             String damageType = event.getSource().damageType;
-            if (!target.isPotionActive(AstralEffects.astralTravelEffect) && AstralDamage.isAstralDamage(damageType)){
+            if (!target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
-            }
-            else if (trueSource.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
+            } else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
-                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.astralTravelEffect).getAmplifier() + 1.0F);
-            }
-            else if (target.isPotionActive(AstralEffects.astralTravelEffect) && !AstralDamage.isAstralDamage(damageType)){
+                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT).getAmplifier() + 1.0F);
+            } else if (target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
             }
         }
@@ -77,12 +75,12 @@ public class TravellingHandlers {
         if (mobA == null || mobB == null) {
             return false;
         }
-        return mobA.isPotionActive(AstralEffects.astralTravelEffect) && !mobB.isPotionActive(AstralEffects.astralTravelEffect) || !mobA.isPotionActive(AstralEffects.astralTravelEffect) && mobB.isPotionActive(AstralEffects.astralTravelEffect);
+        return mobA.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !mobB.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) || !mobA.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && mobB.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT);
     }
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
-        if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.astralTravelEffect) && event.getEntity().isPotionActive(AstralEffects.astralTravelEffect)) {
+        if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && event.getEntity().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
             event.setCanceled(true);
         }
     }
@@ -105,7 +103,7 @@ public class TravellingHandlers {
      * @param entityLiving The entity that with the potion effect
      */
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
-        if (potionEffect.equals(AstralEffects.astralTravelEffect) && entityLiving instanceof PlayerEntity) {
+        if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL_EFFECT) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             //Revoke flight mode capabilities
             if (!playerEntity.abilities.isCreativeMode) {
@@ -152,7 +150,7 @@ public class TravellingHandlers {
                 });
             }
         }
-        if (potionEffect.equals(AstralEffects.astralTravelEffect) && !entityLiving.getEntityWorld().isRemote()) {
+        if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
     }
@@ -165,7 +163,7 @@ public class TravellingHandlers {
      */
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
-        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect)) {
+        if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL_EFFECT) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
             //Give player flight
             PlayerEntity p = (PlayerEntity) event.getEntityLiving();
             if (!p.abilities.isCreativeMode) {
@@ -190,7 +188,7 @@ public class TravellingHandlers {
                 physicalBodyEntity.setHealth(p.getHealth());
             }
         }
-        if (event.getPotionEffect().getPotion().equals(AstralEffects.astralTravelEffect) && !event.getEntityLiving().getEntityWorld().isRemote()) {
+        if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !event.getEntityLiving().getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
     }
@@ -212,7 +210,7 @@ public class TravellingHandlers {
 
     @SubscribeEvent
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
+        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
             Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
             event.setCanceled(!AstralBlockTags.ASTRAL_INTERACT.contains(targetedBlock));
         }
@@ -221,7 +219,7 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
         //Placeholder properties
-        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.astralTravelEffect)) {
+        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
             event.setCanceled(true);
         }
     }
@@ -230,8 +228,8 @@ public class TravellingHandlers {
     public static void startTrackingAstralEntity(PlayerEvent.StartTracking event) {
         if (event.getTarget().isLiving()) {
             LivingEntity livingTarget = event.getEntityLiving();
-            if (livingTarget.isPotionActive(AstralEffects.astralTravelEffect)) {
-                AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.astralTravelEffect), event.getEntity());
+            if (livingTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
+                AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT), event.getEntity());
             }
         }
     }
@@ -250,16 +248,16 @@ public class TravellingHandlers {
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
-        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect) && !AstralBlockTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralBlockTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving().isPotionActive(AstralEffects.astralTravelEffect) && event.getEntityLiving() instanceof PlayerEntity) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && event.getEntityLiving() instanceof PlayerEntity) {
             event.setCanceled(true);
-            event.getEntityLiving().removeActivePotionEffect(AstralEffects.astralTravelEffect);
+            event.getEntityLiving().removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT);
         }
     }
 }

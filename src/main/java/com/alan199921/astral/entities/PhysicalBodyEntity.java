@@ -207,7 +207,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     /**
      * Kill player if the cause of death is not falling out of the world
      *
-     * @param cause
+     * @param cause The cause of death
      */
     @Override
     public void onDeath(DamageSource cause) {
