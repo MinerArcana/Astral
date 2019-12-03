@@ -1,6 +1,6 @@
 package com.alan199921.astral.entities;
 
-import com.alan199921.astral.events.TravellingHandlers;
+import com.alan199921.astral.events.TravelingHandlers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -20,28 +20,26 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
-    private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(6 * 7, ItemStack.EMPTY);
-    private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
-    private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
+public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<CompoundNBT> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.COMPOUND_NBT);
-
+    private final PhysicalBodyInventory mainInventory = new PhysicalBodyInventory();
+    private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
+    private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
+    }
+
+    public PhysicalBodyInventory getMainInventory() {
+        return mainInventory;
     }
 
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
         return inventoryArmor;
-    }
-
-    public NonNullList<ItemStack> getInventoryHands() {
-        return inventoryHands;
     }
 
     @Override
@@ -61,7 +59,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
         super.read(compound);
         ListNBT mainInventoryTag = compound.getList("mainInventoryTag", 10);
         for (int i = 0; i < mainInventoryTag.size(); i++) {
-            mainInventory.set(i, ItemStack.read(mainInventoryTag.getCompound(i)));
+            mainInventory.insertItem(i, ItemStack.read(mainInventoryTag.getCompound(i)), false);
         }
 
         ListNBT armorInventoryTag = compound.getList("armorInventoryTag", 10);
@@ -81,9 +79,9 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     @Override
     public void writeAdditional(CompoundNBT compound) {
         ListNBT mainInventoryTag = new ListNBT();
-        for (int i = 0; i < mainInventory.size(); i++) {
+        for (int i = 0; i < mainInventory.getSlots(); i++) {
             CompoundNBT slotNBT = new CompoundNBT();
-            mainInventory.get(i).write(slotNBT);
+            mainInventory.getStackInSlot(i).write(slotNBT);
             mainInventoryTag.add(i, slotNBT);
         }
         compound.put("mainInventoryTag", mainInventoryTag);
@@ -112,7 +110,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     @Override
     protected void dropInventory() {
         super.dropInventory();
-        mainInventory.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
+        mainInventory.getMainInventory().forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
         inventoryArmor.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
     }
 
@@ -136,43 +134,6 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
     }
 
     @Override
-    public int getSlots() {
-        return mainInventory.size();
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return mainInventory.get(slot);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return mainInventory.set(slot, stack);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return mainInventory.remove(slot).split(amount);
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
-        return 64;
-    }
-
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return true;
-    }
-
-    public NonNullList<ItemStack> getInventory() {
-        return mainInventory;
-    }
-
-    @Override
     protected void registerData() {
         super.registerData();
         dataManager.register(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), new GameProfile(null, "test")));
@@ -186,7 +147,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
             if (getGameProfile() != null && isAlive() && world.getPlayerByUuid(getGameProfile().getId()) != null) {
-                TravellingHandlers.setPlayerMaxHealthTo(world.getPlayerByUuid(getGameProfile().getId()), getHealth());
+                TravelingHandlers.setPlayerMaxHealthTo(world.getPlayerByUuid(getGameProfile().getId()), getHealth());
             }
         }
         super.tick();
@@ -210,7 +171,7 @@ public class PhysicalBodyEntity extends LivingEntity implements IItemHandler {
      * @param cause The cause of death
      */
     @Override
-    public void onDeath(DamageSource cause) {
+    public void onDeath(@Nonnull DamageSource cause) {
         super.onDeath(cause);
         if (!world.isRemote()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().getId());

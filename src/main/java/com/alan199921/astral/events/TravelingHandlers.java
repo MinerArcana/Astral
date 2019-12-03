@@ -37,7 +37,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
-public class TravellingHandlers {
+public class TravelingHandlers {
     private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
 
     @SubscribeEvent
@@ -59,12 +59,13 @@ public class TravellingHandlers {
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
             String damageType = event.getSource().damageType;
-            if (!target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && AstralDamage.isAstralDamage(damageType)) {
+            boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT);
+            if (!isAstralTravelActive && AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
             } else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
                 target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT).getAmplifier() + 1.0F);
-            } else if (target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralDamage.isAstralDamage(damageType)) {
+            } else if (isAstralTravelActive && !AstralDamage.isAstralDamage(damageType)) {
                 event.setCanceled(true);
             }
         }
@@ -128,23 +129,7 @@ public class TravellingHandlers {
 
                     //Get the inventory and transfer items
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                    physicalBodyEntity.getInventory().forEach(item -> {
-                        if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                            playerEntity.addItemStackToInventory(item);
-                        } else {
-                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), item);
-                        }
-                    });
-                    for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                        ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
-                        if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()).getItem() == Items.AIR) {
-                            playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
-                        } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                            playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
-                        } else {
-                            Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
-                        }
-                    }
+                    transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
                     resetPlayerHealth(playerEntity, physicalBodyEntity);
                     physicalBodyEntity.onKillCommand();
                 });
@@ -152,6 +137,27 @@ public class TravellingHandlers {
         }
         if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
+        }
+    }
+
+    private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
+        physicalBodyEntity.getMainInventory().getMainInventory().forEach(item -> {
+            if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                playerEntity.addItemStackToInventory(item);
+            } else {
+                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), item);
+            }
+        });
+        for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+            ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
+            if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()).getItem() == Items.AIR) {
+                playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
+            } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
+            } else {
+                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
+            }
+            physicalBodyEntity.setItemStackToSlot(slot, ItemStack.EMPTY);
         }
     }
 
@@ -196,7 +202,7 @@ public class TravellingHandlers {
     private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
         int i = 0;
         for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
-            physicalBodyEntity.insertItem(i++, stack, false);
+            physicalBodyEntity.getMainInventory().insertItem(i++, stack, false);
         }
         ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
 
