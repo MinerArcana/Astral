@@ -141,7 +141,7 @@ public class TravelingHandlers {
     }
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
-        physicalBodyEntity.getMainInventory().getMainInventory().forEach(item -> {
+        physicalBodyEntity.getMainInventory().forEach(item -> {
             if (playerEntity.inventory.getFirstEmptyStack() != -1) {
                 playerEntity.addItemStackToInventory(item);
             } else {
@@ -202,7 +202,7 @@ public class TravelingHandlers {
     private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
         int i = 0;
         for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
-            physicalBodyEntity.getMainInventory().insertItem(i++, stack, false);
+            physicalBodyEntity.getMainInventory().set(i++, stack);
         }
         ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
 

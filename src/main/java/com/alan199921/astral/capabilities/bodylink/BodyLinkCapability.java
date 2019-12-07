@@ -49,7 +49,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     public NonNullList<ItemStack> killEntity(ServerWorld world) {
         try {
             PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) world.getServer().getWorld(Objects.requireNonNull(DimensionType.getById(dimensionID))).getEntityByUuid(linkedBodyID);
-            NonNullList<ItemStack> inventory = physicalBodyEntity.getMainInventory().getMainInventory();
+            NonNullList<ItemStack> inventory = physicalBodyEntity.getMainInventory();
             physicalBodyEntity.onKillCommand();
             physicalBodyEntity.attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
             return inventory;

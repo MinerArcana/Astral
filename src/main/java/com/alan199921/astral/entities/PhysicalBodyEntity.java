@@ -26,14 +26,14 @@ import javax.annotation.Nonnull;
 public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<CompoundNBT> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.COMPOUND_NBT);
-    private final PhysicalBodyInventory mainInventory = new PhysicalBodyInventory();
+    private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(42, ItemStack.EMPTY);
     private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
     private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }
 
-    public PhysicalBodyInventory getMainInventory() {
+    public NonNullList<ItemStack> getMainInventory() {
         return mainInventory;
     }
 
@@ -59,7 +59,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         super.read(compound);
         ListNBT mainInventoryTag = compound.getList("mainInventoryTag", 10);
         for (int i = 0; i < mainInventoryTag.size(); i++) {
-            mainInventory.insertItem(i, ItemStack.read(mainInventoryTag.getCompound(i)), false);
+            mainInventory.set(i, ItemStack.read(mainInventoryTag.getCompound(i)));
         }
 
         ListNBT armorInventoryTag = compound.getList("armorInventoryTag", 10);
@@ -79,9 +79,9 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     public void writeAdditional(CompoundNBT compound) {
         ListNBT mainInventoryTag = new ListNBT();
-        for (int i = 0; i < mainInventory.getSlots(); i++) {
+        for (int i = 0; i < mainInventory.size(); i++) {
             CompoundNBT slotNBT = new CompoundNBT();
-            mainInventory.getStackInSlot(i).write(slotNBT);
+            mainInventory.get(i).write(slotNBT);
             mainInventoryTag.add(i, slotNBT);
         }
         compound.put("mainInventoryTag", mainInventoryTag);
@@ -110,7 +110,7 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     protected void dropInventory() {
         super.dropInventory();
-        mainInventory.getMainInventory().forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
+        mainInventory.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
         inventoryArmor.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
     }
 
