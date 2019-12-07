@@ -56,7 +56,7 @@ public class TravelingHandlers {
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event){
-        if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()){
+        if (event.getSource().getTrueSource() instanceof LivingEntity) {
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
             DamageSource damageType = event.getSource();
