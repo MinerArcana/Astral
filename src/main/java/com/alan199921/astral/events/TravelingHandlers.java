@@ -20,6 +20,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -58,14 +59,14 @@ public class TravelingHandlers {
         if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource().isLiving()){
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
-            String damageType = event.getSource().damageType;
+            DamageSource damageType = event.getSource();
             boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT);
-            if (!isAstralTravelActive && AstralDamage.isAstralDamage(damageType)) {
+            if (!isAstralTravelActive && IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
-            } else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !AstralDamage.isAstralDamage(damageType)) {
+            } else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
-                target.attackEntityFrom(new AstralDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT).getAmplifier() + 1.0F);
-            } else if (isAstralTravelActive && !AstralDamage.isAstralDamage(damageType)) {
+                target.attackEntityFrom(new AstralEntityDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT).getAmplifier() + 1.0F);
+            } else if (isAstralTravelActive && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
             }
         }
