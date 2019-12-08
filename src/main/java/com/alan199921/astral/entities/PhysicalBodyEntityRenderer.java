@@ -7,6 +7,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +20,11 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
 
     public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager, float shadowSizeIn) {
         super(rendererManager, new PhysicalBodyModel(0.0f, true), shadowSizeIn);
+        this.addLayer(new BipedArmorLayer<>(this, new NonRotatingBipedModel(0.5F), new NonRotatingBipedModel(1.0F)));
+        this.addLayer(new HeldItemLayer<>(this));
+        this.addLayer(new ArrowLayer<>(this));
+        this.addLayer(new HeadLayer<>(this));
+        this.addLayer(new ElytraLayer<>(this));
     }
 
     @Nullable
