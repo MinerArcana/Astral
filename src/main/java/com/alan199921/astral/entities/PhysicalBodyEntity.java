@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -20,35 +19,40 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<CompoundNBT> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.COMPOUND_NBT);
-    private final NonNullList<ItemStack> mainInventory = NonNullList.withSize(42, ItemStack.EMPTY);
-    private final NonNullList<ItemStack> inventoryHands = NonNullList.withSize(2, ItemStack.EMPTY);
-    private final NonNullList<ItemStack> inventoryArmor = NonNullList.withSize(4, ItemStack.EMPTY);
+    private final ItemStackHandler mainInventory = new ItemStackHandler(42);
+    private final ItemStackHandler inventoryHands = new ItemStackHandler(2);
+    private final ItemStackHandler inventoryArmor = new ItemStackHandler(4);
+
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }
 
-    public NonNullList<ItemStack> getMainInventory() {
+    public ItemStackHandler getMainInventory() {
         return mainInventory;
     }
 
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
-        return inventoryArmor;
+        NonNullList<ItemStack> itemStackList = NonNullList.withSize(inventoryArmor.getSlots(), ItemStack.EMPTY);
+        IntStream.range(0, inventoryArmor.getSlots()).forEach(i -> itemStackList.set(i, inventoryArmor.getStackInSlot(i)));
+        return itemStackList;
     }
 
     @Override
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
         switch (slotIn.getSlotType()) {
             case HAND:
-                return this.inventoryHands.get(slotIn.getIndex());
+                return this.inventoryHands.getStackInSlot(slotIn.getIndex());
             case ARMOR:
-                return this.inventoryArmor.get(slotIn.getIndex());
+                return this.inventoryArmor.getStackInSlot(slotIn.getIndex());
             default:
                 return ItemStack.EMPTY;
         }
@@ -57,20 +61,9 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     public void read(CompoundNBT compound) {
         super.read(compound);
-        ListNBT mainInventoryTag = compound.getList("mainInventoryTag", 10);
-        for (int i = 0; i < mainInventoryTag.size(); i++) {
-            mainInventory.set(i, ItemStack.read(mainInventoryTag.getCompound(i)));
-        }
-
-        ListNBT armorInventoryTag = compound.getList("armorInventoryTag", 10);
-        for (int i = 0; i < armorInventoryTag.size(); i++) {
-            inventoryArmor.set(i, ItemStack.read(armorInventoryTag.getCompound(i)));
-        }
-
-        ListNBT handsInventoryTag = compound.getList("handsInventoryTag", 10);
-        for (int i = 0; i < handsInventoryTag.size(); i++) {
-            inventoryHands.set(i, ItemStack.read(handsInventoryTag.getCompound(i)));
-        }
+        mainInventory.deserializeNBT(compound.getCompound("mainInventoryTag"));
+        inventoryArmor.deserializeNBT(compound.getCompound("armorInventoryTag"));
+        inventoryHands.deserializeNBT(compound.getCompound("handsInventoryTag"));
 
         dataManager.set(gameProfile, compound.getCompound("gameProfile"));
         dataManager.set(faceDown, compound.getBoolean("facedown"));
@@ -78,29 +71,10 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
-        ListNBT mainInventoryTag = new ListNBT();
-        for (int i = 0; i < mainInventory.size(); i++) {
-            CompoundNBT slotNBT = new CompoundNBT();
-            mainInventory.get(i).write(slotNBT);
-            mainInventoryTag.add(i, slotNBT);
-        }
-        compound.put("mainInventoryTag", mainInventoryTag);
+        compound.put("mainInventoryTag", mainInventory.serializeNBT());
+        compound.put("armorInventoryTag", inventoryArmor.serializeNBT());
+        compound.put("handsInventoryTag", inventoryHands.serializeNBT());
 
-        ListNBT armorInventoryTag = new ListNBT();
-        for (int i = 0; i < inventoryArmor.size(); i++) {
-            CompoundNBT slotNBT = new CompoundNBT();
-            inventoryArmor.get(i).write(slotNBT);
-            armorInventoryTag.add(i, slotNBT);
-        }
-        compound.put("armorInventoryTag", armorInventoryTag);
-
-        ListNBT handsInventoryTag = new ListNBT();
-        for (int i = 0; i < inventoryHands.size(); i++) {
-            CompoundNBT slotNBT = new CompoundNBT();
-            inventoryHands.get(i).write(slotNBT);
-            handsInventoryTag.add(i, slotNBT);
-        }
-        compound.put("handsInventoryTag", handsInventoryTag);
         compound.put("gameProfile", dataManager.get(gameProfile));
         compound.putBoolean("faceDown", dataManager.get(faceDown));
 
@@ -110,16 +84,16 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     protected void dropInventory() {
         super.dropInventory();
-        mainInventory.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
-        inventoryArmor.forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
+        IntStream.range(0, mainInventory.getSlots()).forEach(i -> Block.spawnAsEntity(world, getPosition(), mainInventory.getStackInSlot(i)));
+        getArmorInventoryList().forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
     }
 
     @Override
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
         if (slotIn.getSlotType() == EquipmentSlotType.Group.HAND) {
-            this.inventoryHands.set(slotIn.getIndex(), stack);
+            this.inventoryHands.setStackInSlot(slotIn.getIndex(), stack);
         } else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-            this.inventoryArmor.set(slotIn.getIndex(), stack);
+            this.inventoryArmor.setStackInSlot(slotIn.getIndex(), stack);
         }
     }
 

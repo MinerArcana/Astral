@@ -36,6 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
@@ -142,11 +143,11 @@ public class TravelingHandlers {
     }
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
-        physicalBodyEntity.getMainInventory().forEach(item -> {
+        IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
             if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                playerEntity.addItemStackToInventory(item);
+                playerEntity.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
             } else {
-                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), item);
+                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
             }
         });
         for (EquipmentSlotType slot : EquipmentSlotType.values()) {
@@ -203,7 +204,7 @@ public class TravelingHandlers {
     private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
         int i = 0;
         for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
-            physicalBodyEntity.getMainInventory().set(i++, stack);
+            physicalBodyEntity.getMainInventory().setStackInSlot(i++, stack);
         }
         ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory.clear();
 
