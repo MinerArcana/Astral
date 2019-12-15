@@ -18,7 +18,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -144,15 +143,17 @@ public class TravelingHandlers {
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
         IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
-            if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                playerEntity.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
+            if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
+                playerEntity.inventory.setInventorySlotContents(i, physicalBodyEntity.getMainInventory().getStackInSlot(i));
+            } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                playerEntity.inventory.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
             } else {
                 Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
             }
         });
         for (EquipmentSlotType slot : EquipmentSlotType.values()) {
             ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
-            if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()).getItem() == Items.AIR) {
+            if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
                 playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
             } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
                 playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
