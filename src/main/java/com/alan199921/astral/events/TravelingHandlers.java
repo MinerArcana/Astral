@@ -23,6 +23,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -267,6 +268,25 @@ public class TravelingHandlers {
         if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && event.getEntityLiving() instanceof PlayerEntity) {
             event.setCanceled(true);
             event.getEntityLiving().removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT);
+        }
+    }
+
+    @SubscribeEvent(receiveCanceled = true)
+    public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
+        Minecraft minecraft = Minecraft.getInstance();
+//        int scaledWidth = minecraft.mainWindow.getScaledWidth();
+//        int scaledHeight = minecraft.mainWindow.getScaledHeight();
+//        if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH && minecraft.getRenderViewEntity() instanceof PlayerEntity){
+//            event.setCanceled(true);
+//
+//            PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
+//
+//        }
+        if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
+            if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD && playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
+                event.setCanceled(true);
+            }
         }
     }
 }
