@@ -143,25 +143,28 @@ public class TravelingHandlers {
     }
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
-        IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
-            if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
-                playerEntity.inventory.setInventorySlotContents(i, physicalBodyEntity.getMainInventory().getStackInSlot(i));
-            } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                playerEntity.inventory.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
-            } else {
-                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
+        if (!playerEntity.getEntityWorld().isRemote()) {
+            IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
+                if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
+                    playerEntity.inventory.setInventorySlotContents(i, physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                    playerEntity.inventory.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                } else {
+                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                }
+                physicalBodyEntity.getMainInventory().setStackInSlot(i, ItemStack.EMPTY);
+            });
+            for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+                ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
+                if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
+                    playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
+                } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                    playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
+                } else {
+                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
+                }
+                physicalBodyEntity.setItemStackToSlot(slot, ItemStack.EMPTY);
             }
-        });
-        for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-            ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
-            if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
-                playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
-            } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
-            } else {
-                Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
-            }
-            physicalBodyEntity.setItemStackToSlot(slot, ItemStack.EMPTY);
         }
     }
 
@@ -271,22 +274,27 @@ public class TravelingHandlers {
         }
     }
 
+    /**
+     * Make hearts white and remove the hunger bar when the player has the Astral potion effect
+     *
+     * @param event The game overlay render event to be cancelled if Astral Travel is active and the event is rendering food or health
+     */
     @SubscribeEvent(receiveCanceled = true)
     public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-//        int scaledWidth = minecraft.mainWindow.getScaledWidth();
-//        int scaledHeight = minecraft.mainWindow.getScaledHeight();
-//        if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH && minecraft.getRenderViewEntity() instanceof PlayerEntity){
-//            event.setCanceled(true);
-//
-//            PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
-//
-//        }
         if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
-            if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD && playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
-                event.setCanceled(true);
+            if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
+                //Cancel rendering of hunger bar
+                if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
+                    event.setCanceled(true);
+                }
+                if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
+                    event.setCanceled(true);
+                    HealthBarRenderer.renderAstralHearts(minecraft, playerEntity);
+                }
             }
         }
     }
+
 }
