@@ -4,7 +4,6 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +14,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 
-import static com.mojang.blaze3d.platform.GlStateManager.color4f;
+import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
 import static net.minecraftforge.client.ForgeIngameGui.left_height;
 
 public class HealthBarRenderer {
@@ -32,8 +31,7 @@ public class HealthBarRenderer {
 
         mc.getProfiler().startSection("health");
         GlStateManager.enableBlend();
-
-
+        mc.getTextureManager().bindTexture(HEART_TEXTURE);
         int health = MathHelper.ceil(player.getHealth());
         int ticks = 0;
         int playerHealth = 0;
@@ -88,17 +86,15 @@ public class HealthBarRenderer {
             if (health <= 4) y += rand.nextInt(2);
             if (i == regen) y -= 2;
 
-            GlStateManager.color3f(0.7176471f, 0.8392157f, 0.84313726f);
             if (i * 2 + 1 < health) {
                 drawTexturedModalRect(x, y, MARGIN + 36, TOP, 9, 9);
             } else if (i * 2 + 1 == health) {
                 drawTexturedModalRect(x, y, MARGIN + 45, TOP, 9, 9);
             }
-            color4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         GlStateManager.disableBlend();
-        mc.getTextureManager().bindTexture(IngameGui.GUI_ICONS_LOCATION);
+        mc.getTextureManager().bindTexture(GUI_ICONS_LOCATION);
         mc.getProfiler().endSection();
     }
 }
