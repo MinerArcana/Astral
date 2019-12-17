@@ -291,7 +291,7 @@ public class TravelingHandlers {
                 }
                 if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
                     event.setCanceled(true);
-                    HealthBarRenderer.renderAstralHearts(minecraft, playerEntity);
+                    AstralHealthBar.renderAstralHearts(minecraft, playerEntity);
                 }
             }
         }

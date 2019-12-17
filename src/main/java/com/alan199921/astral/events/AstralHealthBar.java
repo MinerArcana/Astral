@@ -17,9 +17,9 @@ import java.util.Random;
 import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
 import static net.minecraftforge.client.ForgeIngameGui.left_height;
 
-public class HealthBarRenderer {
+public class AstralHealthBar {
 
-    public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/health.png");
+    public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health.png");
 
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
@@ -78,19 +78,38 @@ public class HealthBarRenderer {
         int MARGIN = 16;
 
         //Renders hearts?
-        for (int i = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1; i >= 0; --i) {
-            int row = MathHelper.ceil((float) (i + 1) / 10.0F) - 1;
-            int x = left + i % 10 * 8;
+        int numberOfHearts = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1;
+        for (int heartNumber = numberOfHearts; heartNumber >= 0; --heartNumber) {
+            int row = MathHelper.ceil((float) (heartNumber + 1) / 10.0F) - 1;
+            int x = left + heartNumber % 10 * 8;
             int y = top - row * rowHeight;
 
             if (health <= 4) y += rand.nextInt(2);
-            if (i == regen) y -= 2;
+            if (heartNumber == regen) y -= 2;
 
-            if (i * 2 + 1 < health) {
-                drawTexturedModalRect(x, y, MARGIN + 36, TOP, 9, 9);
-            } else if (i * 2 + 1 == health) {
-                drawTexturedModalRect(x, y, MARGIN + 45, TOP, 9, 9);
+            boolean fullHeart = heartNumber * 2 + 1 < health;
+            boolean halfHeart = heartNumber * 2 + 1 == health;
+
+            if (heartNumber == 0 && fullHeart) {
+                //Full ghost
+                drawTexturedModalRect(x, y, 0, 9, 9, 9);
+            } else if (heartNumber == 0 && halfHeart) {
+                //Half ghost
+                drawTexturedModalRect(x, y, 0, 9, 5, 9);
+            } else if (heartNumber == numberOfHearts && fullHeart) {
+                //Full end of bar
+                drawTexturedModalRect(x, y, 18, 9, 9, 9);
+            } else if (heartNumber == numberOfHearts && halfHeart) {
+                //Half end of bar
+                drawTexturedModalRect(x, y, 27, 9, 9, 9);
+            } else if (fullHeart) {
+                //Full bar
+                drawTexturedModalRect(x, y, 9, 9, 9, 9);
+            } else if (halfHeart) {
+                //Half heart
+                drawTexturedModalRect(x, y, 9, 9, 5, 9);
             }
+
         }
 
         GlStateManager.disableBlend();
