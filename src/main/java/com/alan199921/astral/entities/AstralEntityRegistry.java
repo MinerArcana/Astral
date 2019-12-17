@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class PhysicalBodyRegistry {
+public class AstralEntityRegistry {
     public static final EntityType<?> PHYSICAL_BODY_ENTITY;
 
     static {

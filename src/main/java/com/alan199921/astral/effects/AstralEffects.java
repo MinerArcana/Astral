@@ -10,13 +10,17 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEffects {
 
+    /*
+    Instantiation is required for it to not crash with Quark since effects are registered after items and the effect
+    on Travelling Medicine would be null
+    */
     @ObjectHolder("astral:astral_travel")
-    public static final Effect astralTravelEffect = null;
+    public static final Effect ASTRAL_TRAVEL_EFFECT = new AstralTravelEffect();
 
 
     @SubscribeEvent
     public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
-        registerEffect(event.getRegistry(), new AstralTravelEffect(), "astral_travel");
+        registerEffect(event.getRegistry(), ASTRAL_TRAVEL_EFFECT, "astral_travel");
     }
 
     /**

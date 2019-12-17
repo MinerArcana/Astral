@@ -9,9 +9,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class BodyLinkCapability implements IBodyLinkCapability {
     private UUID linkedBodyID = UUID.randomUUID();
@@ -49,10 +51,12 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     public NonNullList<ItemStack> killEntity(ServerWorld world) {
         try {
             PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) world.getServer().getWorld(Objects.requireNonNull(DimensionType.getById(dimensionID))).getEntityByUuid(linkedBodyID);
-            NonNullList<ItemStack> inventory = physicalBodyEntity.getInventory();
             physicalBodyEntity.onKillCommand();
             physicalBodyEntity.attackEntityFrom(DamageSource.OUT_OF_WORLD, 1000);
-            return inventory;
+            ItemStackHandler handler = physicalBodyEntity.getMainInventory();
+            NonNullList<ItemStack> itemStacks = NonNullList.withSize(handler.getSlots(), ItemStack.EMPTY);
+            IntStream.range(0, handler.getSlots()).forEach(i -> itemStacks.set(i, handler.getStackInSlot(i)));
+            return itemStacks;
         } catch (NullPointerException e) {
             System.out.println("Entity is already dead!");
         }

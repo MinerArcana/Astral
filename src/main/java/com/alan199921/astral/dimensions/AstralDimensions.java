@@ -22,22 +22,22 @@ import java.util.function.BiFunction;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralDimensions {
-    public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID + ":" + "inner_realm");
-    public static ModDimension innerRealm = new ModDimension() {
+    public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID, "inner_realm");
+    public static final ModDimension innerRealm = new ModDimension() {
         @Override
         public BiFunction<World, DimensionType, ? extends Dimension> getFactory() {
             return InnerRealmDimension::new;
         }
-    }.setRegistryName("astral:inner_realm");
+    };
 
-    public static ChunkGeneratorType<GenerationSettings, InnerRealmChunkGenerator> generatorType = new ChunkGeneratorType<>(InnerRealmChunkGenerator::new, false, GenerationSettings::new);
+    public static final ChunkGeneratorType<GenerationSettings, InnerRealmChunkGenerator> generatorType = new ChunkGeneratorType<>(InnerRealmChunkGenerator::new, false, GenerationSettings::new);
 
-    public static BiomeProviderType<SingleBiomeProviderSettings, InnerRealmBiomeProvider> biomeProviderType = new BiomeProviderType<>(InnerRealmBiomeProvider::new, SingleBiomeProviderSettings::new);
+    public static final BiomeProviderType<SingleBiomeProviderSettings, InnerRealmBiomeProvider> biomeProviderType = new BiomeProviderType<>(InnerRealmBiomeProvider::new, SingleBiomeProviderSettings::new);
 
     @SubscribeEvent
     public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
-        event.getRegistry().register(AstralDimensions.innerRealm);
-        DimensionManager.registerDimension(new ResourceLocation(Astral.MOD_ID, "inner_realm"), AstralDimensions.innerRealm, null, true);
+        event.getRegistry().register(AstralDimensions.innerRealm.setRegistryName(INNER_REALM));
+        DimensionManager.registerDimension(INNER_REALM, AstralDimensions.innerRealm, null, true);
     }
 
 }

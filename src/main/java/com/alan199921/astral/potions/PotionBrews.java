@@ -18,16 +18,16 @@ public class PotionBrews {
     @SubscribeEvent
     public static void createPotionRecipes(final FMLCommonSetupEvent event) {
         //Astral Travel recipe
-        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.travellingMedicine);
-        createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.astralTravelPotion, AstralPotions.longAstralTravelPotion, AstralPotions.strongAstralTravelPotion);
+        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.TRAVELLING_MEDICINE);
+        createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.ASTRAL_TRAVEL_POTION, AstralPotions.LONG_ASTRAL_TRAVEL_POTION, AstralPotions.STRONG_ASTRAL_TRAVEL_POTION);
 
         //Snowberry brew recipe
-        Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.snowberry));
-        createBrewingRecipes(Potions.THICK, snowberryIngredient, AstralPotions.snowberryBrew, AstralPotions.longSnowberryBrew, AstralPotions.strongSnowberryBrew);
+        Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.SNOWBERRY));
+        createBrewingRecipes(Potions.THICK, snowberryIngredient, AstralPotions.SNOWBERRY_BREW, AstralPotions.LONG_SNOWBERRY_BREW, AstralPotions.STRONG_SNOWBERRY_BREW);
 
         //Feverweed brew recipe
-        Ingredient feverweedIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.feverweed));
-        createBrewingRecipes(Potions.THICK, feverweedIngredient, AstralPotions.feverweedBrew, AstralPotions.longFeverweedBrew, AstralPotions.strongFeverweedBrew);
+        Ingredient feverweedIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.FEVERWEED));
+        createBrewingRecipes(Potions.THICK, feverweedIngredient, AstralPotions.FEVERWEED_BREW, AstralPotions.LONG_FEVERWEED_BREW, AstralPotions.STRONG_FEVERWEED_BREW);
     }
 
     private static ItemStack potionToItemStack(Potion potion) {

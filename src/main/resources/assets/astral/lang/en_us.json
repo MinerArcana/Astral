@@ -46,5 +46,17 @@
   "item.minecraft.tipped_arrow.effect.strong_snowberry_brew": "Arrow of Snowberry",
   "item.minecraft.lingering_potion.effect.snowberry_brew": "Snowberry Mist",
   "item.minecraft.lingering_potion.effect.long_snowberry_brew": "Snowberry Mist",
-  "item.minecraft.lingering_potion.effect.strong_snowberry_brew": "Snowberry Mist"
+  "item.minecraft.lingering_potion.effect.strong_snowberry_brew": "Snowberry Mist",
+  "astral.advancement.root.name": "Astral",
+  "astral.advancement.root.desc": "The beginning of a journey of introspection and projection",
+  "astral.advancement.craft_travelling_medicine.name": "Are you experienced?",
+  "astral.advancement.craft_travelling_medicine.desc": "Craft Travelling Medicine",
+  "astral.advancement.become_astral.name": "Steps on the Wind",
+  "astral.advancement.become_astral.desc": "Become a spooky Astral ghost",
+  "astral.advancement.brew_strong_astral_potion.name": "Mile Stride",
+  "astral.advancement.brew_strong_astral_potion.desc": "Brew Potion of Astral Travel II",
+  "astral.advancement.craft_introspection_medicine.name": "Compartmentalization",
+  "astral.advancement.craft_introspection_medicine.desc": "Craft Introspection Medicine",
+  "astral.advancement.inner_realm.name": "Withdrawal",
+  "astral.advancement.inner_realm.desc": "Enter the Inner Realm"
 }

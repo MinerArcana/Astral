@@ -28,7 +28,6 @@ public class InnerRealmTeleporterStorage implements Capability.IStorage<IInnerRe
         HashMap<UUID, BlockPos> spawnList = new HashMap<>();
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
         CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
-        assert spawnLocations != null;
         for (String id : spawnLocations.keySet()) {
             spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocations.getCompound(id)));
         }

@@ -2,19 +2,19 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "astral:feverweed"
+      "item": "astral:snowberry"
     },
     {
-      "item": "minecraft:poisonous_potato"
+      "item": "minecraft:sugar"
     },
     {
       "item": "minecraft:bowl"
     },
     {
-      "tag": "astral:mushrooms"
+      "item": "astral:feverweed"
     }
   ],
   "result": {
-    "item": "astral:introspection_medicine"
+    "item": "astral:travelling_medicine"
   }
 }

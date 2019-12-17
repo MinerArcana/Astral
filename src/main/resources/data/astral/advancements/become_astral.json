@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "become_astral": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "astral:astral_travel": {
+          }
+        }
+      }
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "astral.advancement.become_astral.desc"
+    },
+    "title": {
+      "translate": "astral.advancement.become_astral.name"
+    },
+    "icon": {
+      "item": "minecraft:potion"
+    }
+  },
+  "parent": "astral:craft_travelling_medicine"
+}

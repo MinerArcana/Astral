@@ -42,12 +42,15 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
             }
         }
 
+        //Set snowberry bushes
         int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
         for (int i = 0; i < numberOfBushesInFeature; i++) {
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
             worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.snowberryBush.getDefaultState(), 2);
             generatedSomething = true;
         }
+
+        //Set snow around generation
         for (int i = 0; i < numberOfBushesInFeature; i++) {
             for (BlockPos adjacentPos : getAdjacentBlocks(positionsToGen.get(i))) {
                 int layerLevel = rand.nextInt(4);

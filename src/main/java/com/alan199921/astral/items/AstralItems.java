@@ -12,19 +12,19 @@ import net.minecraftforge.registries.ObjectHolder;
 public class AstralItems {
 
     @ObjectHolder("astral:snowberry")
-    public static final Item snowberry = null;
+    public static final Item SNOWBERRY = null;
 
     @ObjectHolder("astral:feverweed")
-    public static final Item feverweed = null;
+    public static final Item FEVERWEED = null;
 
     @ObjectHolder("astral:introspection_medicine")
-    public static final Item introspectionMedicine = null;
+    public static final Item INTROSPECTION_MEDICINE = null;
 
     @ObjectHolder("astral:enlightenment_key")
-    public static final Item enlightenmentKey = null;
+    public static final Item ENLIGHTENMENT_KEY = null;
 
     @ObjectHolder("astral:travelling_medicine")
-    public static final Item travellingMedicine = null;
+    public static final Item TRAVELLING_MEDICINE = null;
 
     @SubscribeEvent
     public static void onItemRegistry(final RegistryEvent.Register<Item> event) {

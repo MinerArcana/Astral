@@ -42,7 +42,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
 
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        return new ItemStack(AstralItems.snowberry.asItem());
+        return new ItemStack(AstralItems.SNOWBERRY.asItem());
     }
 
     /**
@@ -51,7 +51,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
      * <p>
      * If the player right clicks with bone meal, increase the age by one //TODO May not be implemented yet
      * <p>
-     * Copied from SnowBerrtBushBlock.java
+     * Copied from SweetBerryBushBlock.java
      *
      * @param state   The blockstate of the block
      * @param worldIn The world object
@@ -69,7 +69,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
             return false;
         } else if (age > 1) {
             int j = 1 + worldIn.rand.nextInt(2);
-            spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.snowberry.asItem(), j + (readyToHarvest ? 1 : 0)));
+            spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.asItem(), j + (readyToHarvest ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
             worldIn.setBlockState(pos, state.with(AGE, 1), 2);
             return true;

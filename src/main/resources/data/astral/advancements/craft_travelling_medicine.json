@@ -1,0 +1,29 @@
+{
+  "criteria": {
+    "obtain_travelling_medicine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:travelling_medicine"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "function": "astral:give_key"
+  },
+  "display": {
+    "description": {
+      "translate": "astral.advancement.craft_travelling_medicine.desc"
+    },
+    "title": {
+      "translate": "astral.advancement.craft_travelling_medicine.name"
+    },
+    "icon": {
+      "item": "astral:travelling_medicine"
+    }
+  },
+  "parent": "astral:root"
+}

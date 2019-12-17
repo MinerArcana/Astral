@@ -16,30 +16,30 @@ import net.minecraftforge.registries.ObjectHolder;
 public class AstralPotions {
 
     @ObjectHolder("astral:astral_travel_potion")
-    public static final Potion astralTravelPotion = null;
+    public static final Potion ASTRAL_TRAVEL_POTION = null;
     @ObjectHolder("astral:long_astral_travel_potion")
-    public static final Potion longAstralTravelPotion = null;
+    public static final Potion LONG_ASTRAL_TRAVEL_POTION = null;
     @ObjectHolder("astral:strong_astral_travel_potion")
-    public static final Potion strongAstralTravelPotion = null;
+    public static final Potion STRONG_ASTRAL_TRAVEL_POTION = null;
     @ObjectHolder("astral:feverweed_brew")
-    public static final Potion feverweedBrew = null;
+    public static final Potion FEVERWEED_BREW = null;
     @ObjectHolder("astral:long_feverweed_brew")
-    public static final Potion longFeverweedBrew = null;
+    public static final Potion LONG_FEVERWEED_BREW = null;
     @ObjectHolder("astral:strong_feverweed_brew")
-    public static final Potion strongFeverweedBrew = null;
+    public static final Potion STRONG_FEVERWEED_BREW = null;
     @ObjectHolder("astral:snowberry_brew")
-    public static final Potion snowberryBrew = null;
+    public static final Potion SNOWBERRY_BREW = null;
     @ObjectHolder("astral:long_snowberry_brew")
-    public static final Potion longSnowberryBrew = null;
+    public static final Potion LONG_SNOWBERRY_BREW = null;
     @ObjectHolder("astral:strong_snowberry_brew")
-    public static final Potion strongSnowberryBrew = null;
+    public static final Potion STRONG_SNOWBERRY_BREW = null;
 
     @SubscribeEvent
     public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
         int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
-        registerPotion(event.getRegistry(), AstralEffects.astralTravelEffect, "astral_travel_potion", baseAstralTravelDuration, 0);
-        registerPotion(event.getRegistry(), AstralEffects.astralTravelEffect, "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
-        registerPotion(event.getRegistry(), AstralEffects.astralTravelEffect, "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL_EFFECT, "astral_travel_potion", baseAstralTravelDuration, 0);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL_EFFECT, "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL_EFFECT, "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
 
         //Register more complex potions
         AstralConfig.PotionEffectDurations baseBrewDurations = AstralConfig.getPotionEffectDurations();

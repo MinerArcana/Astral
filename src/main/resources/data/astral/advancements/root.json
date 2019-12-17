@@ -1,0 +1,20 @@
+{
+  "display": {
+    "title": {
+      "translate": "astral.advancement.root.name"
+    },
+    "description": {
+      "translate": "astral.advancement.root.desc"
+    },
+    "icon": {
+      "item": "astral:feverweed"
+    },
+    "background": "astral:textures/block/ether_dirt.png",
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "trigger_1": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

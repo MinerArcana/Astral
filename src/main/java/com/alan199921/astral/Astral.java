@@ -42,7 +42,6 @@ public class Astral {
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
-
     }
 
     private void setup(final FMLCommonSetupEvent event) {

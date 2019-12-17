@@ -1,0 +1,26 @@
+{
+  "criteria": {
+    "obtain_introspection_medicine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:introspection_medicine"
+          }
+        ]
+      }
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "astral.advancement.craft_introspection_medicine.desc"
+    },
+    "title": {
+      "translate": "astral.advancement.craft_introspection_medicine.name"
+    },
+    "icon": {
+      "item": "astral:introspection_medicine"
+    }
+  },
+  "parent": "astral:root"
+}
