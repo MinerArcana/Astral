@@ -23,7 +23,7 @@ public class TravellingMedicine extends Item {
                         .setAlwaysEdible()
                         .saturation(-2F)
                         .hunger(1)
-                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL_EFFECT, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 1), 1)
+                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 1), 1)
                         .build()));
     }
 
@@ -36,7 +36,7 @@ public class TravellingMedicine extends Item {
     @Override
     @Nonnull
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
+        super.onItemUseFinish(stack, worldIn, entityLiving);
         return new ItemStack(Items.BOWL);
-
     }
 }

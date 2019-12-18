@@ -15,12 +15,12 @@ public class AstralEffects {
     on Travelling Medicine would be null
     */
     @ObjectHolder("astral:astral_travel")
-    public static final Effect ASTRAL_TRAVEL_EFFECT = new AstralTravelEffect();
+    public static final Effect ASTRAL_TRAVEL = new AstralTravelEffect();
 
 
     @SubscribeEvent
     public static void onEffectRegistry(final RegistryEvent.Register<Effect> event) {
-        registerEffect(event.getRegistry(), ASTRAL_TRAVEL_EFFECT, "astral_travel");
+        registerEffect(event.getRegistry(), ASTRAL_TRAVEL, "astral_travel");
     }
 
     /**

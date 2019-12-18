@@ -18,7 +18,7 @@ public class IntrospectionMedicine extends Item {
                         .setAlwaysEdible()
                         .hunger(1)
                         .saturation(-2F)
-                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL_EFFECT, Integer.MAX_VALUE), 1)
+                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL, Integer.MAX_VALUE), 1)
                         .build())
                 .group(Astral.setup.astralItems)
         );
@@ -31,6 +31,7 @@ public class IntrospectionMedicine extends Item {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(playerEntity));
         }
+        super.onItemUseFinish(stack, worldIn, entityLiving);
         return new ItemStack(Items.BOWL);
     }
 
