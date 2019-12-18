@@ -2,6 +2,7 @@ package com.alan199921.astral.capabilities.innerrealmteleporter;
 
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
+import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -55,12 +56,12 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void teleport(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
-            innerRealmWorld.getChunk(new BlockPos(0, 0, 0));
-            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
-            serverPlayerEntity.teleport(innerRealmWorld, 1, 1000, 1, player.rotationYaw, player.rotationPitch);
+            TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(1, 1000, 1), DimensionType.byName(AstralDimensions.INNER_REALM));
+//            ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
+//            innerRealmWorld.getChunk(new BlockPos(0, 0, 0));
+//            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
+//            serverPlayerEntity.teleport(innerRealmWorld, 1, 1000, 1, player.rotationYaw, player.rotationPitch);
         }
-
         World innerRealmWorld = player.getEntityWorld();
         boolean firstTime = false;
         if (!spawnLocations.containsKey(player.getUniqueID())) {

@@ -117,9 +117,9 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     @Override
     public void tick() {
-        if (!world.isRemote() && isServerWorld()) {
+        if (!world.isRemote()) {
             ServerWorld serverWorld = (ServerWorld) world;
-            serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, false);
+            serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
             if (getGameProfile() != null && isAlive() && world.getPlayerByUuid(getGameProfile().getId()) != null) {
                 TravelingHandlers.setPlayerMaxHealthTo(world.getPlayerByUuid(getGameProfile().getId()), getHealth());
             }

@@ -37,6 +37,12 @@ public class AstralNetwork {
                 .encoder(StopTrackingAstralPotionMessage::encode)
                 .consumer(StopTrackingAstralPotionMessage::handle)
                 .add();
+
+        channel.messageBuilder(SendPlayerInfoToClientAfterTeleport.class, 4)
+                .decoder(SendPlayerInfoToClientAfterTeleport::decode)
+                .encoder(SendPlayerInfoToClientAfterTeleport::encode)
+                .consumer(SendPlayerInfoToClientAfterTeleport::handle)
+                .add();
         return channel;
     }
 

@@ -1,15 +1,13 @@
 package com.alan199921.astral.blocks;
 
-import com.alan199921.astral.dimensions.TeleportationTools;
+import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -25,14 +23,7 @@ public class EgoMembrane extends Block {
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
         worldIn.setBlockState(pos, AstralBlocks.egoMembrane.getDefaultState(), 2);
-        if (!worldIn.isRemote()) {
-            TeleportationTools.changeDim((ServerPlayerEntity) player, pos, player.getSpawnDimension());
-        }
+        player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT);
         super.harvestBlock(worldIn, player, pos, state, te, stack);
-    }
-
-    @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.east()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.west()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.north()).getBlock().equals(AstralBlocks.egoMembrane) || worldIn.getBlockState(pos.south()).getBlock().equals(AstralBlocks.egoMembrane);
     }
 }
