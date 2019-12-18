@@ -2,6 +2,7 @@ package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
@@ -9,10 +10,7 @@ import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -32,6 +30,7 @@ import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -113,7 +112,6 @@ public class TravelingHandlers {
                 playerEntity.abilities.allowFlying = false;
                 playerEntity.noClip = false;
                 playerEntity.abilities.setFlySpeed(.05F);
-                playerEntity.abilities.allowEdit = true;
                 playerEntity.sendPlayerAbilities();
             }
             //Only run serverside
@@ -183,7 +181,6 @@ public class TravelingHandlers {
                 p.abilities.allowFlying = true;
                 p.noClip = true;
                 p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
-                p.abilities.allowEdit = false;
                 p.sendPlayerAbilities();
             }
             if (!p.getEntityWorld().isRemote()) {
@@ -223,16 +220,27 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
+        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && isEntityInInnerRealm(event.getPlayer())) {
             Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
             event.setCanceled(!AstralBlockTags.ASTRAL_INTERACT.contains(targetedBlock));
         }
     }
 
+    private static boolean isEntityInInnerRealm(Entity entity) {
+        return entity.dimension == DimensionType.byName(AstralDimensions.INNER_REALM);
+    }
+
     @SubscribeEvent
-    public static void astralBreakBlock(PlayerEvent.BreakSpeed event) {
+    public static void astralBreakBlock(BlockEvent.BreakEvent event) {
         //Placeholder properties
-        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT)) {
+        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && isEntityInInnerRealm(event.getPlayer())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralPlaceBlockEvent(BlockEvent.EntityPlaceEvent event) {
+        if (event.getEntity() instanceof LivingEntity && !AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && ((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL_EFFECT) && isEntityInInnerRealm(event.getEntity())) {
             event.setCanceled(true);
         }
     }
