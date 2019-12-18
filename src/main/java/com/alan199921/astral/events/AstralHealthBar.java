@@ -20,14 +20,12 @@ import static net.minecraftforge.client.ForgeIngameGui.left_height;
 public class AstralHealthBar {
 
     public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health.png");
-    private static long healthUpdateCounter;
 
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
     }
 
     static void renderAstralHearts(Minecraft mc, PlayerEntity player) {
-
         int scaledWidth = mc.mainWindow.getScaledWidth();
         int scaledHeight = mc.mainWindow.getScaledHeight();
 
@@ -38,16 +36,7 @@ public class AstralHealthBar {
         int ticks = 0;
         int playerHealth = 0;
         long lastSystemTime = 0;
-        healthUpdateCounter = 0;
-        int updateCounter = mc.ingameGUI.getTicks();
-        boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
-        if (health < playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = System.currentTimeMillis();
-            healthUpdateCounter = updateCounter + 20;
-        } else if (health > playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = System.currentTimeMillis();
-            healthUpdateCounter = updateCounter + 10;
-        }
+        boolean highlight = false;
         if (health < playerHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Util.milliTime();
         } else if (health > playerHealth && player.hurtResistantTime > 0) {
@@ -101,16 +90,6 @@ public class AstralHealthBar {
             boolean fullHeart = heartNumber * 2 + 1 < health;
             boolean halfHeart = heartNumber * 2 + 1 == health;
 
-//            if (highlight) {
-//                if (fullHeart) {
-//                    //Draw full highlighted heart
-//                    drawTexturedModalRect(x, y, k5 + 54, 9 * i5, 9, 9);
-//                }
-//                if (halfHeart) {
-//                    //Draw half highlighted heart
-//                    drawTexturedModalRect(x, y, k5 + 63, 9 * i5, 9, 9);
-//                }
-//            }
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
                 drawTexturedModalRect(x, y, 0, 9, 9, 9);
