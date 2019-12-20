@@ -19,7 +19,7 @@ import static net.minecraftforge.client.ForgeIngameGui.left_height;
 
 public class AstralHealthBar {
 
-    public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health.png");
+    public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health_v2.png");
 
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
@@ -73,7 +73,7 @@ public class AstralHealthBar {
             regen = ticks % 25;
         }
 
-        final int TOP = 9 * (mc.world.getWorldInfo().isHardcore() ? 5 : 0);
+        final int TOP = 9 * (highlight ? 1 : 0);
         final int BACKGROUND = 16;
         int MARGIN = 16;
 
@@ -89,25 +89,47 @@ public class AstralHealthBar {
 
             boolean fullHeart = heartNumber * 2 + 1 < health;
             boolean halfHeart = heartNumber * 2 + 1 == health;
+            boolean fullBar = heartNumber * 2 + 1 < healthMax;
+            boolean halfBar = heartNumber * 2 + 1 == healthMax;
+            //Outlines
+            if (heartNumber == 0 && fullBar) {
+                //Full ghost
+                drawTexturedModalRect(x, y, 54, TOP, 9, 9);
+            } else if (heartNumber == 0 && halfBar) {
+                //Half ghost
+                drawTexturedModalRect(x, y, 54, TOP, 5, 9);
+            } else if (heartNumber == numberOfHearts && fullBar) {
+                //Full end of bar
+                drawTexturedModalRect(x, y, 72, TOP, 9, 9);
+            } else if (heartNumber == numberOfHearts && halfBar) {
+                //Half end of bar
+                drawTexturedModalRect(x, y, 81, TOP, 9, 9);
+            } else if (fullBar) {
+                //Full bar
+                drawTexturedModalRect(x, y, 63, TOP, 9, 9);
+            } else if (halfBar) {
+                //Half heart
+                drawTexturedModalRect(x, y, 63, TOP, 5, 9);
+            }
 
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
-                drawTexturedModalRect(x, y, 0, 9, 9, 9);
+                drawTexturedModalRect(x, y, 0, 0, 9, 9);
             } else if (heartNumber == 0 && halfHeart) {
                 //Half ghost
-                drawTexturedModalRect(x, y, 0, 9, 5, 9);
-            } else if (heartNumber == numberOfHearts && fullHeart) {
-                //Full end of bar
-                drawTexturedModalRect(x, y, 18, 9, 9, 9);
+                drawTexturedModalRect(x, y, 0, 0, 5, 9);
             } else if (heartNumber == numberOfHearts && halfHeart) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 27, 9, 9, 9);
+                drawTexturedModalRect(x, y, 18, 0, 5, 9);
+            } else if (heartNumber == numberOfHearts && fullHeart) {
+                //Full end of bar
+                drawTexturedModalRect(x, y, 18, 0, 9, 9);
             } else if (fullHeart) {
                 //Full bar
-                drawTexturedModalRect(x, y, 9, 9, 9, 9);
+                drawTexturedModalRect(x, y, 9, 0, 9, 9);
             } else if (halfHeart) {
                 //Half heart
-                drawTexturedModalRect(x, y, 9, 9, 5, 9);
+                drawTexturedModalRect(x, y, 9, 0, 5, 9);
             }
 
         }
