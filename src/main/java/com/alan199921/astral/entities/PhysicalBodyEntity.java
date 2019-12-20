@@ -27,6 +27,7 @@ import java.util.stream.IntStream;
 public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<CompoundNBT> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.COMPOUND_NBT);
+    private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
     private final ItemStackHandler mainInventory = new ItemStackHandler(42);
     private final ItemStackHandler inventoryHands = new ItemStackHandler(2);
     private final ItemStackHandler inventoryArmor = new ItemStackHandler(4);
@@ -113,6 +114,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         dataManager.register(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), new GameProfile(null, "test")));
         // Approximately 5% of the storage mobs will be facedown
         dataManager.register(faceDown, Math.random() < .05);
+        dataManager.register(hungerLevel, 20F);
     }
 
     @Override
@@ -137,6 +139,14 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public void setGameProfile(GameProfile playerProfile) {
         dataManager.set(gameProfile, NBTUtil.writeGameProfile(new CompoundNBT(), playerProfile));
+    }
+
+    public float getHungerLevel() {
+        return dataManager.get(hungerLevel);
+    }
+
+    public void setHungerLevel(float hunger) {
+        dataManager.set(hungerLevel, hunger);
     }
 
     /**

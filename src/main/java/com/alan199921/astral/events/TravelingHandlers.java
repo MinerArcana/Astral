@@ -52,10 +52,11 @@ public class TravelingHandlers {
     /**
      * Non Astral entities do not take damage from Astral damage
      * Astral entities have their physical damage replaced with Astral damage
+     *
      * @param event The LivingAttackEvent supplying the target, source, and damage
      */
     @SubscribeEvent
-    public static void replacePhysicalWithAstralDamage(LivingAttackEvent event){
+    public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
         if (event.getSource().getTrueSource() instanceof LivingEntity) {
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
@@ -137,7 +138,7 @@ public class TravelingHandlers {
                     //Get the inventory and transfer items
                     PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
-                    resetPlayerHealth(playerEntity, physicalBodyEntity);
+                    resetPlayerStats(playerEntity, physicalBodyEntity);
                     physicalBodyEntity.onKillCommand();
                 });
             }
@@ -202,6 +203,7 @@ public class TravelingHandlers {
                 //Insert main inventory to body and clear
                 moveInventoryToMob(event, physicalBodyEntity);
                 physicalBodyEntity.setHealth(p.getHealth());
+                physicalBodyEntity.setHungerLevel(p.getFoodStats().getFoodLevel());
             }
         }
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && !event.getEntityLiving().getEntityWorld().isRemote()) {
@@ -279,9 +281,16 @@ public class TravelingHandlers {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
     }
 
-    public static void resetPlayerHealth(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
+    /**
+     * Resets the player entity's stats to what the physical body has
+     *
+     * @param playerEntity       The player entity to recieve stats from the physical body
+     * @param physicalBodyEntity The physical body storing player stats
+     */
+    public static void resetPlayerStats(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         playerEntity.setHealth(physicalBodyEntity.getHealth());
+        playerEntity.getFoodStats().setFoodLevel((int) physicalBodyEntity.getHungerLevel());
     }
 
     @SubscribeEvent
