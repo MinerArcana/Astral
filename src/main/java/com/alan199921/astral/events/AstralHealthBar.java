@@ -20,6 +20,9 @@ import static net.minecraftforge.client.ForgeIngameGui.left_height;
 public class AstralHealthBar {
 
     public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health_v2.png");
+    private static long healthUpdateCounter;
+    private static int playerHealth;
+    private static long lastSystemTime;
 
     public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
         Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
@@ -33,14 +36,15 @@ public class AstralHealthBar {
         GlStateManager.enableBlend();
         mc.getTextureManager().bindTexture(HEART_TEXTURE);
         int health = MathHelper.ceil(player.getHealth());
-        int ticks = 0;
-        int playerHealth = 0;
-        long lastSystemTime = 0;
-        boolean highlight = false;
+        int ticks = mc.ingameGUI.getTicks();
+        boolean highlight = healthUpdateCounter > (long) ticks && (healthUpdateCounter - (long) ticks) / 3L % 2L == 1L;
         if (health < playerHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Util.milliTime();
+            healthUpdateCounter = (long) ticks + 20;
+
         } else if (health > playerHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Util.milliTime();
+            healthUpdateCounter = (long) ticks + 10;
         }
 
         int lastPlayerHealth = 0;
@@ -74,8 +78,6 @@ public class AstralHealthBar {
         }
 
         final int TOP = 9 * (highlight ? 1 : 0);
-        final int BACKGROUND = 16;
-        int MARGIN = 16;
 
         //Renders hearts?
         int numberOfHearts = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1;
@@ -87,10 +89,34 @@ public class AstralHealthBar {
             if (health <= 4) y += rand.nextInt(2);
             if (heartNumber == regen) y -= 2;
 
+            boolean fullHighlight = heartNumber * 2 + 1 < healthLast;
+            boolean halfHighlight = heartNumber * 2 + 1 == healthLast;
             boolean fullHeart = heartNumber * 2 + 1 < health;
             boolean halfHeart = heartNumber * 2 + 1 == health;
             boolean fullBar = heartNumber * 2 + 1 < healthMax;
             boolean halfBar = heartNumber * 2 + 1 == healthMax;
+
+            //Current health rendering
+            if (heartNumber == 0 && fullHeart) {
+                //Full ghost
+                drawTexturedModalRect(x, y, 27, 0, 9, 9);
+            } else if (heartNumber == 0 && halfHeart) {
+                //Half ghost
+                drawTexturedModalRect(x, y, 27, 0, 5, 9);
+            } else if (heartNumber == numberOfHearts && halfHeart) {
+                //Half end of bar
+                drawTexturedModalRect(x, y, 45, 0, 5, 9);
+            } else if (heartNumber == numberOfHearts && fullHeart) {
+                //Full end of bar
+                drawTexturedModalRect(x, y, 45, 0, 9, 9);
+            } else if (fullHeart) {
+                //Full bar
+                drawTexturedModalRect(x, y, 36, 0, 9, 9);
+            } else if (halfHeart) {
+                //Half heart
+                drawTexturedModalRect(x, y, 36, 0, 5, 9);
+            }
+
             //Outlines
             if (heartNumber == 0 && fullBar) {
                 //Full ghost
@@ -110,26 +136,6 @@ public class AstralHealthBar {
             } else if (halfBar) {
                 //Half heart
                 drawTexturedModalRect(x, y, 63, TOP, 5, 9);
-            }
-
-            if (heartNumber == 0 && fullHeart) {
-                //Full ghost
-                drawTexturedModalRect(x, y, 0, 0, 9, 9);
-            } else if (heartNumber == 0 && halfHeart) {
-                //Half ghost
-                drawTexturedModalRect(x, y, 0, 0, 5, 9);
-            } else if (heartNumber == numberOfHearts && halfHeart) {
-                //Half end of bar
-                drawTexturedModalRect(x, y, 18, 0, 5, 9);
-            } else if (heartNumber == numberOfHearts && fullHeart) {
-                //Full end of bar
-                drawTexturedModalRect(x, y, 18, 0, 9, 9);
-            } else if (fullHeart) {
-                //Full bar
-                drawTexturedModalRect(x, y, 9, 0, 9, 9);
-            } else if (halfHeart) {
-                //Half heart
-                drawTexturedModalRect(x, y, 9, 0, 5, 9);
             }
 
         }
