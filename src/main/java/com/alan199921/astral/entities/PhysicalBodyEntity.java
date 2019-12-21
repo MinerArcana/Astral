@@ -119,7 +119,7 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     @Override
     public void tick() {
-        if (!world.isRemote()) {
+        if (!world.isRemote() && world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
             if (getGameProfile() != null && isAlive() && world.getPlayerByUuid(getGameProfile().getId()) != null) {

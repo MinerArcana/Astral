@@ -7,7 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,7 +29,6 @@ public class AstralMeridian extends Block {
      * Enlightenment for the direction to break blocks in
      */
     public static final IntegerProperty DIRECTION = IntegerProperty.create("direction", 0, 3);
-    public static final BooleanProperty ASTRAL_BLOCK = BooleanProperty.create("astral_block");
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
@@ -48,6 +46,5 @@ public class AstralMeridian extends Block {
     public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
         worldIn.setBlockState(pos, AstralBlocks.egoMembrane.getDefaultState(), 2);
         player.removePotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL).getPotion());
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
     }
 }
