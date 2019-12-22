@@ -134,7 +134,6 @@ public class TravelingHandlers {
                     PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
 
                     //Teleport the player
-
                     serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
 
                     //Get the inventory and transfer items

@@ -41,7 +41,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
 
     private void addPlayerToHashMap(PlayerEntity player) {
         int distanceBetweenBoxes = 256;
-        BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getEntityWorld().getSeaLevel() + 1, 8);
+        BlockPos spawnLocation = new BlockPos(spawnLocations.size() * distanceBetweenBoxes + 8, player.getEntityWorld().getSeaLevel() + 4, 8);
         spawnLocations.put(player.getUniqueID(), spawnLocation);
     }
 
@@ -57,10 +57,6 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     public void teleport(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
             TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(1, 1000, 1), DimensionType.byName(AstralDimensions.INNER_REALM));
-//            ServerWorld innerRealmWorld = ((ServerPlayerEntity) player).server.getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
-//            innerRealmWorld.getChunk(new BlockPos(0, 0, 0));
-//            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
-//            serverPlayerEntity.teleport(innerRealmWorld, 1, 1000, 1, player.rotationYaw, player.rotationPitch);
         }
         World innerRealmWorld = player.getEntityWorld();
         boolean firstTime = false;
