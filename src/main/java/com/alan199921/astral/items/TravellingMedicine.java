@@ -43,6 +43,6 @@ public class TravellingMedicine extends Item {
             playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
         }
         super.onItemUseFinish(stack, worldIn, entityLiving);
-        return new ItemStack(Items.BOWL);
+        return ItemStack.EMPTY;
     }
 }
