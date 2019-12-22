@@ -34,6 +34,7 @@ public class Astral {
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
 
     public static ModSetup setup = new ModSetup();
+
     public Astral() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

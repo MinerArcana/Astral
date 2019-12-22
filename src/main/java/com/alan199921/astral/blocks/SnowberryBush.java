@@ -1,7 +1,7 @@
 package com.alan199921.astral.blocks;
 
 import com.alan199921.astral.items.AstralItems;
-import com.alan199921.astral.tags.SustainBlockTags;
+import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -31,7 +31,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
     @Override
     protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
         Block block = state.getBlock();
-        return SustainBlockTags.SNOWBERRY_SUSTAIN.contains(block);
+        return AstralTags.SNOWBERRY_SUSTAIN.contains(block);
     }
 
     @Override
@@ -67,13 +67,15 @@ public class SnowberryBush extends SweetBerryBushBlock {
         boolean readyToHarvest = age == 3;
         if (!readyToHarvest && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {
             return false;
-        } else if (age > 1) {
+        }
+        else if (age > 1) {
             int j = 1 + worldIn.rand.nextInt(2);
             spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.asItem(), j + (readyToHarvest ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
             worldIn.setBlockState(pos, state.with(AGE, 1), 2);
             return true;
-        } else {
+        }
+        else {
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         }
     }

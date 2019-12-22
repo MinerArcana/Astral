@@ -20,7 +20,8 @@ public class BodyLinkProvider implements ICapabilitySerializable {
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == BODY_LINK_CAPABILITY) {
             return LazyOptional.of(() -> instance).cast();
-        } else {
+        }
+        else {
             return LazyOptional.empty();
         }
     }

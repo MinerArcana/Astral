@@ -1,7 +1,10 @@
 package com.alan199921.astral.blocks;
 
-import com.alan199921.astral.tags.SustainBlockTags;
-import net.minecraft.block.*;
+import com.alan199921.astral.tags.AstralTags;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BushBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
@@ -76,9 +79,10 @@ public class FeverweedBlock extends BushBlock {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();
-        if (SustainBlockTags.FEVERWEED_SUSTAIN.contains(block)) {
+        if (AstralTags.FEVERWEED_SUSTAIN.contains(block)) {
             return true;
-        } else {
+        }
+        else {
             return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
         }
     }

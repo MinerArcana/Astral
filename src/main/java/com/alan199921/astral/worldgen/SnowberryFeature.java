@@ -37,7 +37,8 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
             //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
             if (worldIn.isAirBlock(blockpos) && (!worldIn.getDimension().isNether() || blockpos.getY() < worldIn.getWorld().getDimension().getHeight()) && blockstate.isValidPosition(worldIn, blockpos)) {
                 positionsToGen.add(blockpos);
-            } else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+            }
+            else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                 positionsToGen.add(blockpos.down());
             }
         }

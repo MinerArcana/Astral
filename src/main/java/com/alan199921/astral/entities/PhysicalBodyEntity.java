@@ -93,7 +93,8 @@ public class PhysicalBodyEntity extends LivingEntity {
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack) {
         if (slotIn.getSlotType() == EquipmentSlotType.Group.HAND) {
             this.inventoryHands.setStackInSlot(slotIn.getIndex(), stack);
-        } else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+        }
+        else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
             this.inventoryArmor.setStackInSlot(slotIn.getIndex(), stack);
         }
     }

@@ -42,7 +42,8 @@ public class AstralHealthBar {
             lastSystemTime = Util.milliTime();
             healthUpdateCounter = (long) ticks + 20;
 
-        } else if (health > playerHealth && player.hurtResistantTime > 0) {
+        }
+        else if (health > playerHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Util.milliTime();
             healthUpdateCounter = (long) ticks + 10;
         }
@@ -70,7 +71,8 @@ public class AstralHealthBar {
         int left = scaledWidth / 2 - 91;
         int top = scaledHeight - left_height;
         left_height += (healthRows * rowHeight);
-        if (rowHeight != 10) left_height += 10 - rowHeight;
+        if (rowHeight != 10)
+            left_height += 10 - rowHeight;
 
         int regen = -1;
         if (player.isPotionActive(Effects.REGENERATION)) {
@@ -86,8 +88,10 @@ public class AstralHealthBar {
             int x = left + heartNumber % 10 * 8;
             int y = top - row * rowHeight;
 
-            if (health <= 4) y += rand.nextInt(2);
-            if (heartNumber == regen) y -= 2;
+            if (health <= 4)
+                y += rand.nextInt(2);
+            if (heartNumber == regen)
+                y -= 2;
 
             boolean fullHighlight = heartNumber * 2 + 1 < healthLast;
             boolean halfHighlight = heartNumber * 2 + 1 == healthLast;
@@ -100,19 +104,24 @@ public class AstralHealthBar {
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
                 drawTexturedModalRect(x, y, 27, 0, 9, 9);
-            } else if (heartNumber == 0 && halfHeart) {
+            }
+            else if (heartNumber == 0 && halfHeart) {
                 //Half ghost
                 drawTexturedModalRect(x, y, 27, 0, 5, 9);
-            } else if (heartNumber == numberOfHearts && halfHeart) {
+            }
+            else if (heartNumber == numberOfHearts && halfHeart) {
                 //Half end of bar
                 drawTexturedModalRect(x, y, 45, 0, 5, 9);
-            } else if (heartNumber == numberOfHearts && fullHeart) {
+            }
+            else if (heartNumber == numberOfHearts && fullHeart) {
                 //Full end of bar
                 drawTexturedModalRect(x, y, 45, 0, 9, 9);
-            } else if (fullHeart) {
+            }
+            else if (fullHeart) {
                 //Full bar
                 drawTexturedModalRect(x, y, 36, 0, 9, 9);
-            } else if (halfHeart) {
+            }
+            else if (halfHeart) {
                 //Half heart
                 drawTexturedModalRect(x, y, 36, 0, 5, 9);
             }
@@ -121,19 +130,24 @@ public class AstralHealthBar {
             if (heartNumber == 0 && fullBar) {
                 //Full ghost
                 drawTexturedModalRect(x, y, 54, TOP, 9, 9);
-            } else if (heartNumber == 0 && halfBar) {
+            }
+            else if (heartNumber == 0 && halfBar) {
                 //Half ghost
                 drawTexturedModalRect(x, y, 54, TOP, 5, 9);
-            } else if (heartNumber == numberOfHearts && fullBar) {
+            }
+            else if (heartNumber == numberOfHearts && fullBar) {
                 //Full end of bar
                 drawTexturedModalRect(x, y, 72, TOP, 9, 9);
-            } else if (heartNumber == numberOfHearts && halfBar) {
+            }
+            else if (heartNumber == numberOfHearts && halfBar) {
                 //Half end of bar
                 drawTexturedModalRect(x, y, 81, TOP, 9, 9);
-            } else if (fullBar) {
+            }
+            else if (fullBar) {
                 //Full bar
                 drawTexturedModalRect(x, y, 63, TOP, 9, 9);
-            } else if (halfBar) {
+            }
+            else if (halfBar) {
                 //Half heart
                 drawTexturedModalRect(x, y, 63, TOP, 5, 9);
             }

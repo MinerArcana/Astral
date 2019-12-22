@@ -46,7 +46,6 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     }
 
 
-
     @Override
     public NonNullList<ItemStack> killEntity(ServerWorld world) {
         try {

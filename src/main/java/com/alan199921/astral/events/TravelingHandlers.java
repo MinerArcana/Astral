@@ -7,7 +7,7 @@ import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.network.AstralNetwork;
-import com.alan199921.astral.tags.AstralBlockTags;
+import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
@@ -64,10 +64,12 @@ public class TravelingHandlers {
             boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
             if (!isAstralTravelActive && IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
-            } else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !IAstralDamage.isDamageAstral(damageType)) {
+            }
+            else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
                 target.attackEntityFrom(new AstralEntityDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier() + 1.0F);
-            } else if (isAstralTravelActive && !IAstralDamage.isDamageAstral(damageType)) {
+            }
+            else if (isAstralTravelActive && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
             }
         }
@@ -153,9 +155,11 @@ public class TravelingHandlers {
             IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
                 if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
                     playerEntity.inventory.setInventorySlotContents(i, physicalBodyEntity.getMainInventory().getStackInSlot(i));
-                } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                }
+                else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
                     playerEntity.inventory.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
-                } else {
+                }
+                else {
                     Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
                 }
                 physicalBodyEntity.getMainInventory().setStackInSlot(i, ItemStack.EMPTY);
@@ -164,9 +168,11 @@ public class TravelingHandlers {
                 ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
                 if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
                     playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
-                } else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
+                }
+                else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
                     playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
-                } else {
+                }
+                else {
                     Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
                 }
                 physicalBodyEntity.setItemStackToSlot(slot, ItemStack.EMPTY);
@@ -214,9 +220,10 @@ public class TravelingHandlers {
     private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
         int i = 0;
         for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
-            if (AstralBlockTags.ASTRAL_PICKUP.contains(stack.getItem())) {
+            if (AstralTags.ASTRAL_PICKUP.contains(stack.getItem())) {
                 i++;
-            } else {
+            }
+            else {
                 physicalBodyEntity.getMainInventory().setStackInSlot(i++, stack);
                 stack.setCount(0);
             }
@@ -224,7 +231,7 @@ public class TravelingHandlers {
 
         //Insert armor and offhand to entity
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            if (!AstralBlockTags.ASTRAL_PICKUP.contains(event.getEntityLiving().getItemStackFromSlot(slotType).getItem())) {
+            if (!AstralTags.ASTRAL_PICKUP.contains(event.getEntityLiving().getItemStackFromSlot(slotType).getItem())) {
                 physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
                 event.getEntityLiving().setItemStackToSlot(slotType, ItemStack.EMPTY);
             }
@@ -235,7 +242,7 @@ public class TravelingHandlers {
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
         if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getPlayer())) {
             Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
-            event.setCanceled(!AstralBlockTags.ASTRAL_INTERACT.contains(targetedBlock));
+            event.setCanceled(!AstralTags.ASTRAL_INTERACT.contains(targetedBlock));
         }
     }
 
@@ -246,21 +253,21 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(BlockEvent.BreakEvent event) {
         //Placeholder properties
-        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getPlayer())) {
+        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralHarvestSpeed(PlayerEvent.BreakSpeed event) {
-        if (!AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getPlayer())) {
+        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralPlaceBlockEvent(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof LivingEntity && !AstralBlockTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && ((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getEntity())) {
+        if (event.getEntity() instanceof LivingEntity && !AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && ((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !isEntityInInnerRealm(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -296,7 +303,7 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
-        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !AstralBlockTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
         }
     }

@@ -66,7 +66,8 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
         //Add player to HashMap
         if (claimedChunksMap.containsKey(playerID)) {
             claimedChunksMap.get(playerID).add(chunk);
-        } else {
+        }
+        else {
             ArrayList<ChunkPos> claimedChunks = new ArrayList<>();
             claimedChunks.add(chunk);
             this.claimedChunksMap.put(playerID, claimedChunks);

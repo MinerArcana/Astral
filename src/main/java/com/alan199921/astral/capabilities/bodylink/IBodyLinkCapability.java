@@ -11,9 +11,9 @@ public interface IBodyLinkCapability extends INBTSerializable {
 
     void setLinkedBodyID(Entity entity);
 
-    void setDimensionID(int dimensionID);
-
     int getDimensionID();
+
+    void setDimensionID(int dimensionID);
 
     NonNullList<ItemStack> killEntity(ServerWorld world);
 }
