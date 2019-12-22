@@ -189,27 +189,27 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             //Give player flight
-            PlayerEntity p = (PlayerEntity) event.getEntityLiving();
-            if (!p.abilities.isCreativeMode) {
-                p.abilities.allowFlying = true;
-                p.noClip = true;
-                p.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
-                p.sendPlayerAbilities();
+            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            if (!playerEntity.abilities.isCreativeMode) {
+                playerEntity.abilities.allowFlying = true;
+                playerEntity.noClip = true;
+                playerEntity.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
+                playerEntity.sendPlayerAbilities();
             }
-            if (!p.getEntityWorld().isRemote()) {
-                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(p.getEntityWorld(), ItemStack.EMPTY, p, p.getPosition(), SpawnReason.TRIGGERED, false, false);
-                physicalBodyEntity.setGameProfile(p.getGameProfile());
+            if (!playerEntity.getEntityWorld().isRemote()) {
+                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+                physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
                 //Store player UUID to body entity and give it a name
-                p.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
+                playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
                     cap.setLinkedBodyID(physicalBodyEntity);
-                    cap.setDimensionID(p.dimension.getId());
+                    cap.setDimensionID(playerEntity.dimension.getId());
                 });
                 physicalBodyEntity.setName(event.getEntity().getScoreboardName());
 
                 //Insert main inventory to body and clear
-                moveInventoryToMob(event, physicalBodyEntity);
-                physicalBodyEntity.setHealth(p.getHealth());
-                physicalBodyEntity.setHungerLevel(p.getFoodStats().getFoodLevel());
+                moveInventoryToMob(playerEntity, physicalBodyEntity);
+                physicalBodyEntity.setHealth(playerEntity.getHealth());
+                physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
             }
         }
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && !event.getEntityLiving().getEntityWorld().isRemote()) {
@@ -217,9 +217,9 @@ public class TravelingHandlers {
         }
     }
 
-    private static void moveInventoryToMob(PotionEvent.PotionAddedEvent event, PhysicalBodyEntity physicalBodyEntity) {
+    private static void moveInventoryToMob(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
         int i = 0;
-        for (ItemStack stack : ((PlayerEntity) event.getEntityLiving()).inventory.mainInventory) {
+        for (ItemStack stack : playerEntity.inventory.mainInventory) {
             if (AstralTags.ASTRAL_PICKUP.contains(stack.getItem())) {
                 i++;
             }
@@ -228,12 +228,11 @@ public class TravelingHandlers {
                 stack.setCount(0);
             }
         }
-
         //Insert armor and offhand to entity
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            if (!AstralTags.ASTRAL_PICKUP.contains(event.getEntityLiving().getItemStackFromSlot(slotType).getItem())) {
-                physicalBodyEntity.setItemStackToSlot(slotType, event.getEntityLiving().getItemStackFromSlot(slotType));
-                event.getEntityLiving().setItemStackToSlot(slotType, ItemStack.EMPTY);
+            if (!AstralTags.ASTRAL_PICKUP.contains(playerEntity.getItemStackFromSlot(slotType).getItem())) {
+                physicalBodyEntity.setItemStackToSlot(slotType, playerEntity.getItemStackFromSlot(slotType));
+                playerEntity.setItemStackToSlot(slotType, ItemStack.EMPTY);
             }
         }
     }
@@ -338,5 +337,4 @@ public class TravelingHandlers {
             }
         }
     }
-
 }
