@@ -26,7 +26,7 @@ public class StartTrackingAstralPotionMessage {
     }
 
     public static StartTrackingAstralPotionMessage decode(PacketBuffer packetBuffer) {
-        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.ASTRAL_TRAVEL_EFFECT, packetBuffer.readInt(), packetBuffer.readInt()));
+        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.ASTRAL_TRAVEL, packetBuffer.readInt(), packetBuffer.readInt()));
     }
 
     public static void encode(StartTrackingAstralPotionMessage message, PacketBuffer packetBuffer) {
@@ -40,12 +40,12 @@ public class StartTrackingAstralPotionMessage {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world -> {
-                    Entity clientEntity = world.getEntityByID(message.entityID);
-                    if (clientEntity.isLiving()) {
-                        LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(message.entityID);
-                        clientLivingEntity.addPotionEffect(message.potionEffect);
+                        Entity clientEntity = world.getEntityByID(message.entityID);
+                        if (clientEntity.isLiving()) {
+                            LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(message.entityID);
+                            clientLivingEntity.addPotionEffect(message.potionEffect);
+                        }
                     }
-                }
             );
         });
         contextSupplier.get().setPacketHandled(true);

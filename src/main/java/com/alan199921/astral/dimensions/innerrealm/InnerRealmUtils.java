@@ -45,7 +45,8 @@ public class InnerRealmUtils {
                 if (isBetweenInclusive(x, 7, 8) && isBetweenInclusive(y, 7, 8)) {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), AstralBlocks.astralMeridian.getDefaultState().with(AstralMeridian.DIRECTION, 0), false);
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), AstralBlocks.astralMeridian.getDefaultState().with(AstralMeridian.DIRECTION, 2), false);
-                } else {
+                }
+                else {
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 0), AstralBlocks.egoMembrane.getDefaultState(), false);
                     iChunk.setBlockState(new BlockPos(x, iWorld.getSeaLevel() + y, 15), AstralBlocks.egoMembrane.getDefaultState(), false);
                 }
@@ -58,7 +59,8 @@ public class InnerRealmUtils {
                 if (isBetweenInclusive(y, 7, 8) && isBetweenInclusive(z, 7, 8)) {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), AstralBlocks.astralMeridian.getDefaultState().with(AstralMeridian.DIRECTION, 1), false);
                     iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), AstralBlocks.astralMeridian.getDefaultState().with(AstralMeridian.DIRECTION, 3), false);
-                } else {
+                }
+                else {
                     iChunk.setBlockState(new BlockPos(0, iWorld.getSeaLevel() + y, z), AstralBlocks.egoMembrane.getDefaultState(), false);
                     iChunk.setBlockState(new BlockPos(15, iWorld.getSeaLevel() + y, z), AstralBlocks.egoMembrane.getDefaultState(), false);
                 }

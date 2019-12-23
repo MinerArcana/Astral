@@ -36,13 +36,15 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     private ResourceLocation getSkin(GameProfile gameProfile) {
         if (!gameProfile.isComplete()) {
             return new ResourceLocation("minecraft:textures/entity/steve.png");
-        } else {
+        }
+        else {
             final Minecraft minecraft = Minecraft.getInstance();
             SkinManager skinManager = minecraft.getSkinManager();
             final Map<Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.loadSkinFromCache(gameProfile); // returned map may or may not be typed
             if (loadSkinFromCache.containsKey(MinecraftProfileTexture.Type.SKIN)) {
                 return skinManager.loadSkin(loadSkinFromCache.get(Type.SKIN), Type.SKIN);
-            } else {
+            }
+            else {
                 return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
             }
         }

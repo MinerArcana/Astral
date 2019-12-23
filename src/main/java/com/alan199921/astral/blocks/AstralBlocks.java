@@ -1,6 +1,5 @@
 package com.alan199921.astral.blocks;
 
-import com.alan199921.astral.Astral;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

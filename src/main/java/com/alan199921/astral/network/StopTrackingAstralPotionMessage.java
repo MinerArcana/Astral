@@ -18,15 +18,15 @@ public class StopTrackingAstralPotionMessage {
         this.entityID = entityID;
     }
 
-    public static StopTrackingAstralPotionMessage decode(PacketBuffer packetBuffer){
+    public static StopTrackingAstralPotionMessage decode(PacketBuffer packetBuffer) {
         return new StopTrackingAstralPotionMessage(packetBuffer.readInt());
     }
 
-    public static void encode(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, PacketBuffer packetBuffer){
+    public static void encode(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, PacketBuffer packetBuffer) {
         packetBuffer.writeInt(startTrackingAstralPotionMessage.entityID);
     }
 
-    public static void handle(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, Supplier<NetworkEvent.Context> contextSupplier){
+    public static void handle(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
@@ -34,7 +34,7 @@ public class StopTrackingAstralPotionMessage {
                         Entity clientEntity = world.getEntityByID(startTrackingAstralPotionMessage.entityID);
                         if (clientEntity.isLiving()) {
                             LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(startTrackingAstralPotionMessage.entityID);
-                            clientLivingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL_EFFECT);
+                            clientLivingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
                         }
                     }
             );

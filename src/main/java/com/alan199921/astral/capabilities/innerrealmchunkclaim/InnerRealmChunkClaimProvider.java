@@ -22,7 +22,8 @@ public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CHUNK_CLAIM_CAPABILITY) {
             return LazyOptional.of(() -> instance).cast();
-        } else {
+        }
+        else {
             return LazyOptional.empty();
         }
     }

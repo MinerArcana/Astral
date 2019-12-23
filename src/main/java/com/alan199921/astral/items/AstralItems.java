@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

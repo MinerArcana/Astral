@@ -37,6 +37,7 @@ public class AstralNetwork {
                 .encoder(StopTrackingAstralPotionMessage::encode)
                 .consumer(StopTrackingAstralPotionMessage::handle)
                 .add();
+
         return channel;
     }
 

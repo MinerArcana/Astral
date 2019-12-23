@@ -32,8 +32,9 @@ public class SendClaimedChunkMessage {
 
     /**
      * When the client gets the message, calls the deserialize function in the capability to sync with server
+     *
      * @param sendClaimedChunkMessage The message that is being sent from the server
-     * @param contextSupplier The supplier that gives the client access to the world object
+     * @param contextSupplier         The supplier that gives the client access to the world object
      */
     public static void handle(SendClaimedChunkMessage sendClaimedChunkMessage, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
@@ -41,7 +42,8 @@ public class SendClaimedChunkMessage {
 
             optionalWorld.ifPresent(world ->
                     world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(innerRealmChunkClaimCapability -> {
-                        if (!(innerRealmChunkClaimCapability instanceof InnerRealmChunkClaimCapability)) return;
+                        if (!(innerRealmChunkClaimCapability instanceof InnerRealmChunkClaimCapability))
+                            return;
                         innerRealmChunkClaimCapability.deserializeNBT(sendClaimedChunkMessage.nbt);
                     })
             );
