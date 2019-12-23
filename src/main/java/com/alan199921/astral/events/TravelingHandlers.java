@@ -18,6 +18,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -217,14 +218,12 @@ public class TravelingHandlers {
     }
 
     private static void moveInventoryToMob(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
-        int i = 0;
-        for (ItemStack stack : playerEntity.inventory.mainInventory) {
-            if (AstralTags.ASTRAL_PICKUP.contains(stack.getItem())) {
-                i++;
-            }
-            else {
-                physicalBodyEntity.getMainInventory().setStackInSlot(i++, stack);
-                stack.setCount(0);
+        NonNullList<ItemStack> playerMainInventory = playerEntity.inventory.mainInventory;
+        for (int i = 0; i < playerMainInventory.size(); i++) {
+            ItemStack itemStack = playerMainInventory.get(i);
+            if (!AstralTags.ASTRAL_PICKUP.contains(itemStack.getItem())) {
+                physicalBodyEntity.getMainInventory().setStackInSlot(i, itemStack);
+                playerMainInventory.set(i, ItemStack.EMPTY);
             }
         }
         //Insert armor and offhand to entity

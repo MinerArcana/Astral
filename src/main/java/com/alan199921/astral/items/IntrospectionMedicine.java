@@ -29,15 +29,16 @@ public class IntrospectionMedicine extends Item {
     public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
+            playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
             playerEntity.addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL, Integer.MAX_VALUE));
             worldIn.getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(playerEntity));
-            playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
         }
         super.onItemUseFinish(stack, worldIn, entityLiving);
         return ItemStack.EMPTY;
     }
 
     @Override
+    @Nonnull
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.DRINK;
     }

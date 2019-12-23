@@ -93,21 +93,20 @@ public class AstralHealthBar {
             if (heartNumber == regen)
                 y -= 2;
 
-            boolean fullHighlight = heartNumber * 2 + 1 < healthLast;
-            boolean halfHighlight = heartNumber * 2 + 1 == healthLast;
             boolean fullHeart = heartNumber * 2 + 1 < health;
             boolean halfHeart = heartNumber * 2 + 1 == health;
             boolean fullBar = heartNumber * 2 + 1 < healthMax;
             boolean halfBar = heartNumber * 2 + 1 == healthMax;
 
             //Current health rendering
+            //Display injured ghost icon when taking damage or at 4 HP or less
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
-                drawTexturedModalRect(x, y, 27, 0, 9, 9);
+                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 9, 9);
             }
             else if (heartNumber == 0 && halfHeart) {
                 //Half ghost
-                drawTexturedModalRect(x, y, 27, 0, 5, 9);
+                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 5, 9);
             }
             else if (heartNumber == numberOfHearts && halfHeart) {
                 //Half end of bar
