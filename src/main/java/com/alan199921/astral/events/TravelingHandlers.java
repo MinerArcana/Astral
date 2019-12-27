@@ -41,6 +41,7 @@ import java.util.stream.IntStream;
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
     private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
+    private static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
@@ -123,6 +124,7 @@ public class TravelingHandlers {
                 playerEntity.noClip = false;
                 playerEntity.abilities.setFlySpeed(.05F);
                 playerEntity.sendPlayerAbilities();
+                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
             }
             //Only run serverside
             if (!playerEntity.getEntityWorld().isRemote()) {
@@ -191,10 +193,7 @@ public class TravelingHandlers {
             //Give player flight
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             if (!playerEntity.abilities.isCreativeMode) {
-                playerEntity.abilities.allowFlying = true;
-                playerEntity.noClip = true;
-                playerEntity.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
-                playerEntity.sendPlayerAbilities();
+                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             }
             if (!playerEntity.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
