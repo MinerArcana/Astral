@@ -298,6 +298,9 @@ public class TravelingHandlers {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+        if (playerEntity.getHealth() > newMaxHealth) {
+            playerEntity.setHealth(newMaxHealth);
+        }
     }
 
     /**
