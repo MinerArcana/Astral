@@ -3,6 +3,7 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
+import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -136,18 +138,31 @@ public class TravelingHandlers {
 
                 //Retrieve the body entity object  from the capability
                 playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
-                    PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     serverPlayerEntity.setMotion(0, 0, 0);
                     serverPlayerEntity.setVelocity(0, 0, 0);
                     serverPlayerEntity.isAirBorne = false;
                     //Teleport the player
-                    serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
-
-                    //Get the inventory and transfer items
-                    PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                    transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
-                    resetPlayerStats(playerEntity, physicalBodyEntity);
-                    physicalBodyEntity.onKillCommand();
+                    if (cap.getLinkedEntity(serverWorld) instanceof PhysicalBodyEntity) {
+                        PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
+                        serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
+                        //Get the inventory and transfer items
+                        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
+                        transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
+                        resetPlayerStats(playerEntity, physicalBodyEntity);
+                        physicalBodyEntity.onKillCommand();
+                    }
+                    else {
+                        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
+                        if (serverPlayerEntity.getBedPosition().isPresent()) {
+                            BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
+                            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
+                        }
+                        else {
+                            BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
+                            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
+                        }
+                        resetPlayerStats(playerEntity);
+                    }
                 });
             }
         }
@@ -295,6 +310,10 @@ public class TravelingHandlers {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         playerEntity.setHealth(physicalBodyEntity.getHealth());
         playerEntity.getFoodStats().setFoodLevel((int) physicalBodyEntity.getHungerLevel());
+    }
+
+    public static void resetPlayerStats(PlayerEntity playerEntity) {
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
     }
 
     @SubscribeEvent

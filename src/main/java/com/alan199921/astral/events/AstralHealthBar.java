@@ -140,7 +140,7 @@ public class AstralHealthBar {
             }
             else if (heartNumber == numberOfHearts && halfBar) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 81, TOP, 9, 9);
+                drawTexturedModalRect(x, y, 76, TOP, 5, 9);
             }
             else if (fullBar) {
                 //Full bar
