@@ -38,6 +38,12 @@ public class AstralNetwork {
                 .consumer(StopTrackingAstralPotionMessage::handle)
                 .add();
 
+        channel.messageBuilder(UpdateInputMessage.class, 4)
+                .decoder(UpdateInputMessage::decode)
+                .encoder(UpdateInputMessage::encode)
+                .consumer(UpdateInputMessage::handle)
+                .add();
+
         return channel;
     }
 
@@ -51,5 +57,9 @@ public class AstralNetwork {
 
     public static void sendAstralEffectEnding(Entity astralEntity) {
         Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getEntityId()));
+    }
+
+    public static void sendUpdateInputMessage(boolean upNow, boolean downNow, boolean forwardsNow, boolean backwardsNow, boolean leftNow, boolean rightNow) {
+        Astral.INSTANCE.sendToServer(new UpdateInputMessage(upNow, downNow, forwardsNow, backwardsNow, leftNow, rightNow));
     }
 }

@@ -6,6 +6,7 @@ import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
+import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -48,6 +50,13 @@ public class TravelingHandlers {
         if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
             MobEntity mobEntity = (MobEntity) event.getEntityLiving();
             mobEntity.setAttackTarget(null);
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralFlight(TickEvent.PlayerTickEvent event) {
+        if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            FlightHandler.handleAstralFlight(event.player);
         }
     }
 
@@ -118,14 +127,7 @@ public class TravelingHandlers {
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
         if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            //Revoke flight mode capabilities
-            if (!playerEntity.abilities.isCreativeMode) {
-                playerEntity.abilities.allowFlying = false;
-                playerEntity.noClip = false;
-                playerEntity.abilities.setFlySpeed(.05F);
-                playerEntity.sendPlayerAbilities();
-                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
-            }
+            playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
             //Only run serverside
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Get server versions of world and player
@@ -135,7 +137,9 @@ public class TravelingHandlers {
                 //Retrieve the body entity object  from the capability
                 playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
                     PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-
+                    serverPlayerEntity.setMotion(0, 0, 0);
+                    serverPlayerEntity.setVelocity(0, 0, 0);
+                    //TODO Negate fall damage
                     //Teleport the player
                     serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
 
@@ -190,11 +194,8 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            //Give player flight
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            if (!playerEntity.abilities.isCreativeMode) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
-            }
             if (!playerEntity.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
                 physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
