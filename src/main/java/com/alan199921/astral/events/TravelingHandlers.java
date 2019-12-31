@@ -139,7 +139,7 @@ public class TravelingHandlers {
                     PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
                     serverPlayerEntity.setMotion(0, 0, 0);
                     serverPlayerEntity.setVelocity(0, 0, 0);
-                    //TODO Negate fall damage
+                    serverPlayerEntity.isAirBorne = false;
                     //Teleport the player
                     serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
 
