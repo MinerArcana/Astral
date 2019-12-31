@@ -75,20 +75,23 @@ public class TravelingHandlers {
             LivingEntity target = event.getEntityLiving();
             DamageSource damageType = event.getSource();
             boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+            //Negate astral damage to non Astral entities
             if (!isAstralTravelActive && IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
             }
+            //Convert non astral damage to astral damage for Astral entities
             else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
                 target.attackEntityFrom(new AstralEntityDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier() + 1.0F);
             }
-            else if (isAstralTravelActive && !IAstralDamage.isDamageAstral(damageType)) {
+            //Negate non-Astral damage to Astral entities
+            else if (isAstralTravelActive && !(IAstralDamage.isDamageAstral(damageType))) {
                 event.setCanceled(true);
             }
         }
         //Check for astral damage vs. non astral and vice versa
         else {
-            if ((!(IAstralDamage.isDamageAstral(event.getSource()) || event.getSource().isMagicDamage() || event.getSource().isDamageAbsolute()) && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) || IAstralDamage.isDamageAstral(event.getSource()) && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL))) {
+            if (!(IAstralDamage.canDamageTypeDamageAstral(event.getSource())) && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) || IAstralDamage.isDamageAstral(event.getSource()) && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
                 event.setCanceled(true);
             }
         }
@@ -329,9 +332,9 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
+            event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
             event.setCanceled(true);
-            event.getEntityLiving().removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
         }
     }
 
