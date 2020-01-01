@@ -12,6 +12,7 @@ import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +23,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
@@ -154,17 +156,9 @@ public class TravelingHandlers {
                         resetPlayerStats(playerEntity, physicalBodyEntity);
                         physicalBodyEntity.onKillCommand();
                     }
+                    //If body is not found, teleport player to their spawn location (bed or world spawn)
                     else {
-                        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
-                        if (serverPlayerEntity.getBedPosition().isPresent()) {
-                            BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
-                            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
-                        }
-                        else {
-                            BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
-                            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
-                        }
-                        resetPlayerStats(playerEntity);
+                        teleportPlayerToSpawn(serverPlayerEntity);
                     }
                 });
             }
@@ -172,6 +166,23 @@ public class TravelingHandlers {
         if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && !entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
+    }
+
+    private static void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
+        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
+        //Teleport to bed
+        if (serverPlayerEntity.getBedPosition().isPresent()) {
+            BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
+            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking")));
+        }
+        //Teleport to spawn
+        else {
+            BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
+            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking.spawn")));
+        }
+        resetPlayerStats(serverPlayerEntity);
     }
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
