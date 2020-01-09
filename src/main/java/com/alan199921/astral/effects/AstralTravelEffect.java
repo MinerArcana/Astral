@@ -22,12 +22,12 @@ public class AstralTravelEffect extends Effect {
         if (!entityLivingBaseIn.getEntityWorld().isRemote() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth()) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
-                playerEntity.getFoodStats().setFoodLevel(15);
-                playerEntity.getFoodStats().setFoodSaturationLevel(0);
                 if (playerEntity.experienceTotal > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
                     entityLivingBaseIn.heal((amplifier * 0.5F) + 1.0F);
                     ((PlayerEntity) entityLivingBaseIn).giveExperiencePoints(-1);
                 }
+                playerEntity.getFoodStats().setFoodLevel(15);
+                playerEntity.getFoodStats().setFoodSaturationLevel(0);
             }
         }
     }

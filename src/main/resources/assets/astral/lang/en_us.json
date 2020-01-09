@@ -58,5 +58,7 @@
   "astral.advancement.craft_introspection_medicine.name": "Compartmentalization",
   "astral.advancement.craft_introspection_medicine.desc": "Craft Introspection Medicine",
   "astral.advancement.inner_realm.name": "Withdrawal",
-  "astral.advancement.inner_realm.desc": "Enter the Inner Realm"
+  "astral.advancement.inner_realm.desc": "Enter the Inner Realm",
+  "astral.chat_message.sleepwalking.bed": "You find yourself in your bed as you wake up...",
+  "astral.chat_message.sleepwalking.spawn": "You find yourself in a familiar place as you wake up..."
 }

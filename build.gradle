@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.4.10'
+version = '0.5.0'
 group = 'com.alan199921.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
@@ -53,8 +53,8 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.1.96'
-    compile fg.deobf('vazkii.arl:AutoRegLib:1.4-35.69')
-    compile fg.deobf('vazkii.quark:Quark:r2.0-200.835')
+//    compile fg.deobf('vazkii.arl:AutoRegLib:1.4-35.69')
+//    compile fg.deobf('vazkii.quark:Quark:r2.0-200.835')
 
     compileOnly fg.deobf('mezz.jei:jei-1.14.4:6.0.0.18:api')
     runtimeOnly fg.deobf('mezz.jei:jei-1.14.4:6.0.0.18')

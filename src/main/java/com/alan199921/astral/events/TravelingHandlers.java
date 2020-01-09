@@ -3,13 +3,16 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
+import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
+import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,11 +22,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -41,12 +47,20 @@ import java.util.stream.IntStream;
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
     private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
+    private static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
         if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
             MobEntity mobEntity = (MobEntity) event.getEntityLiving();
             mobEntity.setAttackTarget(null);
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralFlight(TickEvent.PlayerTickEvent event) {
+        if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            FlightHandler.handleAstralFlight(event.player);
         }
     }
 
@@ -63,20 +77,23 @@ public class TravelingHandlers {
             LivingEntity target = event.getEntityLiving();
             DamageSource damageType = event.getSource();
             boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+            //Negate astral damage to non Astral entities
             if (!isAstralTravelActive && IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
             }
+            //Convert non astral damage to astral damage for Astral entities
             else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
                 target.attackEntityFrom(new AstralEntityDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier() + 1.0F);
             }
-            else if (isAstralTravelActive && !IAstralDamage.isDamageAstral(damageType)) {
+            //Negate non-Astral damage to Astral entities
+            else if (isAstralTravelActive && !(IAstralDamage.isDamageAstral(damageType))) {
                 event.setCanceled(true);
             }
         }
         //Check for astral damage vs. non astral and vice versa
         else {
-            if ((!(IAstralDamage.isDamageAstral(event.getSource()) || event.getSource().isMagicDamage() || event.getSource().isDamageAbsolute()) && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) || IAstralDamage.isDamageAstral(event.getSource()) && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL))) {
+            if (!(IAstralDamage.canDamageTypeDamageAstral(event.getSource())) && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) || IAstralDamage.isDamageAstral(event.getSource()) && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
                 event.setCanceled(true);
             }
         }
@@ -117,13 +134,7 @@ public class TravelingHandlers {
     private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
         if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            //Revoke flight mode capabilities
-            if (!playerEntity.abilities.isCreativeMode) {
-                playerEntity.abilities.allowFlying = false;
-                playerEntity.noClip = false;
-                playerEntity.abilities.setFlySpeed(.05F);
-                playerEntity.sendPlayerAbilities();
-            }
+            playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
             //Only run serverside
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Get server versions of world and player
@@ -132,22 +143,46 @@ public class TravelingHandlers {
 
                 //Retrieve the body entity object  from the capability
                 playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
-                    PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-
+                    serverPlayerEntity.setMotion(0, 0, 0);
+                    serverPlayerEntity.setVelocity(0, 0, 0);
+                    serverPlayerEntity.isAirBorne = false;
                     //Teleport the player
-                    serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
-
-                    //Get the inventory and transfer items
-                    PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                    transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
-                    resetPlayerStats(playerEntity, physicalBodyEntity);
-                    physicalBodyEntity.onKillCommand();
+                    if (cap.getLinkedEntity(serverWorld) instanceof PhysicalBodyEntity) {
+                        PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
+                        serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
+                        //Get the inventory and transfer items
+                        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
+                        transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
+                        resetPlayerStats(playerEntity, physicalBodyEntity);
+                        physicalBodyEntity.onKillCommand();
+                    }
+                    //If body is not found, teleport player to their spawn location (bed or world spawn)
+                    else {
+                        teleportPlayerToSpawn(serverPlayerEntity);
+                    }
                 });
             }
         }
         if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && !entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
+    }
+
+    private static void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
+        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
+        //Teleport to bed
+        if (serverPlayerEntity.getBedPosition().isPresent()) {
+            BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
+            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking")));
+        }
+        //Teleport to spawn
+        else {
+            BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
+            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking.spawn")));
+        }
+        resetPlayerStats(serverPlayerEntity);
     }
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
@@ -188,14 +223,8 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            //Give player flight
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            if (!playerEntity.abilities.isCreativeMode) {
-                playerEntity.abilities.allowFlying = true;
-                playerEntity.noClip = true;
-                playerEntity.abilities.setFlySpeed(.05F * (event.getPotionEffect().getAmplifier() + 1));
-                playerEntity.sendPlayerAbilities();
-            }
+                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             if (!playerEntity.getEntityWorld().isRemote()) {
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
                 physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
@@ -283,6 +312,9 @@ public class TravelingHandlers {
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
         float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
         playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+        if (playerEntity.getHealth() > newMaxHealth) {
+            playerEntity.setHealth(newMaxHealth);
+        }
     }
 
     /**
@@ -297,6 +329,10 @@ public class TravelingHandlers {
         playerEntity.getFoodStats().setFoodLevel((int) physicalBodyEntity.getHungerLevel());
     }
 
+    public static void resetPlayerStats(PlayerEntity playerEntity) {
+        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
+    }
+
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
@@ -307,9 +343,9 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
+            event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
             event.setCanceled(true);
-            event.getEntityLiving().removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
         }
     }
 
