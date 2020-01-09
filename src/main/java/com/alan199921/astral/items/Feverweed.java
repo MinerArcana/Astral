@@ -16,7 +16,7 @@ public class Feverweed extends BlockNamedItem {
      * Gives luck 2 and hunger 2 for 15 seconds by default (duration is affected by configs)
      */
     public Feverweed() {
-        super(AstralBlocks.feverweedBlock.getBlock(), new Item.Properties()
+        super(AstralBlocks.FEVERWEED_BLOCK.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()

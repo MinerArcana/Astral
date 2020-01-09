@@ -31,7 +31,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
          */
         boolean generatedSomething = false;
         ArrayList<BlockPos> positionsToGen = new ArrayList<>();
-        BlockState blockstate = AstralBlocks.snowberryBush.getDefaultState();
+        BlockState blockstate = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
         for (int tries = 0; tries < 32; ++tries) {
             BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
             //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
@@ -47,7 +47,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
         for (int i = 0; i < numberOfBushesInFeature; i++) {
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-            worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.snowberryBush.getDefaultState(), 2);
+            worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
             generatedSomething = true;
         }
 

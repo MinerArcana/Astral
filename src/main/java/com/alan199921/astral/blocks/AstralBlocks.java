@@ -12,16 +12,16 @@ public class AstralBlocks {
 
     //Astral blocks
     @ObjectHolder("astral:snowberry_bush")
-    public static final Block snowberryBush = null;
+    public static final Block SNOWBERRY_BUSH = null;
 
     @ObjectHolder("astral:feverweed_block")
-    public static final Block feverweedBlock = null;
+    public static final Block FEVERWEED_BLOCK = null;
 
     @ObjectHolder("astral:ego_membrane")
-    public static final Block egoMembrane = null;
+    public static final Block EGO_MEMBRANE = null;
 
     @ObjectHolder("astral:astral_meridian")
-    public static final Block astralMeridian = null;
+    public static final Block ASTRAL_MERIDIAN = null;
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {

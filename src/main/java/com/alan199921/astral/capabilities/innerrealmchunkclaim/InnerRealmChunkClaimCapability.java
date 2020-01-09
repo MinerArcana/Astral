@@ -8,7 +8,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
     private HashMap<UUID, ArrayList<ChunkPos>> claimedChunksMap = new HashMap<>();
 
     @Override
-    public void handleChunkClaim(PlayerEntity player, IChunk chunk) {
+    public void handleChunkClaim(PlayerEntity player, Chunk chunk) {
         //Send sync message to client
         if (!player.getEntityWorld().isRemote()) {
             AstralNetwork.sendClaimedChunksToPlayers((CompoundNBT) serializeNBT());
@@ -32,7 +32,7 @@ public class InnerRealmChunkClaimCapability implements IInnerRealmChunkClaimCapa
         }
         addChunkToPlayerClaims(player, chunk.getPos());
         for (int i = 0; i < 4; i++) {
-            IChunk adjacentChunk = innerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
+            Chunk adjacentChunk = innerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
             if (playerHasClaimedChunk(player, adjacentChunk.getPos())) {
                 innerRealmUtils.destroyWall(player.getEntityWorld(), chunk, i);
                 innerRealmUtils.destroyWall(player.getEntityWorld(), adjacentChunk, (i + 2) % 4);

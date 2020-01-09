@@ -12,7 +12,7 @@ public class ModSetup {
     public final ItemGroup astralItems = new ItemGroup("astral") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(AstralBlocks.snowberryBush);
+            return new ItemStack(AstralBlocks.SNOWBERRY_BUSH);
         }
     };
 

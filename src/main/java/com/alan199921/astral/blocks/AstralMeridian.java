@@ -44,7 +44,7 @@ public class AstralMeridian extends Block {
 
     @Override
     public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
-        worldIn.setBlockState(pos, AstralBlocks.egoMembrane.getDefaultState(), 2);
+        worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.getDefaultState(), 2);
         player.removePotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL).getPotion());
     }
 }

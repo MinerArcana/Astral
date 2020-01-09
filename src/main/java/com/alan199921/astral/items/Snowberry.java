@@ -15,7 +15,7 @@ public class Snowberry extends BlockNamedItem {
      * Gives regeneration 2 and nausea 2 for 15 seconds (depends on configs)
      */
     public Snowberry() {
-        super(AstralBlocks.snowberryBush.getBlock(), new Item.Properties()
+        super(AstralBlocks.SNOWBERRY_BUSH.getBlock(), new Item.Properties()
                 .group(Astral.setup.astralItems)
                 .food(new Food.Builder()
                         .setAlwaysEdible()

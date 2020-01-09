@@ -11,7 +11,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
@@ -29,14 +29,14 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
      */
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
-        World innerRealmWorld = player.getEntityWorld();
-        if (!innerRealmWorld.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
-            System.out.println("Player is not in the inner realm!");
+        if (!player.getEntityWorld().isRemote()) {
+            ServerWorld innerRealmWorld = player.getServer().getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
+            final BlockPos playerSpawnPos = getSpawn(player);
+            Chunk spawnChunk = innerRealmWorld.getChunkAt(playerSpawnPos);
+            innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
+            innerRealmUtils.generateInnerRealmChunk(innerRealmWorld, spawnChunk);
+            innerRealmWorld.getChunk(playerSpawnPos);
         }
-        IChunk spawnChunk = innerRealmWorld.getChunk(getSpawn(player));
-        innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
-        innerRealmUtils.generateInnerRealmChunk(player.world, spawnChunk);
-        innerRealmWorld.getChunk(getSpawn(player));
     }
 
     private void addPlayerToHashMap(PlayerEntity player) {
@@ -56,22 +56,19 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void teleport(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(1, 1000, 1), DimensionType.byName(AstralDimensions.INNER_REALM));
-        }
-        World innerRealmWorld = player.getEntityWorld();
-        boolean firstTime = false;
-        if (!spawnLocations.containsKey(player.getUniqueID())) {
-            addPlayerToHashMap(player);
-            firstTime = true;
-        }
-        BlockPos playerSpawn = getSpawn(player);
-        innerRealmWorld.getChunk(playerSpawn);
-        if (firstTime) {
-            prepareSpawnChunk(player);
-        }
-
-        if (!innerRealmWorld.isRemote()) {
-            ((ServerPlayerEntity) player).teleport((ServerWorld) innerRealmWorld, playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ(), player.rotationYaw, player.rotationPitch);
+            World innerRealmWorld = player.getServer().getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
+            boolean firstTime = false;
+            if (!spawnLocations.containsKey(player.getUniqueID())) {
+                addPlayerToHashMap(player);
+                firstTime = true;
+            }
+            BlockPos playerSpawn = getSpawn(player);
+            if (firstTime) {
+                prepareSpawnChunk(player);
+            }
+            if (!innerRealmWorld.isRemote()) {
+                TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), DimensionType.byName(AstralDimensions.INNER_REALM));
+            }
         }
     }
 
