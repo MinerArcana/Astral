@@ -92,9 +92,9 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     public void deserializeNBT(INBT nbt) {
         HashMap<UUID, BlockPos> spawnList = new HashMap<>();
         CompoundNBT compoundNBT = (CompoundNBT) nbt;
-        CompoundNBT spawnLocations = (CompoundNBT) compoundNBT.get("spawnLocations");
-        for (String id : spawnLocations.keySet()) {
-            spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocations.getCompound(id)));
+        CompoundNBT spawnLocationsNbt = (CompoundNBT) compoundNBT.get("spawnLocations");
+        for (String id : spawnLocationsNbt.keySet()) {
+            spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocationsNbt.getCompound(id)));
         }
         setSpawnList(spawnList);
     }
