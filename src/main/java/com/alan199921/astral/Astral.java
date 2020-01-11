@@ -33,7 +33,7 @@ public class Astral {
     public static final String MOD_ID = "astral";
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
 
-    public static ModSetup setup = new ModSetup();
+    public static final ModSetup setup = new ModSetup();
 
     public Astral() {
         // Register the setup method for modloading

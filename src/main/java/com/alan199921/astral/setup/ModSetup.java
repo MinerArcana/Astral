@@ -4,7 +4,6 @@ import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.DeferredWorkQueue;
 
 public class ModSetup {
 
@@ -18,6 +17,6 @@ public class ModSetup {
 
     public void init() {
         //Initializes worldgen
-        DeferredWorkQueue.runLater(OverworldVegetation::addOverworldVegetation);
+        OverworldVegetation.addOverworldVegetation();
     }
 }
