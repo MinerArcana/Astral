@@ -13,7 +13,7 @@ import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.network.AstralNetwork;
-import com.alan199921.astral.setup.ModSetup;
+import com.alan199921.astral.setup.AstralSetup;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +33,7 @@ public class Astral {
     public static final String MOD_ID = "astral";
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
 
-    public static final ModSetup setup = new ModSetup();
+    public static final AstralSetup setup = new AstralSetup();
 
     public Astral() {
         // Register the setup method for modloading

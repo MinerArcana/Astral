@@ -5,7 +5,7 @@ import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
-public class ModSetup {
+public class AstralSetup {
 
     //Astral ItemGroup using  a Snowberry Bush as an icon
     public final ItemGroup astralItems = new ItemGroup("astral") {
