@@ -1,21 +1,33 @@
 package com.alan199921.astral.flight;
 
+import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class FlightHandler {
+    /**
+     * Handles the movement of the player when they have Astral travel
+     *
+     * @param player The player whose movement will be handled
+     */
     public static void handleAstralFlight(PlayerEntity player) {
+        //Gets closest block under player
+        int closestY = getClosestBlockUnderPlayer(player);
+
+        //Move player based on kets pressed
         if (InputHandler.isHoldingForwards(player)) {
-            player.moveRelative(1, new Vec3d(0, 0, calculateSpeedForward(player.posY, player.getEntityWorld().getSeaLevel())));
+            player.moveRelative(1, new Vec3d(0, 0, calculateSpeedForward(player.posY, closestY)));
         }
         if (InputHandler.isHoldingBackwards(player)) {
-            player.moveRelative(1, new Vec3d(0, 0, -calculateSpeedForward(player.posY, player.getEntityWorld().getSeaLevel()) * 0.8F));
+            player.moveRelative(1, new Vec3d(0, 0, -calculateSpeedForward(player.posY, closestY) * 0.8F));
         }
         if (InputHandler.isHoldingLeft(player)) {
-            player.moveRelative(1, new Vec3d(calculateSpeedForward(player.posY, player.getEntityWorld().getSeaLevel()), 0, 0));
+            player.moveRelative(1, new Vec3d(calculateSpeedForward(player.posY, closestY), 0, 0));
         }
         if (InputHandler.isHoldingRight(player)) {
-            player.moveRelative(1, new Vec3d(-calculateSpeedForward(player.posY, player.getEntityWorld().getSeaLevel()), 0, 0));
+            player.moveRelative(1, new Vec3d(-calculateSpeedForward(player.posY, closestY), 0, 0));
         }
 
         if (InputHandler.isHoldingUp(player)) {
@@ -25,33 +37,46 @@ public class FlightHandler {
             player.moveRelative(1, new Vec3d(0, (double) -1 / 15, 0));
         }
         else {
+            //Smooth flying up and down
             final Vec3d motion = player.getMotion();
             player.setMotion(motion.getX(), 0, motion.getZ());
         }
 
+        //Disable fall damage sounds
         if (!player.getEntityWorld().isRemote()) {
             player.fallDistance = 0.0F;
         }
     }
 
+    /**
+     * Gets the Y coordinate closest block under the player
+     *
+     * @param player The player to check
+     * @return The Y coordinate of the closest block under the player, or -1 if no blocks are found
+     */
+    private static int getClosestBlockUnderPlayer(PlayerEntity player) {
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain(player);
+        while (pos.getY() >= 0 && player.getEntityWorld().isAirBlock(pos)) {
+            pos.move(Direction.DOWN);
+        }
+        return pos.getY();
+    }
 
-    private static double calculateSpeedForward(double posY, int seaLevel) {
-        double baseSpeed = 4.137 / 20;
-        double speedMultiplier = 1.5;
-        double maxChange = 1.4;
-        int astralIslandsHeight = 192;
-        int distanceBetweenSeaAndAstralIslands = astralIslandsHeight - seaLevel;
-        double percentageDistance = (posY - seaLevel) / distanceBetweenSeaAndAstralIslands;
-        if (percentageDistance <= 0) {
-            return baseSpeed * speedMultiplier;
-        }
-        else if (percentageDistance > 1) {
-            speedMultiplier = 1;
-            return baseSpeed * speedMultiplier;
-        }
-        else {
-            speedMultiplier -= percentageDistance * maxChange;
-            return baseSpeed * speedMultiplier;
-        }
+    /**
+     * Calculates the speed of the player based on their height and the height of the closest block underneath them
+     *
+     * @param posY         The player's height
+     * @param closestBlock The height of the closest block under the player
+     * @return The speed that the player will travel at, in blocks/tick
+     */
+    private static double calculateSpeedForward(double posY, int closestBlock) {
+        double baseSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 20;
+        double speedMultiplier = AstralConfig.getFlightSettings().getMaxMultiplier();
+        double maxChange = AstralConfig.getFlightSettings().getMaxPenalty();
+
+        int maxDifference = AstralConfig.getFlightSettings().getHeightPenaltyLimit();
+        double difference = Math.min(maxDifference, posY - closestBlock);
+        double speedPenalty = (difference / maxDifference) * maxChange;
+        return baseSpeed * (speedMultiplier - speedPenalty);
     }
 }

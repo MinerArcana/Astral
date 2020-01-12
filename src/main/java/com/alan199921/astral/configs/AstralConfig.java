@@ -12,11 +12,13 @@ public class AstralConfig {
 
     private final HerbEffectDurations herbEffectDurations;
     private final PotionEffectDurations potionEffectDurations;
+    private final FlightSettings flightSettings;
     private final ForgeConfigSpec spec;
 
     private AstralConfig(ForgeConfigSpec.Builder builder) {
         this.herbEffectDurations = new HerbEffectDurations(builder);
         this.potionEffectDurations = new PotionEffectDurations(builder);
+        this.flightSettings = new FlightSettings(builder);
         this.spec = builder.build();
     }
 
@@ -56,6 +58,10 @@ public class AstralConfig {
      */
     public static PotionEffectDurations getPotionEffectDurations() {
         return instance.potionEffectDurations;
+    }
+
+    public static FlightSettings getFlightSettings() {
+        return instance.flightSettings;
     }
 
     /**
@@ -192,6 +198,48 @@ public class AstralConfig {
 
         public int getAstralTravelDuration() {
             return astralTravelDuration.get();
+        }
+    }
+
+    public static class FlightSettings {
+        private final ForgeConfigSpec.ConfigValue<Double> baseSpeed;
+        private final ForgeConfigSpec.ConfigValue<Double> maxMultiplier;
+        private final ForgeConfigSpec.ConfigValue<Double> maxPenalty;
+        private final ForgeConfigSpec.ConfigValue<Integer> heightPenaltyLimit;
+
+        FlightSettings(ForgeConfigSpec.Builder builder) {
+            builder.comment("Astral Travel flight settings").comment("The speed of flight using Astral Travel decays with every block the player is above the closest block below them.").push("flightSettings");
+
+            baseSpeed = builder.comment("Controls the base speed of the player, in blocks per second.")
+                    .translation("astral.config.common.baseSpeed")
+                    .define("baseSpeed", 4.317);
+            maxMultiplier = builder.comment("Controls the maximum multiplier of the base speed.")
+                    .translation("astral.config.common.maxMultiplier")
+                    .define("baseSpeed", 1.5);
+            maxPenalty = builder.comment("Controls the maximum penalty that could be applied to the maximum multiplier.")
+                    .translation("astral.config.common.maxPenalty")
+                    .define("maxPenalty", .5);
+            heightPenaltyLimit = builder.comment("Controls the maximum height above the ground the pentalty maxes out at.")
+                    .translation("astral.config.common.heightPenaltyLimit")
+                    .define("heightPenaltyLimit", 64);
+
+            builder.pop();
+        }
+
+        public double getBaseSpeed() {
+            return baseSpeed.get();
+        }
+
+        public double getMaxMultiplier() {
+            return maxMultiplier.get();
+        }
+
+        public double getMaxPenalty() {
+            return maxPenalty.get();
+        }
+
+        public int getHeightPenaltyLimit() {
+            return heightPenaltyLimit.get();
         }
     }
 }
