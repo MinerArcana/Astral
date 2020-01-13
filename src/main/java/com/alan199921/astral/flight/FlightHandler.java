@@ -17,11 +17,13 @@ public class FlightHandler {
         int closestY = getClosestBlockUnderPlayer(player);
         MovementType movementType = determineMovementType(player);
         //Move player based on kets pressed
-        if (InputHandler.isHoldingForwards(player)) {
-            player.moveRelative(1, new Vec3d(0, 0, calculateSpeedForward(player.posY, closestY, movementType)));
-        }
-        if (InputHandler.isHoldingBackwards(player)) {
-            player.moveRelative(1, new Vec3d(0, 0, -calculateSpeedForward(player.posY, closestY, movementType) * 0.8F));
+        if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
+            if (InputHandler.isHoldingForwards(player)) {
+                player.moveRelative(1, new Vec3d(0, 0, calculateSpeedForward(player.posY, closestY, movementType)));
+            }
+            if (InputHandler.isHoldingBackwards(player)) {
+                player.moveRelative(1, new Vec3d(0, 0, -calculateSpeedForward(player.posY, closestY, movementType) * 0.8F));
+            }
         }
         if (InputHandler.isHoldingLeft(player)) {
             player.moveRelative(1, new Vec3d(calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
@@ -29,7 +31,6 @@ public class FlightHandler {
         if (InputHandler.isHoldingRight(player)) {
             player.moveRelative(1, new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
         }
-
         if (InputHandler.isHoldingUp(player)) {
             player.moveRelative(1, new Vec3d(0, (double) 1 / 15, 0));
         }
