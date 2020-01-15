@@ -21,12 +21,14 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MovementInput;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
@@ -54,6 +56,18 @@ public class TravelingHandlers {
         if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
             MobEntity mobEntity = (MobEntity) event.getEntityLiving();
             mobEntity.setAttackTarget(null);
+        }
+    }
+
+    @SubscribeEvent
+    public static void cancelRegularMovement(InputUpdateEvent event) {
+        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            final MovementInput movementInput = event.getMovementInput();
+            movementInput.backKeyDown = false;
+            movementInput.forwardKeyDown = false;
+            movementInput.moveForward = 0;
+            movementInput.rightKeyDown = false;
+            movementInput.moveStrafe = 0;
         }
     }
 

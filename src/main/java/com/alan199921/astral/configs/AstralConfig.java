@@ -215,7 +215,7 @@ public class AstralConfig {
                     .define("baseSpeed", 4.317);
             maxMultiplier = builder.comment("Controls the maximum multiplier of the base speed.")
                     .translation("astral.config.common.maxMultiplier")
-                    .define("baseSpeed", 1.5);
+                    .define("maxMultiplier", 1.5);
             maxPenalty = builder.comment("Controls the maximum penalty that could be applied to the maximum multiplier.")
                     .translation("astral.config.common.maxPenalty")
                     .define("maxPenalty", .5);
