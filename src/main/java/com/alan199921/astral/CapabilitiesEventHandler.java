@@ -1,6 +1,7 @@
 package com.alan199921.astral;
 
 import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
+import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentProvider;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterProvider;
 import net.minecraft.entity.Entity;
@@ -15,6 +16,7 @@ public class CapabilitiesEventHandler {
     private static final ResourceLocation INNER_REALM_TELEPORTER = new ResourceLocation(Astral.MOD_ID, "inner_realm_teleporter");
     private static final ResourceLocation INNER_REALM_CHUNK_CLAIM = new ResourceLocation(Astral.MOD_ID, "inner_realm_chunk_claim");
     private static final ResourceLocation BODY_LINK = new ResourceLocation(Astral.MOD_ID, "body_link");
+    private static final ResourceLocation HEIGHT_ADJUSTMENT = new ResourceLocation(Astral.MOD_ID, "height_adjustment");
 
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e) {
@@ -28,6 +30,7 @@ public class CapabilitiesEventHandler {
     @SubscribeEvent
     public static void onAttachCapabilitiesToEntity(AttachCapabilitiesEvent<Entity> e) {
         e.addCapability(BODY_LINK, new BodyLinkProvider());
+        e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
     }
 
 }

@@ -3,6 +3,9 @@ package com.alan199921.astral;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkCapability;
 import com.alan199921.astral.capabilities.bodylink.BodyLinkStorage;
 import com.alan199921.astral.capabilities.bodylink.IBodyLinkCapability;
+import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentCapability;
+import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentStorage;
+import com.alan199921.astral.capabilities.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
 import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimStorage;
@@ -59,6 +62,7 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
+            CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
         }
     }
 

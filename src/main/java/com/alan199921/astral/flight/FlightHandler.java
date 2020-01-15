@@ -1,5 +1,8 @@
 package com.alan199921.astral.flight;
 
+import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentCapability;
+import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentProvider;
+import com.alan199921.astral.capabilities.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,6 +42,19 @@ public class FlightHandler {
         int closestY = getClosestBlockUnderPlayer(player);
         MovementType movementType = determineMovementType(player);
         Vec3d nextMovement = new Vec3d(0, 0, 0);
+        final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElse(new HeightAdjustmentCapability());
+        if (player.world.isRemote()) {
+            if (InputHandler.isHoldingSprint(player) && !heightAdjustmentCapability.isActive()) {
+                System.out.println("Player is sprinting!");
+                heightAdjustmentCapability.activate();
+                heightAdjustmentCapability.setHeightDifference((int) Math.min(AstralConfig.getFlightSettings().getHeightPenaltyLimit(), player.posY - closestY));
+                System.out.println(heightAdjustmentCapability.getHeightDifference());
+            }
+            else if (!InputHandler.isHoldingSprint(player) && heightAdjustmentCapability.isActive()) {
+                System.out.println("Resetting!");
+                heightAdjustmentCapability.deactivate();
+            }
+        }
         //Move player based on keys pressed
         if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
             if (InputHandler.isHoldingForwards(player)) {
@@ -54,11 +70,11 @@ public class FlightHandler {
         if (InputHandler.isHoldingRight(player)) {
             nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
         }
-        if (InputHandler.isHoldingUp(player)) {
-            nextMovement = nextMovement.add(new Vec3d(0, 1, 0));
+        if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.posY) - closestY)) {
+            nextMovement = nextMovement.add(new Vec3d(0, AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() ? 20 : 8), 0));
         }
-        else if (InputHandler.isHoldingDown(player)) {
-            nextMovement = nextMovement.add(new Vec3d(0, -1, 0));
+        else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.posY) - closestY)) {
+            nextMovement = nextMovement.add(new Vec3d(0, -AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() ? 20 : 8), 0));
         }
         else {
             //Smooth flying up and down
