@@ -45,7 +45,6 @@ public class FlightHandler {
         final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElse(new HeightAdjustmentCapability());
         if (player.world.isRemote()) {
             if (InputHandler.isHoldingSprint(player) && !heightAdjustmentCapability.isActive()) {
-                System.out.println("Player is sprinting!");
                 heightAdjustmentCapability.activate();
                 heightAdjustmentCapability.setHeightDifference((int) Math.min(AstralConfig.getFlightSettings().getHeightPenaltyLimit(), player.posY - closestY));
             }
@@ -68,11 +67,11 @@ public class FlightHandler {
         if (InputHandler.isHoldingRight(player)) {
             nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
         }
-        if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.posY) - closestY)) {
+        if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
             nextMovement = nextMovement.add(new Vec3d(0, AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() ? 20 : 8), 0));
         }
-        else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.posY) - closestY)) {
-            nextMovement = nextMovement.add(new Vec3d(0, -AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() ? 20 : 8), 0));
+        else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
+            nextMovement = nextMovement.add(new Vec3d(0, -AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() && !InputHandler.isHoldingDown(player) ? 20 : 8), 0));
         }
         else {
             //Smooth flying up and down
