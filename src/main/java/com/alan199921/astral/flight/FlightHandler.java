@@ -48,10 +48,8 @@ public class FlightHandler {
                 System.out.println("Player is sprinting!");
                 heightAdjustmentCapability.activate();
                 heightAdjustmentCapability.setHeightDifference((int) Math.min(AstralConfig.getFlightSettings().getHeightPenaltyLimit(), player.posY - closestY));
-                System.out.println(heightAdjustmentCapability.getHeightDifference());
             }
             else if (!InputHandler.isHoldingSprint(player) && heightAdjustmentCapability.isActive()) {
-                System.out.println("Resetting!");
                 heightAdjustmentCapability.deactivate();
             }
         }
@@ -79,7 +77,7 @@ public class FlightHandler {
         else {
             //Smooth flying up and down
             Vec3d motion = player.getMotion();
-            player.setMotion(new Vec3d(motion.getX(), 0, motion.getZ()));
+            player.setMotion(new Vec3d(motion.getX(), heightAdjustmentCapability.isActive() ? motion.getY() : 0, motion.getZ()));
         }
 
         //Only set velocity when player is pressing a key
