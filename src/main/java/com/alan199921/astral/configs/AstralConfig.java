@@ -206,6 +206,7 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Double> maxMultiplier;
         private final ForgeConfigSpec.ConfigValue<Double> maxPenalty;
         private final ForgeConfigSpec.ConfigValue<Integer> heightPenaltyLimit;
+        private final ForgeConfigSpec.ConfigValue<Integer> decelerationDistance;
 
         FlightSettings(ForgeConfigSpec.Builder builder) {
             builder.comment("Astral Travel flight settings").comment("The speed of flight using Astral Travel decays with every block the player is above the closest block below them.").push("flightSettings");
@@ -219,9 +220,12 @@ public class AstralConfig {
             maxPenalty = builder.comment("Controls the maximum penalty that could be applied to the maximum multiplier.")
                     .translation("astral.config.common.maxPenalty")
                     .define("maxPenalty", .5);
-            heightPenaltyLimit = builder.comment("Controls the maximum height above the ground the pentalty maxes out at.")
+            heightPenaltyLimit = builder.comment("Controls the maximum height above the ground the penalty maxes out at.")
                     .translation("astral.config.common.heightPenaltyLimit")
                     .define("heightPenaltyLimit", 64);
+            decelerationDistance = builder.comment("Controls how many blocks before the desired height should you decelerate.")
+                    .translation("astral.config.common.decelerationDistance")
+                    .define("decelerationDistance", 5);
 
             builder.pop();
         }
@@ -240,6 +244,10 @@ public class AstralConfig {
 
         public int getHeightPenaltyLimit() {
             return heightPenaltyLimit.get();
+        }
+
+        public int getDecelerationDistance() {
+            return decelerationDistance.get();
         }
     }
 }

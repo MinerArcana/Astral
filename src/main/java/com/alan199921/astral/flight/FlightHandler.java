@@ -68,10 +68,11 @@ public class FlightHandler {
             nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
         }
         if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() ? 20 : 8), 0));
+            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? getAdjustmentSpeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 20), 0))
+            ;
         }
         else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, -AstralConfig.getFlightSettings().getBaseSpeed() / (heightAdjustmentCapability.isActive() && !InputHandler.isHoldingDown(player) ? 20 : 8), 0));
+            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? -getAdjustmentSpeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 20), 0));
         }
         else {
             //Smooth flying up and down
@@ -83,6 +84,16 @@ public class FlightHandler {
         if (!nextMovement.equals(new Vec3d(0, 0, 0))) {
             moveEntity(player, nextMovement);
         }
+    }
+
+    private static double getAdjustmentSpeed(int heightDifference, double heightAboveGround) {
+        final double maxFlyingSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 20;
+        final double deltaHeight = Math.abs(heightAboveGround - heightDifference);
+        if (deltaHeight <= AstralConfig.getFlightSettings().getDecelerationDistance()) {
+            double acceleration = -Math.pow(maxFlyingSpeed, 2) / (2 * AstralConfig.getFlightSettings().getDecelerationDistance());
+            return Math.sqrt(Math.pow(maxFlyingSpeed, 2) + (2 * acceleration * deltaHeight));
+        }
+        return maxFlyingSpeed;
     }
 
     private static MovementType determineMovementType(PlayerEntity player) {
