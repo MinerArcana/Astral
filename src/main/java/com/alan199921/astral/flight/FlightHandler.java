@@ -4,6 +4,7 @@ import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentCapab
 import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentProvider;
 import com.alan199921.astral.capabilities.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.configs.AstralConfig;
+import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Direction;
@@ -55,24 +56,24 @@ public class FlightHandler {
         //Move player based on keys pressed
         if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
             if (InputHandler.isHoldingForwards(player)) {
-                nextMovement = nextMovement.add(0, 0, calculateSpeedForward(player.posY, closestY, movementType));
+                nextMovement = nextMovement.add(0, 0, calculateSpeedForward(player.posY, closestY, movementType, player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier()));
             }
             if (InputHandler.isHoldingBackwards(player)) {
-                nextMovement = nextMovement.add(new Vec3d(0, 0, -calculateSpeedForward(player.posY, closestY, movementType) * 0.8F));
+                nextMovement = nextMovement.add(new Vec3d(0, 0, -calculateSpeedForward(player.posY, closestY, movementType, player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier()) * 0.8F));
             }
         }
         if (InputHandler.isHoldingLeft(player)) {
-            nextMovement = nextMovement.add(new Vec3d(calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
+            nextMovement = nextMovement.add(new Vec3d(calculateSpeedForward(player.posY, closestY, movementType, player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier()), 0, 0));
         }
         if (InputHandler.isHoldingRight(player)) {
-            nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType), 0, 0));
+            nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.posY, closestY, movementType, player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier()), 0, 0));
         }
         if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? getAdjustmentSpeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 20), 0))
+            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSPeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0))
             ;
         }
         else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.posY) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? -getAdjustmentSpeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 20), 0));
+            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSPeed(heightAdjustmentCapability.getHeightDifference(), player.posY - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0));
         }
         else {
             //Smooth flying up and down
@@ -86,8 +87,8 @@ public class FlightHandler {
         }
     }
 
-    private static double getAdjustmentSpeed(int heightDifference, double heightAboveGround) {
-        final double maxFlyingSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 20;
+    private static double getAdjustedVerticalSPeed(int heightDifference, double heightAboveGround) {
+        final double maxFlyingSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 40;
         final double deltaHeight = Math.abs(heightAboveGround - heightDifference);
         if (deltaHeight <= AstralConfig.getFlightSettings().getDecelerationDistance()) {
             double acceleration = -Math.pow(maxFlyingSpeed, 2) / (2 * AstralConfig.getFlightSettings().getDecelerationDistance());
@@ -114,9 +115,10 @@ public class FlightHandler {
      * @param posY         The player's height
      * @param closestBlock The height of the closest block under the player
      * @param movementType How the player is moving (sprinting, walking, sneaking)
+     * @param amplifier    The amplifier of the Astral Travel potion effect
      * @return The speed that the player will travel at, in blocks/tick
      */
-    private static double calculateSpeedForward(double posY, int closestBlock, MovementType movementType) {
+    private static double calculateSpeedForward(double posY, int closestBlock, MovementType movementType, int amplifier) {
         double baseSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 20;
         if (movementType == MovementType.SNEAKING) {
             return 0.0655;
@@ -130,7 +132,7 @@ public class FlightHandler {
         int maxDifference = AstralConfig.getFlightSettings().getHeightPenaltyLimit();
         double difference = Math.min(maxDifference, posY - closestBlock);
         double speedPenalty = (difference / maxDifference) * maxChange;
-        return baseSpeed * (speedMultiplier - speedPenalty);
+        return baseSpeed * (speedMultiplier - speedPenalty) * (1 + amplifier * .5);
     }
 
     /**
