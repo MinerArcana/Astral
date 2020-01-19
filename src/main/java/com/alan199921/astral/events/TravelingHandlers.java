@@ -5,6 +5,7 @@ import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
+import com.alan199921.astral.effects.AstralTravelEffect;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.flight.FlightHandler;
@@ -21,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Effect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.NonNullList;
@@ -141,23 +141,26 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void travelEffectExpire(PotionEvent.PotionExpiryEvent event) {
-        handleAstralEffectEnd(event.getPotionEffect().getPotion(), event.getEntityLiving());
+        if (event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof AstralTravelEffect) {
+            handleAstralEffectEnd(event.getEntityLiving());
+        }
     }
 
     @SubscribeEvent
     public static void travelEffectRemove(PotionEvent.PotionRemoveEvent event) {
-        handleAstralEffectEnd(event.getPotionEffect().getPotion(), event.getEntityLiving());
+        if (event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof AstralTravelEffect) {
+            handleAstralEffectEnd(event.getEntityLiving());
+        }
     }
 
     /**
      * When the Astral Travel potion effect ends, remove the player's flying abilities, teleport them to the body,
      * transfer the body's inventory into the player's inventory, and then kill it.
      *
-     * @param potionEffect The potion effect that is ending
      * @param entityLiving The entity that with the potion effect
      */
-    private static void handleAstralEffectEnd(Effect potionEffect, LivingEntity entityLiving) {
-        if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && entityLiving instanceof PlayerEntity) {
+    private static void handleAstralEffectEnd(LivingEntity entityLiving) {
+        if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
             //Only run serverside
@@ -188,7 +191,7 @@ public class TravelingHandlers {
                 });
             }
         }
-        if (potionEffect.equals(AstralEffects.ASTRAL_TRAVEL) && !entityLiving.getEntityWorld().isRemote()) {
+        if (!entityLiving.getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectEnding(entityLiving);
         }
     }
