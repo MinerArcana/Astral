@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.bodylink;
+package com.alan199921.astral.api.bodylink;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;

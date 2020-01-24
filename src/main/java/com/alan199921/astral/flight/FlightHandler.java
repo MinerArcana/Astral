@@ -1,8 +1,8 @@
 package com.alan199921.astral.flight;
 
-import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentCapability;
-import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentProvider;
-import com.alan199921.astral.capabilities.heightadjustment.IHeightAdjustmentCapability;
+import com.alan199921.astral.api.heightadjustment.HeightAdjustmentCapability;
+import com.alan199921.astral.api.heightadjustment.HeightAdjustmentProvider;
+import com.alan199921.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.entity.Entity;

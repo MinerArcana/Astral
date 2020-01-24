@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.innerrealmteleporter;
+package com.alan199921.astral.api.innerrealmteleporter;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.INBT;

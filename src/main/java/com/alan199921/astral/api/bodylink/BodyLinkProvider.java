@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.innerrealmchunkclaim;
+package com.alan199921.astral.api.bodylink;
 
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -10,24 +10,21 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
-    @CapabilityInject(IInnerRealmChunkClaimCapability.class)
-    public static final Capability<IInnerRealmChunkClaimCapability> CHUNK_CLAIM_CAPABILITY = null;
+public class BodyLinkProvider implements ICapabilitySerializable {
+    @CapabilityInject(IBodyLinkCapability.class)
+    public static final Capability<IBodyLinkCapability> BODY_LINK_CAPABILITY = null;
 
-    private IInnerRealmChunkClaimCapability instance = CHUNK_CLAIM_CAPABILITY.getDefaultInstance();
-
+    private IBodyLinkCapability instance = BODY_LINK_CAPABILITY.getDefaultInstance();
 
     @Nonnull
-    @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CHUNK_CLAIM_CAPABILITY) {
+        if (cap == BODY_LINK_CAPABILITY) {
             return LazyOptional.of(() -> instance).cast();
         }
         else {
             return LazyOptional.empty();
         }
     }
-
 
     @Override
     public INBT serializeNBT() {
@@ -38,5 +35,4 @@ public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
     public void deserializeNBT(INBT nbt) {
         instance.deserializeNBT(nbt);
     }
-
 }

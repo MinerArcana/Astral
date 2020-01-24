@@ -1,9 +1,9 @@
 package com.alan199921.astral;
 
-import com.alan199921.astral.capabilities.bodylink.BodyLinkProvider;
-import com.alan199921.astral.capabilities.heightadjustment.HeightAdjustmentProvider;
-import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
-import com.alan199921.astral.capabilities.innerrealmteleporter.InnerRealmTeleporterProvider;
+import com.alan199921.astral.api.bodylink.BodyLinkProvider;
+import com.alan199921.astral.api.heightadjustment.HeightAdjustmentProvider;
+import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;

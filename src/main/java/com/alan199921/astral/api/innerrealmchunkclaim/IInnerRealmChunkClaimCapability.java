@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.innerrealmchunkclaim;
+package com.alan199921.astral.api.innerrealmchunkclaim;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.INBT;

@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.bodylink;
+package com.alan199921.astral.api.bodylink;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;

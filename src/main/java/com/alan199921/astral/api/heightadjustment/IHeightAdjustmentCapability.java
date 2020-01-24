@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.heightadjustment;
+package com.alan199921.astral.api.heightadjustment;
 
 import net.minecraftforge.common.util.INBTSerializable;
 

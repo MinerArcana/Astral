@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.innerrealmchunkclaim;
+package com.alan199921.astral.api.innerrealmchunkclaim;
 
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import com.alan199921.astral.network.AstralNetwork;

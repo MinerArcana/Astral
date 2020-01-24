@@ -4,6 +4,7 @@ import com.alan199921.astral.Astral;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmBiomeProvider;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmChunkGenerator;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmDimension;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.provider.BiomeProviderType;
@@ -40,4 +41,7 @@ public class AstralDimensions {
         DimensionManager.registerDimension(INNER_REALM, AstralDimensions.innerRealm, null, true);
     }
 
+    public static boolean isEntityNotInInnerRealm(Entity entity) {
+        return entity.dimension != DimensionType.byName(INNER_REALM);
+    }
 }

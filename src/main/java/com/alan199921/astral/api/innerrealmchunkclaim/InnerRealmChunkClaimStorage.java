@@ -1,4 +1,4 @@
-package com.alan199921.astral.capabilities.innerrealmchunkclaim;
+package com.alan199921.astral.api.innerrealmchunkclaim;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

@@ -1,7 +1,7 @@
 package com.alan199921.astral.network;
 
-import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
-import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
+import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;

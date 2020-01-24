@@ -1,6 +1,6 @@
-package com.alan199921.astral.capabilities.innerrealmteleporter;
+package com.alan199921.astral.api.innerrealmteleporter;
 
-import com.alan199921.astral.capabilities.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
