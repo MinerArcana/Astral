@@ -13,12 +13,14 @@ public class AstralConfig {
     private final HerbEffectDurations herbEffectDurations;
     private final PotionEffectDurations potionEffectDurations;
     private final FlightSettings flightSettings;
+    private final TravelingSettings travelingSettings;
     private final ForgeConfigSpec spec;
 
     private AstralConfig(ForgeConfigSpec.Builder builder) {
         this.herbEffectDurations = new HerbEffectDurations(builder);
         this.potionEffectDurations = new PotionEffectDurations(builder);
         this.flightSettings = new FlightSettings(builder);
+        this.travelingSettings = new TravelingSettings(builder);
         this.spec = builder.build();
     }
 
@@ -62,6 +64,10 @@ public class AstralConfig {
 
     public static FlightSettings getFlightSettings() {
         return instance.flightSettings;
+    }
+
+    public static TravelingSettings getTravelingSettings() {
+        return instance.travelingSettings;
     }
 
     /**
@@ -248,6 +254,20 @@ public class AstralConfig {
 
         public int getDecelerationDistance() {
             return decelerationDistance.get();
+        }
+    }
+
+    public static class TravelingSettings {
+        private final ForgeConfigSpec.ConfigValue<Integer> startupTime;
+
+        TravelingSettings(ForgeConfigSpec.Builder builder) {
+            startupTime = builder.comment("Controls how long it takes for the benefits of Astral travel to kick in, in ticks")
+                    .translation("astral.config.common.startupTime")
+                    .define("startupTime", 50);
+        }
+
+        public int getStartupTime() {
+            return startupTime.get();
         }
     }
 }

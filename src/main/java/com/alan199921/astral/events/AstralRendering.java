@@ -2,8 +2,10 @@ package com.alan199921.astral.events;
 
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.configs.AstralConfig;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,13 +13,14 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
 import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
 import static net.minecraftforge.client.ForgeIngameGui.left_height;
 
-public class AstralHealthBar {
+public class AstralRendering {
 
     public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health_v2.png");
     private static long healthUpdateCounter;
@@ -48,15 +51,12 @@ public class AstralHealthBar {
             healthUpdateCounter = (long) ticks + 10;
         }
 
-        int lastPlayerHealth = 0;
         if (Util.milliTime() - lastSystemTime > 1000L) {
             playerHealth = health;
-            lastPlayerHealth = health;
             lastSystemTime = Util.milliTime();
         }
 
         playerHealth = health;
-        int healthLast = lastPlayerHealth;
 
         IAttributeInstance attrMaxHealth = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
         float healthMax = (float) attrMaxHealth.getValue();
@@ -156,5 +156,34 @@ public class AstralHealthBar {
         GlStateManager.disableBlend();
         mc.getTextureManager().bindTexture(GUI_ICONS_LOCATION);
         mc.getProfiler().endSection();
+    }
+
+    public static void renderAstralScreenFade(int sleep) {
+        Minecraft mc = Minecraft.getInstance();
+        GlStateManager.enableBlend();
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableDepthTest();
+        GlStateManager.disableAlphaTest();
+        int sleepTime = Math.toIntExact((long) (sleep * (100.0 / AstralConfig.getTravelingSettings().getStartupTime())));
+        float opacity = (float) sleepTime / 100.0F;
+
+        if (opacity > 1.0F) {
+            opacity = 1.0F - (float) (sleepTime - 100) / 10.0F;
+        }
+
+        int color = (int) (220.0F * opacity) << 24 | 1052704;
+        int scaledWidth = mc.mainWindow.getScaledWidth();
+        int scaledHeight = mc.mainWindow.getScaledHeight();
+
+        AbstractGui.fill(0, 0, scaledWidth, scaledHeight, color);
+        GlStateManager.enableAlphaTest();
+        GlStateManager.enableDepthTest();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        GlStateManager.disableAlphaTest();
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.disableLighting();
+        GlStateManager.enableAlphaTest();
+
     }
 }

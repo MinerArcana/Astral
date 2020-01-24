@@ -4,7 +4,6 @@ import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
-import com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
@@ -14,15 +13,10 @@ import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
@@ -34,6 +28,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -53,10 +48,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
+
+import static com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
@@ -94,12 +90,17 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            final IPsychicInventory psychicInventory = event.player.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-            if (psychicInventory.canPlayerStartTraveling()) {
+            final IPsychicInventory psychicInventory = event.player.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+            if (psychicInventory.isEntityTraveling(event.player)) {
                 FlightHandler.handleAstralFlight(event.player);
             }
             else {
-                psychicInventory.addSleep();
+                final boolean startAstralTravel = psychicInventory.addSleep();
+                if (startAstralTravel) {
+                    spawnPhysicalBody(event.player);
+                    event.player.setMotion(0, 10, 0);
+                    event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+                }
             }
         }
     }
@@ -116,18 +117,19 @@ public class TravelingHandlers {
             LivingEntity trueSource = (LivingEntity) event.getSource().getTrueSource();
             LivingEntity target = event.getEntityLiving();
             DamageSource damageType = event.getSource();
-            boolean isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+            boolean isAstralTravelActiveOnTarget = isAstralTravelActive(target);
+            boolean isAstralTravelActiveOnSource = isAstralTravelActive(trueSource);
             //Negate astral damage to non Astral entities
-            if (!isAstralTravelActive && IAstralDamage.isDamageAstral(damageType)) {
+            if (!isAstralTravelActiveOnTarget && IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
             }
             //Convert non astral damage to astral damage for Astral entities
-            else if (trueSource.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !IAstralDamage.isDamageAstral(damageType)) {
+            else if (isAstralTravelActiveOnSource && !IAstralDamage.isDamageAstral(damageType)) {
                 event.setCanceled(true);
                 target.attackEntityFrom(new AstralEntityDamage(trueSource), trueSource.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL).getAmplifier() + 1.0F);
             }
             //Negate non-Astral damage to Astral entities
-            else if (isAstralTravelActive && !(IAstralDamage.isDamageAstral(damageType))) {
+            else if (isAstralTravelActiveOnTarget && !(IAstralDamage.isDamageAstral(damageType))) {
                 event.setCanceled(true);
             }
         }
@@ -137,6 +139,18 @@ public class TravelingHandlers {
                 event.setCanceled(true);
             }
         }
+    }
+
+    public static boolean isAstralTravelActive(LivingEntity target) {
+        boolean isAstralTravelActive;
+        if (target.getCapability(PSYCHIC_INVENTORY_CAPABILITY).isPresent()) {
+            final IPsychicInventory psychicInventory = target.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+            isAstralTravelActive = psychicInventory.isEntityTraveling(target);
+        }
+        else {
+            isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+        }
+        return isAstralTravelActive;
     }
 
     //Function for detecting if an Astral entity is interacting with a non astral entity
@@ -267,27 +281,30 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            playerEntity.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory()).clearSleep();
+            playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory()).clearSleep();
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
-                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
-                physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
-                //Store player UUID to body entity and give it a name
-                playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
-                    cap.setLinkedBodyID(physicalBodyEntity);
-                    cap.setDimensionID(playerEntity.dimension.getId());
-                });
-                physicalBodyEntity.setName(event.getEntity().getScoreboardName());
-
-                //Insert main inventory to body and clear
-                moveInventoryToMob(playerEntity, physicalBodyEntity);
-                physicalBodyEntity.setHealth(playerEntity.getHealth());
-                physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
             }
         }
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && !event.getEntityLiving().getEntityWorld().isRemote()) {
             AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
+    }
+
+    public static void spawnPhysicalBody(PlayerEntity playerEntity) {
+        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+        physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
+        //Store player UUID to body entity and give it a name
+        playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
+            cap.setLinkedBodyID(physicalBodyEntity);
+            cap.setDimensionID(playerEntity.dimension.getId());
+        });
+        physicalBodyEntity.setName(playerEntity.getScoreboardName());
+
+        //Insert main inventory to body and clear
+        moveInventoryToMob(playerEntity, physicalBodyEntity);
+        physicalBodyEntity.setHealth(playerEntity.getHealth());
+        physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
     }
 
     private static void moveInventoryToMob(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
@@ -406,42 +423,14 @@ public class TravelingHandlers {
                 }
                 if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
                     event.setCanceled(true);
-                    AstralHealthBar.renderAstralHearts(minecraft, playerEntity);
+                    AstralRendering.renderAstralHearts(minecraft, playerEntity);
                 }
-                final IPsychicInventory psychicInventory = playerEntity.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-                if (!psychicInventory.canPlayerStartTraveling()) {
-                    renderAstralScreenFade(psychicInventory.getSleep());
+                final IPsychicInventory psychicInventory = playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+                if (!psychicInventory.isEntityTraveling(playerEntity)) {
+                    AstralRendering.renderAstralScreenFade(psychicInventory.getSleep());
                 }
             }
         }
     }
 
-    public static void renderAstralScreenFade(int sleep) {
-        Minecraft mc = Minecraft.getInstance();
-        GlStateManager.enableBlend();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableDepthTest();
-        GlStateManager.disableAlphaTest();
-        int sleepTime = Math.toIntExact((sleep * 2) % 100);
-        float opacity = (float) sleepTime / 100.0F;
-
-        if (opacity > 1.0F) {
-            opacity = 1.0F - (float) (sleepTime - 100) / 10.0F;
-        }
-
-        int color = (int) (220.0F * opacity) << 24 | 1052704;
-        int scaledWidth = mc.mainWindow.getScaledWidth();
-        int scaledHeight = mc.mainWindow.getScaledHeight();
-
-        AbstractGui.fill(0, 0, scaledWidth, scaledHeight, color);
-        GlStateManager.enableAlphaTest();
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        GlStateManager.disableAlphaTest();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableLighting();
-        GlStateManager.enableAlphaTest();
-
-    }
 }

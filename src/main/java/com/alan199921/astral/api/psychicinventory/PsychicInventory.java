@@ -1,5 +1,9 @@
 package com.alan199921.astral.api.psychicinventory;
 
+import com.alan199921.astral.configs.AstralConfig;
+import com.alan199921.astral.effects.AstralEffects;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -46,17 +50,19 @@ public class PsychicInventory implements IPsychicInventory {
         activeGhost = nbt.getBoolean("activeGhost");
     }
 
+    /**
+     * Adds 1 to the sleep counter, returns true if this switches the player to astral mode
+     *
+     * @return Whether the player gets the full benefits of Astral travel from incrementing
+     */
     @Override
-    public void addSleep() {
+    public boolean addSleep() {
         sleepGauge++;
-        if (canPlayerStartTraveling()) {
+        if (sleepGauge >= AstralConfig.getTravelingSettings().getStartupTime() && !activeGhost) {
             activeGhost = true;
+            return true;
         }
-    }
-
-    @Override
-    public void addSleep(int ticks) {
-        sleepGauge += ticks;
+        return false;
     }
 
     @Override
@@ -66,12 +72,20 @@ public class PsychicInventory implements IPsychicInventory {
     }
 
     @Override
-    public boolean canPlayerStartTraveling() {
-        return sleepGauge >= 50;
+    public int getSleep() {
+        return sleepGauge;
     }
 
     @Override
-    public int getSleep() {
-        return sleepGauge;
+    public boolean isEntityTraveling(LivingEntity entity) {
+        if (entity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            if (entity instanceof PlayerEntity) {
+                return activeGhost;
+            }
+            else {
+                return true;
+            }
+        }
+        return false;
     }
 }
