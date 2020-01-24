@@ -135,7 +135,7 @@ public class TravelingHandlers {
         }
         //Check for astral damage vs. non astral and vice versa
         else {
-            if (!(IAstralDamage.canDamageTypeDamageAstral(event.getSource())) && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) || IAstralDamage.isDamageAstral(event.getSource()) && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            if (!(IAstralDamage.canDamageTypeDamageAstral(event.getSource())) && isAstralTravelActive(event.getEntityLiving()) || IAstralDamage.isDamageAstral(event.getSource()) && !isAstralTravelActive(event.getEntityLiving())) {
                 event.setCanceled(true);
             }
         }
@@ -158,12 +158,12 @@ public class TravelingHandlers {
         if (mobA == null || mobB == null) {
             return false;
         }
-        return mobA.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !mobB.isPotionActive(AstralEffects.ASTRAL_TRAVEL) || !mobA.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && mobB.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+        return isAstralTravelActive(mobA) && !isAstralTravelActive(mobB) || !isAstralTravelActive(mobA) && isAstralTravelActive(mobB);
     }
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent event) {
-        if (!Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntity().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+        if (!isAstralTravelActive(Minecraft.getInstance().player) && isAstralTravelActive(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -327,7 +327,7 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
+        if (isAstralTravelActive(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
             event.setCanceled(!AstralTags.ASTRAL_INTERACT.contains(targetedBlock));
         }
@@ -336,21 +336,21 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralBreakBlock(BlockEvent.BreakEvent event) {
         //Placeholder properties
-        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
+        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isAstralTravelActive(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralHarvestSpeed(PlayerEvent.BreakSpeed event) {
-        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
+        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isAstralTravelActive(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralPlaceBlockEvent(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof LivingEntity && !AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && ((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) && AstralDimensions.isEntityNotInInnerRealm(event.getEntity())) {
+        if (event.getEntity() instanceof LivingEntity && !AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isAstralTravelActive((LivingEntity) event.getEntity()) && AstralDimensions.isEntityNotInInnerRealm(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -393,14 +393,14 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
-        if (!world.isRemote() && event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+        if (!world.isRemote() && isAstralTravelActive(event.getEntityLiving()) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
+        if (isAstralTravelActive(event.getEntityLiving()) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
             event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
             event.setCanceled(true);
         }
@@ -416,7 +416,7 @@ public class TravelingHandlers {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
-            if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            if (isAstralTravelActive(playerEntity)) {
                 //Cancel rendering of hunger bar
                 if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
                     event.setCanceled(true);
