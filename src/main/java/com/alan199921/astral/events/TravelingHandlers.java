@@ -302,12 +302,12 @@ public class TravelingHandlers {
         physicalBodyEntity.setName(playerEntity.getScoreboardName());
 
         //Insert main inventory to body and clear
-        moveInventoryToMob(playerEntity, physicalBodyEntity);
+        transferInventoryToPsychicInventory(playerEntity, physicalBodyEntity);
         physicalBodyEntity.setHealth(playerEntity.getHealth());
         physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
     }
 
-    private static void moveInventoryToMob(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
+    private static void transferInventoryToPsychicInventory(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
         NonNullList<ItemStack> playerMainInventory = playerEntity.inventory.mainInventory;
         for (int i = 0; i < playerMainInventory.size(); i++) {
             ItemStack itemStack = playerMainInventory.get(i);

@@ -9,6 +9,36 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class PsychicInventory implements IPsychicInventory {
 
+    @Override
+    public ItemStackHandler getPhysicalMainInventory() {
+        return physicalMainInventory;
+    }
+
+    @Override
+    public ItemStackHandler getPhysicalArmor() {
+        return physicalArmor;
+    }
+
+    @Override
+    public ItemStackHandler getPhysicalHands() {
+        return physicalHands;
+    }
+
+    @Override
+    public ItemStackHandler getPsychicMainInventory() {
+        return psychicMainInventory;
+    }
+
+    @Override
+    public ItemStackHandler getPsychicArmor() {
+        return psychicArmor;
+    }
+
+    @Override
+    public ItemStackHandler getPsychicHands() {
+        return psychicHands;
+    }
+
     //Physical inventory
     private final ItemStackHandler physicalMainInventory = new ItemStackHandler(42);
     private final ItemStackHandler physicalArmor = new ItemStackHandler(4);
