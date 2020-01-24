@@ -12,6 +12,9 @@ import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimStorag
 import com.alan199921.astral.api.innerrealmteleporter.IInnerRealmTeleporterCapability;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
+import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
+import com.alan199921.astral.api.psychicinventory.PsychicInventory;
+import com.alan199921.astral.api.psychicinventory.PsychicInventoryStorage;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
@@ -63,6 +66,7 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
+            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new PsychicInventoryStorage(), PsychicInventory::new);
         }
     }
 
