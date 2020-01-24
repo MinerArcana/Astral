@@ -2,6 +2,9 @@ package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
+import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
+import com.alan199921.astral.api.psychicinventory.PsychicInventory;
+import com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
@@ -91,7 +94,13 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            FlightHandler.handleAstralFlight(event.player);
+            final IPsychicInventory psychicInventory = event.player.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+            if (psychicInventory.canPlayerStartTraveling()) {
+                FlightHandler.handleAstralFlight(event.player);
+            }
+            else {
+                psychicInventory.addSleep();
+            }
         }
     }
 
@@ -144,11 +153,6 @@ public class TravelingHandlers {
             event.setCanceled(true);
         }
     }
-
-//    @SubscribeEvent
-//    public static void renderAstralPlayer(RenderPlayerEvent event){
-//        event.getRenderer().
-//    }
 
     @SubscribeEvent
     public static void travelEffectExpire(PotionEvent.PotionExpiryEvent event) {
@@ -263,6 +267,7 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            playerEntity.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory()).clearSleep();
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
                 PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
@@ -403,18 +408,21 @@ public class TravelingHandlers {
                     event.setCanceled(true);
                     AstralHealthBar.renderAstralHearts(minecraft, playerEntity);
                 }
-                renderAstralScreenFade();
+                final IPsychicInventory psychicInventory = playerEntity.getCapability(PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+                if (!psychicInventory.canPlayerStartTraveling()) {
+                    renderAstralScreenFade(psychicInventory.getSleep());
+                }
             }
         }
     }
 
-    public static void renderAstralScreenFade() {
+    public static void renderAstralScreenFade(int sleep) {
         Minecraft mc = Minecraft.getInstance();
         GlStateManager.enableBlend();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableDepthTest();
         GlStateManager.disableAlphaTest();
-        int sleepTime = Math.toIntExact(mc.world.getGameTime() % 100);
+        int sleepTime = Math.toIntExact((sleep * 2) % 100);
         float opacity = (float) sleepTime / 100.0F;
 
         if (opacity > 1.0F) {

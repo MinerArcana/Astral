@@ -14,6 +14,7 @@ public class PsychicInventory implements IPsychicInventory {
     private final ItemStackHandler psychicArmor = new ItemStackHandler(4);
     private final ItemStackHandler psychicHands = new ItemStackHandler(2);
     private int sleepGauge = 0;
+    private boolean activeGhost = false;
 
     @Override
     public CompoundNBT serializeNBT() {
@@ -25,6 +26,9 @@ public class PsychicInventory implements IPsychicInventory {
         psychicInventoryNBT.put("psychicMainInventory", psychicMainInventory.serializeNBT());
         psychicInventoryNBT.put("psychicArmor", psychicArmor.serializeNBT());
         psychicInventoryNBT.put("psychicHands", psychicHands.serializeNBT());
+
+        psychicInventoryNBT.putInt("sleepGauge", sleepGauge);
+        psychicInventoryNBT.putBoolean("activeGhost", activeGhost);
         return psychicInventoryNBT;
     }
 
@@ -37,11 +41,17 @@ public class PsychicInventory implements IPsychicInventory {
         psychicMainInventory.deserializeNBT(nbt.getCompound("psychicMainInventory"));
         psychicArmor.deserializeNBT(nbt.getCompound("psychicArmor"));
         psychicHands.deserializeNBT(nbt.getCompound("psychicHands"));
+
+        sleepGauge = nbt.getInt("sleepGauge");
+        activeGhost = nbt.getBoolean("activeGhost");
     }
 
     @Override
     public void addSleep() {
         sleepGauge++;
+        if (canPlayerStartTraveling()) {
+            activeGhost = true;
+        }
     }
 
     @Override
@@ -50,7 +60,18 @@ public class PsychicInventory implements IPsychicInventory {
     }
 
     @Override
-    public boolean isPlayerSleeping() {
+    public void clearSleep() {
+        sleepGauge = 0;
+        activeGhost = false;
+    }
+
+    @Override
+    public boolean canPlayerStartTraveling() {
         return sleepGauge >= 50;
+    }
+
+    @Override
+    public int getSleep() {
+        return sleepGauge;
     }
 }

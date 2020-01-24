@@ -8,5 +8,9 @@ public interface IPsychicInventory extends INBTSerializable<CompoundNBT> {
 
     void addSleep(int ticks);
 
-    boolean isPlayerSleeping();
+    void clearSleep();
+
+    boolean canPlayerStartTraveling();
+
+    int getSleep();
 }
