@@ -13,14 +13,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.6.5'
+version = '0.6.6'
 group = 'com.alan199921.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20191026-1.14.3'
+    mappings channel: 'snapshot', version: '20200119-1.14.3'
     runs {
         client {
             workingDirectory project.file('run')
@@ -52,7 +52,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.96'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.117'
 //    compile fg.deobf('vazkii.arl:AutoRegLib:1.4-35.69')
 //    compile fg.deobf('vazkii.quark:Quark:r2.0-200.835')
 

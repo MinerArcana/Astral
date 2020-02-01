@@ -13,6 +13,7 @@ import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class InnerRealmDimension extends Dimension {
@@ -21,6 +22,7 @@ public class InnerRealmDimension extends Dimension {
     }
 
     @Override
+    @Nonnull
     public ChunkGenerator<?> createChunkGenerator() {
         return AstralDimensions.generatorType.create(this.world, AstralDimensions.biomeProviderType.create(AstralDimensions.biomeProviderType.createSettings().setBiome(Biomes.PLAINS)), AstralDimensions.generatorType.createSettings());
     }
