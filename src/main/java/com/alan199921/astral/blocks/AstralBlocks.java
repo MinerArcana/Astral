@@ -23,12 +23,16 @@ public class AstralBlocks {
     @ObjectHolder("astral:astral_meridian")
     public static final Block ASTRAL_MERIDIAN = null;
 
+    @ObjectHolder("astral:offering_brazier")
+    public static final Block OFFERING_BRAZIER = null;
+
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
         registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
         registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
         registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
+        registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier", true);
     }
 
     /**
