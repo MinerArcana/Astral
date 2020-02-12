@@ -425,10 +425,10 @@ public class TravelingHandlers {
                     event.setCanceled(true);
                     AstralRendering.renderAstralHearts(minecraft, playerEntity);
                 }
-                final IPsychicInventory psychicInventory = playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-                if (!psychicInventory.isEntityTraveling(playerEntity)) {
-                    AstralRendering.renderAstralScreenFade(psychicInventory.getSleep());
-                }
+            }
+            final IPsychicInventory psychicInventory = playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
+            if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !psychicInventory.isEntityTraveling(playerEntity)) {
+                AstralRendering.renderAstralScreenFade(psychicInventory.getSleep());
             }
         }
     }
