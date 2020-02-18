@@ -15,6 +15,9 @@ import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterStorag
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventoryStorage;
+import com.alan199921.astral.api.sleepmanager.ISleepManager;
+import com.alan199921.astral.api.sleepmanager.SleepManager;
+import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
@@ -67,6 +70,7 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new PsychicInventoryStorage(), PsychicInventory::new);
+            CapabilityManager.INSTANCE.register(ISleepManager.class, new SleepManagerStorage(), SleepManager::new);
         }
     }
 

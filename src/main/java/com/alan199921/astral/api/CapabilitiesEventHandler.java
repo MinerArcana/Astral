@@ -6,6 +6,7 @@ import com.alan199921.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider;
+import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -21,6 +22,7 @@ public class CapabilitiesEventHandler {
     private static final ResourceLocation BODY_LINK = new ResourceLocation(Astral.MOD_ID, "body_link");
     private static final ResourceLocation HEIGHT_ADJUSTMENT = new ResourceLocation(Astral.MOD_ID, "height_adjustment");
     private static final ResourceLocation PSYCHIC_INVENTORY = new ResourceLocation(Astral.MOD_ID, "psychic_inventory");
+    private static final ResourceLocation SLEEP_MANAGER = new ResourceLocation(Astral.MOD_ID, "sleep_manager");
 
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e) {
@@ -28,6 +30,7 @@ public class CapabilitiesEventHandler {
         if (world != null) {
             e.addCapability(INNER_REALM_TELEPORTER, new InnerRealmTeleporterProvider());
             e.addCapability(INNER_REALM_CHUNK_CLAIM, new InnerRealmChunkClaimProvider());
+            e.addCapability(PSYCHIC_INVENTORY, new PsychicInventoryProvider());
         }
     }
 
@@ -37,7 +40,7 @@ public class CapabilitiesEventHandler {
         if (e.getObject() instanceof PlayerEntity) {
             e.addCapability(BODY_LINK, new BodyLinkProvider());
             e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
-            e.addCapability(PSYCHIC_INVENTORY, new PsychicInventoryProvider());
+            e.addCapability(SLEEP_MANAGER, new SleepManagerStorage());
         }
     }
 
