@@ -11,4 +11,6 @@ public interface ISleepManager extends INBTSerializable<CompoundNBT> {
     void addSleep();
 
     void resetSleep();
+
+    boolean isEntityTraveling();
 }

@@ -1,5 +1,6 @@
 package com.alan199921.astral.api.sleepmanager;
 
+import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.nbt.CompoundNBT;
 
 public class SleepManager implements ISleepManager {
@@ -24,6 +25,11 @@ public class SleepManager implements ISleepManager {
     @Override
     public void resetSleep() {
         sleepCount = 0;
+    }
+
+    @Override
+    public boolean isEntityTraveling() {
+        return sleepCount >= AstralConfig.getTravelingSettings().getStartupTime();
     }
 
     @Override

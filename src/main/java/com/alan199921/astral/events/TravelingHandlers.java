@@ -2,8 +2,9 @@ package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
-import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
-import com.alan199921.astral.api.psychicinventory.PsychicInventory;
+import com.alan199921.astral.api.sleepmanager.ISleepManager;
+import com.alan199921.astral.api.sleepmanager.SleepManager;
+import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
@@ -52,8 +53,6 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider.PSYCHIC_INVENTORY_CAPABILITY;
-
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
     private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
@@ -90,18 +89,21 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            final IPsychicInventory psychicInventory = event.player.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-            if (psychicInventory.isEntityTraveling(event.player)) {
-                FlightHandler.handleAstralFlight(event.player);
-            }
-            else {
-                final boolean startAstralTravel = psychicInventory.addSleep();
-                if (startAstralTravel) {
-                    spawnPhysicalBody(event.player);
-                    event.player.setMotion(0, 10, 0);
-                    event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+            if (event.player.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).isPresent()) {
+                final ISleepManager sleepManager = event.player.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
+                if (sleepManager.isEntityTraveling()) {
+                    FlightHandler.handleAstralFlight(event.player);
+                }
+                else {
+                    sleepManager.addSleep();
+                    if (sleepManager.isEntityTraveling()) {
+                        spawnPhysicalBody(event.player);
+                        event.player.setMotion(0, 10, 0);
+                        event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+                    }
                 }
             }
+
         }
     }
 
@@ -143,9 +145,9 @@ public class TravelingHandlers {
 
     public static boolean isAstralTravelActive(LivingEntity target) {
         boolean isAstralTravelActive;
-        if (target.getCapability(PSYCHIC_INVENTORY_CAPABILITY).isPresent()) {
-            final IPsychicInventory psychicInventory = target.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-            isAstralTravelActive = psychicInventory.isEntityTraveling(target);
+        if (target.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).isPresent()) {
+            final ISleepManager sleepManager = target.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
+            isAstralTravelActive = sleepManager.isEntityTraveling();
         }
         else {
             isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
@@ -281,7 +283,7 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory()).clearSleep();
+            playerEntity.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager()).resetSleep();
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             }
@@ -426,10 +428,11 @@ public class TravelingHandlers {
                     AstralRendering.renderAstralHearts(minecraft, playerEntity);
                 }
             }
-            final IPsychicInventory psychicInventory = playerEntity.getCapability(PSYCHIC_INVENTORY_CAPABILITY).orElse(new PsychicInventory());
-            if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !psychicInventory.isEntityTraveling(playerEntity)) {
-                AstralRendering.renderAstralScreenFade(psychicInventory.getSleep());
-            }
+            playerEntity.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
+                if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !iSleepManager.isEntityTraveling()) {
+                    AstralRendering.renderAstralScreenFade(iSleepManager.getSleep());
+                }
+            });
         }
     }
 
