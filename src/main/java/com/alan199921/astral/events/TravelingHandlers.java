@@ -4,7 +4,7 @@ import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
-import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
+import com.alan199921.astral.api.sleepmanager.SleepManagerProvider;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
@@ -89,8 +89,8 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            if (event.player.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).isPresent()) {
-                final ISleepManager sleepManager = event.player.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
+            if (event.player.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).isPresent()) {
+                final ISleepManager sleepManager = event.player.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
                 if (sleepManager.isEntityTraveling()) {
                     FlightHandler.handleAstralFlight(event.player);
                 }
@@ -145,8 +145,8 @@ public class TravelingHandlers {
 
     public static boolean isAstralTravelActive(LivingEntity target) {
         boolean isAstralTravelActive;
-        if (target.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).isPresent()) {
-            final ISleepManager sleepManager = target.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
+        if (target.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).isPresent()) {
+            final ISleepManager sleepManager = target.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager());
             isAstralTravelActive = sleepManager.isEntityTraveling();
         }
         else {
@@ -283,7 +283,7 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            playerEntity.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager()).resetSleep();
+            playerEntity.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).orElse(new SleepManager()).resetSleep();
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             }
@@ -428,7 +428,7 @@ public class TravelingHandlers {
                     AstralRendering.renderAstralHearts(minecraft, playerEntity);
                 }
             }
-            playerEntity.getCapability(SleepManagerStorage.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
+            playerEntity.getCapability(SleepManagerProvider.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
                 if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !iSleepManager.isEntityTraveling()) {
                     AstralRendering.renderAstralScreenFade(iSleepManager.getSleep());
                 }

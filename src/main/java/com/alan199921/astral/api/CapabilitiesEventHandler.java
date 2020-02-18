@@ -6,7 +6,7 @@ import com.alan199921.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.api.psychicinventory.PsychicInventoryProvider;
-import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
+import com.alan199921.astral.api.sleepmanager.SleepManagerProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public class CapabilitiesEventHandler {
         if (e.getObject() instanceof PlayerEntity) {
             e.addCapability(BODY_LINK, new BodyLinkProvider());
             e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
-            e.addCapability(SLEEP_MANAGER, new SleepManagerStorage());
+            e.addCapability(SLEEP_MANAGER, new SleepManagerProvider());
         }
     }
 
