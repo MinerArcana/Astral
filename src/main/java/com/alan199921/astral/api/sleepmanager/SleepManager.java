@@ -9,7 +9,7 @@ public class SleepManager implements ISleepManager {
 
     @Override
     public int getSleep() {
-        return 0;
+        return sleepCount;
     }
 
     @Override
