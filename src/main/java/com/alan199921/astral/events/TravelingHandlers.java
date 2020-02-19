@@ -143,16 +143,23 @@ public class TravelingHandlers {
         }
     }
 
-    public static boolean isAstralTravelActive(LivingEntity target) {
-        boolean isAstralTravelActive;
-        if (target.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-            final ISleepManager sleepManager = target.getCapability(AstralAPI.sleepManagerCapability).orElse(new SleepManager());
-            isAstralTravelActive = sleepManager.isEntityTraveling();
+    /**
+     * Returns whether the living entity should be receiving the effects of Astral Travel
+     * <p>
+     * Entities receive the effects of Astral Travel if they have the Astral Travel potion effect and is not a player
+     * or if they have charged up their sleep gauge from the sleep manager capability
+     *
+     * @param livingEntity The living entity to be checked
+     * @return Whether the entity should be receving the benefits of Astral Travel
+     */
+    public static boolean isAstralTravelActive(LivingEntity livingEntity) {
+        if (livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
+            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElse(new SleepManager());
+            return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && sleepManager.isEntityTraveling();
         }
         else {
-            isAstralTravelActive = target.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+            return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
         }
-        return isAstralTravelActive;
     }
 
     //Function for detecting if an Astral entity is interacting with a non astral entity
