@@ -14,7 +14,6 @@ import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterCapabi
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
-import com.alan199921.astral.api.psychicinventory.PsychicInventoryStorage;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.configs.AstralConfig;
@@ -74,7 +73,18 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
-            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new PsychicInventoryStorage(), PsychicInventory::new);
+            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new Capability.IStorage<IPsychicInventory>() {
+                @Nullable
+                @Override
+                public INBT writeNBT(Capability<IPsychicInventory> capability, IPsychicInventory instance, Direction side) {
+                    return instance.serializeNBT();
+                }
+
+                @Override
+                public void readNBT(Capability<IPsychicInventory> capability, IPsychicInventory instance, Direction side, INBT nbt) {
+                    instance.deserializeNBT((CompoundNBT) nbt);
+                }
+            }, PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new Capability.IStorage<ISleepManager>() {
                 @Nullable
                 @Override

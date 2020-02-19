@@ -8,9 +8,6 @@ import java.util.UUID;
 public class PsychicInventory implements IPsychicInventory {
 
     public static final String PSYCHIC_INVENTORIES = "psychicInventories";
-    private int sleepGauge = 0;
-    private boolean activeGhost = false;
-
     private HashMap<UUID, PsychicInventoryInstance> playerInventoriesMap = new HashMap<>();
 
 
@@ -18,8 +15,6 @@ public class PsychicInventory implements IPsychicInventory {
     public CompoundNBT serializeNBT() {
         CompoundNBT psychicInventoryNBT = new CompoundNBT();
         playerInventoriesMap.forEach((key, value) -> psychicInventoryNBT.put(key.toString(), value.serialize()));
-        psychicInventoryNBT.putInt("sleepGauge", sleepGauge);
-        psychicInventoryNBT.putBoolean("activeGhost", activeGhost);
         CompoundNBT psychicInventoryMap = new CompoundNBT();
         psychicInventoryMap.put(PSYCHIC_INVENTORIES, psychicInventoryNBT);
         return psychicInventoryMap;
@@ -32,12 +27,13 @@ public class PsychicInventory implements IPsychicInventory {
             psychicInventoryInstance.deserialize(nbt.getCompound(PSYCHIC_INVENTORIES).getCompound(s));
             playerInventoriesMap.put(UUID.fromString(s), psychicInventoryInstance);
         });
-        sleepGauge = nbt.getInt("sleepGauge");
-        activeGhost = nbt.getBoolean("activeGhost");
     }
 
     @Override
     public PsychicInventoryInstance getInventoryOfPlayer(UUID player) {
+        if (!playerInventoriesMap.containsKey(player)) {
+            playerInventoriesMap.put(player, new PsychicInventoryInstance());
+        }
         return playerInventoriesMap.get(player);
     }
 }

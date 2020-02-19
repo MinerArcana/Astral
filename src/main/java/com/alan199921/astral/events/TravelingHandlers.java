@@ -324,6 +324,8 @@ public class TravelingHandlers {
                 physicalBodyEntity.getMainInventory().setStackInSlot(i, itemStack);
                 playerMainInventory.set(i, ItemStack.EMPTY);
             }
+            int finalI = i;
+            playerEntity.getEntityWorld().getCapability(AstralAPI.psychicInventoryCapability).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).getMainInventory().setStackInSlot(finalI, itemStack));
         }
         //Insert armor and offhand to entity
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
