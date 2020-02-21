@@ -42,6 +42,11 @@ public class OfferingBrazier extends Block {
         TileEntity entity = world.getTileEntity(blockPos);
         if (!playerEntity.isSneaking() && entity instanceof OfferingBrazierTile) {
             ((OfferingBrazierTile) entity).extractInsertItem(playerEntity, hand);
+            return true;
+        }
+        else if (playerEntity.isSneaking() && entity instanceof OfferingBrazierTile) {
+            ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
+            return true;
         }
         return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
     }
