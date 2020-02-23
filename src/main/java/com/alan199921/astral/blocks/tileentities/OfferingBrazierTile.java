@@ -49,9 +49,9 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                     progress = 0;
                 }
             }
-            else if (burnTicks <= 0 && AbstractFurnaceTileEntity.getBurnTimes().get(inventory.getStackInSlot(0).getItem()) > 0) {
+            else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0))) {
                 final ItemStack fuelInSlot = inventory.getStackInSlot(0);
-                burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(inventory.getStackInSlot(0).getItem());
+                burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
                 fuelInSlot.shrink(1);
             }
         });
@@ -76,7 +76,6 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     }
 
     public void extractItem(PlayerEntity playerEntity, IItemHandler inventory) {
-        boolean used = false;
         if (!inventory.getStackInSlot(1).isEmpty()) {
             ItemStack itemStack = inventory.extractItem(0, inventory.getStackInSlot(1).getCount(), false);
             playerEntity.addItemStackToInventory(itemStack);
@@ -85,14 +84,19 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
             ItemStack itemStack = inventory.extractItem(1, inventory.getStackInSlot(1).getCount(), false);
             playerEntity.addItemStackToInventory(itemStack);
         }
+        markDirty();
     }
 
     public void insertItem(IItemHandler brazierInventory, ItemStack heldItem) {
         if (AbstractFurnaceTileEntity.isFuel(heldItem)) {
-            brazierInventory.insertItem(0, heldItem, false).getCount();
+            final int leftover = brazierInventory.insertItem(0, heldItem.copy(), false).getCount();
+            heldItem.setCount(leftover);
+//            heldItem.setCount(leftover);
         }
         else {
-            brazierInventory.insertItem(1, heldItem, false).getCount();
+            final int leftover = brazierInventory.insertItem(1, heldItem.copy(), false).getCount();
+            heldItem.setCount(leftover);
+//            heldItem.setCount(leftover);
         }
     }
 
@@ -132,5 +136,15 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         write.putUniqueId("boundPlayer", boundPlayer);
         write.put("lastStack", lastStack.serializeNBT());
         return write;
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        return write(new CompoundNBT());
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        read(nbt);
     }
 }
