@@ -125,26 +125,36 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         progress = nbt.getInt("progress");
         boundPlayer = nbt.getUniqueId("boundPlayer");
         lastStack.deserializeNBT(nbt.getCompound("lastStack"));
+        handler.ifPresent(iItemHandler -> {
+            if (iItemHandler instanceof ItemStackHandler) {
+                ((ItemStackHandler) iItemHandler).deserializeNBT(nbt.getCompound("brazierInventory"));
+            }
+        });
     }
 
     @Override
     @Nonnull
     public CompoundNBT write(CompoundNBT nbt) {
-        CompoundNBT write = super.write(nbt);
-        write.putInt("burnTicks", burnTicks);
-        write.putInt("progress", progress);
-        write.putUniqueId("boundPlayer", boundPlayer);
-        write.put("lastStack", lastStack.serializeNBT());
-        return write;
+        super.write(nbt);
+        nbt.putInt("burnTicks", burnTicks);
+        nbt.putInt("progress", progress);
+        nbt.putUniqueId("boundPlayer", boundPlayer);
+        nbt.put("lastStack", lastStack.serializeNBT());
+        handler.ifPresent(iItemHandler -> {
+            if (iItemHandler instanceof ItemStackHandler) {
+                nbt.put("brazierInventory", ((ItemStackHandler) iItemHandler).serializeNBT());
+            }
+        });
+        return nbt;
     }
 
-    @Override
-    public CompoundNBT serializeNBT() {
-        return write(new CompoundNBT());
-    }
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        read(nbt);
-    }
+//    @Override
+//    public CompoundNBT serializeNBT() {
+//        return write(new CompoundNBT());
+//    }
+//
+//    @Override
+//    public void deserializeNBT(CompoundNBT nbt) {
+//        read(nbt);
+//    }
 }
