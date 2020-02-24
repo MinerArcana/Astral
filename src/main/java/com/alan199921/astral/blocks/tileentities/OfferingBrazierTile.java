@@ -8,13 +8,17 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class OfferingBrazierTile extends TileEntity implements ITickableTileEntity {
@@ -26,6 +30,15 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
 
     public OfferingBrazierTile() {
         super(AstralTiles.OFFERING_BRAZIER_TILE);
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return handler.cast();
+        }
+        return super.getCapability(cap, side);
     }
 
     @Override
@@ -55,8 +68,6 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 fuelInSlot.shrink(1);
             }
         });
-
-
     }
 
     private boolean hasFuel() {
@@ -88,15 +99,13 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     }
 
     public void insertItem(IItemHandler brazierInventory, ItemStack heldItem) {
-        if (AbstractFurnaceTileEntity.isFuel(heldItem)) {
+        if (brazierInventory.isItemValid(0, heldItem)) {
             final int leftover = brazierInventory.insertItem(0, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
-//            heldItem.setCount(leftover);
         }
-        else {
+        else if (brazierInventory.isItemValid(1, heldItem)) {
             final int leftover = brazierInventory.insertItem(1, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
-//            heldItem.setCount(leftover);
         }
     }
 
@@ -110,6 +119,16 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                if (slot == 0) {
+                    return AbstractFurnaceTileEntity.isFuel(stack) && super.isItemValid(slot, stack);
+                }
+                else {
+                    return super.isItemValid(slot, stack);
+                }
             }
         };
     }
@@ -147,14 +166,4 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         });
         return nbt;
     }
-
-//    @Override
-//    public CompoundNBT serializeNBT() {
-//        return write(new CompoundNBT());
-//    }
-//
-//    @Override
-//    public void deserializeNBT(CompoundNBT nbt) {
-//        read(nbt);
-//    }
 }
