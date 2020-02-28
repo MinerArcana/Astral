@@ -3,6 +3,7 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
+import com.alan199921.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.dimensions.AstralDimensions;
@@ -49,6 +50,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -253,20 +255,23 @@ public class TravelingHandlers {
 
     private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
         if (!playerEntity.getEntityWorld().isRemote()) {
-            IntStream.range(0, physicalBodyEntity.getMainInventory().getSlots()).forEach(i -> {
+            final PsychicInventoryInstance inventoryOfPlayer = AstralAPI.getOverworldPsychicInventory(serverWorld).getInventoryOfPlayer(playerEntity.getUniqueID());
+
+            final ItemStackHandler physicalInventory = inventoryOfPlayer.getPhysicalInventory();
+            IntStream.range(0, physicalInventory.getSlots()).forEach(i -> {
                 if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
-                    playerEntity.inventory.setInventorySlotContents(i, physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                    playerEntity.inventory.setInventorySlotContents(i, physicalInventory.getStackInSlot(i));
                 }
                 else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                    playerEntity.inventory.addItemStackToInventory(physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                    playerEntity.inventory.addItemStackToInventory(physicalInventory.getStackInSlot(i));
                 }
                 else {
-                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyEntity.getMainInventory().getStackInSlot(i));
+                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalInventory.getStackInSlot(i));
                 }
                 physicalBodyEntity.getMainInventory().setStackInSlot(i, ItemStack.EMPTY);
             });
             for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                ItemStack physicalBodyArmorItemStack = physicalBodyEntity.getItemStackFromSlot(slot);
+                ItemStack physicalBodyArmorItemStack = inventoryOfPlayer.getStackFromPhysicalSlot(slot);
                 if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
                     playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
                 }
