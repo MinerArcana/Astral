@@ -55,7 +55,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 if (progress >= 200 && boundPlayer != null) {
                     if (world instanceof ServerWorld) {
                         final IPsychicInventory overworldPsychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world);
-                        overworldPsychicInventory.getInventoryOfPlayer(boundPlayer).getMainInventory().insertItem(0, new ItemStack(lastStack.getItem()), false);
+                        overworldPsychicInventory.getInventoryOfPlayer(boundPlayer).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
                         System.out.println("Transferred item to psychic inventory!");
                         lastStack.shrink(1);
                     }
