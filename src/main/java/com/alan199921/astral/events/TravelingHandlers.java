@@ -3,7 +3,7 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
-import com.alan199921.astral.api.psychicinventory.PsychicInventoryInstance;
+import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.dimensions.AstralDimensions;
@@ -24,11 +24,9 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentUtils;
@@ -50,10 +48,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
@@ -220,7 +216,7 @@ public class TravelingHandlers {
                         serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
                         //Get the inventory and transfer items
                         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                        transferInventoryToPlayer(playerEntity, serverWorld, physicalBodyEntity);
+                        AstralAPI.getOverworldPsychicInventory(serverWorld).getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.InventoryType.PHYSICAL, playerEntity.inventory);
                         resetPlayerStats(playerEntity, physicalBodyEntity);
                         physicalBodyEntity.onKillCommand();
                     }
@@ -253,39 +249,6 @@ public class TravelingHandlers {
         resetPlayerStats(serverPlayerEntity);
     }
 
-    private static void transferInventoryToPlayer(PlayerEntity playerEntity, ServerWorld serverWorld, PhysicalBodyEntity physicalBodyEntity) {
-        if (!playerEntity.getEntityWorld().isRemote()) {
-            final PsychicInventoryInstance inventoryOfPlayer = AstralAPI.getOverworldPsychicInventory(serverWorld).getInventoryOfPlayer(playerEntity.getUniqueID());
-
-            final ItemStackHandler physicalInventory = inventoryOfPlayer.getPhysicalInventory();
-            IntStream.range(0, physicalInventory.getSlots()).forEach(i -> {
-                if (playerEntity.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
-                    playerEntity.inventory.setInventorySlotContents(i, physicalInventory.getStackInSlot(i));
-                }
-                else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                    playerEntity.inventory.addItemStackToInventory(physicalInventory.getStackInSlot(i));
-                }
-                else {
-                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalInventory.getStackInSlot(i));
-                }
-                physicalBodyEntity.getMainInventory().setStackInSlot(i, ItemStack.EMPTY);
-            });
-            for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-                ItemStack physicalBodyArmorItemStack = inventoryOfPlayer.getStackFromPhysicalSlot(slot);
-                if (!slot.equals(EquipmentSlotType.MAINHAND) && playerEntity.inventory.armorItemInSlot(slot.getIndex()) == ItemStack.EMPTY) {
-                    playerEntity.setItemStackToSlot(slot, physicalBodyArmorItemStack);
-                }
-                else if (playerEntity.inventory.getFirstEmptyStack() != -1) {
-                    playerEntity.inventory.addItemStackToInventory(physicalBodyArmorItemStack);
-                }
-                else {
-                    Block.spawnAsEntity(serverWorld, physicalBodyEntity.getPosition(), physicalBodyArmorItemStack);
-                }
-                physicalBodyEntity.setItemStackToSlot(slot, ItemStack.EMPTY);
-            }
-        }
-    }
-
     /**
      * When the player gets access to the Astral travel effect, give them the ability to fly, and transfer their inventory into the physical body mob
      *
@@ -316,29 +279,11 @@ public class TravelingHandlers {
         physicalBodyEntity.setName(playerEntity.getScoreboardName());
 
         //Insert main inventory to body and clear
-        transferInventoryToPsychicInventory(playerEntity, physicalBodyEntity);
+        if (!playerEntity.getEntityWorld().isRemote()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.InventoryType.ASTRAL, playerEntity.inventory);
+        }
         physicalBodyEntity.setHealth(playerEntity.getHealth());
         physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
-    }
-
-    private static void transferInventoryToPsychicInventory(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
-        NonNullList<ItemStack> playerMainInventory = playerEntity.inventory.mainInventory;
-        for (int i = 0; i < playerMainInventory.size(); i++) {
-            ItemStack itemStack = playerMainInventory.get(i);
-            if (!AstralTags.ASTRAL_PICKUP.contains(itemStack.getItem())) {
-                physicalBodyEntity.getMainInventory().setStackInSlot(i, itemStack);
-                playerMainInventory.set(i, ItemStack.EMPTY);
-                int finalI = i;
-                playerEntity.getEntityWorld().getCapability(AstralAPI.psychicInventoryCapability).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).getPhysicalInventory().setStackInSlot(finalI, itemStack));
-            }
-        }
-        //Insert armor and offhand to entity
-        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            if (!AstralTags.ASTRAL_PICKUP.contains(playerEntity.getItemStackFromSlot(slotType).getItem())) {
-                physicalBodyEntity.setItemStackToSlot(slotType, playerEntity.getItemStackFromSlot(slotType));
-                playerEntity.setItemStackToSlot(slotType, ItemStack.EMPTY);
-            }
-        }
     }
 
     @SubscribeEvent
