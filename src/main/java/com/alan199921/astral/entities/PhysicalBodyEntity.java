@@ -35,9 +35,6 @@ import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
     public static final IDataSerializer<Optional<GameProfile>> OPTIONAL_GAMEPROFILE;
-    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, OPTIONAL_GAMEPROFILE);
-
-    private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
 
     static {
         final IDataSerializer<Optional<GameProfile>> serializer = OPTIONAL_GAMEPROFILE = new IDataSerializer<Optional<GameProfile>>() {
@@ -61,11 +58,15 @@ public class PhysicalBodyEntity extends LivingEntity {
             @Override
             @Nonnull
             public Optional<GameProfile> copyValue(@Nonnull Optional<GameProfile> gameProfile) {
-                return gameProfile.map(profile -> new GameProfile(profile.getId(), profile.getName()));
+                return gameProfile;
             }
         };
         DataSerializers.registerSerializer(serializer);
     }
+
+    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, OPTIONAL_GAMEPROFILE);
+
+    private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
 
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
     private final ItemStackHandler mainInventory = new ItemStackHandler(42);
@@ -135,7 +136,9 @@ public class PhysicalBodyEntity extends LivingEntity {
         compound.put("handsInventoryTag", inventoryHands.serializeNBT());
 
         compound.putBoolean("gameProfileExists", dataManager.get(gameProfile).isPresent());
-        compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), dataManager.get(gameProfile).get()));
+        if (getGameProfile().isPresent()) {
+            compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), dataManager.get(gameProfile).get()));
+        }
         compound.putBoolean("faceDown", dataManager.get(faceDown));
 
         super.writeAdditional(compound);
