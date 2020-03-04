@@ -8,6 +8,6 @@ import java.util.UUID;
 public interface IPsychicInventory extends INBTSerializable<CompoundNBT> {
     PsychicInventoryInstance getInventoryOfPlayer(UUID player);
 
-    InventoryType.InventoryType getInventoryType(UUID playerId);
+    InventoryType getInventoryType(UUID playerId);
 
 }

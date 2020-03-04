@@ -1,7 +1,6 @@
 package com.alan199921.astral.blocks.tileentities;
 
 import com.alan199921.astral.api.AstralAPI;
-import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -54,10 +53,11 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 }
                 if (progress >= 200 && boundPlayer != null) {
                     if (world instanceof ServerWorld) {
-                        final IPsychicInventory overworldPsychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world);
-                        overworldPsychicInventory.getInventoryOfPlayer(boundPlayer).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
-                        System.out.println("Transferred item to psychic inventory!");
-                        lastStack.shrink(1);
+                        AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
+                            overworldPsychicInventory.getInventoryOfPlayer(boundPlayer).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
+                            System.out.println("Transferred item to psychic inventory!");
+                            lastStack.shrink(1);
+                        });
                     }
                     progress = 0;
                 }

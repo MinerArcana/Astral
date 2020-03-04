@@ -216,7 +216,7 @@ public class TravelingHandlers {
                         serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
                         //Get the inventory and transfer items
                         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                        AstralAPI.getOverworldPsychicInventory(serverWorld).getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.InventoryType.PHYSICAL, playerEntity.inventory);
+                        AstralAPI.getOverworldPsychicInventory(serverWorld).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, playerEntity.inventory));
                         resetPlayerStats(playerEntity, physicalBodyEntity);
                         physicalBodyEntity.onKillCommand();
                     }
@@ -280,7 +280,7 @@ public class TravelingHandlers {
 
         //Insert main inventory to body and clear
         if (!playerEntity.getEntityWorld().isRemote()) {
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.InventoryType.ASTRAL, playerEntity.inventory);
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
         }
         physicalBodyEntity.setHealth(playerEntity.getHealth());
         physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());

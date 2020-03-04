@@ -38,7 +38,7 @@ public class PsychicInventory implements IPsychicInventory {
     }
 
     @Override
-    public InventoryType.InventoryType getInventoryType(UUID playerId) {
+    public InventoryType getInventoryType(UUID playerId) {
         return playerInventoriesMap.get(playerId).getInventoryType();
     }
 }

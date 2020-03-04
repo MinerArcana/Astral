@@ -30,7 +30,10 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(PhysicalBodyEntity entity) {
-        return getSkin(entity.getGameProfile());
+        if (!entity.getGameProfile().isPresent()) {
+            return new ResourceLocation("minecraft:textures/entity/steve.png");
+        }
+        return getSkin(entity.getGameProfile().get());
     }
 
     private ResourceLocation getSkin(GameProfile gameProfile) {
