@@ -3,6 +3,7 @@ package com.alan199921.astral.entities;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.events.TravelingHandlers;
+import com.alan199921.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
@@ -12,11 +13,9 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.LazyLoadBase;
@@ -34,41 +33,10 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
-    public static final IDataSerializer<Optional<GameProfile>> OPTIONAL_GAMEPROFILE;
-
-    static {
-        final IDataSerializer<Optional<GameProfile>> serializer = OPTIONAL_GAMEPROFILE = new IDataSerializer<Optional<GameProfile>>() {
-            @Override
-            public void write(@Nonnull PacketBuffer packetBuffer, @Nonnull Optional<GameProfile> gameProfile) {
-                if (gameProfile.isPresent()) {
-                    packetBuffer.writeBoolean(true);
-                    packetBuffer.writeCompoundTag(NBTUtil.writeGameProfile(new CompoundNBT(), gameProfile.get()));
-                }
-                else {
-                    packetBuffer.writeBoolean(false);
-                }
-            }
-
-            @Override
-            @Nonnull
-            public Optional<GameProfile> read(@Nonnull PacketBuffer packetBuffer) {
-                return packetBuffer.readBoolean() ? Optional.of(NBTUtil.readGameProfile(packetBuffer.readCompoundTag())) : Optional.empty();
-            }
-
-            @Override
-            @Nonnull
-            public Optional<GameProfile> copyValue(@Nonnull Optional<GameProfile> gameProfile) {
-                return gameProfile;
-            }
-        };
-        DataSerializers.registerSerializer(serializer);
-    }
-
-    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, OPTIONAL_GAMEPROFILE);
-
+    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
-
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
+
     private final ItemStackHandler mainInventory = new ItemStackHandler(42);
     private final ItemStackHandler inventoryHands = new ItemStackHandler(2);
     private final ItemStackHandler inventoryArmor = new ItemStackHandler(4);
@@ -222,11 +190,10 @@ public class PhysicalBodyEntity extends LivingEntity {
         super.onDeath(cause);
         if (!world.isRemote() && getGameProfile().isPresent()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().get().getId());
-            if (!cause.getDamageType().equals("outOfWorld")) {
+            if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null) {
                 playerEntity.onKillCommand();
                 dropInventory();
             }
         }
     }
-
 }
