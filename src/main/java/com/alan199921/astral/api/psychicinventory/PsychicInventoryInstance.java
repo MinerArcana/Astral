@@ -10,7 +10,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.stream.IntStream;
 
 public class PsychicInventoryInstance {
-    private InventoryType inventoryType = com.alan199921.astral.api.psychicinventory.InventoryType.PHYSICAL;
+    private InventoryType inventoryType = InventoryType.PHYSICAL;
 
 
     private static final String ASTRAL = "astral";
@@ -92,16 +92,16 @@ public class PsychicInventoryInstance {
     }
 
     public void deserialize(CompoundNBT nbt) {
-        astralMainInventory.deserializeNBT(nbt.getCompound(PHYSICAL_MAIN_INVENTORY));
-        astralHandsInventory.deserializeNBT(nbt.getCompound(PHYSICAL_HANDS_INVENTORY));
-        astralArmorInventory.deserializeNBT(nbt.getCompound(PHYSICAL_ARMOR_INVENTORY));
+        astralMainInventory.deserializeNBT(nbt.getCompound(ASTRAL_MAIN_INVENTORY));
+        astralHandsInventory.deserializeNBT(nbt.getCompound(ASTRAL_HANDS_INVENTORY));
+        astralArmorInventory.deserializeNBT(nbt.getCompound(ASTRAL_ARMOR_INVENTORY));
         physicalInventory.deserializeNBT(nbt.getCompound(PHYSICAL_MAIN_INVENTORY));
         physicalHands.deserializeNBT(nbt.getCompound(PHYSICAL_HANDS_INVENTORY));
         physicalArmor.deserializeNBT(nbt.getCompound(PHYSICAL_ARMOR_INVENTORY));
         innerRealmMain.deserializeNBT(nbt.getCompound(INNER_REALM_MAIN_INVENTORY));
         innerRealmArmor.deserializeNBT(nbt.getCompound(INNER_REALM_ARMOR_INVENTORY));
         innerRealmHands.deserializeNBT(nbt.getCompound(INNER_REALM_HANDS_INVENTORY));
-        inventoryType = com.alan199921.astral.api.psychicinventory.InventoryType.valueOf(nbt.getString("inventoryType"));
+        inventoryType = InventoryType.valueOf(nbt.getString("inventoryType"));
 
     }
 
@@ -143,7 +143,7 @@ public class PsychicInventoryInstance {
      * @param inventoryType The inventory type to switch to
      * @return An array of ItemStackHandlers of size 3, index 0 is the main inventory, 1 is the armor, 2 is the hands
      */
-    public ItemStackHandler[] getInventory(InventoryType inventoryType) {
+    private ItemStackHandler[] getInventory(InventoryType inventoryType) {
         switch (inventoryType) {
             case ASTRAL:
                 return new ItemStackHandler[]{astralMainInventory, astralArmorInventory, astralHandsInventory};

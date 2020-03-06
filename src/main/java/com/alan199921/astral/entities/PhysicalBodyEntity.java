@@ -1,7 +1,6 @@
 package com.alan199921.astral.entities;
 
 import com.alan199921.astral.api.AstralAPI;
-import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.events.TravelingHandlers;
 import com.alan199921.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
@@ -18,7 +17,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.HandSide;
-import net.minecraft.util.LazyLoadBase;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -42,18 +40,12 @@ public class PhysicalBodyEntity extends LivingEntity {
     private final ItemStackHandler inventoryArmor = new ItemStackHandler(4);
 
     private LazyOptional<IItemHandler> inventory;
+    private LazyOptional<IItemHandler> armorInventory;
+    private LazyOptional<IItemHandler> handsInventory;
 
 
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
-        if (world instanceof ServerWorld && !world.isRemote()) {
-            LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world);
-            if (psychicInventory.isPresent()) {
-                psychicInventory.addListener(LazyOptional::invalidate);
-            }
-            final LazyLoadBase<UUID> lazyUUID = new LazyLoadBase<>(this::getUniqueID);
-            inventory = psychicInventory.map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(lazyUUID.getValue()).getPhysicalInventory()).map(PhysicalBodyInventory::new);
-        }
     }
 
     private void handleInvalid() {
@@ -95,6 +87,12 @@ public class PhysicalBodyEntity extends LivingEntity {
 
         dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.of(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
         dataManager.set(faceDown, compound.getBoolean("facedown"));
+        if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
+            final UUID playerId = getGameProfile().get().getId();
+            inventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalInventory());
+            armorInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor());
+            handsInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands());
+        }
     }
 
     @Override
@@ -170,6 +168,12 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public void setGameProfile(GameProfile playerProfile) {
         dataManager.set(gameProfile, Optional.of(playerProfile));
+        if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
+            final UUID playerId = getGameProfile().get().getId();
+            inventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalInventory());
+            armorInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor());
+            handsInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands());
+        }
     }
 
     public float getHungerLevel() {
