@@ -32,6 +32,10 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         super(AstralTiles.OFFERING_BRAZIER_TILE);
     }
 
+    public Optional<UUID> getBoundPlayer() {
+        return boundPlayer;
+    }
+
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
@@ -55,7 +59,9 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 if (progress >= 200 && boundPlayer.isPresent()) {
                     if (world instanceof ServerWorld) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
-                            overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
+                            //TODO Make better insert function
+                            final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
+                            insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
                             System.out.println("Transferred item to psychic inventory!");
                             lastStack.shrink(1);
                         });
@@ -70,6 +76,17 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
             }
 
         }));
+    }
+
+    private void insertIntoAnySlot(IItemHandler itemHandler, ItemStack itemStack) {
+        final int slots = itemHandler.getSlots();
+        ItemStack leftovers;
+        for (int i = 0; i < slots; i++) {
+            leftovers = itemHandler.insertItem(i, itemStack, false);
+            if (leftovers.isEmpty()) {
+                break;
+            }
+        }
     }
 
     private boolean hasFuel() {
