@@ -59,7 +59,6 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 if (progress >= 200 && boundPlayer.isPresent()) {
                     if (world instanceof ServerWorld) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
-                            //TODO Make better insert function
                             final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
                             insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
                             System.out.println("Transferred item to psychic inventory!");
@@ -78,15 +77,16 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         }));
     }
 
-    private void insertIntoAnySlot(IItemHandler itemHandler, ItemStack itemStack) {
+    private ItemStack insertIntoAnySlot(IItemHandler itemHandler, ItemStack itemStack) {
         final int slots = itemHandler.getSlots();
-        ItemStack leftovers;
+        ItemStack leftovers = itemStack;
         for (int i = 0; i < slots; i++) {
-            leftovers = itemHandler.insertItem(i, itemStack, false);
+            leftovers = itemHandler.insertItem(i, leftovers, false);
             if (leftovers.isEmpty()) {
-                break;
+                return ItemStack.EMPTY;
             }
         }
+        return leftovers;
     }
 
     private boolean hasFuel() {
