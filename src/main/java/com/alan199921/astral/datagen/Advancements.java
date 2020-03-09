@@ -75,9 +75,13 @@ public class Advancements extends AdvancementProvider {
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
 
         final Advancement magicalPuissance = Advancement.Builder.builder()
-                .withParent(root)
+                .withParent(innerRealm)
                 .withCriterion("none", new TickTrigger.Instance())
-                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "magical_puissance").build())
+                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "magical_puissance")
+                        .hidden(true)
+                        .showToast(false)
+                        .announceToChat(false)
+                        .build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "magical_puissance").toString());
 
         final Advancement enchantingInsight = Advancement.Builder.builder()

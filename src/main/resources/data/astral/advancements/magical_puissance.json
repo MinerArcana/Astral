@@ -1,5 +1,5 @@
 {
-  "parent": "astral:root",
+  "parent": "astral:inner_realm",
   "display": {
     "icon": {
       "item": "minecraft:ender_pearl"
@@ -11,9 +11,9 @@
       "translate": "astral.advancement.magical_puissance.desc"
     },
     "frame": "task",
-    "show_toast": true,
-    "announce_to_chat": true,
-    "hidden": false
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
   },
   "criteria": {
     "none": {
