@@ -4,6 +4,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public interface ISleepManager extends INBTSerializable<CompoundNBT> {
+    boolean isGoingToInnerRealm();
+
+    void setGoingToInnerRealm(boolean goingToInnerRealm);
+
     int getSleep();
 
     void setSleep(int sleepCount);

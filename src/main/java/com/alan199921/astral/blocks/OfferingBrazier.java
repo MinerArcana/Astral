@@ -4,7 +4,9 @@ import com.alan199921.astral.blocks.tileentities.OfferingBrazierTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
@@ -35,6 +37,17 @@ public class OfferingBrazier extends Block {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new OfferingBrazierTile();
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        super.onBlockPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
+        if (livingEntity instanceof PlayerEntity) {
+            TileEntity tileEntity = world.getTileEntity(blockPos);
+            if (tileEntity instanceof OfferingBrazierTile) {
+                ((OfferingBrazierTile) tileEntity).setUUID(livingEntity.getUniqueID());
+            }
+        }
     }
 
     @Override

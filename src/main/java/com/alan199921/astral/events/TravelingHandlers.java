@@ -3,6 +3,8 @@ package com.alan199921.astral.events;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
+import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
+import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
@@ -36,6 +38,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -87,8 +90,9 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            if (event.player.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-                final ISleepManager sleepManager = event.player.getCapability(AstralAPI.sleepManagerCapability).orElse(new SleepManager());
+            final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.sleepManagerCapability);
+            if (iSleepManagerLazyOptional.isPresent()) {
+                final ISleepManager sleepManager = iSleepManagerLazyOptional.orElse(new SleepManager());
                 if (sleepManager.isEntityTraveling()) {
                     FlightHandler.handleAstralFlight(event.player);
                 }
@@ -96,8 +100,16 @@ public class TravelingHandlers {
                     sleepManager.addSleep();
                     if (sleepManager.isEntityTraveling()) {
                         spawnPhysicalBody(event.player);
-                        event.player.setMotion(0, 10, 0);
-                        event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+                        final Boolean goingToInnerRealm = iSleepManagerLazyOptional.map(ISleepManager::isGoingToInnerRealm).orElse(false);
+                        if (Boolean.TRUE.equals(goingToInnerRealm)) {
+                            event.player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(event.player));
+                            iSleepManagerLazyOptional.ifPresent(iSleepManager -> iSleepManager.setGoingToInnerRealm(false));
+                        }
+                        else {
+                            event.player.setMotion(0, 10, 0);
+                            event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+                        }
+
                     }
                 }
             }
@@ -280,7 +292,11 @@ public class TravelingHandlers {
 
         //Insert main inventory to body and clear
         if (!playerEntity.getEntityWorld().isRemote()) {
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
+
+            final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
+            final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElse(false);
+
+            psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(Boolean.TRUE.equals(goingToInnerRealm) ? InventoryType.INNER_REALM : InventoryType.ASTRAL, playerEntity.inventory));
         }
         physicalBodyEntity.setHealth(playerEntity.getHealth());
         physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());

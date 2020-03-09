@@ -18,13 +18,14 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class OfferingBrazierTile extends TileEntity implements ITickableTileEntity {
     private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
-    private UUID boundPlayer = UUID.randomUUID();
+    private Optional<UUID> boundPlayer = Optional.empty();
     private ItemStack lastStack = ItemStack.EMPTY;
 
     public OfferingBrazierTile() {
@@ -42,7 +43,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
 
     @Override
     public void tick() {
-        handler.ifPresent(inventory -> {
+        handler.ifPresent(inventory -> boundPlayer.ifPresent(uuid -> {
             if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
                 if (lastStack != inventory.getStackInSlot(1)) {
                     progress = 0;
@@ -51,10 +52,10 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 else {
                     progress++;
                 }
-                if (progress >= 200 && boundPlayer != null) {
+                if (progress >= 200 && boundPlayer.isPresent()) {
                     if (world instanceof ServerWorld) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
-                            overworldPsychicInventory.getInventoryOfPlayer(boundPlayer).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
+                            overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain().insertItem(0, new ItemStack(lastStack.getItem()), false);
                             System.out.println("Transferred item to psychic inventory!");
                             lastStack.shrink(1);
                         });
@@ -67,7 +68,8 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                 burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
                 fuelInSlot.shrink(1);
             }
-        });
+
+        }));
     }
 
     private boolean hasFuel() {
@@ -134,7 +136,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     }
 
     public void setUUID(UUID uuid) {
-        boundPlayer = uuid;
+        boundPlayer = Optional.of(uuid);
     }
 
     @Override
@@ -142,7 +144,8 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         super.read(nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
-        boundPlayer = nbt.getUniqueId("boundPlayer");
+        boolean boundPlayerExists = nbt.getBoolean("boundPlayerExists");
+        boundPlayer = boundPlayerExists ? Optional.of(nbt.getUniqueId("boundPlayer")) : Optional.empty();
         lastStack.deserializeNBT(nbt.getCompound("lastStack"));
         handler.ifPresent(iItemHandler -> {
             if (iItemHandler instanceof ItemStackHandler) {
@@ -157,7 +160,8 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         super.write(nbt);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("progress", progress);
-        nbt.putUniqueId("boundPlayer", boundPlayer);
+        nbt.putBoolean("boundPlayerExists", boundPlayer.isPresent());
+        boundPlayer.ifPresent(uuid -> nbt.putUniqueId("boundPlayer", uuid));
         nbt.put("lastStack", lastStack.serializeNBT());
         handler.ifPresent(iItemHandler -> {
             if (iItemHandler instanceof ItemStackHandler) {

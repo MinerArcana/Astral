@@ -5,7 +5,19 @@ import net.minecraft.nbt.CompoundNBT;
 
 public class SleepManager implements ISleepManager {
     public static final String SLEEP_COUNT = "sleepCount";
+    public static final String GOING_TO_INNER_REALM = "goingToInnerRealm";
     private int sleepCount = 0;
+    private boolean goingToInnerRealm = false;
+
+    @Override
+    public boolean isGoingToInnerRealm() {
+        return goingToInnerRealm;
+    }
+
+    @Override
+    public void setGoingToInnerRealm(boolean goingToInnerRealm) {
+        this.goingToInnerRealm = goingToInnerRealm;
+    }
 
     @Override
     public int getSleep() {
@@ -32,15 +44,18 @@ public class SleepManager implements ISleepManager {
         return sleepCount >= AstralConfig.getTravelingSettings().getStartupTime();
     }
 
+
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putInt(SLEEP_COUNT, sleepCount);
+        nbt.putBoolean(GOING_TO_INNER_REALM, goingToInnerRealm);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         sleepCount = nbt.getInt(SLEEP_COUNT);
+        goingToInnerRealm = nbt.getBoolean(GOING_TO_INNER_REALM);
     }
 }
