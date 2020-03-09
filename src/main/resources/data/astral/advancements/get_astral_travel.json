@@ -5,10 +5,10 @@
       "item": "astral:travelling_medicine"
     },
     "title": {
-      "translate": "astral.advancement.become_astral.name"
+      "translate": "astral.advancement.get_astral_travel.name"
     },
     "description": {
-      "translate": "astral.advancement.become_astral.name"
+      "translate": "astral.advancement.get_astral_travel.desc"
     },
     "frame": "task",
     "show_toast": true,
@@ -16,7 +16,7 @@
     "hidden": false
   },
   "criteria": {
-    "getAstralTravel": {
+    "get_astral_travel": {
       "trigger": "minecraft:effects_changed",
       "conditions": {
         "effects": {
@@ -27,7 +27,7 @@
   },
   "requirements": [
     [
-      "getAstralTravel"
+      "get_astral_travel"
     ]
   ]
 }

@@ -1,6 +1,22 @@
 {
+  "parent": "astral:root",
+  "display": {
+    "icon": {
+      "item": "astral:introspection_medicine"
+    },
+    "title": {
+      "translate": "astral.advancement.craft_introspection_medicine.name"
+    },
+    "description": {
+      "translate": "astral.advancement.craft_introspection_medicine.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
   "criteria": {
-    "obtain_introspection_medicine": {
+    "craft_introspection_medicine": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -11,16 +27,9 @@
       }
     }
   },
-  "display": {
-    "description": {
-      "translate": "astral.advancement.craft_introspection_medicine.desc"
-    },
-    "title": {
-      "translate": "astral.advancement.craft_introspection_medicine.name"
-    },
-    "icon": {
-      "item": "astral:introspection_medicine"
-    }
-  },
-  "parent": "astral:root"
+  "requirements": [
+    [
+      "craft_introspection_medicine"
+    ]
+  ]
 }

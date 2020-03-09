@@ -1,20 +1,28 @@
 {
   "display": {
+    "icon": {
+      "item": "astral:feverweed"
+    },
     "title": {
       "translate": "astral.advancement.root.name"
     },
     "description": {
       "translate": "astral.advancement.root.desc"
     },
-    "icon": {
-      "item": "astral:feverweed"
-    },
-    "background": "astral:textures/block/ether_dirt.png",
-    "announce_to_chat": false
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true,
+    "background": "astral:textures/block/ether_dirt.png"
   },
   "criteria": {
-    "trigger_1": {
+    "tick": {
       "trigger": "minecraft:tick"
     }
-  }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ]
 }

@@ -1,6 +1,22 @@
 {
+  "parent": "astral:root",
+  "display": {
+    "icon": {
+      "item": "astral:travelling_medicine"
+    },
+    "title": {
+      "translate": "astral.advancement.craft_travelling_medicine.name"
+    },
+    "description": {
+      "translate": "astral.advancement.craft_travelling_medicine.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
   "criteria": {
-    "obtain_travelling_medicine": {
+    "craft_travelling_medicine": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -11,19 +27,9 @@
       }
     }
   },
-  "rewards": {
-    "function": "astral:give_key"
-  },
-  "display": {
-    "description": {
-      "translate": "astral.advancement.craft_travelling_medicine.desc"
-    },
-    "title": {
-      "translate": "astral.advancement.craft_travelling_medicine.name"
-    },
-    "icon": {
-      "item": "astral:travelling_medicine"
-    }
-  },
-  "parent": "astral:root"
+  "requirements": [
+    [
+      "craft_travelling_medicine"
+    ]
+  ]
 }

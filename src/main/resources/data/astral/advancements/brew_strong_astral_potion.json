@@ -1,4 +1,20 @@
 {
+  "parent": "astral:craft_travelling_medicine",
+  "display": {
+    "icon": {
+      "item": "minecraft:potion"
+    },
+    "title": {
+      "translate": "astral.advancement.brew_strong_astral_potion.name"
+    },
+    "description": {
+      "translate": "astral.advancement.brew_strong_astral_potion.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
   "criteria": {
     "brew_strong_astral_potion": {
       "trigger": "minecraft:brewed_potion",
@@ -7,19 +23,9 @@
       }
     }
   },
-  "display": {
-    "description": {
-      "translate": "astral.advancement.brew_strong_astral_potion.desc"
-    },
-    "title": {
-      "translate": "astral.advancement.brew_strong_astral_potion.name"
-    },
-    "icon": {
-      "item": "minecraft:potion"
-    }
-  },
-  "parent": "astral:craft_travelling_medicine",
-  "rewards": {
-    "function": "astral:give_key"
-  }
+  "requirements": [
+    [
+      "brew_strong_astral_potion"
+    ]
+  ]
 }

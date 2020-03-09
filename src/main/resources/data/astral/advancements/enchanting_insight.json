@@ -1,0 +1,29 @@
+{
+  "parent": "astral:magical_puissance",
+  "display": {
+    "icon": {
+      "item": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "astral.advancement.enchanting_insight.name"
+    },
+    "description": {
+      "translate": "astral.advancement.enchanting_insight.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enchanting_insight": {
+      "trigger": "minecraft:enchanted_item",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "enchanting_insight"
+    ]
+  ]
+}

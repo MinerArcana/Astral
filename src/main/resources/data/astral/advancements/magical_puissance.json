@@ -1,0 +1,28 @@
+{
+  "parent": "astral:root",
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_pearl"
+    },
+    "title": {
+      "translate": "astral.advancement.magical_puissance.name"
+    },
+    "description": {
+      "translate": "astral.advancement.magical_puissance.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "none": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "none"
+    ]
+  ]
+}

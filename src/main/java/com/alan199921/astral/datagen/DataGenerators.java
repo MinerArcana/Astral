@@ -12,7 +12,8 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        generator.addProvider(new Recipes(generator));
-        generator.addProvider(new LootTables(generator));
+//        generator.addProvider(new Recipes(generator));
+//        generator.addProvider(new LootTables(generator));
+        generator.addProvider(new Advancements(generator));
     }
 }
