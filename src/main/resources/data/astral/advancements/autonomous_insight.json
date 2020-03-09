@@ -1,0 +1,33 @@
+{
+  "parent": "astral:magical_puissance",
+  "display": {
+    "icon": {
+      "item": "minecraft:carved_pumpkin"
+    },
+    "title": {
+      "translate": "astral.advancement.autonomous_insight.name"
+    },
+    "description": {
+      "translate": "astral.advancement.autonomous_insight.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "autonomous_insight": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:iron_golem"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "autonomous_insight"
+    ]
+  ]
+}

@@ -13,6 +13,7 @@ import net.minecraft.data.AdvancementProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
@@ -91,7 +92,17 @@ public class Advancements extends AdvancementProvider {
                 .withDisplay(new DisplayBuilder(Items.BREWING_STAND, "brewing_insight").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "brewing_insight").toString());
 
+        final Advancement autonomousInsight = Advancement.Builder.builder()
+                .withParent(magicalPuissance)
+                .withCriterion("autonomous_insight", new SummonedEntityTrigger.Instance(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM).build()))
+                .withDisplay(new DisplayBuilder(Items.CARVED_PUMPKIN, "autonomous_insight").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "autonomous_insight").toString());
 
+        final Advancement medicalInsight = Advancement.Builder.builder()
+                .withParent(magicalPuissance)
+                .withCriterion("medical_insight", CuredZombieVillagerTrigger.Instance.any())
+                .withDisplay(new DisplayBuilder(Items.GOLDEN_APPLE, "medical_insight").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "medical_insight").toString());
     }
 
     @Override

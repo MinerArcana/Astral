@@ -1,0 +1,29 @@
+{
+  "parent": "astral:magical_puissance",
+  "display": {
+    "icon": {
+      "item": "minecraft:golden_apple"
+    },
+    "title": {
+      "translate": "astral.advancement.medical_insight.name"
+    },
+    "description": {
+      "translate": "astral.advancement.medical_insight.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "medical_insight": {
+      "trigger": "minecraft:cured_zombie_villager",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "medical_insight"
+    ]
+  ]
+}
