@@ -1,1 +1,1 @@
-give @p astral:enlightenment_key
+burn @p astral:enlightenment_key

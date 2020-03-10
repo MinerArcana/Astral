@@ -8,7 +8,9 @@ import com.alan199921.astral.potions.AstralPotions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.criterion.*;
+import net.minecraft.command.FunctionObject;
 import net.minecraft.data.AdvancementProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -53,6 +55,7 @@ public class Advancements extends AdvancementProvider {
                 .withParent(craftTravelingMedicine)
                 .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL)))
                 .withDisplay(new DisplayBuilder(AstralItems.TRAVELLING_MEDICINE, "get_astral_travel").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "get_astral_travel").toString());
 
         final String brewStrongAstralPotionName = "brew_strong_astral_potion";
@@ -60,6 +63,7 @@ public class Advancements extends AdvancementProvider {
                 .withParent(craftTravelingMedicine)
                 .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(AstralPotions.STRONG_ASTRAL_TRAVEL_POTION))
                 .withDisplay(new DisplayBuilder(Items.POTION, brewStrongAstralPotionName).build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, brewStrongAstralPotionName).toString());
 
         final Advancement craftIntrospectionMedicine = Advancement.Builder.builder()
@@ -72,6 +76,7 @@ public class Advancements extends AdvancementProvider {
                 .withParent(craftIntrospectionMedicine)
                 .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM)))
                 .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY, "inner_realm").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
 
         final Advancement magicalPuissance = Advancement.Builder.builder()
@@ -88,24 +93,28 @@ public class Advancements extends AdvancementProvider {
                 .withParent(magicalPuissance)
                 .withCriterion("enchanting_insight", EnchantedItemTrigger.Instance.any())
                 .withDisplay(new DisplayBuilder(Items.ENCHANTED_BOOK, "enchanting_insight").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "enchanting_insight").toString());
 
         final Advancement brewingInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
                 .withCriterion("brewing_insight", BrewedPotionTrigger.Instance.brewedPotion())
                 .withDisplay(new DisplayBuilder(Items.BREWING_STAND, "brewing_insight").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "brewing_insight").toString());
 
         final Advancement autonomousInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
                 .withCriterion("autonomous_insight", new SummonedEntityTrigger.Instance(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM).build()))
                 .withDisplay(new DisplayBuilder(Items.CARVED_PUMPKIN, "autonomous_insight").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "autonomous_insight").toString());
 
         final Advancement medicalInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
                 .withCriterion("medical_insight", CuredZombieVillagerTrigger.Instance.any())
                 .withDisplay(new DisplayBuilder(Items.GOLDEN_APPLE, "medical_insight").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "medical_insight").toString());
     }
 

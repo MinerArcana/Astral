@@ -60,5 +60,7 @@
   "astral.advancement.inner_realm.name": "Withdrawal",
   "astral.advancement.inner_realm.desc": "Enter the Inner Realm",
   "astral.chat_message.sleepwalking.bed": "You find yourself in your bed as you wake up...",
-  "astral.chat_message.sleepwalking.spawn": "You find yourself in a familiar place as you wake up..."
+  "astral.chat_message.sleepwalking.spawn": "You find yourself in a familiar place as you wake up...",
+  "commands.burn.success.single": "Offered %s %s to %s's Inner Realm",
+  "commands.burn.success.multiple": "Offered %s %s to %s players' Inner Realm"
 }

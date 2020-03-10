@@ -15,6 +15,10 @@
     "announce_to_chat": true,
     "hidden": false
   },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
   "criteria": {
     "brew_strong_astral_potion": {
       "trigger": "minecraft:brewed_potion",

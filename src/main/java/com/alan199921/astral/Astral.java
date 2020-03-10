@@ -113,7 +113,7 @@ public class Astral {
     }
 
     public static void serverLoad(FMLServerStartingEvent event) {
-        event.getCommandDispatcher().register(AstralCommands.create());
+        AstralCommands.registerCommands(event.getCommandDispatcher());
     }
 
 }

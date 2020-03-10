@@ -1,6 +1,7 @@
 package com.alan199921.astral.blocks.tileentities;
 
 import com.alan199921.astral.api.AstralAPI;
+import com.alan199921.astral.util.UtilityFunctions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -60,7 +61,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                     if (world instanceof ServerWorld) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
                             final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
-                            insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
+                            UtilityFunctions.insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
                             System.out.println("Transferred item to psychic inventory!");
                             lastStack.shrink(1);
                         });
@@ -75,18 +76,6 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
             }
 
         }));
-    }
-
-    private ItemStack insertIntoAnySlot(IItemHandler itemHandler, ItemStack itemStack) {
-        final int slots = itemHandler.getSlots();
-        ItemStack leftovers = itemStack;
-        for (int i = 0; i < slots; i++) {
-            leftovers = itemHandler.insertItem(i, leftovers, false);
-            if (leftovers.isEmpty()) {
-                return ItemStack.EMPTY;
-            }
-        }
-        return leftovers;
     }
 
     private boolean hasFuel() {
