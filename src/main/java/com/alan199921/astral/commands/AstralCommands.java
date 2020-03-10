@@ -20,14 +20,18 @@ import java.util.Collection;
 
 public class AstralCommands {
 
+    public static final String TARGETS = "targets";
+    public static final String ITEM = "item";
+    public static final String COUNT = "count";
+
     public static void registerCommands(CommandDispatcher<CommandSource> commandDispatcher) {
         //Burn command is structured similarly to vanilla's give command
         final LiteralArgumentBuilder<CommandSource> burnCommand = Commands.literal("burn").requires(commandSource -> commandSource.hasPermissionLevel(2))
-                .then(Commands.argument("targets", EntityArgument.players())
-                        .then(Commands.argument("item", ItemArgument.item())
-                                .then(Commands.argument("count", IntegerArgumentType.integer(1))
-                                        .executes(context -> addItemToInnerRealmInventory(context.getSource(), EntityArgument.getPlayers(context, "targets"), new ItemStack(ItemArgument.getItem(context, "item").getItem(), IntegerArgumentType.getInteger(context, "count")))))
-                                .executes(context -> addItemToInnerRealmInventory(context.getSource(), EntityArgument.getPlayers(context, "targets"), new ItemStack(ItemArgument.getItem(context, "item").getItem(), 1))))
+                .then(Commands.argument(TARGETS, EntityArgument.players())
+                        .then(Commands.argument(ITEM, ItemArgument.item())
+                                .then(Commands.argument(COUNT, IntegerArgumentType.integer(1))
+                                        .executes(context -> addItemToInnerRealmInventory(context.getSource(), EntityArgument.getPlayers(context, TARGETS), new ItemStack(ItemArgument.getItem(context, ITEM).getItem(), IntegerArgumentType.getInteger(context, COUNT)))))
+                                .executes(context -> addItemToInnerRealmInventory(context.getSource(), EntityArgument.getPlayers(context, TARGETS), new ItemStack(ItemArgument.getItem(context, ITEM).getItem(), 1))))
                 );
         commandDispatcher.register(burnCommand);
     }

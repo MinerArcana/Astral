@@ -36,7 +36,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -112,8 +112,9 @@ public class Astral {
         }
     }
 
-    public static void serverLoad(FMLServerStartingEvent event) {
-        AstralCommands.registerCommands(event.getCommandDispatcher());
+    @SubscribeEvent
+    public static void serverLoad(FMLServerAboutToStartEvent event) {
+        AstralCommands.registerCommands(event.getServer().getCommandManager().getDispatcher());
     }
 
 }
