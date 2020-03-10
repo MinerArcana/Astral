@@ -1,5 +1,5 @@
 {
-  "parent": "astral:craft_travelling_medicine",
+  "parent": "astral:craft_traveling_medicine",
   "display": {
     "icon": {
       "item": "minecraft:potion"

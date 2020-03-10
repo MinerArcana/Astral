@@ -1,0 +1,35 @@
+{
+  "parent": "astral:dimensional_travel",
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_pearl"
+    },
+    "title": {
+      "translate": "astral.advancement.void_substance.name"
+    },
+    "description": {
+      "translate": "astral.advancement.void_substance.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "end_gateway": {
+      "trigger": "minecraft:enter_block",
+      "conditions": {
+        "block": "minecraft:end_gateway"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "end_gateway"
+    ]
+  ]
+}

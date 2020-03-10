@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.criterion.*;
+import net.minecraft.block.Blocks;
 import net.minecraft.command.FunctionObject;
 import net.minecraft.data.AdvancementProvider;
 import net.minecraft.data.DataGenerator;
@@ -19,6 +20,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.gen.feature.Feature;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -39,10 +41,50 @@ public class Advancements extends AdvancementProvider {
     private Advancement brewingInsight;
     private Advancement autonomousInsight;
     private Advancement medicalInsight;
+    private Advancement dimensionalTravel;
+    private Advancement spectralWorld;
+    private Advancement relativeDistance;
+    private Advancement infiniteExpanse;
+    private Advancement voidSubstance;
+    private Advancement yourWings;
+    private Advancement enterStronghold;
+    private Advancement radiantPower;
 
     public Advancements(DataGenerator dataGenerator) {
         super(dataGenerator);
         this.dataGenerator = dataGenerator;
+    }
+
+    public Advancement getEnterStronghold() {
+        return enterStronghold;
+    }
+
+    public Advancement getRadiantPower() {
+        return radiantPower;
+    }
+
+    public Advancement getDimensionalTravel() {
+        return dimensionalTravel;
+    }
+
+    public Advancement getSpectralWorld() {
+        return spectralWorld;
+    }
+
+    public Advancement getRelativeDistance() {
+        return relativeDistance;
+    }
+
+    public Advancement getInfiniteExpanse() {
+        return infiniteExpanse;
+    }
+
+    public Advancement getVoidSubstance() {
+        return voidSubstance;
+    }
+
+    public Advancement getYourWings() {
+        return yourWings;
     }
 
     public Advancement getRoot() {
@@ -109,7 +151,7 @@ public class Advancements extends AdvancementProvider {
         becomeAstral = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
                 .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL)))
-                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE, "get_astral_travel").build())
+                .withDisplay(new DisplayBuilder(Items.PHANTOM_MEMBRANE, "get_astral_travel").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "get_astral_travel").toString());
 
@@ -137,7 +179,7 @@ public class Advancements extends AdvancementProvider {
         magicalPuissance = Advancement.Builder.builder()
                 .withParent(innerRealm)
                 .withCriterion("none", new TickTrigger.Instance())
-                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "magical_puissance")
+                .withDisplay(new DisplayBuilder(Items.EXPERIENCE_BOTTLE, "magical_puissance")
                         .hidden(true)
                         .showToast(false)
                         .announceToChat(false)
@@ -171,6 +213,66 @@ public class Advancements extends AdvancementProvider {
                 .withDisplay(new DisplayBuilder(Items.GOLDEN_APPLE, "medical_insight").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "medical_insight").toString());
+
+        enterStronghold = Advancement.Builder.builder()
+                .withParent(magicalPuissance)
+                .withCriterion("enter_stronghold", PositionTrigger.Instance.forLocation(LocationPredicate.forFeature(Feature.STRONGHOLD)))
+                .withDisplay(new DisplayBuilder(Items.ENDER_EYE, "enter_stronghold").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "enter_stronghold").toString());
+
+        radiantPower = Advancement.Builder.builder()
+                .withParent(magicalPuissance)
+                .withCriterion("beacon", ConstructBeaconTrigger.Instance.forLevel(MinMaxBounds.IntBound.atLeast(4)))
+                .withDisplay(new DisplayBuilder(Items.BEACON, "radiant_power").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "radiant_power").toString());
+
+        dimensionalTravel = Advancement.Builder.builder()
+                .withParent(innerRealm)
+                .withCriterion("none", new TickTrigger.Instance())
+                .withDisplay(new DisplayBuilder(Items.END_PORTAL_FRAME, "dimensional_travel")
+                        .announceToChat(false)
+                        .showToast(false)
+                        .hidden(true)
+                        .build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "dimensional_travel").toString());
+
+        spectralWorld = Advancement.Builder.builder()
+                .withParent(dimensionalTravel)
+                .withCriterion("go_to_nether", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.THE_NETHER))
+                .withDisplay(new DisplayBuilder(Items.FLINT_AND_STEEL, "spectral_world").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "spectral_world").toString());
+
+        relativeDistance = Advancement.Builder.builder()
+                .withParent(dimensionalTravel)
+                .withCriterion("nether_travel", NetherTravelTrigger.Instance.forDistance(DistancePredicate.forHorizontal(MinMaxBounds.FloatBound.atLeast(7000))))
+                .withDisplay(new DisplayBuilder(Items.MAP, "relative_distance").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "relative_distance").toString());
+
+        infiniteExpanse = Advancement.Builder.builder()
+                .withParent(dimensionalTravel)
+                .withCriterion("enter_the_end", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.THE_END))
+                .withDisplay(new DisplayBuilder(Items.END_STONE, "infinite_expanse").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "infinite_expanse").toString());
+
+        voidSubstance = Advancement.Builder.builder()
+                .withParent(dimensionalTravel)
+                .withCriterion("end_gateway", EnterBlockTrigger.Instance.forBlock(Blocks.END_GATEWAY))
+                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "void_substance").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "void_substance").toString());
+
+        yourWings = Advancement.Builder.builder()
+                .withParent(dimensionalTravel)
+                .withCriterion("yourWings", InventoryChangeTrigger.Instance.forItems(Items.ELYTRA))
+                .withDisplay(new DisplayBuilder(Items.ELYTRA, "your_wings").build())
+                .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "your_wings").toString());
+
     }
 
     @Override

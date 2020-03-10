@@ -1,0 +1,39 @@
+{
+  "parent": "astral:dimensional_travel",
+  "display": {
+    "icon": {
+      "item": "minecraft:elytra"
+    },
+    "title": {
+      "translate": "astral.advancement.your_wings.name"
+    },
+    "description": {
+      "translate": "astral.advancement.your_wings.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "yourWings": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:elytra"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "yourWings"
+    ]
+  ]
+}

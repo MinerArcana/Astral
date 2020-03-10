@@ -54,6 +54,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(FEVERWEED, "Feverweed");
         add(SNOWBERRY, "Snowberries");
         add(INTROSPECTION_MEDICINE, "Introspection Medicine");
+        add(OFFERING_BRAZIER_ITEM, "Offering Brazier");
     }
 
     private void addPotions() {
@@ -80,6 +81,14 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(advancements.getCraftIntrospectionMedicine(), "Compartmentalization", "Craft Introspection Medicine");
         add(advancements.getEnchantingInsight(), "Imparting the Spirit", "Expand your mind with the knowledge of enchantments");
         add(advancements.getMedicalInsight(), "Minds Renewed", "Expand your mind by curing a Zombie Villager");
+        add(advancements.getEnterStronghold(), "Seeing Through Other Eyes", "Expand your mind by following the Eye of Ender to its destination");
+        add(advancements.getRadiantPower(), "Radiant Power", "Expand your mind by unlocking the full power of the beacon");
+        add(advancements.getDimensionalTravel(), "Dimensional Travel", "A list of transdimensional mind expanding tasks");
+        add(advancements.getInfiniteExpanse(), "Infinite Expanse", "Expand your mind with images of The End");
+        add(advancements.getRelativeDistance(), "Relative Distance", "Expand your mind by traveling to faraway lands through The Nether");
+        add(advancements.getSpectralWorld(), "Spectral World", "Exapnd your mind with images of The Nether");
+        add(advancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
+        add(advancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
     }
 
     private void add(Potion potion, String potionName, String splashPotionName, String lingeringPotionName, String arrowName) {

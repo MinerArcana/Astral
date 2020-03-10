@@ -1,5 +1,8 @@
 package com.alan199921.astral.items;
 
+import com.alan199921.astral.Astral;
+import com.alan199921.astral.blocks.AstralBlocks;
+import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +28,9 @@ public class AstralItems {
     @ObjectHolder("astral:traveling_medicine")
     public static final Item TRAVELING_MEDICINE = null;
 
+    @ObjectHolder("astral:offering_brazier")
+    public static final Item OFFERING_BRAZIER_ITEM = null;
+
     @SubscribeEvent
     public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
         registerItem(event.getRegistry(), new Snowberry(), "snowberry");
@@ -32,6 +38,7 @@ public class AstralItems {
         registerItem(event.getRegistry(), new IntrospectionMedicine(), "introspection_medicine");
         registerItem(event.getRegistry(), new EnlightenmentKey(), "enlightenment_key");
         registerItem(event.getRegistry(), new TravelingMedicine(), "traveling_medicine");
+        registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.OFFERING_BRAZIER, new Item.Properties().group(Astral.setup.astralItems)), "offering_brazier");
     }
 
     /**

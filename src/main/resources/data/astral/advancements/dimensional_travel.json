@@ -2,13 +2,13 @@
   "parent": "astral:inner_realm",
   "display": {
     "icon": {
-      "item": "minecraft:experience_bottle"
+      "item": "minecraft:end_portal_frame"
     },
     "title": {
-      "translate": "astral.advancement.magical_puissance.name"
+      "translate": "astral.advancement.dimensional_travel.name"
     },
     "description": {
-      "translate": "astral.advancement.magical_puissance.desc"
+      "translate": "astral.advancement.dimensional_travel.desc"
     },
     "frame": "task",
     "show_toast": false,
