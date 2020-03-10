@@ -28,7 +28,7 @@ public class Recipes extends RecipeProvider {
                 .setGroup(Astral.MOD_ID)
                 .build(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.TRAVELLING_MEDICINE)
+        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.TRAVELING_MEDICINE)
                 .addIngredient(Items.SUGAR)
                 .addIngredient(AstralItems.SNOWBERRY)
                 .addIngredient(Items.BOWL)

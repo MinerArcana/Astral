@@ -126,7 +126,7 @@ public class AstralConfig {
                     .translation("astral.config.common.snowberriesNauseaDuration")
                     .define("snowberriesNauseaDuration", 300);
 
-            travellingMedicineDuration = builder.comment("Controls the duration of Astral Travel from Travelling Medicine, in ticks.")
+            travellingMedicineDuration = builder.comment("Controls the duration of Astral Travel from Traveling Medicine, in ticks.")
                     .translation("astral.config.common.travellingMedicineAstralTravelDuration")
                     .define("travellingMedicineAstralTravelDuration", 1200);
 

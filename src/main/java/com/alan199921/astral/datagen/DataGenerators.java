@@ -14,6 +14,8 @@ public class DataGenerators {
         DataGenerator generator = event.getGenerator();
 //        generator.addProvider(new Recipes(generator));
 //        generator.addProvider(new LootTables(generator));
-        generator.addProvider(new Advancements(generator));
+        final Advancements advancements = new Advancements(generator);
+        generator.addProvider(advancements);
+        generator.addProvider(new EnglishLocalizaton(generator, advancements));
     }
 }

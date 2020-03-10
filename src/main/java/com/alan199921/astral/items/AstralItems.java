@@ -22,8 +22,8 @@ public class AstralItems {
     @ObjectHolder("astral:enlightenment_key")
     public static final Item ENLIGHTENMENT_KEY = null;
 
-    @ObjectHolder("astral:travelling_medicine")
-    public static final Item TRAVELLING_MEDICINE = null;
+    @ObjectHolder("astral:traveling_medicine")
+    public static final Item TRAVELING_MEDICINE = null;
 
     @SubscribeEvent
     public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
@@ -31,7 +31,7 @@ public class AstralItems {
         registerItem(event.getRegistry(), new Feverweed(), "feverweed");
         registerItem(event.getRegistry(), new IntrospectionMedicine(), "introspection_medicine");
         registerItem(event.getRegistry(), new EnlightenmentKey(), "enlightenment_key");
-        registerItem(event.getRegistry(), new TravellingMedicine(), "travelling_medicine");
+        registerItem(event.getRegistry(), new TravelingMedicine(), "traveling_medicine");
     }
 
     /**

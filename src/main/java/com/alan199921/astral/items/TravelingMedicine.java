@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TravellingMedicine extends Item {
+public class TravelingMedicine extends Item {
 
     /**
      * Gives the Astral Travel potion effect when consumed for 60 seconds
      */
-    public TravellingMedicine() {
+    public TravelingMedicine() {
         super(new Item.Properties()
                 .group(Astral.setup.astralItems)
                 .food(new Food.Builder()

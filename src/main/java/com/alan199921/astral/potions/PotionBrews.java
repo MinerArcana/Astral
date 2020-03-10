@@ -18,7 +18,7 @@ public class PotionBrews {
     @SubscribeEvent
     public static void createPotionRecipes(final FMLCommonSetupEvent event) {
         //Astral Travel recipe
-        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.TRAVELLING_MEDICINE);
+        Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE);
         createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.ASTRAL_TRAVEL_POTION, AstralPotions.LONG_ASTRAL_TRAVEL_POTION, AstralPotions.STRONG_ASTRAL_TRAVEL_POTION);
 
         //Snowberry brew recipe

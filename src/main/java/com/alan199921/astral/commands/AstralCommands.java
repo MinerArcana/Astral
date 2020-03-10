@@ -3,6 +3,7 @@ package com.alan199921.astral.commands;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.api.psychicinventory.PsychicInventoryInstance;
+import com.alan199921.astral.util.Constants;
 import com.alan199921.astral.util.UtilityFunctions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -59,10 +60,10 @@ public class AstralCommands {
                 }
             });
             if (targets.size() == 1) {
-                source.sendFeedback(new TranslationTextComponent("commands.burn.success.single", copy.getCount(), copy.getTextComponent(), targets.iterator().next().getDisplayName()), true);
+                source.sendFeedback(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_SINGLE, copy.getCount(), copy.getTextComponent(), targets.iterator().next().getDisplayName()), true);
             }
             else {
-                source.sendFeedback(new TranslationTextComponent("commands.burn.success.multiple", copy.getCount(), copy.getTextComponent(), targets.size()), true);
+                source.sendFeedback(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_MULTIPLE, copy.getCount(), copy.getTextComponent(), targets.size()), true);
             }
         });
         return 0;

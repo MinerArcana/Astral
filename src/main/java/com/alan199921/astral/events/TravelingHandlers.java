@@ -17,6 +17,7 @@ import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
+import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -250,13 +251,13 @@ public class TravelingHandlers {
         if (serverPlayerEntity.getBedPosition().isPresent()) {
             BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
             TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking")));
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_BED)));
         }
         //Teleport to spawn
         else {
             BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
             TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format("astral.chat_message.sleepwalking.spawn")));
+            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_SPAWN)));
         }
         resetPlayerStats(serverPlayerEntity);
     }
