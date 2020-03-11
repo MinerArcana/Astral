@@ -96,11 +96,11 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
 
     public void extractItem(PlayerEntity playerEntity, IItemHandler inventory) {
         if (!inventory.getStackInSlot(1).isEmpty()) {
-            ItemStack itemStack = inventory.extractItem(0, inventory.getStackInSlot(1).getCount(), false);
+            ItemStack itemStack = inventory.extractItem(1, inventory.getStackInSlot(1).getCount(), false);
             playerEntity.addItemStackToInventory(itemStack);
         }
-        else {
-            ItemStack itemStack = inventory.extractItem(1, inventory.getStackInSlot(1).getCount(), false);
+        else if (!inventory.getStackInSlot(0).isEmpty()) {
+            ItemStack itemStack = inventory.extractItem(0, inventory.getStackInSlot(0).getCount(), false);
             playerEntity.addItemStackToInventory(itemStack);
         }
         markDirty();
