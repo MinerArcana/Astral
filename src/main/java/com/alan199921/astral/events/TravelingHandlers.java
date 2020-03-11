@@ -88,6 +88,21 @@ public class TravelingHandlers {
         }
     }
 
+//    /**
+//     * Removes Astral travel when players teleports out of the inner realm
+//     * @param event The PlayerChangedDimensionEvent
+//     */
+//    @SubscribeEvent
+//    public static void swapInventoryOutOfInnerRealm(EntityTravelToDimensionEvent event){
+//        if (event.getEntity() instanceof ServerPlayerEntity){
+//            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) event.getEntity();
+//            if (serverPlayerEntity.dimension.equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && !event.getDimension().equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && serverPlayerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)){
+//                serverPlayerEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
+//                event.setCanceled(true);
+//            }
+//        }
+//    }
+
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
@@ -271,7 +286,11 @@ public class TravelingHandlers {
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            playerEntity.getCapability(AstralAPI.sleepManagerCapability).orElse(new SleepManager()).resetSleep();
+            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
+                if (!iSleepManager.isEntityTraveling()) {
+                    iSleepManager.resetSleep();
+                }
+            });
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             }
