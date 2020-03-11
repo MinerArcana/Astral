@@ -2,6 +2,7 @@ package com.alan199921.astral.blocks.tileentities;
 
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.util.UtilityFunctions;
+import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,6 +50,9 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     @Override
     public void tick() {
         handler.ifPresent(inventory -> boundPlayer.ifPresent(uuid -> {
+            if (hasFuel()) {
+                burnTicks--;
+            }
             if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
                 if (lastStack != inventory.getStackInSlot(1)) {
                     progress = 0;
@@ -62,19 +66,24 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
                             final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
                             UtilityFunctions.insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
-                            System.out.println("Transferred item to psychic inventory!");
                             lastStack.shrink(1);
                         });
                     }
                     progress = 0;
                 }
             }
-            else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0))) {
+            else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
+                this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(AbstractFurnaceBlock.LIT, true));
                 final ItemStack fuelInSlot = inventory.getStackInSlot(0);
                 burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
                 fuelInSlot.shrink(1);
             }
-
+            if (burnTicks <= 0) {
+                this.getWorld().setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, false), 3);
+            }
+            else {
+                this.getWorld().setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, true), 3);
+            }
         }));
     }
 
