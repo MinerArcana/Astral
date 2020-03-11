@@ -16,9 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.stream.IntStream;
 
 public class OfferingBrazier extends Block {
 
@@ -33,7 +35,7 @@ public class OfferingBrazier extends Block {
 
     @Override
     public int getLightValue(BlockState state) {
-        return Boolean.TRUE.equals(state.getBlockState().get(AbstractFurnaceBlock.LIT)) ? 13 : 0;
+        return state.getBlockState().get(AbstractFurnaceBlock.LIT) ? 13 : 0;
     }
 
     @Override
@@ -84,5 +86,19 @@ public class OfferingBrazier extends Block {
             return true;
         }
         return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
+            if (tileentity instanceof OfferingBrazierTile) {
+                tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> IntStream.range(0, itemHandler.getSlots()).forEach(i -> Block.spawnAsEntity(worldIn, pos, itemHandler.getStackInSlot(i))));
+
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 }
