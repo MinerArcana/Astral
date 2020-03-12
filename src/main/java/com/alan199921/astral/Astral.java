@@ -14,20 +14,18 @@ import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterCapabi
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
+import com.alan199921.astral.api.psychicinventory.PsychicInventoryStorage;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
+import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
 import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.setup.AstralSetup;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -40,8 +38,6 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-
-import javax.annotation.Nullable;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -77,30 +73,8 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
-            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new Capability.IStorage<IPsychicInventory>() {
-                @Nullable
-                @Override
-                public INBT writeNBT(Capability<IPsychicInventory> capability, IPsychicInventory instance, Direction side) {
-                    return instance.serializeNBT();
-                }
-
-                @Override
-                public void readNBT(Capability<IPsychicInventory> capability, IPsychicInventory instance, Direction side, INBT nbt) {
-                    instance.deserializeNBT((CompoundNBT) nbt);
-                }
-            }, PsychicInventory::new);
-            CapabilityManager.INSTANCE.register(ISleepManager.class, new Capability.IStorage<ISleepManager>() {
-                @Nullable
-                @Override
-                public INBT writeNBT(Capability<ISleepManager> capability, ISleepManager instance, Direction side) {
-                    return instance.serializeNBT();
-                }
-
-                @Override
-                public void readNBT(Capability<ISleepManager> capability, ISleepManager instance, Direction side, INBT nbt) {
-                    instance.deserializeNBT((CompoundNBT) nbt);
-                }
-            }, SleepManager::new);
+            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new PsychicInventoryStorage(), PsychicInventory::new);
+            CapabilityManager.INSTANCE.register(ISleepManager.class, new SleepManagerStorage(), SleepManager::new);
         }
     }
 
