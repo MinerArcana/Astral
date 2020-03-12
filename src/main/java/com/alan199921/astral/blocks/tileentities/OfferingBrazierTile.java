@@ -116,11 +116,11 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     }
 
     public void insertItem(IItemHandler brazierInventory, ItemStack heldItem) {
-        if (brazierInventory.isItemValid(0, heldItem)) {
+        if (brazierInventory.isItemValid(0, heldItem) && !brazierInventory.insertItem(0, heldItem, true).isItemEqual(heldItem)) {
             final int leftover = brazierInventory.insertItem(0, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
         }
-        else if (brazierInventory.isItemValid(1, heldItem)) {
+        else if (brazierInventory.isItemValid(1, heldItem) && !brazierInventory.insertItem(1, heldItem, true).isItemEqual(heldItem)) {
             final int leftover = brazierInventory.insertItem(1, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
         }
