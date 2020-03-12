@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class InnerRealmChunkClaimStorage implements Capability.IStorage<IInnerRealmChunkClaimCapability> {
+    //TODO Move this over to NBTCapStorage
     @Nullable
     @Override
     public INBT writeNBT(Capability<IInnerRealmChunkClaimCapability> capability, IInnerRealmChunkClaimCapability instance, Direction side) {

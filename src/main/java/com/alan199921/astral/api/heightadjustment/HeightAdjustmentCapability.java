@@ -1,7 +1,6 @@
 package com.alan199921.astral.api.heightadjustment;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 
 public class HeightAdjustmentCapability implements IHeightAdjustmentCapability {
     private int heightDifference = 0;
@@ -33,7 +32,7 @@ public class HeightAdjustmentCapability implements IHeightAdjustmentCapability {
     }
 
     @Override
-    public INBT serializeNBT() {
+    public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt("heightDifference", heightDifference);
         compoundNBT.putBoolean("differenceActive", active);
@@ -41,9 +40,8 @@ public class HeightAdjustmentCapability implements IHeightAdjustmentCapability {
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        CompoundNBT compoundNBT = (CompoundNBT) nbt;
-        heightDifference = compoundNBT.getInt("heightDifference");
-        active = compoundNBT.getBoolean("differenceActive");
+    public void deserializeNBT(CompoundNBT nbt) {
+        heightDifference = nbt.getInt("heightDifference");
+        active = nbt.getBoolean("differenceActive");
     }
 }

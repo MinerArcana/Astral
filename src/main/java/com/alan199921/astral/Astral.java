@@ -1,10 +1,9 @@
 package com.alan199921.astral;
 
+import com.alan199921.astral.api.NBTCapStorage;
 import com.alan199921.astral.api.bodylink.BodyLinkCapability;
-import com.alan199921.astral.api.bodylink.BodyLinkStorage;
 import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
 import com.alan199921.astral.api.heightadjustment.HeightAdjustmentCapability;
-import com.alan199921.astral.api.heightadjustment.HeightAdjustmentStorage;
 import com.alan199921.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
@@ -14,10 +13,8 @@ import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterCapabi
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
-import com.alan199921.astral.api.psychicinventory.PsychicInventoryStorage;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
-import com.alan199921.astral.api.sleepmanager.SleepManagerStorage;
 import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
@@ -71,10 +68,10 @@ public class Astral {
         public static void init(final FMLCommonSetupEvent event) {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
-            CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new BodyLinkStorage(), BodyLinkCapability::new);
-            CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new HeightAdjustmentStorage(), HeightAdjustmentCapability::new);
-            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new PsychicInventoryStorage(), PsychicInventory::new);
-            CapabilityManager.INSTANCE.register(ISleepManager.class, new SleepManagerStorage(), SleepManager::new);
+            CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new NBTCapStorage<>(), BodyLinkCapability::new);
+            CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
+            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
+            CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
         }
     }
 

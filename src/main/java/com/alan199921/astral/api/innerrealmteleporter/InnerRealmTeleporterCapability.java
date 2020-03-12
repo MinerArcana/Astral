@@ -7,7 +7,6 @@ import com.alan199921.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -89,10 +88,9 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         HashMap<UUID, BlockPos> spawnList = new HashMap<>();
-        CompoundNBT compoundNBT = (CompoundNBT) nbt;
-        CompoundNBT spawnLocationsNbt = (CompoundNBT) compoundNBT.get("spawnLocations");
+        CompoundNBT spawnLocationsNbt = (CompoundNBT) nbt.get("spawnLocations");
         for (String id : spawnLocationsNbt.keySet()) {
             spawnList.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocationsNbt.getCompound(id)));
         }
@@ -100,7 +98,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     }
 
     @Override
-    public INBT serializeNBT() {
+    public CompoundNBT serializeNBT() {
         CompoundNBT spawnLocationTag = new CompoundNBT();
         for (UUID uuid : getSpawnList().keySet()) {
             spawnLocationTag.put(uuid.toString(), NBTUtil.writeBlockPos(getSpawnList().get(uuid)));
