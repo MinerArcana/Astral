@@ -66,6 +66,7 @@ public class Astral {
 
         @SubscribeEvent
         public static void init(final FMLCommonSetupEvent event) {
+            //TODO Refactor Teleporter and Chunk Claim
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
             CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new NBTCapStorage<>(), BodyLinkCapability::new);

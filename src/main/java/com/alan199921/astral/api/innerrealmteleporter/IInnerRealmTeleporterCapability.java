@@ -18,8 +18,4 @@ public interface IInnerRealmTeleporterCapability extends INBTSerializable<Compou
     HashMap<UUID, BlockPos> getSpawnList();
 
     void setSpawnList(HashMap<UUID, BlockPos> uuidBlockPosHashMap);
-
-    void deserializeNBT(CompoundNBT nbt);
-
-    CompoundNBT serializeNBT();
 }
