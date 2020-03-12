@@ -4,7 +4,6 @@ import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan199921.astral.util.Constants;
-import com.alan199921.astral.util.UtilityFunctions;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -16,6 +15,7 @@ import net.minecraft.command.arguments.ItemArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Collection;
 
@@ -56,7 +56,7 @@ public class AstralCommands {
                     target.inventory.addItemStackToInventory(itemStack);
                 }
                 else {
-                    UtilityFunctions.insertIntoAnySlot(playerInventory.getInnerRealmMain(), itemStack);
+                    ItemHandlerHelper.insertItemStacked(playerInventory.getInnerRealmMain(), itemStack, false);
                 }
             });
             if (targets.size() == 1) {

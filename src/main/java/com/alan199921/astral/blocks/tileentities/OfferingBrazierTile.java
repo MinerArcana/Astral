@@ -1,7 +1,6 @@
 package com.alan199921.astral.blocks.tileentities;
 
 import com.alan199921.astral.api.AstralAPI;
-import com.alan199921.astral.util.UtilityFunctions;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,6 +15,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -65,7 +65,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                     if (world instanceof ServerWorld) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
                             final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
-                            UtilityFunctions.insertIntoAnySlot(innerRealmMain, new ItemStack(lastStack.getItem()));
+                            ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
                             lastStack.shrink(1);
                         });
                     }
