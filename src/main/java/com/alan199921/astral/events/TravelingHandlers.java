@@ -115,7 +115,7 @@ public class TravelingHandlers {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.sleepManagerCapability);
             if (iSleepManagerLazyOptional.isPresent()) {
-                final ISleepManager sleepManager = iSleepManagerLazyOptional.orElse(new SleepManager());
+                final ISleepManager sleepManager = iSleepManagerLazyOptional.orElseGet(() -> new SleepManager());
                 if (sleepManager.isEntityTraveling()) {
                     FlightHandler.handleAstralFlight(event.player);
                 }
@@ -123,7 +123,7 @@ public class TravelingHandlers {
                     sleepManager.addSleep();
                     if (sleepManager.isEntityTraveling()) {
                         spawnPhysicalBody(event.player);
-                        final Boolean goingToInnerRealm = iSleepManagerLazyOptional.map(ISleepManager::isGoingToInnerRealm).orElse(false);
+                        final Boolean goingToInnerRealm = iSleepManagerLazyOptional.map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
                         if (Boolean.TRUE.equals(goingToInnerRealm)) {
                             event.player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(event.player));
                             iSleepManagerLazyOptional.ifPresent(iSleepManager -> iSleepManager.setGoingToInnerRealm(false));
@@ -187,7 +187,7 @@ public class TravelingHandlers {
      */
     public static boolean isAstralTravelActive(LivingEntity livingEntity) {
         if (livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElse(new SleepManager());
+            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(() -> new SleepManager());
             return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && sleepManager.isEntityTraveling();
         }
         else {
@@ -323,7 +323,7 @@ public class TravelingHandlers {
         if (!playerEntity.getEntityWorld().isRemote()) {
 
             final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
-            final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElse(false);
+            final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
 
             psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(Boolean.TRUE.equals(goingToInnerRealm) ? InventoryType.INNER_REALM : InventoryType.ASTRAL, playerEntity.inventory));
         }

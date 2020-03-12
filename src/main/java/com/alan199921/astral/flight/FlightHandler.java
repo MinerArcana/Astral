@@ -44,7 +44,7 @@ public class FlightHandler {
         //Gets closest block under player
         int closestY = getClosestBlockUnderPlayer(player);
         MovementType movementType = determineMovementType(player);
-        final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElse(new HeightAdjustmentCapability());
+        final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElseGet(() -> new HeightAdjustmentCapability());
         activateHoverCapability(player, closestY, heightAdjustmentCapability);
         Vec3d nextMovement = generateMovementVector(player, closestY, movementType, heightAdjustmentCapability);
         //Only set velocity when player is pressing a key

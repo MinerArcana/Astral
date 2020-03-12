@@ -55,14 +55,14 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     public ItemStackHandler getMainInventory() {
-        return getInventory().orElse(new ItemStackHandler(32));
+        return getInventory().orElseGet(() -> new ItemStackHandler(32));
     }
 
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
         NonNullList<ItemStack> itemStackList = NonNullList.withSize(4, ItemStack.EMPTY);
         int bound = itemStackList.size();
-        IntStream.range(0, bound).forEach(i -> itemStackList.set(i, getArmor().orElse(new ItemStackHandler(4)).getStackInSlot(i)));
+        IntStream.range(0, bound).forEach(i -> itemStackList.set(i, getArmor().orElseGet(() -> new ItemStackHandler(4)).getStackInSlot(i)));
         return itemStackList;
     }
 
@@ -70,9 +70,9 @@ public class PhysicalBodyEntity extends LivingEntity {
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
         switch (slotIn.getSlotType()) {
             case HAND:
-                return getHands().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElse(ItemStack.EMPTY);
+                return getHands().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElseGet(() -> ItemStack.EMPTY);
             case ARMOR:
-                return getArmor().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElse(ItemStack.EMPTY);
+                return getArmor().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElseGet(() -> ItemStack.EMPTY);
             default:
                 return ItemStack.EMPTY;
         }
@@ -117,10 +117,10 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     public void setItemStackToSlot(EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
         if (slotIn.getSlotType() == EquipmentSlotType.Group.HAND) {
-            getHands().orElse(new ItemStackHandler(2)).setStackInSlot(slotIn.getIndex(), stack);
+            getHands().orElseGet(() -> new ItemStackHandler(2)).setStackInSlot(slotIn.getIndex(), stack);
         }
         else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
-            getArmor().orElse(new ItemStackHandler(4)).setStackInSlot(slotIn.getIndex(), stack);
+            getArmor().orElseGet(() -> new ItemStackHandler(4)).setStackInSlot(slotIn.getIndex(), stack);
         }
     }
 
