@@ -74,16 +74,20 @@ public class OfferingBrazier extends Block {
     @Override
     public boolean onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
         TileEntity entity = world.getTileEntity(blockPos);
-        if (entity instanceof OfferingBrazierTile && !((OfferingBrazierTile) entity).getBoundPlayer().isPresent()) {
-            ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
-        }
-        if (!playerEntity.isSneaking() && entity instanceof OfferingBrazierTile) {
-            ((OfferingBrazierTile) entity).extractInsertItem(playerEntity, hand);
-            return true;
-        }
-        else if (playerEntity.isSneaking() && entity instanceof OfferingBrazierTile) {
-            ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
-            return true;
+        if (entity instanceof OfferingBrazierTile) {
+            //If the block does not have a bound player, sets the bound player to the player
+            if (!((OfferingBrazierTile) entity).getBoundPlayer().isPresent()) {
+                ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
+            }
+            //Sneak click to bind a player, regular right click inserts/extracts
+            if (!playerEntity.isSneaking()) {
+                ((OfferingBrazierTile) entity).extractInsertItem(playerEntity, hand);
+                return true;
+            }
+            else if (playerEntity.isSneaking()) {
+                ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
+                return true;
+            }
         }
         return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
     }
