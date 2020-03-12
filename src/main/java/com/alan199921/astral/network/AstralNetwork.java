@@ -1,7 +1,9 @@
 package com.alan199921.astral.network;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -44,6 +46,12 @@ public class AstralNetwork {
                 .consumer(UpdateInputMessage::handle)
                 .add();
 
+        channel.messageBuilder(SendAstralTravelStarting.class, 5)
+                .decoder(SendAstralTravelStarting::decode)
+                .encoder(SendAstralTravelStarting::encode)
+                .consumer(SendAstralTravelStarting::handle)
+                .add();
+
         return channel;
     }
 
@@ -61,5 +69,9 @@ public class AstralNetwork {
 
     public static void sendUpdateInputMessage(boolean upNow, boolean downNow, boolean forwardsNow, boolean backwardsNow, boolean leftNow, boolean rightNow, boolean sprintNow) {
         Astral.INSTANCE.sendToServer(new UpdateInputMessage(upNow, downNow, forwardsNow, backwardsNow, leftNow, rightNow, sprintNow));
+    }
+
+    public static void sendClientAstralTravelStart(ServerPlayerEntity playerEntity, ISleepManager sleepManager) {
+        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelStarting(playerEntity.getEntityId(), sleepManager));
     }
 }

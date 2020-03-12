@@ -61,6 +61,13 @@ public class TravelingHandlers {
     private static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
     @SubscribeEvent
+    public static void sendCapsToPlayer(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getPlayer() instanceof ServerPlayerEntity) {
+            AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) event.getPlayer(), sleepManager));
+        }
+    }
+
+    @SubscribeEvent
     public static void mobsTargetPhysicalBody(EntityJoinWorldEvent event) {
         if (!event.getWorld().isRemote() && event.getEntity() instanceof IMob && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
             MobEntity mobEntity = (MobEntity) event.getEntity();
@@ -284,18 +291,20 @@ public class TravelingHandlers {
      */
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
+        PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
-                if (!iSleepManager.isEntityTraveling()) {
-                    iSleepManager.resetSleep();
-                }
-            });
+            //TODO Call this through packet
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
             }
         }
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && !event.getEntityLiving().getEntityWorld().isRemote()) {
+            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
+                sleepManager.resetSleep();
+                if (playerEntity instanceof ServerPlayerEntity) {
+                    AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) playerEntity, sleepManager);
+                }
+            });
             AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
     }

@@ -41,7 +41,7 @@ public class StartTrackingAstralPotionMessage {
 
             optionalWorld.ifPresent(world -> {
                         Entity clientEntity = world.getEntityByID(message.entityID);
-                        if (clientEntity.isLiving()) {
+                        if (clientEntity instanceof LivingEntity) {
                             LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(message.entityID);
                             clientLivingEntity.addPotionEffect(message.potionEffect);
                         }
