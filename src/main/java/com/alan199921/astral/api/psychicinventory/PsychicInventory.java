@@ -3,12 +3,13 @@ package com.alan199921.astral.api.psychicinventory;
 import net.minecraft.nbt.CompoundNBT;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class PsychicInventory implements IPsychicInventory {
 
     public static final String PSYCHIC_INVENTORIES = "psychicInventories";
-    private HashMap<UUID, PsychicInventoryInstance> playerInventoriesMap = new HashMap<>();
+    private Map<UUID, PsychicInventoryInstance> playerInventoriesMap = new HashMap<>();
 
 
     @Override
