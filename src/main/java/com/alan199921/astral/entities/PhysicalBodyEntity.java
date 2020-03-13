@@ -195,7 +195,6 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (!world.isRemote() && getGameProfile().isPresent()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().get().getId());
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null) {
-                playerEntity.inventory.clear();
                 playerEntity.onKillCommand();
             }
             else {

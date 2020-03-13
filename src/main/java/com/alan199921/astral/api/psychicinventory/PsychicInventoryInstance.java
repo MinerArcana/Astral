@@ -166,22 +166,24 @@ public class PsychicInventoryInstance {
         transferInventoryToCapability(playerInventory);
 
         this.inventoryType = inventoryType;
-        final ItemStackHandler[] inventories = getInventory(inventoryType);
-        final ItemStackHandler mainInventory = inventories[0];
-        IntStream.range(0, mainInventory.getSlots()).forEach(i -> {
-            if (playerInventory.getStackInSlot(i) == ItemStack.EMPTY) {
-                playerInventory.setInventorySlotContents(i, mainInventory.getStackInSlot(i));
-            }
-        });
-        final ItemStackHandler armorInventory = inventories[1];
-        final ItemStackHandler handsInventory = inventories[2];
-        for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-            EquipmentSlotType.Group group = slot.getSlotType();
-            if (group == EquipmentSlotType.Group.HAND && !slot.equals(EquipmentSlotType.MAINHAND)) {
-                playerInventory.player.setItemStackToSlot(slot, handsInventory.getStackInSlot(slot.getIndex()));
-            }
-            else if (group == EquipmentSlotType.Group.ARMOR) {
-                playerInventory.player.setItemStackToSlot(slot, armorInventory.getStackInSlot(slot.getIndex()));
+        if (playerInventory.player.isAlive()) {
+            final ItemStackHandler[] inventories = getInventory(inventoryType);
+            final ItemStackHandler mainInventory = inventories[0];
+            IntStream.range(0, mainInventory.getSlots()).forEach(i -> {
+                if (playerInventory.getStackInSlot(i) == ItemStack.EMPTY) {
+                    playerInventory.setInventorySlotContents(i, mainInventory.getStackInSlot(i));
+                }
+            });
+            final ItemStackHandler armorInventory = inventories[1];
+            final ItemStackHandler handsInventory = inventories[2];
+            for (EquipmentSlotType slot : EquipmentSlotType.values()) {
+                EquipmentSlotType.Group group = slot.getSlotType();
+                if (group == EquipmentSlotType.Group.HAND && !slot.equals(EquipmentSlotType.MAINHAND)) {
+                    playerInventory.player.setItemStackToSlot(slot, handsInventory.getStackInSlot(slot.getIndex()));
+                }
+                else if (group == EquipmentSlotType.Group.ARMOR) {
+                    playerInventory.player.setItemStackToSlot(slot, armorInventory.getStackInSlot(slot.getIndex()));
+                }
             }
         }
     }

@@ -291,21 +291,18 @@ public class TravelingHandlers {
      */
     @SubscribeEvent
     public static void travelEffectActivate(PotionEvent.PotionAddedEvent event) {
-        PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            //TODO Call this through packet
+            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             if (!playerEntity.getEntityWorld().isRemote()) {
                 playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
+                playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
+                    sleepManager.resetSleep();
+                    if (playerEntity instanceof ServerPlayerEntity && !playerEntity.world.isRemote()) {
+                        AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) playerEntity, sleepManager);
+                    }
+                });
+                AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
             }
-        }
-        if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && !event.getEntityLiving().getEntityWorld().isRemote()) {
-            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
-                sleepManager.resetSleep();
-                if (playerEntity instanceof ServerPlayerEntity) {
-                    AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) playerEntity, sleepManager);
-                }
-            });
-            AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
     }
 
@@ -406,9 +403,19 @@ public class TravelingHandlers {
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (isAstralTravelActive(event.getEntityLiving()) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
-            event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
-            event.setCanceled(true);
+        if (event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
+            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
+            final Boolean isPhysicalBodyAlive = playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).map(iBodyLinkCapability -> iBodyLinkCapability.getLinkedEntity(serverWorld).isAlive()).orElseGet(() -> true);
+            AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
+                if (isAstralTravelActive(playerEntity)) {
+                    event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
+                    if (isPhysicalBodyAlive) {
+                        event.setCanceled(true);
+                    }
+                }
+            });
+
         }
     }
 
