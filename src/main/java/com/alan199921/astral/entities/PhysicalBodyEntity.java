@@ -33,7 +33,6 @@ public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
-    private static final DataParameter<LazyOptional<ItemStackHandler>> inventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
     private static final DataParameter<LazyOptional<ItemStackHandler>> armorInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
     private static final DataParameter<LazyOptional<ItemStackHandler>> handsInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
 
@@ -42,20 +41,12 @@ public class PhysicalBodyEntity extends LivingEntity {
         super(type, world);
     }
 
-    private LazyOptional<ItemStackHandler> getInventory() {
-        return dataManager.get(inventory);
-    }
-
     private LazyOptional<ItemStackHandler> getArmor() {
         return dataManager.get(armorInventory);
     }
 
     private LazyOptional<ItemStackHandler> getHands() {
         return dataManager.get(handsInventory);
-    }
-
-    public ItemStackHandler getMainInventory() {
-        return getInventory().orElseGet(() -> new ItemStackHandler(32));
     }
 
     @Override
@@ -87,7 +78,6 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
 
-            dataManager.set(inventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalInventory()));
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -107,11 +97,22 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     protected void dropInventory() {
         super.dropInventory();
-        int bound = getMainInventory().getSlots();
-        for (int i = 0; i < bound; i++) {
-            Block.spawnAsEntity(world, getPosition(), getMainInventory().getStackInSlot(i));
+        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); i++) {
+                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalInventory().getStackInSlot(i));
+                    psychicInventoryInstance.getPhysicalInventory().setStackInSlot(i, ItemStack.EMPTY);
+                }
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalArmor().getSlots(); i++) {
+                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalArmor().getStackInSlot(i));
+                    psychicInventoryInstance.getPhysicalArmor().setStackInSlot(i, ItemStack.EMPTY);
+                }
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalHands().getSlots(); i++) {
+                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalHands().getStackInSlot(i));
+                    psychicInventoryInstance.getPhysicalHands().setStackInSlot(i, ItemStack.EMPTY);
+                }
+            });
         }
-        getArmorInventoryList().forEach(item -> Block.spawnAsEntity(world, getPosition(), item));
     }
 
     @Override
@@ -141,7 +142,6 @@ public class PhysicalBodyEntity extends LivingEntity {
         // Approximately 5% of the storage mobs will be facedown
         dataManager.register(faceDown, Math.random() < .05);
         dataManager.register(hungerLevel, 20F);
-        dataManager.register(inventory, LazyOptional.empty());
         dataManager.register(armorInventory, LazyOptional.empty());
         dataManager.register(handsInventory, LazyOptional.empty());
     }
@@ -171,7 +171,6 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
 
-            dataManager.set(inventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalInventory()));
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -198,7 +197,6 @@ public class PhysicalBodyEntity extends LivingEntity {
                 playerEntity.onKillCommand();
             }
             else {
-                dataManager.set(inventory, LazyOptional.of(() -> new ItemStackHandler(36)));
                 dataManager.set(armorInventory, LazyOptional.of(() -> new ItemStackHandler(4)));
                 dataManager.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
             }

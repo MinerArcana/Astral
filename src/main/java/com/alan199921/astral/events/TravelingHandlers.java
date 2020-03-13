@@ -406,7 +406,7 @@ public class TravelingHandlers {
         if (event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
-            final Boolean isPhysicalBodyAlive = playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).map(iBodyLinkCapability -> iBodyLinkCapability.getLinkedEntity(serverWorld).isAlive()).orElseGet(() -> true);
+            final Boolean isPhysicalBodyAlive = playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).map(iBodyLinkCapability -> iBodyLinkCapability.getLinkedEntity(serverWorld).isAlive()).orElseGet(() -> false);
             AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
                 if (isAstralTravelActive(playerEntity)) {
                     event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
