@@ -2,7 +2,6 @@ package com.alan199921.astral.api.bodylink;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
@@ -14,7 +13,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     private int dimensionID;
 
     @Override
-    public INBT serializeNBT() {
+    public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
         compoundNBT.putInt("bodyDimension", dimensionID);
         compoundNBT.putUniqueId("uniqueID", linkedBodyID);
@@ -22,10 +21,9 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        CompoundNBT compoundNBT = (CompoundNBT) nbt;
-        linkedBodyID = compoundNBT.getUniqueId("uniqueID");
-        dimensionID = compoundNBT.getInt("bodyDimension");
+    public void deserializeNBT(CompoundNBT nbt) {
+        linkedBodyID = nbt.getUniqueId("uniqueID");
+        dimensionID = nbt.getInt("bodyDimension");
     }
 
     @Override

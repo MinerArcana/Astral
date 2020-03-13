@@ -1,5 +1,6 @@
 package com.alan199921.astral.api;
 
+import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ public class AstralAPI {
 
     @CapabilityInject(IPsychicInventory.class)
     public static Capability<IPsychicInventory> psychicInventoryCapability;
+    public static Capability<IBodyLinkCapability> bodyLinkCapability;
 
     public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerWorld world) {
         return world.getServer().getWorld(DimensionType.OVERWORLD).getCapability(psychicInventoryCapability);

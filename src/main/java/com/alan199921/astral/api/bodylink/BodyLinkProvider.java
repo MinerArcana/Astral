@@ -1,38 +1,41 @@
 package com.alan199921.astral.api.bodylink;
 
-import net.minecraft.nbt.INBT;
+import com.alan199921.astral.api.AstralAPI;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class BodyLinkProvider implements ICapabilitySerializable {
-    @CapabilityInject(IBodyLinkCapability.class)
-    public static final Capability<IBodyLinkCapability> BODY_LINK_CAPABILITY = null;
+public class BodyLinkProvider implements ICapabilitySerializable<CompoundNBT> {
+    private final BodyLinkCapability bodyLinkCapability;
+    private final LazyOptional<IBodyLinkCapability> bodyLinkOptional;
 
-    private IBodyLinkCapability instance = BODY_LINK_CAPABILITY.getDefaultInstance();
+    public BodyLinkProvider() {
+        this(new BodyLinkCapability());
+    }
+
+    public BodyLinkProvider(BodyLinkCapability bodyLinkCapability) {
+        this.bodyLinkCapability = bodyLinkCapability;
+        this.bodyLinkOptional = LazyOptional.of(() -> bodyLinkCapability);
+    }
 
     @Nonnull
+    @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == BODY_LINK_CAPABILITY) {
-            return LazyOptional.of(() -> instance).cast();
-        }
-        else {
-            return LazyOptional.empty();
-        }
+        return cap == AstralAPI.bodyLinkCapability ? bodyLinkOptional.cast() : LazyOptional.empty();
     }
 
     @Override
-    public INBT serializeNBT() {
-        return instance.serializeNBT();
+    public CompoundNBT serializeNBT() {
+        return bodyLinkCapability.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        instance.deserializeNBT(nbt);
+    public void deserializeNBT(CompoundNBT nbt) {
+        bodyLinkCapability.deserializeNBT(nbt);
     }
 }
