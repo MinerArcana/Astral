@@ -97,6 +97,27 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     protected void dropInventory() {
         super.dropInventory();
+        dropPhysicalInventory();
+    }
+
+    private void clearPhysicalInventory() {
+        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); i++) {
+                    psychicInventoryInstance.getPhysicalInventory().setStackInSlot(i, ItemStack.EMPTY);
+                }
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalArmor().getSlots(); i++) {
+                    psychicInventoryInstance.getPhysicalArmor().setStackInSlot(i, ItemStack.EMPTY);
+                }
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalHands().getSlots(); i++) {
+                    psychicInventoryInstance.getPhysicalHands().setStackInSlot(i, ItemStack.EMPTY);
+                }
+            });
+        }
+    }
+
+
+    private void dropPhysicalInventory() {
         if (world instanceof ServerWorld && getGameProfile().isPresent()) {
             AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
                 for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); i++) {
@@ -197,6 +218,7 @@ public class PhysicalBodyEntity extends LivingEntity {
                 playerEntity.onKillCommand();
             }
             else {
+                clearPhysicalInventory();
                 dataManager.set(armorInventory, LazyOptional.of(() -> new ItemStackHandler(4)));
                 dataManager.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
             }
