@@ -186,6 +186,18 @@ public class PsychicInventoryInstance {
                 }
             }
         }
+        //Clear physical inventory if player is dying
+        else if (!playerInventory.player.isAlive() && inventoryType == InventoryType.PHYSICAL) {
+            for (int i = 0; i < physicalInventory.getSlots(); i++) {
+                physicalInventory.setStackInSlot(i, ItemStack.EMPTY);
+            }
+            for (int i = 0; i < physicalArmor.getSlots(); i++) {
+                physicalArmor.setStackInSlot(i, ItemStack.EMPTY);
+            }
+            for (int i = 0; i < physicalHands.getSlots(); i++) {
+                physicalHands.setStackInSlot(i, ItemStack.EMPTY);
+            }
+        }
     }
 
     /**
