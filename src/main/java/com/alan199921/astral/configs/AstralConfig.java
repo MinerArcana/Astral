@@ -259,15 +259,23 @@ public class AstralConfig {
 
     public static class TravelingSettings {
         private final ForgeConfigSpec.ConfigValue<Integer> startupTime;
+        private final ForgeConfigSpec.ConfigValue<Integer> syncInterval;
 
         TravelingSettings(ForgeConfigSpec.Builder builder) {
             startupTime = builder.comment("Controls how long it takes for the benefits of Astral travel to kick in, in ticks")
                     .translation("astral.config.common.startupTime")
                     .define("startupTime", 50);
+            syncInterval = builder.comment("Controls how long it takes for the Physical Body to update its stats to the player, in ticks")
+                    .translation("astral.config.common.syncInterval")
+                    .define("syncInterval", 5);
         }
 
         public int getStartupTime() {
             return startupTime.get();
+        }
+
+        public int getSyncInterval() {
+            return syncInterval.get();
         }
     }
 }

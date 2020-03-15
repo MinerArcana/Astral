@@ -3,6 +3,7 @@ package com.alan199921.astral.entities;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.api.bodylink.BodyInfo;
 import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
+import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
@@ -171,14 +172,13 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     /**
      * The entity will update the body link capability every 20 ticks (if it exists), which will then update the player's information
-     * TODO Make ticks configurable
      */
     @Override
     public void tick() {
         if (!world.isRemote() && world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (world.getGameTime() % 20 == 0 && isAlive()) {
+            if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
             }
         }
