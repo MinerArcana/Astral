@@ -335,7 +335,6 @@ public class TravelingHandlers {
     }
 
 
-
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
@@ -349,15 +348,15 @@ public class TravelingHandlers {
         if (event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
-            AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
-                final Boolean isPhysicalBodyAlive = AstralAPI.getBodyLinkCapability(serverWorld).map(iBodyLinkCapability -> iBodyLinkCapability.getInfo(playerEntity.getUniqueID()).isAlive()).orElseGet(() -> false);
-                if (isAstralTravelActive(playerEntity)) {
+            if (isAstralTravelActive(playerEntity)) {
+                AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
+                    final Boolean isPhysicalBodyAlive = AstralAPI.getBodyLinkCapability(serverWorld).map(iBodyLinkCapability -> iBodyLinkCapability.getInfo(playerEntity.getUniqueID()).isAlive()).orElseGet(() -> false);
                     event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
                     if (isPhysicalBodyAlive) {
                         event.setCanceled(true);
                     }
-                }
-            });
+                });
+            }
 
         }
     }

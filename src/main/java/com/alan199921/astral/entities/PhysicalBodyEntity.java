@@ -227,15 +227,18 @@ public class PhysicalBodyEntity extends LivingEntity {
     public void onDeath(@Nonnull DamageSource cause) {
         if (!world.isRemote() && getGameProfile().isPresent()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().get().getId());
+            //If body is killed, drop inventory and kill the player
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
+                super.onDeath(cause);
                 setBodyLinkInfo((ServerWorld) world);
             }
+            //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player
             else {
                 clearPhysicalInventory();
                 dataManager.set(armorInventory, LazyOptional.of(() -> new ItemStackHandler(4)));
                 dataManager.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
+                super.onDeath(cause);
             }
         }
-        super.onDeath(cause);
     }
 }
