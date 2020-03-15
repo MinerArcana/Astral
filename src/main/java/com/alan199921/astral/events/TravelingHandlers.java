@@ -56,10 +56,20 @@ public class TravelingHandlers {
 
     public static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
+    /**
+     * Makes sure fade effect is not triggered when logging in and updates player with the physical body's info
+     *
+     * @param event The player logged in event
+     */
     @SubscribeEvent
     public static void sendCapsToPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getPlayer() instanceof ServerPlayerEntity) {
-            AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) event.getPlayer(), sleepManager));
+            final ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+            final ServerWorld serverWorld = player.getServerWorld();
+            AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
+            if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.updatePlayer(player.getUniqueID(), serverWorld));
+            }
         }
     }
 

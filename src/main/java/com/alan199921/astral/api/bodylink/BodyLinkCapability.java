@@ -134,6 +134,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
                 teleportPlayerToSpawn((ServerPlayerEntity) player);
             }
         }
+        bodyInfoMap.remove(playerID);
     }
 
     private void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
