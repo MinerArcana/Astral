@@ -115,7 +115,7 @@ public class PsychicInventoryInstance {
     public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack, InventoryType inventoryType) {
         final ItemStackHandler[] inventories = getInventory(inventoryType);
         if (slotIn == EquipmentSlotType.OFFHAND) {
-            inventories[2].setStackInSlot(0, stack);
+            inventories[2].setStackInSlot(1, stack);
         }
         else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
             inventories[1].setStackInSlot(slotIn.getIndex(), stack);
