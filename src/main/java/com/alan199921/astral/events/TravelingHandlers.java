@@ -2,14 +2,12 @@ package com.alan199921.astral.events;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
-import com.alan199921.astral.api.bodylink.BodyLinkProvider;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.dimensions.AstralDimensions;
-import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.effects.AstralTravelEffect;
 import com.alan199921.astral.entities.AstralEntityRegistry;
@@ -17,11 +15,12 @@ import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
-import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.*;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
@@ -29,13 +28,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
 import net.minecraft.util.MovementInput;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -58,8 +53,8 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
-    private static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
-    private static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
+
+    public static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
     @SubscribeEvent
     public static void sendCapsToPlayer(PlayerEvent.PlayerLoggedInEvent event) {
@@ -240,28 +235,7 @@ public class TravelingHandlers {
                 //Get server versions of world and player
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-
-                //Retrieve the body entity object  from the capability
-                playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
-                    serverPlayerEntity.setMotion(0, 0, 0);
-                    serverPlayerEntity.setVelocity(0, 0, 0);
-                    serverPlayerEntity.isAirBorne = false;
-                    //Teleport the player
-                    if (cap.getLinkedEntity(serverWorld) instanceof PhysicalBodyEntity) {
-                        PhysicalBodyEntity body = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                        TeleportationTools.performTeleport(serverPlayerEntity, DimensionType.getById(cap.getDimensionID()), new BlockPos(body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ), Direction.UP);
-//                        serverPlayerEntity.teleport(serverWorld.getServer().getWorld(DimensionType.getById(cap.getDimensionID())), body.lastTickPosX, body.lastTickPosY, body.lastTickPosZ, serverPlayerEntity.rotationYaw, serverPlayerEntity.rotationPitch);
-                        //Get the inventory and transfer items
-                        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) cap.getLinkedEntity(serverWorld);
-                        AstralAPI.getOverworldPsychicInventory(serverWorld).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, playerEntity.inventory));
-                        resetPlayerStats(playerEntity, physicalBodyEntity);
-                        physicalBodyEntity.onKillCommand();
-                    }
-                    //If body is not found, teleport player to their spawn location (bed or world spawn)
-                    else {
-                        teleportPlayerToSpawn(serverPlayerEntity);
-                    }
-                });
+                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.handleMergeWithBody(playerEntity.getUniqueID(), serverWorld));
             }
         }
         if (!entityLiving.getEntityWorld().isRemote()) {
@@ -269,22 +243,6 @@ public class TravelingHandlers {
         }
     }
 
-    private static void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
-        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
-        //Teleport to bed
-        if (serverPlayerEntity.getBedPosition().isPresent()) {
-            BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
-            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_BED)));
-        }
-        //Teleport to spawn
-        else {
-            BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
-            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_SPAWN)));
-        }
-        resetPlayerStats(serverPlayerEntity);
-    }
 
     /**
      * When the player gets access to the Astral travel effect, give them the ability to fly, and transfer their inventory into the physical body mob
@@ -310,12 +268,8 @@ public class TravelingHandlers {
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
-        physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
         //Store player UUID to body entity and give it a name
-        playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).ifPresent(cap -> {
-            cap.setLinkedBodyID(physicalBodyEntity);
-            cap.setDimensionID(playerEntity.dimension.getId());
-        });
+        physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
         physicalBodyEntity.setName(playerEntity.getScoreboardName());
 
         //Insert main inventory to body and clear
@@ -370,30 +324,7 @@ public class TravelingHandlers {
         }
     }
 
-    public static void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
-        float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(healthId, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
-        if (playerEntity.getHealth() > newMaxHealth) {
-            playerEntity.setHealth(newMaxHealth);
-        }
-    }
 
-    /**
-     * Resets the player entity's stats to what the physical body has
-     *
-     * @param playerEntity       The player entity to recieve stats from the physical body
-     * @param physicalBodyEntity The physical body storing player stats
-     */
-    public static void resetPlayerStats(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
-        playerEntity.setHealth(physicalBodyEntity.getHealth());
-        playerEntity.getFoodStats().setFoodLevel((int) physicalBodyEntity.getHungerLevel());
-    }
-
-    public static void resetPlayerStats(PlayerEntity playerEntity) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(healthId);
-    }
 
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
@@ -408,8 +339,8 @@ public class TravelingHandlers {
         if (event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getEntityWorld().isRemote()) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
-            final Boolean isPhysicalBodyAlive = playerEntity.getCapability(BodyLinkProvider.BODY_LINK_CAPABILITY).map(iBodyLinkCapability -> iBodyLinkCapability.getLinkedEntity(serverWorld).isAlive()).orElseGet(() -> false);
             AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
+                final Boolean isPhysicalBodyAlive = AstralAPI.getBodyLinkCapability(serverWorld).map(iBodyLinkCapability -> iBodyLinkCapability.getInfo(playerEntity.getUniqueID()).isAlive()).orElseGet(() -> false);
                 if (isAstralTravelActive(playerEntity)) {
                     event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL);
                     if (isPhysicalBodyAlive) {

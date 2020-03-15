@@ -1,7 +1,8 @@
 package com.alan199921.astral.entities;
 
 import com.alan199921.astral.api.AstralAPI;
-import com.alan199921.astral.events.TravelingHandlers;
+import com.alan199921.astral.api.bodylink.BodyInfo;
+import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
 import com.alan199921.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
+    private LazyOptional<IBodyLinkCapability> bodyLink = LazyOptional.empty();
     private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
@@ -77,7 +79,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         dataManager.set(faceDown, compound.getBoolean("facedown"));
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
-
+            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -167,16 +169,26 @@ public class PhysicalBodyEntity extends LivingEntity {
         dataManager.register(handsInventory, LazyOptional.empty());
     }
 
+    /**
+     * The entity will update the body link capability every 20 ticks (if it exists), which will then update the player's information
+     * TODO Make ticks configurable
+     */
     @Override
     public void tick() {
         if (!world.isRemote() && world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (getGameProfile().isPresent() && isAlive() && world.getPlayerByUuid(getGameProfile().get().getId()) != null) {
-                TravelingHandlers.setPlayerMaxHealthTo(world.getPlayerByUuid(getGameProfile().get().getId()), getHealth());
+            if (world.getGameTime() % 20 == 0 && isAlive()) {
+                setBodyLinkInfo(serverWorld);
             }
         }
         super.tick();
+    }
+
+    public void setBodyLinkInfo(ServerWorld serverWorld) {
+        if (getGameProfile().isPresent()) {
+            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(getGameProfile().get().getId(), new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), serverWorld));
+        }
     }
 
     public boolean isFaceDown() {
@@ -191,7 +203,8 @@ public class PhysicalBodyEntity extends LivingEntity {
         dataManager.set(gameProfile, Optional.of(playerProfile));
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
-
+            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
+            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(playerId, new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), (ServerWorld) world));
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -214,8 +227,8 @@ public class PhysicalBodyEntity extends LivingEntity {
     public void onDeath(@Nonnull DamageSource cause) {
         if (!world.isRemote() && getGameProfile().isPresent()) {
             PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().get().getId());
-            if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null) {
-                playerEntity.onKillCommand();
+            if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
+                setBodyLinkInfo((ServerWorld) world);
             }
             else {
                 clearPhysicalInventory();

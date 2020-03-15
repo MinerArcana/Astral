@@ -16,7 +16,13 @@ public class AstralAPI {
 
     @CapabilityInject(IPsychicInventory.class)
     public static Capability<IPsychicInventory> psychicInventoryCapability;
+
+    @CapabilityInject(IBodyLinkCapability.class)
     public static Capability<IBodyLinkCapability> bodyLinkCapability;
+
+    public static LazyOptional<IBodyLinkCapability> getBodyLinkCapability(ServerWorld world) {
+        return world.getServer().getWorld(DimensionType.OVERWORLD).getCapability(bodyLinkCapability);
+    }
 
     public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerWorld world) {
         return world.getServer().getWorld(DimensionType.OVERWORLD).getCapability(psychicInventoryCapability);
