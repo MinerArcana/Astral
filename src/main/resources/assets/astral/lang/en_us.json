@@ -31,7 +31,7 @@
   "astral.advancement.relative_distance.name": "Relative Distance",
   "astral.advancement.root.desc": "A journey of introspection and projection",
   "astral.advancement.root.name": "Astral",
-  "astral.advancement.spectral_world.desc": "Exapnd your mind with images of The Nether",
+  "astral.advancement.spectral_world.desc": "Expand your mind with images of The Nether",
   "astral.advancement.spectral_world.name": "Spectral World",
   "astral.advancement.void_substance.desc": "Expand your mind by warping through an End Gateway",
   "astral.advancement.void_substance.name": "Substance of the Void",
@@ -89,5 +89,6 @@
   "item.minecraft.tipped_arrow.effect.snowberry_brew": "Arrow of Snowberry",
   "item.minecraft.tipped_arrow.effect.strong_astral_travel_potion": "Arrow of Astral Travel",
   "item.minecraft.tipped_arrow.effect.strong_feverweed_brew": "Arrow of Feverweed",
-  "item.minecraft.tipped_arrow.effect.strong_snowberry_brew": "Arrow of Snowberry"
+  "item.minecraft.tipped_arrow.effect.strong_snowberry_brew": "Arrow of Snowberry",
+  "itemGroup.astral": "Astral"
 }
