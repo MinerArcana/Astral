@@ -101,21 +101,24 @@ public class TravelingHandlers {
         }
     }
 
-//    /**
-//     * Removes Astral travel when players teleports out of the inner realm
-//     * @param event The PlayerChangedDimensionEvent
-//     */
+    /**
+     * Removes Astral travel when players teleports out of the inner realm
+     *
+     * @param event The PlayerChangedDimensionEvent
+     */
 //    @SubscribeEvent
-//    public static void swapInventoryOutOfInnerRealm(EntityTravelToDimensionEvent event){
-//        if (event.getEntity() instanceof ServerPlayerEntity){
+//    public static void swapInventoryOutOfInnerRealm(EntityTravelToDimensionEvent event) {
+//        if (event.getEntity() instanceof ServerPlayerEntity) {
 //            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) event.getEntity();
-//            if (serverPlayerEntity.dimension.equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && !event.getDimension().equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && serverPlayerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)){
-//                serverPlayerEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
-//                event.setCanceled(true);
-//            }
+//            AstralAPI.getOverworldPsychicInventory(serverPlayerEntity.getServerWorld()).ifPresent(iPsychicInventory -> {
+//                if (iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).getInventoryType() == InventoryType.INNER_REALM && !event.getDimension().equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && serverPlayerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+//                    serverPlayerEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
+//                    serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL));
+//                    event.setCanceled(true);
+//                }
+//            });
 //        }
 //    }
-
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
@@ -338,7 +341,7 @@ public class TravelingHandlers {
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         World world = event.getEntityLiving().world;
-        if (!world.isRemote() && isAstralTravelActive(event.getEntityLiving()) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+        if (!world.isRemote() && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer()) && isAstralTravelActive(event.getEntityLiving()) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
         }
     }
