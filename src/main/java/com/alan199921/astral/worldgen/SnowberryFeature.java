@@ -10,29 +10,32 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-public class SnowberryFeature extends Feature<NoFeatureConfig> {
-    public SnowberryFeature(Function<Dynamic<?>, ? extends NoFeatureConfig> configFactoryIn) {
+public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
+
+    public SnowberryFeature(Function<Dynamic<?>, ? extends SnowberryFeatureConfig> configFactoryIn) {
         super(configFactoryIn);
     }
 
+    private List<BlockPos> getAdjacentBlocks(BlockPos blockpos) {
+        return new ArrayList<>(Arrays.asList(blockpos.east(), blockpos.west(), blockpos.north(), blockpos.south(), blockpos.north().east(), blockpos.north().west(), blockpos.south().east(), blockpos.south().west()));
+    }
+
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull NoFeatureConfig config) {
+    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
         /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
         boolean generatedSomething = false;
         ArrayList<BlockPos> positionsToGen = new ArrayList<>();
         BlockState blockstate = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
-        for (int tries = 0; tries < 32; ++tries) {
+        for (int tries = 0; tries < 32; tries++) {
             BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
             //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
             if (worldIn.isAirBlock(blockpos) && (!worldIn.getDimension().isNether() || blockpos.getY() < worldIn.getWorld().getDimension().getHeight()) && blockstate.isValidPosition(worldIn, blockpos)) {
@@ -44,7 +47,7 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
         }
 
         //Set snowberry bushes
-        int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(3) + 2);
+        int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize());
         for (int i = 0; i < numberOfBushesInFeature; i++) {
             worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
             worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
@@ -61,9 +64,5 @@ public class SnowberryFeature extends Feature<NoFeatureConfig> {
             }
         }
         return generatedSomething;
-    }
-
-    private List<BlockPos> getAdjacentBlocks(BlockPos blockpos) {
-        return new ArrayList<>(Arrays.asList(blockpos.east(), blockpos.west(), blockpos.north(), blockpos.south(), blockpos.north().east(), blockpos.north().west(), blockpos.south().east(), blockpos.south().west()));
     }
 }

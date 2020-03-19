@@ -8,7 +8,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.crafting.IngredientNBT;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -59,7 +59,7 @@ public class PotionBrews {
         BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(result), glowstoneIngredient, potionToSplashPotionItemStack(strongResult));
     }
 
-    public static class PotionIngredient extends IngredientNBT {
+    public static class PotionIngredient extends NBTIngredient {
 
         private PotionIngredient(Potion potion, ItemStack stack) {
             super(PotionUtils.addPotionToItemStack(stack, potion));

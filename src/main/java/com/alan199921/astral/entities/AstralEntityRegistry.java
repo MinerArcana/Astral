@@ -10,11 +10,12 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEntityRegistry {
-    public static final EntityType<?> PHYSICAL_BODY_ENTITY;
+    public static final EntityType<PhysicalBodyEntity> PHYSICAL_BODY_ENTITY;
 
     static {
         ResourceLocation physicalBodyResourceLocation = new ResourceLocation(Astral.MOD_ID, "physical_body");
-        PHYSICAL_BODY_ENTITY = EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC).size(2, 1).build(physicalBodyResourceLocation.toString()).setRegistryName(physicalBodyResourceLocation);
+        final EntityType<?> entityType = EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC).size(2, 1).build(physicalBodyResourceLocation.toString()).setRegistryName(physicalBodyResourceLocation);
+        PHYSICAL_BODY_ENTITY = (EntityType<PhysicalBodyEntity>) entityType;
     }
 
     @SubscribeEvent

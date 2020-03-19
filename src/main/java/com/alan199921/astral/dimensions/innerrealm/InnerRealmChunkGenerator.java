@@ -7,6 +7,7 @@ import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.WorldGenRegion;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 
@@ -21,8 +22,9 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public void generateSurface(@Nonnull IChunk chunk) {
+    public void func_225551_a_(@Nonnull WorldGenRegion p_225551_1_, @Nonnull IChunk p_225551_2_) {
         //This is a void world!
+
     }
 
     @Override

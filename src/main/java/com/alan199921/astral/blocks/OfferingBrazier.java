@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -44,12 +44,6 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    @Nonnull
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }
@@ -72,7 +66,7 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
+    public ActionResultType onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
         TileEntity entity = world.getTileEntity(blockPos);
         if (entity instanceof OfferingBrazierTile) {
             //If the block does not have a bound player, sets the bound player to the player
@@ -80,20 +74,20 @@ public class OfferingBrazier extends Block {
                 ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
             }
             //Sneak click to bind a player, regular right click inserts/extracts
-            if (!playerEntity.isSneaking()) {
+            if (!playerEntity.isCrouching()) {
                 ((OfferingBrazierTile) entity).extractInsertItem(playerEntity, hand);
-                return true;
+                return ActionResultType.CONSUME;
             }
-            else if (playerEntity.isSneaking()) {
+            else if (playerEntity.isCrouching()) {
                 ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
-                return true;
+                return ActionResultType.PASS;
             }
         }
         return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof OfferingBrazierTile) {

@@ -1,9 +1,12 @@
 package com.alan199921.astral.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -29,10 +32,15 @@ public class AstralBlocks {
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
-        registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
+        final Block feverweed = registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
         registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
         registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
         registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier", true);
+
+        if (FMLEnvironment.dist.isClient()) {
+            RenderType cutout = RenderType.getCutout();
+            RenderTypeLookup.setRenderLayer(feverweed, cutout);
+        }
     }
 
     /**

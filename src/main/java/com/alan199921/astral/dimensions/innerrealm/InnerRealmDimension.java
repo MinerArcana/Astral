@@ -7,9 +7,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.provider.BiomeProviderType;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationSettings;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -17,19 +19,21 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class InnerRealmDimension extends Dimension {
-    public InnerRealmDimension(World world, DimensionType type) {
-        super(world, type);
+
+    public InnerRealmDimension(World world, DimensionType dimensionType) {
+        super(world, dimensionType, 1.0f);
     }
 
     @Override
     @Nonnull
     public ChunkGenerator<?> createChunkGenerator() {
-        return AstralDimensions.generatorType.create(this.world, AstralDimensions.biomeProviderType.create(AstralDimensions.biomeProviderType.createSettings().setBiome(Biomes.PLAINS)), AstralDimensions.generatorType.createSettings());
+        GenerationSettings generationSettings = AstralDimensions.INNER_REALM_CHUNK_GENERATOR.createSettings();
+        return AstralDimensions.INNER_REALM_CHUNK_GENERATOR.create(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.func_226840_a_(this.world.getWorldInfo()).setBiome(Biomes.PLAINS)), generationSettings);
     }
 
     @Nullable
     @Override
-    public BlockPos findSpawn(ChunkPos chunkPos, boolean checkValid) {
+    public BlockPos findSpawn(@Nonnull ChunkPos chunkPos, boolean checkValid) {
         return null;
     }
 
@@ -66,6 +70,7 @@ public class InnerRealmDimension extends Dimension {
     }
 
     @Override
+    @Nonnull
     @OnlyIn(Dist.CLIENT)
     public Vec3d getFogColor(float p_76562_1_, float p_76562_2_) {
         float f = MathHelper.cos(p_76562_1_ * ((float) Math.PI * 2F)) * 2.0F + 0.5F;
@@ -90,11 +95,6 @@ public class InnerRealmDimension extends Dimension {
         return false;
     }
 
-    @Override
-    public long getWorldTime() {
-        long ret = super.getWorldTime();
-        return ret;
-    }
 
     @Override
     public boolean hasSkyLight() {

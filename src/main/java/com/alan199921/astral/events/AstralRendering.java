@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
-import static net.minecraftforge.client.ForgeIngameGui.left_height;
+import static net.minecraftforge.client.gui.ForgeIngameGui.left_height;
 
 public class AstralRendering {
 
@@ -32,8 +32,8 @@ public class AstralRendering {
     }
 
     static void renderAstralHearts(Minecraft mc, PlayerEntity player) {
-        int scaledWidth = mc.mainWindow.getScaledWidth();
-        int scaledHeight = mc.mainWindow.getScaledHeight();
+        int scaledWidth = mc.getMainWindow().getScaledWidth();
+        int scaledHeight = mc.getMainWindow().getScaledHeight();
 
         mc.getProfiler().startSection("health");
         GlStateManager.enableBlend();
@@ -172,8 +172,8 @@ public class AstralRendering {
         }
 
         int color = (int) (220.0F * opacity) << 24 | 1052704;
-        int scaledWidth = mc.mainWindow.getScaledWidth();
-        int scaledHeight = mc.mainWindow.getScaledHeight();
+        int scaledWidth = mc.getMainWindow().getScaledWidth();
+        int scaledHeight = mc.getMainWindow().getScaledHeight();
 
         AbstractGui.fill(0, 0, scaledWidth, scaledHeight, color);
         GlStateManager.enableAlphaTest();

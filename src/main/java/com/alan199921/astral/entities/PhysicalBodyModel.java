@@ -13,7 +13,7 @@ public class PhysicalBodyModel extends PlayerModel<PhysicalBodyEntity> {
     }
 
     @Override
-    public void setRotationAngles(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+    public void setRotationAngles(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //Disable rotations
     }
 }

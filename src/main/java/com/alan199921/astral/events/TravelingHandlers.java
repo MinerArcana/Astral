@@ -124,7 +124,7 @@ public class TravelingHandlers {
         if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.sleepManagerCapability);
             if (iSleepManagerLazyOptional.isPresent()) {
-                final ISleepManager sleepManager = iSleepManagerLazyOptional.orElseGet(() -> new SleepManager());
+                final ISleepManager sleepManager = iSleepManagerLazyOptional.orElseGet(SleepManager::new);
                 if (sleepManager.isEntityTraveling()) {
                     FlightHandler.handleAstralFlight(event.player);
                 }

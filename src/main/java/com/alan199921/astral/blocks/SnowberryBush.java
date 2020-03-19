@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -62,18 +63,18 @@ public class SnowberryBush extends SweetBerryBushBlock {
      * @return Whether the interaction was successful or not
      */
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         int age = state.get(AGE);
         boolean readyToHarvest = age == 3;
         if (!readyToHarvest && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {
-            return false;
+            return ActionResultType.CONSUME;
         }
         else if (age > 1) {
             int j = 1 + worldIn.rand.nextInt(2);
             spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.asItem(), j + (readyToHarvest ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
             worldIn.setBlockState(pos, state.with(AGE, 1), 2);
-            return true;
+            return ActionResultType.SUCCESS;
         }
         else {
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);

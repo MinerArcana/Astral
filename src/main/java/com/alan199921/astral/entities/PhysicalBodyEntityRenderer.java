@@ -3,23 +3,24 @@ package com.alan199921.astral.entities;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntity, PhysicalBodyModel> {
 
-    public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager, float shadowSizeIn) {
-        super(rendererManager, new PhysicalBodyModel(0.0f, true), shadowSizeIn);
+    public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager) {
+        super(rendererManager, new PhysicalBodyModel(0.0f, true), 1.0f);
         this.addLayer(new BipedArmorLayer<>(this, new NonRotatingBipedModel(0.5F), new NonRotatingBipedModel(1.0F)));
         this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new ArrowLayer<>(this));
@@ -27,9 +28,9 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
         this.addLayer(new ElytraLayer<>(this));
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    protected ResourceLocation getEntityTexture(PhysicalBodyEntity entity) {
+    public ResourceLocation getEntityTexture(PhysicalBodyEntity entity) {
         return entity.getGameProfile()
                 .map(this::getSkin)
                 .orElseGet(() -> new ResourceLocation("minecraft:textures/entity/steve.png"));
@@ -52,6 +53,14 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
         }
     }
 
+    @Override
+    public void render(PhysicalBodyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        GL11.glRotated(entityIn.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
+        GL11.glRotated(entityIn.rotationPitch, 0F, 0F, 1F); // turn
+        GL11.glTranslated(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F); // center
+    }
+
     @Nonnull
     @Override
     public PhysicalBodyModel getEntityModel() {
@@ -59,15 +68,8 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     }
 
     @Override
-    protected void applyRotations(PhysicalBodyEntity p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_) {
-        super.applyRotations(p_77043_1_, 0, 0, 0);
+    protected void applyRotations(PhysicalBodyEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        super.applyRotations(entityLiving, matrixStackIn, 0, 0, 0);
     }
 
-    @Override
-    protected void renderLivingAt(PhysicalBodyEntity e, double x, double y, double z) {
-        super.renderLivingAt(e, x, y, z); // translation
-        GlStateManager.rotated(e.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
-        GlStateManager.rotated(e.rotationPitch, 0F, 0F, 1F); // turn
-        GlStateManager.translated(0F, -0.85F, e.isFaceDown() ? -0.125F : 0.125F); // center
-    }
 }
