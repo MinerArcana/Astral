@@ -7,9 +7,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.nio.file.Path;
 import java.util.Objects;
 
+//TODO Get rid of builder comments and make fields public
 public class AstralConfig {
     private static AstralConfig instance;
 
+    private final WorldgenSettings worldgenSettings;
     private final HerbEffectDurations herbEffectDurations;
     private final PotionEffectDurations potionEffectDurations;
     private final FlightSettings flightSettings;
@@ -17,6 +19,7 @@ public class AstralConfig {
     private final ForgeConfigSpec spec;
 
     private AstralConfig(ForgeConfigSpec.Builder builder) {
+        this.worldgenSettings = new WorldgenSettings(builder);
         this.herbEffectDurations = new HerbEffectDurations(builder);
         this.potionEffectDurations = new PotionEffectDurations(builder);
         this.flightSettings = new FlightSettings(builder);
@@ -66,6 +69,10 @@ public class AstralConfig {
         return instance.flightSettings;
     }
 
+    public static WorldgenSettings getWorldgenSettings() {
+        return instance.worldgenSettings;
+    }
+
     public static TravelingSettings getTravelingSettings() {
         return instance.travelingSettings;
     }
@@ -86,6 +93,7 @@ public class AstralConfig {
         configData.load();
         spec.setConfig(configData);
     }
+
 
     /**
      * Getter for the ForceConfigSpec. Needs to be accessed through getInstance() since function is not static.
@@ -153,6 +161,7 @@ public class AstralConfig {
             return travellingMedicineDuration.get();
         }
     }
+
 
     public static class PotionEffectDurations {
         private final ForgeConfigSpec.ConfigValue<Integer> astralTravelDuration;
@@ -276,6 +285,86 @@ public class AstralConfig {
 
         public int getSyncInterval() {
             return syncInterval.get();
+        }
+    }
+
+    public static class WorldgenSettings {
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedMinPatchSize;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedMaxPatchSize;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedPatchSpawnRate;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedPatchDistribution;
+        private final ForgeConfigSpec.ConfigValue<Integer> feverweedMaxTries;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberryMinPatchSize;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberryMaxPatchSize;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberryPatchSpawnRate;
+
+        public WorldgenSettings(ForgeConfigSpec.Builder builder) {
+            builder.comment("Astral worldgen settings").push("worldgenSettings");
+
+            feverweedMinPatchSize = builder.comment("Controls the minimum size of Feverweed patches")
+                    .translation("astral.config.common.feverweedMinPatchSize")
+                    .define("feverweedMinPatchSize", 4);
+
+            feverweedMaxPatchSize = builder.comment("Controls the maximum size of Feverweed patches")
+                    .translation("astral.config.common.feverweedMaxPatchSize")
+                    .define("feverweedMaxPatchSize", 10);
+
+            feverweedPatchSpawnRate = builder.comment("Controls how often Feverweed spawns, in terms of 1 in x chunks")
+                    .translation("astral.config.common.feverweedPatchSpawnRate")
+                    .define("feverweedPatchSpawnRate", 25);
+
+            feverweedPatchDistribution = builder.comment("Controls how distributed Feverweed blocks will be in a Feverweed patch")
+                    .translation("astral.config.common.feverweedPatchDistribution")
+                    .define("feverweedPatchDistribution", 5);
+
+            feverweedMaxTries = builder.comment("Controls how many tries the world generator will attempt to spawn a block of Feverweed")
+                    .translation("astral.config.common.feverweedMaxTries")
+                    .define("feverweedMaxTries", 40);
+
+            snowberryMinPatchSize = builder.comment("Controls the minimum size of Snowberry patches")
+                    .translation("astral.config.common.snowberryMinPatchSize")
+                    .define("snowberryMinPatchSize", 2);
+
+            snowberryMaxPatchSize = builder.comment("Controls the maximum size of Snowberry patches")
+                    .translation("astral.config.common.snowberryMaxPatchSize")
+                    .define("snowberryMaxPatchSize", 5);
+
+            snowberryPatchSpawnRate = builder.comment("Controls how often Snowberry spawns, in terms of 1 in x chunks")
+                    .translation("astral.config.common.snowberryPatchSpawnRate")
+                    .define("snowberryPatchSpawnRate", 25);
+
+        }
+
+        public int getFeverweedPatchSpawnRate() {
+            return feverweedPatchSpawnRate.get();
+        }
+
+        public int getFeverweedPatchDistribution() {
+            return feverweedPatchDistribution.get();
+        }
+
+        public int getFeverweedMaxTries() {
+            return feverweedMaxTries.get();
+        }
+
+        public int getSnowberryMinPatchSize() {
+            return snowberryMinPatchSize.get();
+        }
+
+        public int getSnowberryMaxPatchSize() {
+            return snowberryMaxPatchSize.get();
+        }
+
+        public int getSnowberryPatchSpawnRate() {
+            return snowberryPatchSpawnRate.get();
+        }
+
+        public int getFeverweedMaxPatchSize() {
+            return feverweedMaxPatchSize.get();
+        }
+
+        public int getFeverweedMinPatchSize() {
+            return feverweedMinPatchSize.get();
         }
     }
 }
