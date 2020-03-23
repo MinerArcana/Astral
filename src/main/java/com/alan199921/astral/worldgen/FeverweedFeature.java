@@ -28,7 +28,6 @@ public class FeverweedFeature extends Feature<FeverweedFeatureConfig> {
             //Choose random spot in chunk as the center for generating Feverweed
             int centerX = pos.getX() + rand.nextInt(16);
             int centerZ = pos.getZ() + rand.nextInt(16);
-            int centerY = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, centerX, centerZ);
 
             BlockState feverweed = AstralBlocks.FEVERWEED_BLOCK.getDefaultState();
             int spawned = 0;

@@ -39,7 +39,6 @@ public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<LazyOptional<ItemStackHandler>> armorInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
     private static final DataParameter<LazyOptional<ItemStackHandler>> handsInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
 
-
     protected PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }

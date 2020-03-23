@@ -6,13 +6,13 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -56,9 +56,11 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     @Override
     public void render(PhysicalBodyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        GL11.glRotated(entityIn.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
-        GL11.glRotated(entityIn.rotationPitch, 0F, 0F, 1F); // turn
-        GL11.glTranslated(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F); // center
+//        GL11.glRotated(entityIn.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
+//        GL11.glRotated(entityIn.rotationPitch, 0F, 0F, 1F); // turn
+//        GL11.glTranslated(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F); // center
+        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90));
+        matrixStackIn.translate(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F);
     }
 
     @Nonnull

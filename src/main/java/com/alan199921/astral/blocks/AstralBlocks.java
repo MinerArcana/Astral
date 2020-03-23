@@ -31,15 +31,17 @@ public class AstralBlocks {
 
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-        registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
+        final Block snowberryBush = registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
         final Block feverweed = registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
         registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
         registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
-        registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier", true);
+        final Block offeringBrazier = registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier", true);
 
         if (FMLEnvironment.dist.isClient()) {
             RenderType cutout = RenderType.getCutout();
             RenderTypeLookup.setRenderLayer(feverweed, cutout);
+            RenderTypeLookup.setRenderLayer(snowberryBush, cutout);
+            RenderTypeLookup.setRenderLayer(offeringBrazier, cutout);
         }
     }
 

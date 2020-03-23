@@ -50,7 +50,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
      * When the block is right clicked, check if the bush is ready to harvest (age 3), and if it is, drop a snowberry
      * item and lower it's age to age 2.
      * <p>
-     * If the player right clicks with bone meal, increase the age by one //TODO May not be implemented yet
+     * If the player right clicks with bone meal, increase the age by one TODO May not be implemented yet
      * <p>
      * Copied from SweetBerryBushBlock.java
      *
