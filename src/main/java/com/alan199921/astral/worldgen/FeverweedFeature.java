@@ -42,10 +42,8 @@ public class FeverweedFeature extends Feature<FeverweedFeatureConfig> {
                     worldIn.setBlockState(generatingPos, feverweed, 2);
                     generated = true;
                     spawned++;
-                    System.out.println(generatingPos);
                 }
             }
-            System.out.println(numberOfPlants + " " + spawned);
         }
         return generated;
     }

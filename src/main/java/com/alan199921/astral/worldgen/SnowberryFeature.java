@@ -9,8 +9,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationSettings;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,41 +30,54 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
     }
 
     @Override
-    public boolean place(IWorld worldIn, ChunkGenerator<? extends GenerationSettings> generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
+    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull SnowberryFeatureConfig config) {
         /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
-        boolean generatedSomething = false;
-        ArrayList<BlockPos> positionsToGen = new ArrayList<>();
-        BlockState blockstate = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
-        for (int tries = 0; tries < 32; tries++) {
-            BlockPos blockpos = pos.add(rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(4) - rand.nextInt(4));
-            //If pos is a snow or air block and the block below it can sustain a snowberry bush, generate the bush
-            if (worldIn.isAirBlock(blockpos) && (!worldIn.getDimension().isNether() || blockpos.getY() < worldIn.getWorld().getDimension().getHeight()) && blockstate.isValidPosition(worldIn, blockpos)) {
-                positionsToGen.add(blockpos);
-            }
-            else if ((!worldIn.getDimension().isNether() || (blockpos.getY() < worldIn.getWorld().getDimension().getHeight())) && (blockstate.isValidPosition(worldIn, blockpos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
-                positionsToGen.add(blockpos.down());
-            }
-        }
+        boolean generated = false;
+        if (rand.nextInt(config.getPatchChance()) == 0) {
+            int spawned = 0;
+            final int numberOfPlants = rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize();
+            //Choose random spot in chunk as the center for generating Snowberry bushes
+            int centerX = pos.getX() + rand.nextInt(16);
+            int centerZ = pos.getZ() + rand.nextInt(16);
+            ArrayList<BlockPos> positionsToGen = new ArrayList<>();
 
-        //Set snowberry bushes
-        int numberOfBushesInFeature = Math.min(positionsToGen.size(), rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize());
-        for (int i = 0; i < numberOfBushesInFeature; i++) {
-            worldIn.setBlockState(positionsToGen.get(i).down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-            worldIn.setBlockState(positionsToGen.get(i), AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
-            generatedSomething = true;
-        }
-
-        //Set snow around generation
-        for (int i = 0; i < numberOfBushesInFeature; i++) {
-            for (BlockPos adjacentPos : getAdjacentBlocks(positionsToGen.get(i))) {
-                int layerLevel = rand.nextInt(4);
-                if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
-                    worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
+            BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
+            for (int tries = 0; tries < 40 && spawned < numberOfPlants; tries++) {
+                int dist = 6;
+                int x = centerX + rand.nextInt(dist * 2) - dist;
+                int z = centerZ + rand.nextInt(dist * 2) - dist;
+                int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
+                BlockPos generatingPos = new BlockPos(x, y, z);
+                if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimension().isNether() || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
+                    positionsToGen.add(generatingPos);
+                    worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
+                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
+                        int layerLevel = rand.nextInt(4);
+                        if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
+                            worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
+                        }
+                    }
+                    generated = true;
+                    System.out.println(generatingPos);
+                }
+                else if ((!worldIn.getDimension().isNether() || (generatingPos.getY() < worldIn.getWorld().getDimension().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+                    positionsToGen.add(generatingPos);
+                    worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
+                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
+                        int layerLevel = rand.nextInt(4);
+                        if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
+                            worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
+                        }
+                    }
+                    generated = true;
+                    System.out.println(generatingPos);
                 }
             }
         }
-        return generatedSomething;
+        return generated;
     }
 }

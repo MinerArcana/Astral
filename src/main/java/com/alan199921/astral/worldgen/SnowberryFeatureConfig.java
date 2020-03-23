@@ -32,4 +32,8 @@ public class SnowberryFeatureConfig implements IFeatureConfig {
     public static SnowberryFeatureConfig deserialize(Dynamic<?> dynamic) {
         return new SnowberryFeatureConfig();
     }
+
+    public int getMaxTries() {
+        return 40;
+    }
 }
