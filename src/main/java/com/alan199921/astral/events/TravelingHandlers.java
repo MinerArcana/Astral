@@ -15,13 +15,13 @@ import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
+import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,12 +49,9 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.UUID;
-
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
 
-    public static final UUID astralGravity = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
 
     /**
      * Makes sure fade effect is not triggered when logging in and updates player with the physical body's info
@@ -242,7 +239,9 @@ public class TravelingHandlers {
     private static void handleAstralEffectEnd(LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(astralGravity);
+            if (playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
+                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(Constants.DISABLES_GRAVITY);
+            }
             //Only run serverside
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Get server versions of world and player
@@ -267,7 +266,9 @@ public class TravelingHandlers {
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             if (!playerEntity.getEntityWorld().isRemote()) {
-                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true));
+                if (!playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
+                    playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(Constants.DISABLES_GRAVITY);
+                }
                 playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
                     sleepManager.resetSleep();
                     if (playerEntity instanceof ServerPlayerEntity && !playerEntity.world.isRemote()) {
