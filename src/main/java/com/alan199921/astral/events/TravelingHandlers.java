@@ -141,7 +141,9 @@ public class TravelingHandlers {
                             event.player.setMotion(0, 10, 0);
                             event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
                         }
-
+                        if (event.player.getEntityWorld().isRemote()) {
+                            Minecraft.getInstance().worldRenderer.loadRenderers();
+                        }
                     }
                 }
             }
@@ -196,7 +198,7 @@ public class TravelingHandlers {
      */
     public static boolean isAstralTravelActive(LivingEntity livingEntity) {
         if (livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(() -> new SleepManager());
+            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(SleepManager::new);
             return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && sleepManager.isEntityTraveling();
         }
         else {
