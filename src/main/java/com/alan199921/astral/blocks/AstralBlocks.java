@@ -1,5 +1,6 @@
 package com.alan199921.astral.blocks;
 
+import com.alan199921.astral.blocks.etherealblocks.EtherDirt;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -29,13 +30,17 @@ public class AstralBlocks {
     @ObjectHolder("astral:offering_brazier")
     public static final Block OFFERING_BRAZIER = null;
 
+    @ObjectHolder("astral:ether_dirt")
+    public static final Block ETHER_DIRT = null;
+
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-        final Block snowberryBush = registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush", false);
-        final Block feverweed = registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block", false);
-        registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane", false);
-        registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian", false);
-        final Block offeringBrazier = registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier", true);
+        final Block snowberryBush = registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush");
+        final Block feverweed = registerBlock(event.getRegistry(), new FeverweedBlock(), "feverweed_block");
+        registerBlock(event.getRegistry(), new EgoMembrane(), "ego_membrane");
+        registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian");
+        final Block offeringBrazier = registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier");
+        registerBlock(event.getRegistry(), new EtherDirt(), "ether_dirt");
 
         if (FMLEnvironment.dist.isClient()) {
             RenderType cutout = RenderType.getCutout();
@@ -48,14 +53,12 @@ public class AstralBlocks {
     /**
      * Creates a block and puts it in the Astral item tab
      *
-     * @param registry        The event registry to register a block
-     * @param block           A Block object
-     * @param name            The registry name of the block
-     * @param createBlockItem Whether an item version of the block should be created (for items that the player should
-     *                        not be able to access)
+     * @param registry The event registry to register a block
+     * @param block    A Block object
+     * @param name     The registry name of the block
      * @return A Block object
      */
-    private static Block registerBlock(IForgeRegistry<Block> registry, Block block, String name, boolean createBlockItem) {
+    private static Block registerBlock(IForgeRegistry<Block> registry, Block block, String name) {
         block.setRegistryName(name);
         registry.register(block);
         return block;

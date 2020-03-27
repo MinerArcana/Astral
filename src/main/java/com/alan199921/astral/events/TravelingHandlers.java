@@ -18,6 +18,7 @@ import com.alan199921.astral.tags.AstralTags;
 import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
@@ -27,6 +28,8 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SPlayEntityEffectPacket;
+import net.minecraft.network.play.server.SRemoveEntityEffectPacket;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
@@ -210,8 +213,8 @@ public class TravelingHandlers {
     }
 
     @SubscribeEvent
-    public static void renderAstralEntities(RenderLivingEvent event) {
-        if (!isAstralTravelActive(Minecraft.getInstance().player) && isAstralTravelActive(event.getEntity())) {
+    public static void renderAstralEntities(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
+        if (Minecraft.getInstance().player != null && !isAstralTravelActive(Minecraft.getInstance().player) && isAstralTravelActive(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -248,6 +251,7 @@ public class TravelingHandlers {
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
                 AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.handleMergeWithBody(playerEntity.getUniqueID(), serverWorld));
+                serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL));
             }
         }
         if (!entityLiving.getEntityWorld().isRemote()) {
@@ -272,7 +276,9 @@ public class TravelingHandlers {
                 playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
                     sleepManager.resetSleep();
                     if (playerEntity instanceof ServerPlayerEntity && !playerEntity.world.isRemote()) {
-                        AstralNetwork.sendClientAstralTravelStart((ServerPlayerEntity) playerEntity, sleepManager);
+                        final ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+                        AstralNetwork.sendClientAstralTravelStart(serverPlayerEntity, sleepManager);
+                        serverPlayerEntity.connection.sendPacket(new SPlayEntityEffectPacket(serverPlayerEntity.getEntityId(), event.getPotionEffect()));
                     }
                 });
                 AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());

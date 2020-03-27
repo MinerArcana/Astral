@@ -47,6 +47,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(SNOWBERRY_BUSH, "Snowberry Bush");
         add(FEVERWEED_BLOCK, "Feverweed");
         add(OFFERING_BRAZIER, "Offering Brazier");
+        add(ETHER_DIRT, "Ether Dirt");
     }
 
     private void addItems() {
@@ -56,6 +57,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(SNOWBERRY, "Snowberries");
         add(INTROSPECTION_MEDICINE, "Introspection Medicine");
         add(OFFERING_BRAZIER_ITEM, "Offering Brazier");
+        add(ETHER_DIRT_ITEM, "Ether Dirt");
     }
 
     private void addPotions() {
