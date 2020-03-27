@@ -16,6 +16,7 @@ import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.tags.AstralTags;
 import com.alan199921.astral.util.Constants;
+import com.alan199921.astral.util.RenderingUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -55,6 +56,13 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelingHandlers {
 
+    @SubscribeEvent
+    public static void reloadWhenAstralTravelEnds(TickEvent.ClientTickEvent event) {
+        if (Minecraft.getInstance().player != null && RenderingUtils.shouldReloadRenderers() && !Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            RenderingUtils.reloadRenderers();
+            RenderingUtils.setReloadRenderers(false);
+        }
+    }
 
     /**
      * Makes sure fade effect is not triggered when logging in and updates player with the physical body's info
@@ -141,8 +149,8 @@ public class TravelingHandlers {
                             event.player.setMotion(0, 10, 0);
                             event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
                         }
-                        if (event.player.getEntityWorld().isRemote()) {
-                            Minecraft.getInstance().worldRenderer.loadRenderers();
+                        if (event.player.world.isRemote()) {
+                            RenderingUtils.reloadRenderers();
                         }
                     }
                 }
@@ -254,6 +262,7 @@ public class TravelingHandlers {
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
                 AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.handleMergeWithBody(playerEntity.getUniqueID(), serverWorld));
                 serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL));
+                RenderingUtils.setReloadRenderers(true);
             }
         }
         if (!entityLiving.getEntityWorld().isRemote()) {
