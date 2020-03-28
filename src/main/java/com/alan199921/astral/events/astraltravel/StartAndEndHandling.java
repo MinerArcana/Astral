@@ -11,7 +11,6 @@ import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.util.Constants;
-import com.alan199921.astral.util.RenderingUtils;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,28 +28,37 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class StartAndEndHandling {
     /**
-     * When the player gets access to the Astral travel effect, give them the ability to fly, and transfer their inventory into the physical body mob
+     * When the player gets access to the Astral travel effect, disable their gravity and tell the sleep manager that
+     * they are falling asleep.
+     * Notifies the client that an entity is getting Astral Travel
      *
      * @param event The event that contains information about the player and the effect applied
      */
     @SubscribeEvent
     public static void astralTravelAdded(PotionEvent.PotionAddedEvent event) {
+        //Only players need the startup effects
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
             if (!playerEntity.getEntityWorld().isRemote()) {
+                //Only apply modifier if it does not exist
                 if (!playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
                     playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(Constants.DISABLES_GRAVITY);
                 }
+                //Reset the sleep manager
                 playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
                     sleepManager.resetSleep();
                     if (playerEntity instanceof ServerPlayerEntity && !playerEntity.world.isRemote()) {
                         final ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+                        //Send Astral Travel is starting to client to display fade effect
                         AstralNetwork.sendClientAstralTravelStart(serverPlayerEntity, sleepManager);
                         serverPlayerEntity.connection.sendPacket(new SPlayEntityEffectPacket(serverPlayerEntity.getEntityId(), event.getPotionEffect()));
                     }
                 });
-                AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
             }
+        }
+        //Apply Astral Travel to entity on client
+        if (event.getEntityLiving().world instanceof ServerWorld) {
+            AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
         }
     }
 
@@ -73,7 +81,7 @@ public class StartAndEndHandling {
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
                 AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.handleMergeWithBody(playerEntity.getUniqueID(), serverWorld));
                 serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL));
-                RenderingUtils.setReloadRenderers(true);
+                AstralNetwork.sendClientAstralTravelEnd(serverPlayerEntity);
             }
         }
         if (!entityLiving.getEntityWorld().isRemote()) {
@@ -114,20 +122,22 @@ public class StartAndEndHandling {
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
-        //Store player UUID to body entity and give it a name
-        physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
-        physicalBodyEntity.setName(playerEntity.getScoreboardName());
+        if (physicalBodyEntity != null) {
+            //Store player UUID to body entity and give it a name
+            physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
+            physicalBodyEntity.setName(playerEntity.getScoreboardName());
 
-        //Insert main inventory to body and clear
-        if (!playerEntity.getEntityWorld().isRemote()) {
+            //Insert main inventory to body and clear
+            if (!playerEntity.getEntityWorld().isRemote()) {
 
-            final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
-            final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
+                final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
+                final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
 
-            psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(Boolean.TRUE.equals(goingToInnerRealm) ? InventoryType.INNER_REALM : InventoryType.ASTRAL, playerEntity.inventory));
+                psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(Boolean.TRUE.equals(goingToInnerRealm) ? InventoryType.INNER_REALM : InventoryType.ASTRAL, playerEntity.inventory));
+            }
+            physicalBodyEntity.setHealth(playerEntity.getHealth());
+            physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
         }
-        physicalBodyEntity.setHealth(playerEntity.getHealth());
-        physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
     }
 
     @SubscribeEvent

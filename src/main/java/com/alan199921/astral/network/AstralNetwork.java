@@ -52,6 +52,12 @@ public class AstralNetwork {
                 .consumer(SendAstralTravelStarting::handle)
                 .add();
 
+        channel.messageBuilder(SendAstralTravelEnding.class, 6)
+                .decoder(SendAstralTravelEnding::decode)
+                .encoder(SendAstralTravelEnding::encode)
+                .consumer(SendAstralTravelEnding::handle)
+                .add();
+
         return channel;
     }
 
@@ -73,5 +79,9 @@ public class AstralNetwork {
 
     public static void sendClientAstralTravelStart(ServerPlayerEntity playerEntity, ISleepManager sleepManager) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelStarting(playerEntity.getEntityId(), sleepManager));
+    }
+
+    public static void sendClientAstralTravelEnd(ServerPlayerEntity playerEntity) {
+        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelEnding(playerEntity.getEntityId()));
     }
 }

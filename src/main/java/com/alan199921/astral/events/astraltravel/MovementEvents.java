@@ -9,6 +9,7 @@ import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.util.RenderingUtils;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.InputUpdateEvent;
@@ -41,25 +42,33 @@ public class MovementEvents {
                     FlightHandler.handleAstralFlight(event.player);
                 }
                 else {
-                    sleepManager.addSleep();
-                    if (sleepManager.isEntityTraveling()) {
-                        StartAndEndHandling.spawnPhysicalBody(event.player);
-                        final Boolean goingToInnerRealm = iSleepManagerLazyOptional.map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
-                        if (Boolean.TRUE.equals(goingToInnerRealm)) {
-                            event.player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(event.player));
-                            iSleepManagerLazyOptional.ifPresent(iSleepManager -> iSleepManager.setGoingToInnerRealm(false));
-                        }
-                        else {
-                            event.player.setMotion(0, 10, 0);
-                            event.player.move(MoverType.SELF, new Vec3d(0, 1, 0));
-                        }
-                        if (event.player.world.isRemote()) {
-                            RenderingUtils.reloadRenderers();
-                        }
-                    }
+                    handleSleep(event.player, sleepManager);
                 }
             }
 
+        }
+    }
+
+    public static void handleSleep(PlayerEntity player, ISleepManager sleepManager) {
+        sleepManager.addSleep();
+        if (sleepManager.isEntityTraveling()) {
+            finishSleeping(player, sleepManager);
+        }
+    }
+
+    public static void finishSleeping(PlayerEntity player, ISleepManager sleepManager) {
+        StartAndEndHandling.spawnPhysicalBody(player);
+        final Boolean goingToInnerRealm = sleepManager.isGoingToInnerRealm();
+        if (Boolean.TRUE.equals(goingToInnerRealm)) {
+            player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(player));
+            sleepManager.setGoingToInnerRealm(false);
+        }
+        else {
+            player.setMotion(0, 10, 0);
+            player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+        }
+        if (player.world.isRemote()) {
+            RenderingUtils.reloadRenderers();
         }
     }
 }

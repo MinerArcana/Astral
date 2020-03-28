@@ -26,7 +26,8 @@ public class SnowberryBush extends SweetBerryBushBlock {
         super(Properties.create(Material.PLANTS)
                 .sound(SoundType.PLANT)
                 .tickRandomly()
-                .hardnessAndResistance(0.2f));
+                .hardnessAndResistance(0.2f)
+                .notSolid());
     }
 
     @Override

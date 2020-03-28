@@ -28,7 +28,7 @@ public class AstralTravelRendering {
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
-        if (Minecraft.getInstance().player != null && !TravelRestrictions.isAstralTravelActive(Minecraft.getInstance().player) && TravelRestrictions.isAstralTravelActive(event.getEntity())) {
+        if (Minecraft.getInstance().player != null && !TravelEffects.isAstralTravelActive(Minecraft.getInstance().player) && TravelEffects.isAstralTravelActive(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -43,7 +43,7 @@ public class AstralTravelRendering {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
-            if (TravelRestrictions.isAstralTravelActive(playerEntity)) {
+            if (TravelEffects.isAstralTravelActive(playerEntity)) {
                 //Cancel rendering of hunger bar
                 if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
                     event.setCanceled(true);

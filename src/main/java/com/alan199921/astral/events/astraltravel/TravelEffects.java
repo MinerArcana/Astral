@@ -31,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
-public class TravelRestrictions {
+public class TravelEffects {
     @SubscribeEvent
     public static void mobsTargetPhysicalBody(EntityJoinWorldEvent event) {
         if (!event.getWorld().isRemote() && event.getEntity() instanceof IMob && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
