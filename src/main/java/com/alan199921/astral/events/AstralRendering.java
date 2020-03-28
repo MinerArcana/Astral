@@ -31,7 +31,7 @@ public class AstralRendering {
         Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
     }
 
-    static void renderAstralHearts(Minecraft mc, PlayerEntity player) {
+    public static void renderAstralHearts(Minecraft mc, PlayerEntity player) {
         int scaledWidth = mc.getMainWindow().getScaledWidth();
         int scaledHeight = mc.getMainWindow().getScaledHeight();
 
