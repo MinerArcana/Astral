@@ -20,7 +20,7 @@ import java.util.Map;
 public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntity, PhysicalBodyModel> {
 
     public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager, new PhysicalBodyModel(0.0f, true), 1.0f);
+        super(rendererManager, new PhysicalBodyModel(0.0f, true), .7F);
         this.addLayer(new BipedArmorLayer<>(this, new NonRotatingBipedModel(0.5F), new NonRotatingBipedModel(1.0F)));
         this.addLayer(new HeldItemLayer<>(this));
         this.addLayer(new ArrowLayer<>(this));
@@ -54,13 +54,8 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     }
 
     @Override
-    public void render(PhysicalBodyEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(@Nonnull PhysicalBodyEntity entityIn, float entityYaw, float partialTicks, @Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-//        GL11.glRotated(entityIn.isFaceDown() ? 90 : 270, 1F, 0F, 0F); // face-down
-//        GL11.glRotated(entityIn.rotationPitch, 0F, 0F, 1F); // turn
-//        GL11.glTranslated(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F); // center
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90));
-        matrixStackIn.translate(0F, -0.85F, entityIn.isFaceDown() ? -0.125F : 0.125F);
     }
 
     @Nonnull
@@ -70,7 +65,14 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     }
 
     @Override
-    protected void applyRotations(PhysicalBodyEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(PhysicalBodyEntity entityLiving, @Nonnull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
+        float rotationDegrees = 90F;
+        matrixStackIn.translate(0, .125, -1);
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(rotationDegrees));
+        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(this.getDeathMaxRotation(entityLiving)));
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90F));
+
         super.applyRotations(entityLiving, matrixStackIn, 0, 0, 0);
     }
 

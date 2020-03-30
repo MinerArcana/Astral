@@ -14,7 +14,7 @@ public class AstralEntityRegistry {
 
     static {
         ResourceLocation physicalBodyResourceLocation = new ResourceLocation(Astral.MOD_ID, "physical_body");
-        final EntityType<?> entityType = EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC).size(2, 1).build(physicalBodyResourceLocation.toString()).setRegistryName(physicalBodyResourceLocation);
+        final EntityType<?> entityType = EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC).size(1.8F, .6F).build(physicalBodyResourceLocation.toString()).setRegistryName(physicalBodyResourceLocation);
         PHYSICAL_BODY_ENTITY = (EntityType<PhysicalBodyEntity>) entityType;
     }
 
