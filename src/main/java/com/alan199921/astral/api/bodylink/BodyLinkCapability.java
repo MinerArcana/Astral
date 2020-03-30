@@ -122,10 +122,13 @@ public class BodyLinkCapability implements IBodyLinkCapability {
             TeleportationTools.performTeleport(player, bodyInfo.getDimensionType(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
             //Get the inventory and transfer items
             AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerID).setInventoryType(InventoryType.PHYSICAL, player.inventory));
-            final Entity entity = world.getEntityByUuid(bodyInfo.getBodyId());
-            if (entity instanceof PhysicalBodyEntity) {
-                resetPlayerStats(player, (PhysicalBodyEntity) entity);
-                entity.onKillCommand();
+            if (!player.world.isRemote()) {
+                ServerWorld serverWorld = (ServerWorld) player.getEntityWorld();
+                final Entity entity = serverWorld.getEntityByUuid(bodyInfo.getBodyId());
+                if (entity instanceof PhysicalBodyEntity) {
+                    resetPlayerStats(player, (PhysicalBodyEntity) entity);
+                    entity.onKillCommand();
+                }
             }
         }
         //If body is not found, teleport player to their spawn location (bed or world spawn)

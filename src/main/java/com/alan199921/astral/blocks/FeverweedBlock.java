@@ -7,6 +7,7 @@ import net.minecraft.block.BushBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
@@ -83,7 +84,7 @@ public class FeverweedBlock extends BushBlock {
             return true;
         }
         else {
-            return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
+            return blockstate.canSustainPlant(worldIn, blockpos, Direction.UP, this);
         }
     }
 }
