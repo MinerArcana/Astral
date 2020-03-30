@@ -71,7 +71,7 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
         matrixStackIn.translate(0, .125, -1);
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(rotationDegrees));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(this.getDeathMaxRotation(entityLiving)));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(90F));
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(entityLiving.isFaceDown() ? 270F : 90F));
 
         super.applyRotations(entityLiving, matrixStackIn, 0, 0, 0);
     }
