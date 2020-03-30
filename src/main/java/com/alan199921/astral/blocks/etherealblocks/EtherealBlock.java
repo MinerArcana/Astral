@@ -40,7 +40,7 @@ public class EtherealBlock extends Block {
     @Override
     public boolean canEntityDestroy(BlockState state, IBlockReader world, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity) {
-            return ((LivingEntity) entity).getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL) == null;
+            return ((LivingEntity) entity).isPotionActive(AstralEffects.ASTRAL_TRAVEL);
         }
         return super.canEntityDestroy(state, world, pos, entity);
     }
