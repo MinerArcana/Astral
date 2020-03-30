@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class EtherealBlock extends Block {
     public EtherealBlock(Properties properties) {
-        super(properties.notSolid().tickRandomly());
+        super(properties.notSolid());
     }
 
     /**
@@ -62,5 +62,10 @@ public class EtherealBlock extends Block {
             return VoxelShapes.empty();
         }
         return super.getShape(state, worldIn, pos, context);
+    }
+
+    @Override
+    public int getOpacity(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+        return 0;
     }
 }
