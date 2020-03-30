@@ -45,7 +45,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
 
             BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
             for (int tries = 0; tries < 40 && spawned < numberOfPlants; tries++) {
-                int dist = 6;
+                int dist = (int) Math.ceil(Math.sqrt(config.getMaxPatchSize())) / 2 + 1;
                 int x = centerX + rand.nextInt(dist * 2) - dist;
                 int z = centerZ + rand.nextInt(dist * 2) - dist;
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
@@ -54,6 +54,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                     positionsToGen.add(generatingPos);
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
                     worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    spawned++;
                     for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
                         int layerLevel = rand.nextInt(4);
                         if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
@@ -67,6 +68,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                     positionsToGen.add(generatingPos);
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
                     worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    spawned++;
                     for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
                         int layerLevel = rand.nextInt(4);
                         if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
