@@ -19,6 +19,7 @@ public class OverworldVegetation {
         }
         for (Biome biome : BiomeManager.oceanBiomes) {
             biome.addStructure(astralIsland.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.astralIsland.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
 
     }

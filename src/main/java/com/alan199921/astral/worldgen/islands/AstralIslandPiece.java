@@ -57,6 +57,5 @@ public class AstralIslandPiece extends TemplateStructurePiece {
 
     @Override
     protected void handleDataMarker(String s, BlockPos blockPos, IWorld iWorld, Random random, MutableBoundingBox mutableBoundingBox) {
-
     }
 }

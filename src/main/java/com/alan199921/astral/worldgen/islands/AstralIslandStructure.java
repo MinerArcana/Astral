@@ -63,11 +63,11 @@ public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
     }
 
     private int getSeparation() {
-        return 15;
+        return 5;
     }
 
     private int getDistance() {
-        return 20;
+        return 6;
     }
 
     @Override
