@@ -5,13 +5,10 @@ import com.alan199921.astral.worldgen.islands.AstralIslandPiece;
 import com.alan199921.astral.worldgen.islands.AstralIslandStructure;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.IStructurePieceType;
 import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,13 +26,7 @@ public class AstralFeatures {
     @SubscribeEvent
     public static void registerFeature(RegistryEvent.Register<Feature<?>> event) {
         event.getRegistry().register(new AstralIslandStructure(NoFeatureConfig::deserialize).setRegistryName("astral:astral_island_structure"));
-        onFeatureRegistryEvent();
     }
 
-    private static void onFeatureRegistryEvent() {
-        for (Biome biome : BiomeManager.oceanBiomes) {
-            biome.addStructure(astralIsland.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-        }
-    }
 
 }

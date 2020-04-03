@@ -43,14 +43,14 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         super(AstralFeatures.ASTRAL_ISLAND_PIECE, nbt);
         this.templateName = nbt.getString("Template");
         this.variant = AstralIslandVariant.getVariantFromIndex(nbt.getInt("Variant"));
-        this.rotation = Rotation.valueOf(nbt.getString("Rot"));
+        this.rotation = nbt.getString("Rot").equals("") ? Rotation.NONE : Rotation.valueOf(nbt.getString("Rot"));
         this.mirror = Mirror.valueOf(nbt.getString("Mi"));
         this.numberOfTreesPlaced = nbt.getInt("NumberOfTreesPlaced");
         this.loadTemplate(templateManager);
     }
 
     private void loadTemplate(TemplateManager templateManager) {
-        Template template = templateManager.getTemplateDefaulted(new ResourceLocation(Astral.MOD_ID, templateName));
+        Template template = templateManager.getTemplateDefaulted(new ResourceLocation(Astral.MOD_ID, "astral_island/" + templateName));
         PlacementSettings placementsettings = (new PlacementSettings()).setIgnoreEntities(true).setRotation(this.rotation).setMirror(this.mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK);
         this.setup(template, this.templatePosition, placementsettings);
     }

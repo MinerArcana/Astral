@@ -18,5 +18,6 @@ public class AstralSetup {
     public void init() {
         //Initializes worldgen
         OverworldVegetation.addOverworldVegetation();
+
     }
 }
