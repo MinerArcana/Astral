@@ -13,7 +13,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralBlocks {
-
     //Astral blocks
     @ObjectHolder("astral:snowberry_bush")
     public static final Block SNOWBERRY_BUSH = null;

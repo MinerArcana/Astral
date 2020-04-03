@@ -121,7 +121,7 @@ public class StartAndEndHandling {
     }
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
-        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
         if (physicalBodyEntity != null) {
             //Store player UUID to body entity and give it a name
             physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());

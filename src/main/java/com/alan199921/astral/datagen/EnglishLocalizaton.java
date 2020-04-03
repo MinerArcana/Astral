@@ -29,7 +29,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         addBlocks();
         addPotions();
         addConstants();
-        add(AstralEntityRegistry.PHYSICAL_BODY_ENTITY, "Physical Body");
+        add(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
         add(AstralEffects.ASTRAL_TRAVEL, "Astral Travel");
         add("itemGroup.astral", "Astral");
     }
