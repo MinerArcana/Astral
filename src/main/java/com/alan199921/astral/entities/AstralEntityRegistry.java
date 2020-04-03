@@ -3,23 +3,20 @@ package com.alan199921.astral.entities;
 import com.alan199921.astral.Astral;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEntityRegistry {
-    public static final EntityType<PhysicalBodyEntity> PHYSICAL_BODY_ENTITY;
+    public static final String PHYSICAL_BODY = "physical_body";
+    private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Astral.MOD_ID);
+    public static final RegistryObject<EntityType<PhysicalBodyEntity>> PHYSICAL_BODY_ENTITY = ENTITIES.register(PHYSICAL_BODY, () -> EntityType.Builder
+            .create(PhysicalBodyEntity::new, EntityClassification.MISC)
+            .size(1.8F, .6F)
+            .build(PHYSICAL_BODY));
 
-    static {
-        ResourceLocation physicalBodyResourceLocation = new ResourceLocation(Astral.MOD_ID, "physical_body");
-        final EntityType<?> entityType = EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC).size(1.8F, .6F).build(physicalBodyResourceLocation.toString()).setRegistryName(physicalBodyResourceLocation);
-        PHYSICAL_BODY_ENTITY = (EntityType<PhysicalBodyEntity>) entityType;
-    }
-
-    @SubscribeEvent
-    public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
-        event.getRegistry().register(PHYSICAL_BODY_ENTITY);
+    public static void register(IEventBus modBus) {
+        ENTITIES.register(modBus);
     }
 }

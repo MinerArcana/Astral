@@ -25,7 +25,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -46,13 +48,16 @@ public class Astral {
 
     public Astral() {
         // Register the setup method for modloading
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::setup);
 
         // Register and load configs
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
+        AstralEntityRegistry.register(modEventBus);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -80,7 +85,7 @@ public class Astral {
     public static class ClientEvents {
         @SubscribeEvent
         public static void registerModels(ModelRegistryEvent event) {
-            RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY, PhysicalBodyEntityRenderer::new);
+            RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
         }
     }
 

@@ -30,7 +30,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
     }
 
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull SnowberryFeatureConfig config) {
+    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, SnowberryFeatureConfig config) {
         /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
@@ -41,7 +41,6 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
             //Choose random spot in chunk as the center for generating Snowberry bushes
             int centerX = pos.getX() + rand.nextInt(16);
             int centerZ = pos.getZ() + rand.nextInt(16);
-            ArrayList<BlockPos> positionsToGen = new ArrayList<>();
 
             BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
             for (int tries = 0; tries < 40 && spawned < numberOfPlants; tries++) {
@@ -51,7 +50,6 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
                 if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimension().isNether() || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
-                    positionsToGen.add(generatingPos);
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
                     worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
                     spawned++;
@@ -62,10 +60,8 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                         }
                     }
                     generated = true;
-                    System.out.println(generatingPos);
                 }
                 else if ((!worldIn.getDimension().isNether() || (generatingPos.getY() < worldIn.getWorld().getDimension().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
-                    positionsToGen.add(generatingPos);
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
                     worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
                     spawned++;
@@ -76,7 +72,6 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                         }
                     }
                     generated = true;
-                    System.out.println(generatingPos);
                 }
             }
         }
