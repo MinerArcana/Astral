@@ -1,6 +1,7 @@
 {
   "replace": "false",
   "values": [
-    "astral:enlightenment_key"
+    "astral:enlightenment_key",
+    "astral:ether_dirt"
   ]
 }

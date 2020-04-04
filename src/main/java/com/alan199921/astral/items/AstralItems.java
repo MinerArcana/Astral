@@ -34,6 +34,9 @@ public class AstralItems {
     @ObjectHolder("astral:ether_dirt")
     public static final Item ETHER_DIRT_ITEM = null;
 
+    @ObjectHolder("astral:ether_grass")
+    public static final Item ETHER_GRASS_ITEM = null;
+
     @SubscribeEvent
     public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
         registerItem(event.getRegistry(), new Snowberry(), "snowberry");
@@ -43,6 +46,7 @@ public class AstralItems {
         registerItem(event.getRegistry(), new TravelingMedicine(), "traveling_medicine");
         registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.OFFERING_BRAZIER, new Item.Properties().group(Astral.setup.astralItems)), "offering_brazier");
         registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.ETHER_DIRT, new Item.Properties().group(Astral.setup.astralItems)), "ether_dirt");
+        registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.ETHER_GRASS, new Item.Properties().group(Astral.setup.astralItems)), "ether_grass");
     }
 
     /**

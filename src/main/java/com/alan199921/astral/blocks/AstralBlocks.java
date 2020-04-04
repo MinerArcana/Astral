@@ -1,6 +1,7 @@
 package com.alan199921.astral.blocks;
 
 import com.alan199921.astral.blocks.etherealblocks.EtherDirt;
+import com.alan199921.astral.blocks.etherealblocks.EtherGrass;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -32,6 +33,9 @@ public class AstralBlocks {
     @ObjectHolder("astral:ether_dirt")
     public static final Block ETHER_DIRT = null;
 
+    @ObjectHolder("astral:ether_grass")
+    public static final Block ETHER_GRASS = null;
+
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         final Block snowberryBush = registerBlock(event.getRegistry(), new SnowberryBush(), "snowberry_bush");
@@ -40,6 +44,7 @@ public class AstralBlocks {
         registerBlock(event.getRegistry(), new AstralMeridian(), "astral_meridian");
         final Block offeringBrazier = registerBlock(event.getRegistry(), new OfferingBrazier(), "offering_brazier");
         registerBlock(event.getRegistry(), new EtherDirt(), "ether_dirt");
+        registerBlock(event.getRegistry(), new EtherGrass(), "ether_grass");
 
         if (FMLEnvironment.dist.isClient()) {
             RenderType cutout = RenderType.getCutout();

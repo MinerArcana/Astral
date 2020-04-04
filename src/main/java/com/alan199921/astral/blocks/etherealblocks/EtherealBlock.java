@@ -1,6 +1,7 @@
 package com.alan199921.astral.blocks.etherealblocks;
 
 import com.alan199921.astral.effects.AstralEffects;
+import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -45,10 +47,19 @@ public class EtherealBlock extends Block {
         return super.canEntityDestroy(state, world, pos, entity);
     }
 
+    /**
+     * Allows Astral entities and items to not pass through Ethereal blocks
+     *
+     * @param state   The blockstate of the ethereal block
+     * @param worldIn The world
+     * @param pos     The blockpos
+     * @param context The context of the shape query
+     * @return super (usually a regular shape) if the entity is Astral, empty if not
+     */
     @Nonnull
     @Override
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, ISelectionContext context) {
-        if (context.getEntity() instanceof LivingEntity && ((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+        if (context.getEntity() instanceof LivingEntity && ((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
             return super.getCollisionShape(state, worldIn, pos, context);
         }
         return VoxelShapes.empty();

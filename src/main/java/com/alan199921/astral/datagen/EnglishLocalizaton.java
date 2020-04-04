@@ -58,6 +58,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(INTROSPECTION_MEDICINE, "Introspection Medicine");
         add(OFFERING_BRAZIER_ITEM, "Offering Brazier");
         add(ETHER_DIRT_ITEM, "Ether Dirt");
+        add(ETHER_GRASS_ITEM, "Ether Grass");
     }
 
     private void addPotions() {
