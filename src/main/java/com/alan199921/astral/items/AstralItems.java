@@ -2,62 +2,38 @@ package com.alan199921.astral.items;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralItems {
-
-    @ObjectHolder("astral:snowberry")
-    public static final Item SNOWBERRY = null;
-
-    @ObjectHolder("astral:feverweed")
-    public static final Item FEVERWEED = null;
-
-    @ObjectHolder("astral:introspection_medicine")
-    public static final Item INTROSPECTION_MEDICINE = null;
-
-    @ObjectHolder("astral:enlightenment_key")
-    public static final Item ENLIGHTENMENT_KEY = null;
-
-    @ObjectHolder("astral:traveling_medicine")
-    public static final Item TRAVELING_MEDICINE = null;
-
-    @ObjectHolder("astral:offering_brazier")
-    public static final Item OFFERING_BRAZIER_ITEM = null;
-
-    @ObjectHolder("astral:ether_dirt")
-    public static final Item ETHER_DIRT_ITEM = null;
-
-    @ObjectHolder("astral:ether_grass")
-    public static final Item ETHER_GRASS_ITEM = null;
-
-    @SubscribeEvent
-    public static void onItemRegistry(final RegistryEvent.Register<Item> event) {
-        registerItem(event.getRegistry(), new Snowberry(), "snowberry");
-        registerItem(event.getRegistry(), new Feverweed(), "feverweed");
-        registerItem(event.getRegistry(), new IntrospectionMedicine(), "introspection_medicine");
-        registerItem(event.getRegistry(), new EnlightenmentKey(), "enlightenment_key");
-        registerItem(event.getRegistry(), new TravelingMedicine(), "traveling_medicine");
-        registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.OFFERING_BRAZIER, new Item.Properties().group(Astral.setup.astralItems)), "offering_brazier");
-        registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.ETHER_DIRT, new Item.Properties().group(Astral.setup.astralItems)), "ether_dirt");
-        registerItem(event.getRegistry(), new BlockNamedItem(AstralBlocks.ETHER_GRASS, new Item.Properties().group(Astral.setup.astralItems)), "ether_grass");
-    }
+    //Items
+    public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Astral.MOD_ID);
+    public static final RegistryObject<BlockNamedItem> ETHER_GRASS_ITEM = ITEMS.register("ether_grass", () -> convertToBlockItem(AstralBlocks.ETHER_GRASS.get()));
+    public static final RegistryObject<BlockNamedItem> ETHER_DIRT_ITEM = ITEMS.register("ether_dirt", () -> convertToBlockItem(AstralBlocks.ETHER_DIRT.get()));
+    public static final RegistryObject<BlockNamedItem> OFFERING_BRAZIER_ITEM = ITEMS.register("offering_brazier", () -> convertToBlockItem(AstralBlocks.OFFERING_BRAZIER.get()));
+    public static final RegistryObject<IntrospectionMedicine> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", IntrospectionMedicine::new);
+    public static final RegistryObject<EnlightenmentKey> ENLIGHTENMENT_KEY = ITEMS.register("enlightenment_key", EnlightenmentKey::new);
+    public static final RegistryObject<TravelingMedicine> TRAVELING_MEDICINE = ITEMS.register("traveling_medicine", TravelingMedicine::new);
+    public static final RegistryObject<Snowberry> SNOWBERRY = ITEMS.register("snowberry", Snowberry::new);
+    public static final RegistryObject<Feverweed> FEVERWEED = ITEMS.register("feverweed", Feverweed::new);
 
     /**
-     * Registers an item
+     * Converts a block into a BlockNamedItem that belongs to the Astral tab
      *
-     * @param registry The event registry to register the item
-     * @param item     An instance of an item
-     * @param name     The registry name of the item
+     * @param block The block to be converted
+     * @return A converted block
      */
-    private static void registerItem(IForgeRegistry<Item> registry, Item item, String name) {
-        item.setRegistryName(name);
-        registry.register(item);
+    private static BlockNamedItem convertToBlockItem(Block block) {
+        return new BlockNamedItem(block, new Item.Properties().group(Astral.setup.astralItems));
     }
+
+    public static void register(IEventBus modBus) {
+        ITEMS.register(modBus);
+    }
+
 }

@@ -20,19 +20,19 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
 
-        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.INTROSPECTION_MEDICINE)
+        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.INTROSPECTION_MEDICINE.get())
                 .addIngredient(AstralTags.MUSHROOMS)
                 .addIngredient(Items.POISONOUS_POTATO)
-                .addIngredient(AstralItems.FEVERWEED)
+                .addIngredient(AstralItems.FEVERWEED.get())
                 .addIngredient(Items.BOWL)
                 .setGroup(Astral.MOD_ID)
                 .build(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.TRAVELING_MEDICINE)
+        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.TRAVELING_MEDICINE.get())
                 .addIngredient(Items.SUGAR)
-                .addIngredient(AstralItems.SNOWBERRY)
+                .addIngredient(AstralItems.SNOWBERRY.get())
                 .addIngredient(Items.BOWL)
-                .addIngredient(AstralItems.FEVERWEED)
+                .addIngredient(AstralItems.FEVERWEED.get())
                 .setGroup(Astral.MOD_ID)
                 .build(consumer);
     }

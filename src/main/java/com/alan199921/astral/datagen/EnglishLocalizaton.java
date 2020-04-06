@@ -3,6 +3,7 @@ package com.alan199921.astral.datagen;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
+import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
@@ -11,7 +12,6 @@ import net.minecraft.potion.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 
 import static com.alan199921.astral.blocks.AstralBlocks.*;
-import static com.alan199921.astral.items.AstralItems.*;
 import static com.alan199921.astral.potions.AstralPotions.*;
 
 public class EnglishLocalizaton extends LanguageProvider {
@@ -42,23 +42,23 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void addBlocks() {
-        add(EGO_MEMBRANE, "Ego Membrane");
-        add(ASTRAL_MERIDIAN, "Astral Meridian");
-        add(SNOWBERRY_BUSH, "Snowberry Bush");
-        add(FEVERWEED_BLOCK, "Feverweed");
-        add(OFFERING_BRAZIER, "Offering Brazier");
-        add(ETHER_DIRT, "Ether Dirt");
+        add(EGO_MEMBRANE.get(), "Ego Membrane");
+        add(ASTRAL_MERIDIAN.get(), "Astral Meridian");
+        add(SNOWBERRY_BUSH.get(), "Snowberry Bush");
+        add(FEVERWEED_BLOCK.get(), "Feverweed");
+        add(OFFERING_BRAZIER.get(), "Offering Brazier");
+        add(ETHER_DIRT.get(), "Ether Dirt");
     }
 
     private void addItems() {
-        add(ENLIGHTENMENT_KEY, "Key of Enlightenment");
-        add(TRAVELING_MEDICINE, "Traveling Medicine");
-        add(FEVERWEED, "Feverweed");
-        add(SNOWBERRY, "Snowberries");
-        add(INTROSPECTION_MEDICINE, "Introspection Medicine");
-        add(OFFERING_BRAZIER_ITEM, "Offering Brazier");
-        add(ETHER_DIRT_ITEM, "Ether Dirt");
-        add(ETHER_GRASS_ITEM, "Ether Grass");
+        add(AstralItems.ENLIGHTENMENT_KEY.get(), "Key of Enlightenment");
+        add(AstralItems.TRAVELING_MEDICINE.get(), "Traveling Medicine");
+        add(AstralItems.FEVERWEED.get(), "Feverweed");
+        add(AstralItems.SNOWBERRY.get(), "Snowberries");
+        add(AstralItems.INTROSPECTION_MEDICINE.get(), "Introspection Medicine");
+        add(OFFERING_BRAZIER.get(), "Offering Brazier");
+        add(ETHER_DIRT.get(), "Ether Dirt");
+        add(ETHER_GRASS.get(), "Ether Grass");
     }
 
     private void addPotions() {

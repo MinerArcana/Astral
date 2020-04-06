@@ -28,7 +28,7 @@ public class EnlightenmentKey extends Item {
         World world = context.getWorld();
         if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
             IChunk meridianChunk = world.getChunk(context.getPos());
-            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN) {
+            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
                 BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
                 int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
                 InnerRealmUtils innerRealmUtils = new InnerRealmUtils();

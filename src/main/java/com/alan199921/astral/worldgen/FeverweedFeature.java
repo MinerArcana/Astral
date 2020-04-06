@@ -29,7 +29,7 @@ public class FeverweedFeature extends Feature<FeverweedFeatureConfig> {
             int centerX = pos.getX() + rand.nextInt(16);
             int centerZ = pos.getZ() + rand.nextInt(16);
 
-            BlockState feverweed = AstralBlocks.FEVERWEED_BLOCK.getDefaultState();
+            BlockState feverweed = AstralBlocks.FEVERWEED_BLOCK.get().getDefaultState();
             int spawned = 0;
             int dist = config.getDistribution();
             for (int tries = 0; spawned < numberOfPlants && tries < config.getMaxTries(); tries++) {

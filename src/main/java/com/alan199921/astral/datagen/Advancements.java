@@ -133,7 +133,7 @@ public class Advancements extends AdvancementProvider {
 
     private void registerAdvancements(Consumer<Advancement> consumer) {
         root = Advancement.Builder.builder()
-                .withDisplay(new DisplayBuilder(AstralItems.FEVERWEED, "root")
+                .withDisplay(new DisplayBuilder(AstralItems.FEVERWEED.get(), "root")
                         .hidden(true)
                         .showToast(false)
                         .announceToChat(false)
@@ -144,8 +144,8 @@ public class Advancements extends AdvancementProvider {
 
         craftTravelingMedicine = Advancement.Builder.builder()
                 .withParent(root)
-                .withCriterion("craft_traveling_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.TRAVELING_MEDICINE))
-                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE, "craft_traveling_medicine").build())
+                .withCriterion("craft_traveling_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.TRAVELING_MEDICINE.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "craft_traveling_medicine").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_traveling_medicine").toString());
 
         becomeAstral = Advancement.Builder.builder()
@@ -165,14 +165,14 @@ public class Advancements extends AdvancementProvider {
 
         craftIntrospectionMedicine = Advancement.Builder.builder()
                 .withParent(root)
-                .withCriterion("craft_introspection_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.INTROSPECTION_MEDICINE))
-                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE, "craft_introspection_medicine").build())
+                .withCriterion("craft_introspection_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.INTROSPECTION_MEDICINE.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE.get(), "craft_introspection_medicine").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_introspection_medicine").toString());
 
         innerRealm = Advancement.Builder.builder()
                 .withParent(craftIntrospectionMedicine)
                 .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM)))
-                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY, "inner_realm").build())
+                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "inner_realm").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
 

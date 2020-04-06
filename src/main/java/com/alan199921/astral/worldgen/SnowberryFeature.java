@@ -42,7 +42,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
             int centerX = pos.getX() + rand.nextInt(16);
             int centerZ = pos.getZ() + rand.nextInt(16);
 
-            BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.getDefaultState();
+            BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState();
             for (int tries = 0; tries < 40 && spawned < numberOfPlants; tries++) {
                 int dist = (int) Math.ceil(Math.sqrt(config.getMaxPatchSize())) / 2 + 1;
                 int x = centerX + rand.nextInt(dist * 2) - dist;
@@ -51,7 +51,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 BlockPos generatingPos = new BlockPos(x, y, z);
                 if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimension().isNether() || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
                     spawned++;
                     for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
                         int layerLevel = rand.nextInt(4);
@@ -63,7 +63,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 }
                 else if ((!worldIn.getDimension().isNether() || (generatingPos.getY() < worldIn.getWorld().getDimension().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                     worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.getDefaultState(), 2);
+                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
                     spawned++;
                     for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
                         int layerLevel = rand.nextInt(4);

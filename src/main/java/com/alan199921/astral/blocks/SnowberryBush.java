@@ -44,7 +44,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
 
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        return new ItemStack(AstralItems.SNOWBERRY.asItem());
+        return new ItemStack(AstralItems.SNOWBERRY.get().asItem());
     }
 
     /**
@@ -72,7 +72,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
         }
         else if (age > 1) {
             int j = 1 + worldIn.rand.nextInt(2);
-            spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.asItem(), j + (readyToHarvest ? 1 : 0)));
+            spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.get().asItem(), j + (readyToHarvest ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
             worldIn.setBlockState(pos, state.with(AGE, 1), 2);
             return ActionResultType.SUCCESS;

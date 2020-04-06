@@ -15,10 +15,12 @@ import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.psychicinventory.PsychicInventory;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
+import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
+import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.setup.AstralSetup;
 import net.minecraftforge.api.distmarker.Dist;
@@ -57,6 +59,8 @@ public class Astral {
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
         AstralEntityRegistry.register(modEventBus);
+        AstralBlocks.register(modEventBus);
+        AstralItems.register(modEventBus);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
 

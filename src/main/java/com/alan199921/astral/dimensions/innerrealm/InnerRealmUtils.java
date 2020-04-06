@@ -34,8 +34,8 @@ public class InnerRealmUtils {
         //XZ plane
         for (x = 0; x < 16; x++) {
             for (z = 0; z < 16; z++) {
-                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel(), z), AstralBlocks.EGO_MEMBRANE.getDefaultState());
-                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + 15, z), AstralBlocks.EGO_MEMBRANE.getDefaultState());
+                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel(), z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + 15, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
             }
         }
 
@@ -43,12 +43,12 @@ public class InnerRealmUtils {
         for (x = 0; x < 16; x++) {
             for (y = 0; y < 16; y++) {
                 if (isBetweenInclusive(x, 7, 8) && isBetweenInclusive(y, 7, 8)) {
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.ASTRAL_MERIDIAN.getDefaultState().with(AstralMeridian.DIRECTION, 0));
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.ASTRAL_MERIDIAN.getDefaultState().with(AstralMeridian.DIRECTION, 2));
+                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0));
+                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2));
                 }
                 else {
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.EGO_MEMBRANE.getDefaultState());
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.EGO_MEMBRANE.getDefaultState());
+                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
                 }
             }
         }
@@ -57,12 +57,12 @@ public class InnerRealmUtils {
         for (z = 0; z < 16; z++) {
             for (y = 0; y < 16; y++) {
                 if (isBetweenInclusive(y, 7, 8) && isBetweenInclusive(z, 7, 8)) {
-                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.getDefaultState().with(AstralMeridian.DIRECTION, 1));
-                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.getDefaultState().with(AstralMeridian.DIRECTION, 3));
+                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1));
+                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3));
                 }
                 else {
-                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.getDefaultState());
-                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.getDefaultState());
+                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
                 }
             }
         }
