@@ -54,6 +54,7 @@ public class Recipes extends RecipeProvider {
                 .key('F', Items.CAMPFIRE)
                 .patternLine(" C ")
                 .patternLine(" F ")
+                .addCriterion("cauldron", hasItem(Items.CAULDRON))
                 .build(consumer);
     }
 

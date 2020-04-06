@@ -21,6 +21,7 @@
     }
   ],
   "result": {
-    "item": "astral:etheric_powder"
+    "item": "astral:etheric_powder",
+    "count": 3
   }
 }
