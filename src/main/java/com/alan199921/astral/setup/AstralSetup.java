@@ -1,7 +1,6 @@
 package com.alan199921.astral.setup;
 
 import com.alan199921.astral.blocks.AstralBlocks;
-import com.alan199921.astral.blocks.RenderLayers;
 import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,5 @@ public class AstralSetup {
     public void init() {
         //Initializes worldgen
         OverworldVegetation.addOverworldVegetation();
-        RenderLayers.setRenderLayers();
     }
 }

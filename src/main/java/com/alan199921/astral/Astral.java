@@ -16,6 +16,7 @@ import com.alan199921.astral.api.psychicinventory.PsychicInventory;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.blocks.AstralBlocks;
+import com.alan199921.astral.blocks.RenderLayers;
 import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.AstralEntityRegistry;
@@ -34,6 +35,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -85,11 +87,16 @@ public class Astral {
         }
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientEvents {
         @SubscribeEvent
         public static void registerModels(ModelRegistryEvent event) {
             RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
+        }
+
+        @SubscribeEvent
+        public static void setRenderLayers(FMLClientSetupEvent event) {
+            RenderLayers.setRenderLayers();
         }
     }
 

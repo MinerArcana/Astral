@@ -14,10 +14,10 @@ public class RenderLayers {
     }
 
     public static void setRenderLayers() {
-        RenderType cutout = RenderType.getCutout();
-        RenderTypeLookup.setRenderLayer(FEVERWEED_BLOCK.get(), cutout);
-        RenderTypeLookup.setRenderLayer(SNOWBERRY_BUSH.get(), cutout);
-        RenderTypeLookup.setRenderLayer(OFFERING_BRAZIER.get(), cutout);
+        RenderType cutoutMipped = RenderType.getCutoutMipped();
+        RenderTypeLookup.setRenderLayer(FEVERWEED_BLOCK.get(), cutoutMipped);
+        RenderTypeLookup.setRenderLayer(SNOWBERRY_BUSH.get(), cutoutMipped);
+        RenderTypeLookup.setRenderLayer(OFFERING_BRAZIER.get(), cutoutMipped);
 
     }
 }
