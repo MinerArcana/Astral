@@ -3,7 +3,6 @@ package com.alan199921.astral.datagen;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
-import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
@@ -12,6 +11,7 @@ import net.minecraft.potion.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 
 import static com.alan199921.astral.blocks.AstralBlocks.*;
+import static com.alan199921.astral.items.AstralItems.*;
 import static com.alan199921.astral.potions.AstralPotions.*;
 
 public class EnglishLocalizaton extends LanguageProvider {
@@ -48,17 +48,19 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(FEVERWEED_BLOCK.get(), "Feverweed");
         add(OFFERING_BRAZIER.get(), "Offering Brazier");
         add(ETHER_DIRT.get(), "Ether Dirt");
+        add(ETHERIC_POWDER.get(), "Etheric Powder");
     }
 
     private void addItems() {
-        add(AstralItems.ENLIGHTENMENT_KEY.get(), "Key of Enlightenment");
-        add(AstralItems.TRAVELING_MEDICINE.get(), "Traveling Medicine");
-        add(AstralItems.FEVERWEED.get(), "Feverweed");
-        add(AstralItems.SNOWBERRY.get(), "Snowberries");
-        add(AstralItems.INTROSPECTION_MEDICINE.get(), "Introspection Medicine");
-        add(OFFERING_BRAZIER.get(), "Offering Brazier");
-        add(ETHER_DIRT.get(), "Ether Dirt");
-        add(ETHER_GRASS.get(), "Ether Grass");
+        add(ENLIGHTENMENT_KEY.get(), "Key of Enlightenment");
+        add(TRAVELING_MEDICINE.get(), "Traveling Medicine");
+        add(FEVERWEED.get(), "Feverweed");
+        add(SNOWBERRY.get(), "Snowberries");
+        add(INTROSPECTION_MEDICINE.get(), "Introspection Medicine");
+        add(OFFERING_BRAZIER_ITEM.get(), "Offering Brazier");
+        add(ETHER_DIRT_ITEM.get(), "Ether Dirt");
+        add(ETHER_GRASS_ITEM.get(), "Ether Grass");
+        add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
     }
 
     private void addPotions() {
@@ -93,6 +95,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(advancements.getSpectralWorld(), "Spectral World", "Expand your mind with images of The Nether");
         add(advancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
         add(advancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
+        add(advancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
     }
 
     private void add(Potion potion, String potionName, String splashPotionName, String lingeringPotionName, String arrowName) {

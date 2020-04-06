@@ -17,5 +17,6 @@ public class DataGenerators {
         final Advancements advancements = new Advancements(generator);
         generator.addProvider(advancements);
         generator.addProvider(new EnglishLocalizaton(generator, advancements));
+        generator.addProvider(new Recipes(generator));
     }
 }

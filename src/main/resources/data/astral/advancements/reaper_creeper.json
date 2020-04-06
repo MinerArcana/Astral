@@ -1,32 +1,27 @@
 {
-  "parent": "astral:dimensional_travel",
+  "parent": "astral:get_astral_travel",
   "display": {
     "icon": {
-      "item": "minecraft:elytra",
-      "nbt": "{Damage:0}"
+      "item": "astral:etheric_powder"
     },
     "title": {
-      "translate": "astral.advancement.your_wings.name"
+      "translate": "astral.advancement.reaper_creeper.name"
     },
     "description": {
-      "translate": "astral.advancement.your_wings.desc"
+      "translate": "astral.advancement.reaper_creeper.desc"
     },
     "frame": "task",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
   },
-  "rewards": {
-    "experience": 5,
-    "function": "astral:give_key"
-  },
   "criteria": {
-    "yourWings": {
+    "use_etheric_powder": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:elytra"
+            "item": "astral:etheric_powder"
           }
         ]
       }
@@ -34,7 +29,7 @@
   },
   "requirements": [
     [
-      "yourWings"
+      "use_etheric_powder"
     ]
   ]
 }

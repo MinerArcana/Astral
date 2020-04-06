@@ -21,6 +21,9 @@ public class PotionBrews {
         Ingredient travellingMedicineIngredient = Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get());
         createBrewingRecipes(Potions.AWKWARD, travellingMedicineIngredient, AstralPotions.ASTRAL_TRAVEL_POTION, AstralPotions.LONG_ASTRAL_TRAVEL_POTION, AstralPotions.STRONG_ASTRAL_TRAVEL_POTION);
 
+        Ingredient ethericPowderIngredient = Ingredient.fromItems(AstralItems.ETHERIC_POWDER_ITEM.get());
+        createBrewingRecipes(Potions.AWKWARD, ethericPowderIngredient, AstralPotions.ASTRAL_TRAVEL_POTION, AstralPotions.LONG_ASTRAL_TRAVEL_POTION, AstralPotions.STRONG_ASTRAL_TRAVEL_POTION);
+
         //Snowberry brew recipe
         Ingredient snowberryIngredient = Ingredient.fromStacks(new ItemStack(AstralItems.SNOWBERRY.get()));
         createBrewingRecipes(Potions.THICK, snowberryIngredient, AstralPotions.SNOWBERRY_BREW, AstralPotions.LONG_SNOWBERRY_BREW, AstralPotions.STRONG_SNOWBERRY_BREW);

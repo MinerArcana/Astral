@@ -49,6 +49,7 @@ public class Advancements extends AdvancementProvider {
     private Advancement yourWings;
     private Advancement enterStronghold;
     private Advancement radiantPower;
+    private Advancement reaperCreeper;
 
     public Advancements(DataGenerator dataGenerator) {
         super(dataGenerator);
@@ -129,6 +130,10 @@ public class Advancements extends AdvancementProvider {
 
     public Advancement getMedicalInsight() {
         return medicalInsight;
+    }
+
+    public Advancement getReaperCreeper() {
+        return reaperCreeper;
     }
 
     private void registerAdvancements(Consumer<Advancement> consumer) {
@@ -272,6 +277,12 @@ public class Advancements extends AdvancementProvider {
                 .withDisplay(new DisplayBuilder(Items.ELYTRA, "your_wings").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "your_wings").toString());
+
+        reaperCreeper = Advancement.Builder.builder()
+                .withParent(becomeAstral)
+                .withCriterion("use_etheric_powder", InventoryChangeTrigger.Instance.forItems(AstralItems.ETHERIC_POWDER_ITEM.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.ETHERIC_POWDER_ITEM.get(), "reaper_creeper").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "reaper_creeper").toString());
 
     }
 

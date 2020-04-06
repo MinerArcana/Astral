@@ -2,16 +2,16 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "astral:feverweed"
+      "tag": "astral:mushrooms"
     },
     {
       "item": "minecraft:poisonous_potato"
     },
     {
-      "item": "minecraft:bowl"
+      "item": "astral:feverweed"
     },
     {
-      "tag": "astral:mushrooms"
+      "item": "minecraft:bowl"
     }
   ],
   "result": {

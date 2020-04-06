@@ -2,7 +2,8 @@
   "parent": "astral:dimensional_travel",
   "display": {
     "icon": {
-      "item": "minecraft:flint_and_steel"
+      "item": "minecraft:flint_and_steel",
+      "nbt": "{Damage:0}"
     },
     "title": {
       "translate": "astral.advancement.spectral_world.name"
