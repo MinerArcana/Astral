@@ -11,7 +11,9 @@ import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.util.Constants;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,6 +41,7 @@ public class StartAndEndHandling {
         //Only players need the startup effects
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            playerEntity.getDataManager().set(Entity.POSE, Pose.SLEEPING);
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Only apply modifier if it does not exist
                 if (!playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {

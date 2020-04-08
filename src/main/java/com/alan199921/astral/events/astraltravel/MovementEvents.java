@@ -8,7 +8,9 @@ import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.flight.FlightHandler;
 import com.alan199921.astral.util.RenderingUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
@@ -51,6 +53,7 @@ public class MovementEvents {
 
     public static void handleSleep(PlayerEntity player, ISleepManager sleepManager) {
         sleepManager.addSleep();
+        player.getDataManager().set(Entity.POSE, Pose.SLEEPING);
         if (sleepManager.isEntityTraveling()) {
             finishSleeping(player, sleepManager);
         }

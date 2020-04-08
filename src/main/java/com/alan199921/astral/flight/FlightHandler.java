@@ -201,6 +201,7 @@ public class FlightHandler {
      */
     private static int getClosestBlockUnderPlayer(PlayerEntity player) {
         BlockPos.PooledMutable pos = BlockPos.PooledMutable.retain(player);
+        //TODO Change to allow blocks that don't block movement as well
         while (pos.getY() >= 0 && player.getEntityWorld().isAirBlock(pos)) {
             pos.move(Direction.DOWN);
         }
