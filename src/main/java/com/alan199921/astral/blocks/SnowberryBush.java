@@ -20,6 +20,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 public class SnowberryBush extends SweetBerryBushBlock {
 
     public SnowberryBush() {
@@ -42,6 +44,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
         return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
     }
 
+    @Nonnull
     @Override
     public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
         return new ItemStack(AstralItems.SNOWBERRY.get().asItem());
@@ -50,9 +53,6 @@ public class SnowberryBush extends SweetBerryBushBlock {
     /**
      * When the block is right clicked, check if the bush is ready to harvest (age 3), and if it is, drop a snowberry
      * item and lower it's age to age 2.
-     * <p>
-     * If the player right clicks with bone meal, increase the age by one TODO May not be implemented yet
-     * <p>
      * Copied from SweetBerryBushBlock.java
      *
      * @param state   The blockstate of the block
@@ -63,12 +63,13 @@ public class SnowberryBush extends SweetBerryBushBlock {
      * @param hit     Where the block was hit
      * @return Whether the interaction was successful or not
      */
+    @Nonnull
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         int age = state.get(AGE);
         boolean readyToHarvest = age == 3;
         if (!readyToHarvest && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {
-            return ActionResultType.CONSUME;
+            return ActionResultType.PASS;
         }
         else if (age > 1) {
             int j = 1 + worldIn.rand.nextInt(2);
