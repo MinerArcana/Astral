@@ -65,7 +65,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
      */
     @Nonnull
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, @Nonnull World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         int age = state.get(AGE);
         boolean readyToHarvest = age == 3;
         if (!readyToHarvest && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {

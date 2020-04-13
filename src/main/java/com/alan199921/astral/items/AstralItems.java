@@ -22,6 +22,8 @@ public class AstralItems {
     public static final RegistryObject<Snowberry> SNOWBERRY = ITEMS.register("snowberry", Snowberry::new);
     public static final RegistryObject<Feverweed> FEVERWEED = ITEMS.register("feverweed", Feverweed::new);
     public static final RegistryObject<BlockNamedItem> ETHERIC_POWDER_ITEM = ITEMS.register("etheric_powder", () -> convertToBlockItem(AstralBlocks.ETHERIC_POWDER.get()));
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_LEAVES_ITEM = ITEMS.register("ethereal_leaves", () -> convertToBlockItem(AstralBlocks.ETHEREAL_LEAVES.get()));
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_WOOD_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(AstralBlocks.ETHEREAL_WOOD.get()));
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab

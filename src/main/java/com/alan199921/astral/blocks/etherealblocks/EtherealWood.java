@@ -2,11 +2,9 @@ package com.alan199921.astral.blocks.etherealblocks;
 
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.tags.AstralTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -17,16 +15,12 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
 
-public class EtherDirt extends Block implements Ethereal {
-    public EtherDirt() {
-        super(Properties.create(Material.EARTH)
-                .hardnessAndResistance(.5f)
-                .harvestTool(ToolType.SHOVEL)
-                .sound(SoundType.GROUND));
+public class EtherealWood extends LogBlock {
+    public EtherealWood() {
+        super(MaterialColor.SAND, Block.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
     }
 
     /**

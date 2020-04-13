@@ -3,6 +3,8 @@
   "values": [
     "astral:ether_dirt",
     "astral:ether_grass",
-    "astral:etheric_powder"
+    "astral:etheric_powder",
+    "astral:ethereal_wood",
+    "astral:ethereal_leaves"
   ]
 }

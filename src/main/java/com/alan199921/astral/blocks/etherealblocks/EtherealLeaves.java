@@ -2,9 +2,8 @@ package com.alan199921.astral.blocks.etherealblocks;
 
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.tags.AstralTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -18,9 +17,9 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nonnull;
 
-public class EtherealBlock extends Block {
-    public EtherealBlock(Properties properties) {
-        super(properties.notSolid());
+public class EtherealLeaves extends LeavesBlock implements Ethereal {
+    public EtherealLeaves() {
+        super(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT));
     }
 
     /**
@@ -31,7 +30,7 @@ public class EtherealBlock extends Block {
      */
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderType(@Nonnull BlockState state) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
             return player.isPotionActive(AstralEffects.ASTRAL_TRAVEL) ? super.getRenderType(state) : BlockRenderType.INVISIBLE;
@@ -67,7 +66,7 @@ public class EtherealBlock extends Block {
 
     @Nonnull
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
         if (clientPlayerEntity != null && !clientPlayerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             return VoxelShapes.empty();
@@ -76,7 +75,7 @@ public class EtherealBlock extends Block {
     }
 
     @Override
-    public int getOpacity(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 0;
     }
 }

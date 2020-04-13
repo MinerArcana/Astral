@@ -49,6 +49,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(OFFERING_BRAZIER.get(), "Offering Brazier");
         add(ETHER_DIRT.get(), "Ether Dirt");
         add(ETHERIC_POWDER.get(), "Etheric Powder");
+        add(ETHEREAL_WOOD.get(), "Ethereal Wood");
+        add(ETHEREAL_LEAVES.get(), "Ethereal Leaves");
     }
 
     private void addItems() {
@@ -61,6 +63,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHER_DIRT_ITEM.get(), "Ether Dirt");
         add(ETHER_GRASS_ITEM.get(), "Ether Grass");
         add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
+        add(ETHEREAL_WOOD_ITEM.get(), "Ethereal Wood");
+        add(ETHEREAL_LEAVES_ITEM.get(), "Ethereal Leaves");
     }
 
     private void addPotions() {
