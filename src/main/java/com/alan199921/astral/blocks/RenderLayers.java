@@ -18,6 +18,5 @@ public class RenderLayers {
         RenderTypeLookup.setRenderLayer(FEVERWEED_BLOCK.get(), cutout);
         RenderTypeLookup.setRenderLayer(SNOWBERRY_BUSH.get(), cutout);
         RenderTypeLookup.setRenderLayer(OFFERING_BRAZIER.get(), cutout);
-        RenderTypeLookup.setRenderLayer(ETHEREAL_LEAVES.get(), cutout);
     }
 }

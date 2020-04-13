@@ -26,7 +26,8 @@ public class EtherGrass extends GrassBlock implements Ethereal {
         super(Properties.create(Material.ORGANIC)
                 .hardnessAndResistance(.5f)
                 .harvestTool(ToolType.SHOVEL)
-                .sound(SoundType.PLANT));
+                .sound(SoundType.PLANT)
+                .notSolid());
     }
 
     /**

@@ -26,7 +26,8 @@ public class EtherDirt extends Block implements Ethereal {
         super(Properties.create(Material.EARTH)
                 .hardnessAndResistance(.5f)
                 .harvestTool(ToolType.SHOVEL)
-                .sound(SoundType.GROUND));
+                .sound(SoundType.GROUND)
+                .notSolid());
     }
 
     /**

@@ -19,7 +19,12 @@ import javax.annotation.Nonnull;
 
 public class EtherealLeaves extends LeavesBlock implements Ethereal {
     public EtherealLeaves() {
-        super(Block.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT));
+        super(Block.Properties
+                .create(Material.LEAVES)
+                .hardnessAndResistance(0.2F)
+                .tickRandomly()
+                .sound(SoundType.PLANT)
+                .notSolid());
     }
 
     /**

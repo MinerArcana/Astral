@@ -20,7 +20,11 @@ import javax.annotation.Nonnull;
 
 public class EtherealWood extends LogBlock {
     public EtherealWood() {
-        super(MaterialColor.SAND, Block.Properties.create(Material.WOOD, MaterialColor.SAND).hardnessAndResistance(2.0F).sound(SoundType.WOOD));
+        super(MaterialColor.SAND, Block.Properties
+                .create(Material.WOOD, MaterialColor.SAND)
+                .hardnessAndResistance(2.0F)
+                .sound(SoundType.WOOD)
+                .notSolid());
     }
 
     /**
