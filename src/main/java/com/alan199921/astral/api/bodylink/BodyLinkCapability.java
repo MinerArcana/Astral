@@ -30,7 +30,7 @@ import java.util.UUID;
  */
 public class BodyLinkCapability implements IBodyLinkCapability {
     public static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
-    private Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
+    private final Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
 
     /**
      * Resets the player entity's stats
@@ -111,9 +111,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     @Override
     public void handleMergeWithBody(UUID playerID, ServerWorld world) {
         PlayerEntity player = world.getPlayerByUuid(playerID);
-        //Retrieve the body entity object  from the capability
         player.setMotion(0, 0, 0);
-        player.setVelocity(0, 0, 0);
         player.isAirBorne = false;
         //Teleport the player
         if (bodyInfoMap.containsKey(playerID)) {
