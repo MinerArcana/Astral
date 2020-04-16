@@ -63,7 +63,11 @@ public class TravelingHandlers {
             final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
             if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.updatePlayer(player.getUniqueID(), serverWorld));
+                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> {
+                    if (iBodyLinkCapability.getInfo(player.getUniqueID()) != null) {
+                        iBodyLinkCapability.updatePlayer(player.getUniqueID(), serverWorld);
+                    }
+                });
             }
         }
     }
@@ -180,7 +184,7 @@ public class TravelingHandlers {
      */
     public static boolean isAstralTravelActive(LivingEntity livingEntity) {
         if (livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(() -> new SleepManager());
+            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(SleepManager::new);
             return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && sleepManager.isEntityTraveling();
         }
         else {

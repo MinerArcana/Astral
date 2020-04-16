@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
@@ -40,7 +39,7 @@ public class AstralSerializers {
 
     public static final IDataSerializer<LazyOptional<ItemStackHandler>> OPTIONAL_ITEMSTACK_HANDLER = new IDataSerializer<LazyOptional<ItemStackHandler>>() {
         @Override
-        public void write(PacketBuffer packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public void write(@Nonnull PacketBuffer packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             if (itemStackHandlerLazyOptional.isPresent()) {
                 itemStackHandlerLazyOptional.ifPresent(itemStackHandler -> {
                     packetBuffer.writeBoolean(true);
@@ -52,6 +51,7 @@ public class AstralSerializers {
             }
         }
 
+        @Nonnull
         @Override
         public LazyOptional<ItemStackHandler> read(PacketBuffer packetBuffer) {
             if (packetBuffer.readBoolean()) {
@@ -62,14 +62,11 @@ public class AstralSerializers {
             return LazyOptional.empty();
         }
 
+        @Nonnull
         @Override
-        public LazyOptional<ItemStackHandler> copyValue(LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public LazyOptional<ItemStackHandler> copyValue(@Nonnull LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             return itemStackHandlerLazyOptional;
         }
     };
 
-    static {
-        DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
-        DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-    }
 }

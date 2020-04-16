@@ -21,6 +21,7 @@ import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.setup.AstralSetup;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -35,6 +36,9 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+
+import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_GAME_PROFILE;
+import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Astral.MOD_ID)
@@ -57,6 +61,8 @@ public class Astral {
 
     private void setup(final FMLCommonSetupEvent event) {
         setup.init();
+        DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
+        DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD

@@ -27,7 +27,7 @@ public class AstralTravelEffect extends Effect {
                     ((PlayerEntity) entityLivingBaseIn).giveExperiencePoints(-1);
                 }
                 playerEntity.getFoodStats().setFoodLevel(15);
-                playerEntity.getFoodStats().setFoodSaturationLevel(0);
+                //playerEntity.getFoodStats().setFoodSaturationLevel(0);
             }
         }
     }
