@@ -2,8 +2,9 @@ package com.alan199921.astral.blocks.etherealblocks;
 
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.tags.AstralTags;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -19,14 +20,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public class EtherealLeaves extends LeavesBlock implements Ethereal {
-    public EtherealLeaves() {
-        super(Block.Properties
-                .create(Material.LEAVES)
-                .hardnessAndResistance(0.2F)
-                .tickRandomly()
-                .sound(SoundType.PLANT)
-                .notSolid());
+public abstract class EtherealBlock extends Block implements Ethereal {
+    public EtherealBlock(Properties properties) {
+        super(properties);
     }
 
     /**
@@ -86,4 +82,5 @@ public class EtherealLeaves extends LeavesBlock implements Ethereal {
     public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 0;
     }
+
 }
