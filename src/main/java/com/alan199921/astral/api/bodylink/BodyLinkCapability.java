@@ -5,7 +5,6 @@ import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.util.Constants;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,7 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
@@ -30,7 +29,7 @@ import java.util.UUID;
  */
 public class BodyLinkCapability implements IBodyLinkCapability {
     public static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
-    private Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
+    private final Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
 
     /**
      * Resets the player entity's stats
@@ -146,13 +145,13 @@ public class BodyLinkCapability implements IBodyLinkCapability {
         if (serverPlayerEntity.getBedPosition().isPresent()) {
             BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
             TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_BED)));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED));
         }
         //Teleport to spawn
         else {
             BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
             TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_SPAWN)));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN));
         }
         resetPlayerStats(serverPlayerEntity);
     }
