@@ -12,9 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,17 +20,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class MovementEvents {
-    @SubscribeEvent
-    public static void cancelRegularMovement(InputUpdateEvent event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-            final MovementInput movementInput = event.getMovementInput();
-            movementInput.backKeyDown = false;
-            movementInput.forwardKeyDown = false;
-            movementInput.moveForward = 0;
-            movementInput.rightKeyDown = false;
-            movementInput.moveStrafe = 0;
-        }
-    }
 
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {

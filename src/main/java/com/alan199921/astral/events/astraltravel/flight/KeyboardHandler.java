@@ -1,15 +1,18 @@
 package com.alan199921.astral.events.astraltravel.flight;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.network.AstralNetwork;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.MovementInput;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Astral.MOD_ID, value = Dist.CLIENT)
 public class KeyboardHandler {
 
     private static boolean up = false;
@@ -47,6 +50,18 @@ public class KeyboardHandler {
                     InputHandler.update(mc.player, upNow, downNow, forwardsNow, backwardsNow, leftNow, rightNow, sprintNow);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void cancelRegularMovement(InputUpdateEvent event) {
+        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            final MovementInput movementInput = event.getMovementInput();
+            movementInput.backKeyDown = false;
+            movementInput.forwardKeyDown = false;
+            movementInput.moveForward = 0;
+            movementInput.rightKeyDown = false;
+            movementInput.moveStrafe = 0;
         }
     }
 }
