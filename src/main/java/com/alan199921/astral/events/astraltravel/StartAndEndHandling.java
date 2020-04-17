@@ -118,7 +118,11 @@ public class StartAndEndHandling {
             final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
             if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.updatePlayer(player.getUniqueID(), serverWorld));
+                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(bodyLink -> {
+                    if (bodyLink.getInfo(player.getUniqueID()) != null) {
+                        bodyLink.updatePlayer(player.getUniqueID(), serverWorld);
+                    }
+                });
             }
         }
     }
