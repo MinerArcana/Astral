@@ -110,32 +110,33 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     @Override
     public void handleMergeWithBody(UUID playerID, ServerWorld world) {
         PlayerEntity player = world.getPlayerByUuid(playerID);
-        //Retrieve the body entity object  from the capability
-        player.setMotion(0, 0, 0);
-        player.isAirBorne = false;
-        //Teleport the player
-        if (bodyInfoMap.containsKey(playerID)) {
-            final BodyInfo bodyInfo = bodyInfoMap.get(playerID);
-            final BlockPos pos = bodyInfo.getPos();
-            TeleportationTools.performTeleport(player, bodyInfo.getDimensionType(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
-            //Get the inventory and transfer items
-            AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerID).setInventoryType(InventoryType.PHYSICAL, player.inventory));
-            if (!player.world.isRemote()) {
-                ServerWorld serverWorld = (ServerWorld) player.getEntityWorld();
-                final Entity entity = serverWorld.getEntityByUuid(bodyInfo.getBodyId());
-                if (entity instanceof PhysicalBodyEntity) {
-                    resetPlayerStats(player, (PhysicalBodyEntity) entity);
-                    entity.onKillCommand();
+        if (player != null) {
+            player.setMotion(0, 0, 0);
+            player.isAirBorne = false;
+            //Teleport the player
+            if (bodyInfoMap.containsKey(playerID)) {
+                final BodyInfo bodyInfo = bodyInfoMap.get(playerID);
+                final BlockPos pos = bodyInfo.getPos();
+                TeleportationTools.performTeleport(player, bodyInfo.getDimensionType(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
+                //Get the inventory and transfer items
+                AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerID).setInventoryType(InventoryType.PHYSICAL, player.inventory));
+                if (!player.world.isRemote()) {
+                    ServerWorld serverWorld = (ServerWorld) player.getEntityWorld();
+                    final Entity entity = serverWorld.getEntityByUuid(bodyInfo.getBodyId());
+                    if (entity instanceof PhysicalBodyEntity) {
+                        resetPlayerStats(player, (PhysicalBodyEntity) entity);
+                        entity.onKillCommand();
+                    }
                 }
             }
-        }
-        //If body is not found, teleport player to their spawn location (bed or world spawn)
-        else {
-            if (player instanceof ServerPlayerEntity) {
-                teleportPlayerToSpawn((ServerPlayerEntity) player);
+            //If body is not found, teleport player to their spawn location (bed or world spawn)
+            else {
+                if (player instanceof ServerPlayerEntity) {
+                    teleportPlayerToSpawn((ServerPlayerEntity) player);
+                }
             }
+            bodyInfoMap.remove(playerID);
         }
-        bodyInfoMap.remove(playerID);
     }
 
     private void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {

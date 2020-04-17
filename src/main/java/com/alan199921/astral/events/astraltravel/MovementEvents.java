@@ -6,7 +6,7 @@ import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvid
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.effects.AstralEffects;
-import com.alan199921.astral.flight.FlightHandler;
+import com.alan199921.astral.events.astraltravel.flight.FlightHandler;
 import com.alan199921.astral.util.RenderingUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;

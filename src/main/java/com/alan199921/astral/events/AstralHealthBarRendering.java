@@ -20,7 +20,7 @@ import java.util.Random;
 import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
 import static net.minecraftforge.client.gui.ForgeIngameGui.left_height;
 
-public class AstralRendering {
+public class AstralHealthBarRendering {
 
     public static final ResourceLocation HEART_TEXTURE = new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_health_v2.png");
     private static long healthUpdateCounter;

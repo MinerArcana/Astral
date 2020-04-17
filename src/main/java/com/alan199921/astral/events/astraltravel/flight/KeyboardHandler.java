@@ -1,14 +1,15 @@
-package com.alan199921.astral.flight;
+package com.alan199921.astral.events.astraltravel.flight;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.network.AstralNetwork;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Astral.MOD_ID)
+@Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class KeyboardHandler {
 
     private static boolean up = false;

@@ -1,4 +1,4 @@
-package com.alan199921.astral.flight;
+package com.alan199921.astral.events.astraltravel.flight;
 
 import com.alan199921.astral.Astral;
 import net.minecraft.entity.player.PlayerEntity;
