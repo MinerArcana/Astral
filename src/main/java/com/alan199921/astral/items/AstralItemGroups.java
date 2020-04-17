@@ -1,11 +1,10 @@
-package com.alan199921.astral.setup;
+package com.alan199921.astral.items;
 
 import com.alan199921.astral.blocks.AstralBlocks;
-import com.alan199921.astral.worldgen.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
-public class AstralSetup {
+public class AstralItemGroups {
 
     //Astral ItemGroup using  a Snowberry Bush as an icon
     public final ItemGroup astralItems = new ItemGroup("astral") {
@@ -15,8 +14,4 @@ public class AstralSetup {
         }
     };
 
-    public void init() {
-        //Initializes worldgen
-        OverworldVegetation.addOverworldVegetation();
-    }
 }
