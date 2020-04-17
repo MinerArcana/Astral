@@ -32,7 +32,7 @@ public class StopTrackingAstralPotionMessage {
 
             optionalWorld.ifPresent(world -> {
                         Entity clientEntity = world.getEntityByID(startTrackingAstralPotionMessage.entityID);
-                        if (clientEntity.isLiving()) {
+                        if (clientEntity instanceof LivingEntity) {
                             LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(startTrackingAstralPotionMessage.entityID);
                             clientLivingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
                         }

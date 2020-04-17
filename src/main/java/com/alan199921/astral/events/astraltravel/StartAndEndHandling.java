@@ -145,7 +145,7 @@ public class StartAndEndHandling {
 
     @SubscribeEvent
     public static void startTrackingAstralEntity(PlayerEvent.StartTracking event) {
-        if (event.getTarget().isLiving()) {
+        if (event.getTarget() instanceof LivingEntity) {
             LivingEntity livingTarget = event.getEntityLiving();
             if (livingTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
                 AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL), event.getEntity());
