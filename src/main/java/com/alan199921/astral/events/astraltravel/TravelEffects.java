@@ -22,6 +22,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -170,6 +171,13 @@ public class TravelEffects {
                 });
             }
 
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralFalling(LivingFallEvent event) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            event.setCanceled(true);
         }
     }
 }
