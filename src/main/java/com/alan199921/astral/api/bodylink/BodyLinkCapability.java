@@ -112,6 +112,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
         PlayerEntity player = world.getPlayerByUuid(playerID);
         player.setMotion(0, 0, 0);
         player.isAirBorne = false;
+        player.fallDistance = 0;
         //Teleport the player
         if (bodyInfoMap.containsKey(playerID)) {
             final BodyInfo bodyInfo = bodyInfoMap.get(playerID);
