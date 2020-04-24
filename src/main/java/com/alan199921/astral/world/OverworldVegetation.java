@@ -1,12 +1,10 @@
-package com.alan199921.astral.worldgen;
+package com.alan199921.astral.world;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.common.BiomeManager;
-
-import static com.alan199921.astral.worldgen.AstralFeatures.astralIsland;
 
 public class OverworldVegetation {
     private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature(SnowberryFeatureConfig::deserialize);
@@ -18,8 +16,8 @@ public class OverworldVegetation {
             generateFeverweed(biome);
         }
         for (Biome biome : BiomeManager.oceanBiomes) {
-            biome.addStructure(astralIsland.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.astralIsland.withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }
 
     }

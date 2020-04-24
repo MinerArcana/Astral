@@ -1,20 +1,26 @@
-package com.alan199921.astral.worldgen.islands;
+package com.alan199921.astral.world.islands;
 
 import com.alan199921.astral.Astral;
-import com.alan199921.astral.worldgen.AstralFeatures;
+import com.alan199921.astral.world.AstralFeatures;
+import com.alan199921.astral.world.trees.EtherealTreeConfig;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class AstralIslandPiece extends TemplateStructurePiece {
@@ -22,7 +28,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     private final AstralIslandVariant variant;
     private final Rotation rotation;
     private final Mirror mirror;
-    private final int numberOfTreesPlaced;
+    private int numberOfTreesPlaced;
+    private ChunkGenerator<?> chunkGenerator;
 
     public AstralIslandPiece(TemplateManager templateManager, AstralIslandVariant variant, String templateName, BlockPos templatePosition, Rotation rotation) {
         this(templateManager, variant, templateName, templatePosition, rotation, Mirror.NONE);
@@ -57,5 +64,38 @@ public class AstralIslandPiece extends TemplateStructurePiece {
 
     @Override
     protected void handleDataMarker(String s, BlockPos blockPos, IWorld iWorld, Random random, MutableBoundingBox mutableBoundingBox) {
+        if ("tconstruct:slime_tree".equals(s)) {
+            iWorld.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
+
+            ConfiguredFeature<EtherealTreeConfig, ?> treeFeature;
+
+            if (random.nextBoolean() && this.numberOfTreesPlaced < 3) {
+                treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
+
+                treeFeature.place(iWorld, chunkGenerator, random, blockPos);
+            }
+
+            this.numberOfTreesPlaced++;
+        }
+
+    }
+
+    /**
+     * (abstract) Helper method to read subclass data from NBT
+     */
+    @Override
+    protected void readAdditional(CompoundNBT tagCompound) {
+        super.readAdditional(tagCompound);
+        tagCompound.putString("Template", this.templateName);
+        tagCompound.putInt("Variant", this.variant.getIndex());
+        tagCompound.putString("Rot", this.placeSettings.getRotation().name());
+        tagCompound.putString("Mi", this.placeSettings.getMirror().name());
+        tagCompound.putInt("NumberOfTreesPlaced", this.numberOfTreesPlaced);
+    }
+
+    @Override
+    public boolean func_225577_a_(@Nonnull IWorld world, @Nonnull ChunkGenerator<?> chunkGenerator, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox, @Nonnull ChunkPos chunkPos) {
+        this.chunkGenerator = chunkGenerator;
+        return super.func_225577_a_(world, chunkGenerator, random, mutableBoundingBox, chunkPos);
     }
 }

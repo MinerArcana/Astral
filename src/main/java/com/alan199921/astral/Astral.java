@@ -24,7 +24,8 @@ import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.items.AstralItemGroups;
 import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.network.AstralNetwork;
-import com.alan199921.astral.worldgen.OverworldVegetation;
+import com.alan199921.astral.world.AstralFeatures;
+import com.alan199921.astral.world.OverworldVegetation;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
@@ -78,6 +79,7 @@ public class Astral {
         AstralEntityRegistry.register(modEventBus);
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
+        AstralFeatures.register(modEventBus);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
 

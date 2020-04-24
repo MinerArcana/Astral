@@ -1,4 +1,4 @@
-package com.alan199921.astral.worldgen.islands;
+package com.alan199921.astral.world.islands;
 
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.Rotation;

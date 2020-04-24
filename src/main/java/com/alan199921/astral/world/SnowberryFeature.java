@@ -1,4 +1,4 @@
-package com.alan199921.astral.worldgen;
+package com.alan199921.astral.world;
 
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.mojang.datafixers.Dynamic;

@@ -1,4 +1,4 @@
-package com.alan199921.astral.worldgen.islands;
+package com.alan199921.astral.world.islands;
 
 import net.minecraft.util.IStringSerializable;
 
@@ -11,7 +11,7 @@ public enum AstralIslandVariant implements IStringSerializable {
     QUARTER(3);
 
 
-    private int index;
+    private final int index;
 
     AstralIslandVariant(int i) {
         index = i;

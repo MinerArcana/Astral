@@ -1,4 +1,4 @@
-package com.alan199921.astral.worldgen;
+package com.alan199921.astral.world;
 
 import com.alan199921.astral.configs.AstralConfig;
 import com.mojang.datafixers.Dynamic;
@@ -7,7 +7,7 @@ import net.minecraft.world.gen.feature.IFeatureConfig;
 
 import javax.annotation.Nonnull;
 
-public class SnowberryFeatureConfig implements IFeatureConfig {
+public class FeverweedFeatureConfig implements IFeatureConfig {
 
     private final AstralConfig.WorldgenSettings worldgenSettings = AstralConfig.getWorldgenSettings();
 
@@ -18,22 +18,26 @@ public class SnowberryFeatureConfig implements IFeatureConfig {
     }
 
     public int getMinPatchSize() {
-        return worldgenSettings.getSnowberryMinPatchSize();
+        return worldgenSettings.getFeverweedMinPatchSize();
     }
 
     public int getMaxPatchSize() {
-        return worldgenSettings.getSnowberryMaxPatchSize();
+        return worldgenSettings.getFeverweedMaxPatchSize();
     }
 
     public int getPatchChance() {
-        return worldgenSettings.getSnowberryPatchSpawnRate();
+        return worldgenSettings.getFeverweedPatchSpawnRate();
     }
 
-    public static SnowberryFeatureConfig deserialize(Dynamic<?> dynamic) {
-        return new SnowberryFeatureConfig();
+    public static FeverweedFeatureConfig deserialize(Dynamic<?> dynamic) {
+        return new FeverweedFeatureConfig();
     }
 
     public int getMaxTries() {
-        return 40;
+        return worldgenSettings.getFeverweedMaxTries();
+    }
+
+    public int getDistribution() {
+        return (int) Math.max(worldgenSettings.getFeverweedPatchDistribution(), Math.ceil(Math.sqrt(getMaxPatchSize())));
     }
 }
