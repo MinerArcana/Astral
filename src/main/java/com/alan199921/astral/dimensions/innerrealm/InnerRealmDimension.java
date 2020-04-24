@@ -28,7 +28,7 @@ public class InnerRealmDimension extends Dimension {
     @Nonnull
     public ChunkGenerator<?> createChunkGenerator() {
         GenerationSettings generationSettings = AstralDimensions.INNER_REALM_CHUNK_GENERATOR.createSettings();
-        return AstralDimensions.INNER_REALM_CHUNK_GENERATOR.create(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.func_226840_a_(this.world.getWorldInfo()).setBiome(Biomes.PLAINS)), generationSettings);
+        return AstralDimensions.INNER_REALM_CHUNK_GENERATOR.create(this.world, BiomeProviderType.FIXED.create(BiomeProviderType.FIXED.createSettings(this.world.getWorldInfo()).setBiome(Biomes.PLAINS)), generationSettings);
     }
 
     @Nullable

@@ -22,7 +22,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public void func_225551_a_(@Nonnull WorldGenRegion p_225551_1_, @Nonnull IChunk p_225551_2_) {
+    public void generateSurface(@Nonnull WorldGenRegion region, IChunk chunk) {
         //This is a void world!
 
     }
