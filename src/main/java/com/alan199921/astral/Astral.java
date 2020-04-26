@@ -16,7 +16,7 @@ import com.alan199921.astral.api.psychicinventory.PsychicInventory;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
 import com.alan199921.astral.api.sleepmanager.SleepManager;
 import com.alan199921.astral.blocks.AstralBlocks;
-import com.alan199921.astral.blocks.RenderLayers;
+import com.alan199921.astral.blocks.BlockRenderHandler;
 import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.AstralEntityRegistry;
@@ -26,8 +26,6 @@ import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.world.AstralFeatures;
 import com.alan199921.astral.world.OverworldVegetation;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -55,13 +53,6 @@ import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_ITEMS
 public class Astral {
     public static final String MOD_ID = "astral";
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
-    //Astral ItemGroup using  a Snowberry Bush as an icon
-    public final ItemGroup astralItems = new ItemGroup("astral") {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(AstralBlocks.SNOWBERRY_BUSH.get());
-        }
-    };
 
 
     public static final AstralItemGroups setup = new AstralItemGroups();
@@ -119,8 +110,10 @@ public class Astral {
 
         @SubscribeEvent
         public static void setRenderLayers(FMLClientSetupEvent event) {
-            RenderLayers.setRenderLayers();
+            BlockRenderHandler.setRenderLayers();
+            BlockRenderHandler.registerBiomeBasedBlockColors();
         }
+
     }
 
     @SubscribeEvent

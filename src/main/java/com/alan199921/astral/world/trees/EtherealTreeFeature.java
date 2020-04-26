@@ -8,6 +8,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.AbstractTreeFeature;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -19,11 +20,11 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
     }
 
     @Override
-    protected boolean func_225557_a_(IWorldGenerationReader generationReader, Random rand, BlockPos blockPos, Set<BlockPos> blockPosSet, Set<BlockPos> blockPosSet1, MutableBoundingBox mutableBoundingBox, EtherealTreeConfig treeConfig) {
+    protected boolean func_225557_a_(@Nonnull IWorldGenerationReader generationReader, @Nonnull Random rand, @Nonnull BlockPos blockPos, @Nonnull Set<BlockPos> blockPosSet, @Nonnull Set<BlockPos> blockPosSet1, @Nonnull MutableBoundingBox mutableBoundingBox, @Nonnull EtherealTreeConfig treeConfig) {
         if (!(generationReader instanceof IWorld)) {
             return false;
         }
-        int height = treeConfig.baseHeight + rand.nextInt(3);
+        int height = treeConfig.baseHeight + (rand.nextInt(2) * (rand.nextInt(2) - rand.nextInt(3)));
 
 
         placeTrunk(generationReader, rand, blockPos, blockPosSet, mutableBoundingBox, treeConfig, height);
@@ -42,8 +43,19 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
 
     protected void placeCanopy(IWorldGenerationReader worldIn, Random randomIn, int treeHeight, BlockPos blockPos, Set<BlockPos> blockPosSet, MutableBoundingBox mutableBoundingBoxIn, EtherealTreeConfig treeFeatureConfigIn) {
         blockPos = blockPos.up(treeHeight);
-        for (int i = 0; i < 4; i++) {
-            this.placeDiamondLayer(worldIn, randomIn, i + 1, blockPos.down(i), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
+        final int canopyHeight = randomIn.nextInt(2) + 3;
+        int range = 0;
+        for (int i = 0; i < canopyHeight; i++) {
+            if (i == 0) {
+                range = 1;
+            }
+            else if (i == 1) {
+                range++;
+            }
+            else {
+                range = range + randomIn.nextInt(2);
+            }
+            this.placeDiamondLayer(worldIn, randomIn, range, blockPos.down(i), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
         }
 
         blockPos = blockPos.down(3);
@@ -52,14 +64,6 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
         this.placeAir(worldIn, blockPos.add(-4, 0, 0), blockPosSet, mutableBoundingBoxIn);
         this.placeAir(worldIn, blockPos.add(0, 0, +4), blockPosSet, mutableBoundingBoxIn);
         this.placeAir(worldIn, blockPos.add(0, 0, -4), blockPosSet, mutableBoundingBoxIn);
-
-        //Drippers
-        // stuck with only one block down because of leaf decay distance
-        blockPos = blockPos.down();
-        this.func_227219_b_(worldIn, randomIn, blockPos.add(+3, 0, 0), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
-        this.func_227219_b_(worldIn, randomIn, blockPos.add(-3, 0, 0), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
-        this.func_227219_b_(worldIn, randomIn, blockPos.add(0, 0, -3), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
-        this.func_227219_b_(worldIn, randomIn, blockPos.add(0, 0, +3), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
 
     }
 

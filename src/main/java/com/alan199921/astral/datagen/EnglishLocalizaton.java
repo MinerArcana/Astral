@@ -3,6 +3,7 @@ package com.alan199921.astral.datagen;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.entities.AstralEntityRegistry;
+import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
@@ -51,6 +52,10 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHERIC_POWDER.get(), "Etheric Powder");
         add(ETHEREAL_WOOD.get(), "Ethereal Wood");
         add(ETHEREAL_LEAVES.get(), "Ethereal Leaves");
+        add(ETHEREAL_FERN.get(), "Ethereal Fern");
+        add(LARGE_ETHEREAL_FERN.get(), "Large Ethereal Fern");
+        add(ETHEREAL_GRASS.get(), "Ethereal Grass");
+        add(TALL_ETHEREAL_GRASS.get(), "Tall Ethereal Grass");
     }
 
     private void addItems() {
@@ -65,6 +70,11 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
         add(ETHEREAL_WOOD_ITEM.get(), "Ethereal Wood");
         add(ETHEREAL_LEAVES_ITEM.get(), "Ethereal Leaves");
+        add(ETHEREAL_FERN_ITEM.get(), "Ethereal Fern");
+        add(LARGE_ETHEREAL_FERN_ITEM.get(), "Large Ethereal Fern");
+        add(ETHEREAL_GRASS_ITEM.get(), "Ethereal Grass");
+        add(AstralItems.TALL_ETHEREAL_GRASS_ITEM.get(), "Tall Ethereal Grass");
+
     }
 
     private void addPotions() {

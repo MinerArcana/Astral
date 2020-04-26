@@ -1,10 +1,13 @@
 package com.alan199921.astral.world.islands;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.world.AstralFeatures;
 import com.alan199921.astral.world.trees.EtherealTreeConfig;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -19,15 +22,19 @@ import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class AstralIslandPiece extends TemplateStructurePiece {
     private final String templateName;
     private final AstralIslandVariant variant;
     private final Rotation rotation;
     private final Mirror mirror;
+    private ArrayList<BlockPos> treeLocations;
     private int numberOfTreesPlaced;
     private ChunkGenerator<?> chunkGenerator;
 
@@ -43,6 +50,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.rotation = rotation;
         this.mirror = mirror;
         this.numberOfTreesPlaced = 0;
+        this.treeLocations = new ArrayList<>();
         this.loadTemplate(templateManager);
     }
 
@@ -53,6 +61,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.rotation = nbt.getString("Rot").equals("") ? Rotation.NONE : Rotation.valueOf(nbt.getString("Rot"));
         this.mirror = Mirror.valueOf(nbt.getString("Mi"));
         this.numberOfTreesPlaced = nbt.getInt("NumberOfTreesPlaced");
+        nbt.getList("treeLocations", Constants.NBT.TAG_COMPOUND).forEach(inbt -> treeLocations.add(NBTUtil.readBlockPos((CompoundNBT) inbt)));
+
         this.loadTemplate(templateManager);
     }
 
@@ -63,34 +73,67 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     @Override
-    protected void handleDataMarker(String s, BlockPos blockPos, IWorld iWorld, Random random, MutableBoundingBox mutableBoundingBox) {
-        if ("tconstruct:slime_tree".equals(s)) {
-            iWorld.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
+    protected void handleDataMarker(@Nonnull String s, @Nonnull BlockPos blockPos, @Nonnull IWorld world, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox) {
+        if ("astral:island_feature".equals(s)) {
+            switch (random.nextInt(10)) {
+                case 1:
+                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
+                    break;
+                case 2:
+                    ConfiguredFeature<EtherealTreeConfig, ?> treeFeature;
 
-            ConfiguredFeature<EtherealTreeConfig, ?> treeFeature;
+                    if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
+                        world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                        treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
+                        treeFeature.place(world, chunkGenerator, random, blockPos.up());
+                        this.numberOfTreesPlaced++;
+                        treeLocations.add(blockPos);
+                    }
 
-            if (random.nextBoolean() && this.numberOfTreesPlaced < 3) {
-                treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
-
-                treeFeature.place(iWorld, chunkGenerator, random, blockPos);
+                    break;
+                case 3:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    world.setBlockState(blockPos.up(), AstralBlocks.ETHEREAL_FERN.get().getDefaultState(), 2);
+                    break;
+                case 4:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    world.setBlockState(blockPos.up(), AstralBlocks.ETHEREAL_GRASS.get().getDefaultState(), 2);
+                    break;
+                case 5:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    world.setBlockState(blockPos.up(), AstralBlocks.LARGE_ETHEREAL_FERN.get().getDefaultState(), 2);
+                    break;
+                case 6:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    world.setBlockState(blockPos.up(), AstralBlocks.TALL_ETHEREAL_GRASS.get().getDefaultState(), 2);
+                    break;
+                default:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    break;
             }
 
-            this.numberOfTreesPlaced++;
         }
 
+    }
+
+    private boolean farEnoughFromAnotherTree(BlockPos blockPos) {
+        return IntStream.range(0, treeLocations.size()).noneMatch(i -> blockPos.withinDistance(blockPos, 8));
     }
 
     /**
      * (abstract) Helper method to read subclass data from NBT
      */
     @Override
-    protected void readAdditional(CompoundNBT tagCompound) {
+    protected void readAdditional(@Nonnull CompoundNBT tagCompound) {
         super.readAdditional(tagCompound);
         tagCompound.putString("Template", this.templateName);
         tagCompound.putInt("Variant", this.variant.getIndex());
         tagCompound.putString("Rot", this.placeSettings.getRotation().name());
         tagCompound.putString("Mi", this.placeSettings.getMirror().name());
         tagCompound.putInt("NumberOfTreesPlaced", this.numberOfTreesPlaced);
+        ListNBT posList = new ListNBT();
+        treeLocations.forEach(pos -> posList.add(NBTUtil.writeBlockPos(pos)));
+        tagCompound.put("treeLocations", posList);
     }
 
     @Override

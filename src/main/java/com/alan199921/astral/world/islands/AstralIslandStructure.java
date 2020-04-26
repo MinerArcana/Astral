@@ -110,8 +110,8 @@ public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
 
             int rnr = this.rand.nextInt(4);
             AstralIslandVariant variant = AstralIslandVariant.getVariantFromIndex(rnr);
-            String[] sizes = new String[]{"0x1x0", "2x2x4", "4x1x6", "8x1x11", "11x1x11"};
-
+//            String[] sizes = new String[]{"0x1x0", "2x2x4", "4x1x6", "8x1x11", "11x1x11"};
+            String[] sizes = new String[]{"comma_island"};
 
             AstralIslandPiece astralIslandPiece = new AstralIslandPiece(templateManagerIn, variant, sizes[this.rand.nextInt(sizes.length)], new BlockPos(x, y, z), rotation);
             this.components.add(astralIslandPiece);
