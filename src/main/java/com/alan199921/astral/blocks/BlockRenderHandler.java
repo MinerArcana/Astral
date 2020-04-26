@@ -37,23 +37,28 @@ public class BlockRenderHandler {
         blockColors.register((blockState, lightReader, blockPos, i) -> {
             if (blockState.get(ShearableDoublePlantBlock.PLANT_HALF) == DoubleBlockHalf.UPPER) {
                 if (lightReader != null && blockPos != null) {
-                    Color color = new Color(BiomeColors.getGrassColor(lightReader, blockPos.down()));
-                    int adjustedBlue = color.getBlue() + 50;
-                    int adjustedRed = color.getRed() - 10;
-                    int adjustedGreen = color.getGreen() + 40;
-                    return new Color(adjustedRed, adjustedGreen, adjustedBlue).getRGB();
+                    return addEtherealTint(BiomeColors.getGrassColor(lightReader, blockPos.down()));
                 }
                 return -1;
             }
             if (lightReader != null && blockPos != null) {
-                Color color = new Color(BiomeColors.getGrassColor(lightReader, blockPos));
-                int adjustedBlue = color.getBlue() + 50;
-                int adjustedRed = color.getRed() - 10;
-                int adjustedGreen = color.getGreen() + 40;
-                return new Color(adjustedRed, adjustedGreen, adjustedBlue).getRGB();
+                return addEtherealTint(BiomeColors.getGrassColor(lightReader, blockPos));
             }
             return -1;
         }, LARGE_ETHEREAL_FERN.get(), TALL_ETHEREAL_GRASS.get());
-        blockColors.register((blockState, lightReader, blockPos, i) -> lightReader != null && blockPos != null ? BiomeColors.getGrassColor(lightReader, blockPos) : GrassColors.get(0.5D, 1.0D), ETHEREAL_GRASS.get(), ETHEREAL_FERN.get());
+        blockColors.register((blockState, lightReader, blockPos, i) -> {
+            if (lightReader != null && blockPos != null) {
+                return addEtherealTint(BiomeColors.getGrassColor(lightReader, blockPos));
+            }
+            return addEtherealTint(GrassColors.get(0.5D, 1.0D));
+        }, ETHEREAL_GRASS.get(), ETHEREAL_FERN.get());
+    }
+
+    public static int addEtherealTint(int colorInt) {
+        Color color = new Color(colorInt);
+        int adjustedBlue = color.getBlue() + 50;
+        int adjustedRed = color.getRed() - 10;
+        int adjustedGreen = color.getGreen() + 40;
+        return new Color(adjustedRed, adjustedGreen, adjustedBlue).getRGB();
     }
 }
