@@ -43,17 +43,12 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
 
     protected void placeCanopy(IWorldGenerationReader worldIn, Random randomIn, int treeHeight, BlockPos blockPos, Set<BlockPos> blockPosSet, MutableBoundingBox mutableBoundingBoxIn, EtherealTreeConfig treeFeatureConfigIn) {
         blockPos = blockPos.up(treeHeight);
-        final int canopyHeight = randomIn.nextInt(2) + 3;
-        int range = 0;
+        int range = 1;
+        final int canopyHeight = 3;
         for (int i = 0; i < canopyHeight; i++) {
-            if (i == 0) {
-                range = 1;
-            }
-            else if (i == 1) {
+            //Increase range 1/3 of the time when it's not the first layer and the range hasn't increased, or on the last layer if the range hasn't increased
+            if ((range <= 3 && i == canopyHeight - 1 || range == 1 && i != 0 && randomIn.nextInt(3) == 1)) {
                 range++;
-            }
-            else {
-                range = range + randomIn.nextInt(2);
             }
             this.placeDiamondLayer(worldIn, randomIn, range, blockPos.down(i), blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
         }
