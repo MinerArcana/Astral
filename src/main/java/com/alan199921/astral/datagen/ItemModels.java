@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.fml.RegistryObject;
 
@@ -25,10 +26,10 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(ETHER_DIRT_ITEM);
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forItem(METAPHORIC_BONE);
-        withExistingParent("large_ethereal_fern", mcLoc("item/large_fern"));
-        withExistingParent("tall_ethereal_grass", mcLoc("item/tall_grass"));
-        withExistingParent("ethereal_grass", mcLoc("item/grass"));
-        withExistingParent("ethereal_fern", mcLoc("item/fern"));
+        forBlockItem(LARGE_ETHEREAL_FERN_ITEM, mcLoc("item/large_fern"));
+        forBlockItem(TALL_ETHEREAL_GRASS_ITEM, mcLoc("item/tall_grass"));
+        forBlockItem(ETHEREAL_GRASS_ITEM, mcLoc("item/grass"));
+        forBlockItem(ETHEREAL_FERN_ITEM, mcLoc("item/fern"));
     }
 
     private void forItem(RegistryObject<? extends Item> item) {
@@ -36,7 +37,12 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
     }
 
     private void forBlockItem(RegistryObject<? extends BlockNamedItem> item) {
-        withExistingParent(item.getId().getPath(), new ResourceLocation(Astral.MOD_ID, "block/" + item.get().getBlock().getRegistryName().getPath()));
+        getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(new ResourceLocation(Astral.MOD_ID, "block/" + item.get().getBlock().getRegistryName().getPath())));
+    }
+
+    private void forBlockItem(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
+        getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(modelLocation));
+
     }
 
     @Override
