@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.item.BlockNamedItem;
@@ -16,7 +15,7 @@ public class Snowberry extends BlockNamedItem {
      */
     public Snowberry() {
         super(AstralBlocks.SNOWBERRY_BUSH.get(), new Item.Properties()
-                .group(Astral.setup.astralItems)
+                .group(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .saturation(-1F)

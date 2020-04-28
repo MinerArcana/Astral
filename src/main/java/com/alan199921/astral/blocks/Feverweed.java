@@ -14,8 +14,8 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class FeverweedBlock extends BushBlock {
-    public FeverweedBlock() {
+public class Feverweed extends BushBlock {
+    public Feverweed() {
         super(Properties.create(Material.PLANTS)
                 .sound(SoundType.PLANT)
                 .tickRandomly()
@@ -32,7 +32,7 @@ public class FeverweedBlock extends BushBlock {
 
     //Mushroom spread code but ignores light levels
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+    public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
             int i = 5;
 
@@ -62,21 +62,16 @@ public class FeverweedBlock extends BushBlock {
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return state.isOpaqueCube(worldIn, pos);
     }
 
-    //Feverweed is sustained by mycelium nor podzol
+    //Feverweed is sustained by mycelium and podzol
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean isValidPosition(@Nonnull BlockState state, IWorldReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();
-        if (AstralTags.FEVERWEED_SUSTAIN.contains(block)) {
-            return true;
-        }
-        else {
-            return blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
-        }
+        return AstralTags.FEVERWEED_SUSTAIN.contains(block) || blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
     }
 }

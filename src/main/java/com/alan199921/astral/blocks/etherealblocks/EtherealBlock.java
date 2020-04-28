@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public abstract class EtherealBlock extends Block implements Ethereal {
+public class EtherealBlock extends Block implements Ethereal {
     public EtherealBlock(Properties properties) {
         super(properties);
     }

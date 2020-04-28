@@ -2,10 +2,10 @@ package com.alan199921.astral.datagen;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.items.AstralItems;
-import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.data.*;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -20,7 +20,7 @@ public class Recipes extends RecipeProvider {
     protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
 
         ShapelessRecipeBuilder.shapelessRecipe(AstralItems.INTROSPECTION_MEDICINE.get())
-                .addIngredient(AstralTags.MUSHROOMS)
+                .addIngredient(Tags.Items.MUSHROOMS)
                 .addIngredient(Items.POISONOUS_POTATO)
                 .addIngredient(AstralItems.FEVERWEED.get())
                 .addIngredient(Items.BOWL)

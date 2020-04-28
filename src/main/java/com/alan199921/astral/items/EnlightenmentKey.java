@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.blocks.AstralMeridian;
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class EnlightenmentKey extends Item {
     public EnlightenmentKey() {
-        super(new Item.Properties().group(Astral.setup.astralItems));
+        super(new Item.Properties().group(AstralItems.ASTRAL_ITEMS));
     }
 
     @Override

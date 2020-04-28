@@ -12,7 +12,7 @@ public class AstralBlocks {
     public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Astral.MOD_ID);
 
     public static final RegistryObject<SnowberryBush> SNOWBERRY_BUSH = BLOCKS.register("snowberry_bush", SnowberryBush::new);
-    public static final RegistryObject<FeverweedBlock> FEVERWEED_BLOCK = BLOCKS.register("feverweed_block", FeverweedBlock::new);
+    public static final RegistryObject<Feverweed> FEVERWEED_BLOCK = BLOCKS.register("feverweed_block", Feverweed::new);
     public static final RegistryObject<EgoMembrane> EGO_MEMBRANE = BLOCKS.register("ego_membrane", EgoMembrane::new);
     public static final RegistryObject<AstralMeridian> ASTRAL_MERIDIAN = BLOCKS.register("astral_meridian", AstralMeridian::new);
     public static final RegistryObject<OfferingBrazier> OFFERING_BRAZIER = BLOCKS.register("offering_brazier", OfferingBrazier::new);
@@ -25,6 +25,7 @@ public class AstralBlocks {
     public static final RegistryObject<EtherealTallGrassBlock> ETHEREAL_FERN = BLOCKS.register("ethereal_fern", EtherealTallGrassBlock::new);
     public static final RegistryObject<EtherealDoublePlantBlock> TALL_ETHEREAL_GRASS = BLOCKS.register("tall_ethereal_grass", EtherealDoublePlantBlock::new);
     public static final RegistryObject<EtherealDoublePlantBlock> LARGE_ETHEREAL_FERN = BLOCKS.register("large_ethereal_fern", EtherealDoublePlantBlock::new);
+    public static final RegistryObject<EtherealBlock> ETHEREAL_PLANKS = BLOCKS.register("ethereal_planks", EtherealPlanks::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

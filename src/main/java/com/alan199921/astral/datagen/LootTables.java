@@ -1,6 +1,5 @@
 package com.alan199921.astral.datagen;
 
-import com.alan199921.astral.blocks.AstralBlocks;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
@@ -19,6 +18,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static com.alan199921.astral.blocks.AstralBlocks.*;
+
 public class LootTables extends LootTableProvider {
     public LootTables(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
@@ -36,11 +37,21 @@ public class LootTables extends LootTableProvider {
     }
 
     private static class Blocks extends BlockLootTables {
-        private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(AstralBlocks.LARGE_ETHEREAL_FERN.get(), AstralBlocks.ETHEREAL_FERN.get(), AstralBlocks.ETHEREAL_GRASS.get(), AstralBlocks.TALL_ETHEREAL_GRASS.get(), AstralBlocks.ETHEREAL_LEAVES.get()));
+        private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_ETHEREAL_FERN.get(), ETHEREAL_FERN.get(), ETHEREAL_GRASS.get(), TALL_ETHEREAL_GRASS.get(), ETHEREAL_LEAVES.get()));
 
         @Override
         protected void addTables() {
             etherealPlants.forEach(this::registerShearsRecipe);
+            this.registerLootTable(LARGE_ETHEREAL_FERN.get(), onlyWithShears(ETHEREAL_FERN.get()));
+            this.registerLootTable(TALL_ETHEREAL_GRASS.get(), onlyWithShears(ETHEREAL_GRASS.get()));
+//            this.registerLootTable(AstralBlocks.LARGE_ETHEREAL_FERN.get(), droppingWithShears(AstralBlocks.LARGE_ETHEREAL_FERN.get(), withSurvivesExplosion(AstralBlocks.LARGE_ETHEREAL_FERN.get(), ItemLootEntry
+//                    .builder(Items.WHEAT_SEEDS))
+//                    .acceptCondition(BlockStateProperty
+//                            .builder(AstralBlocks.LARGE_ETHEREAL_FERN.get())
+//                            .fromProperties(StatePropertiesPredicate.Builder
+//                                    .newBuilder()
+//                                    .withProp(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)))
+//                    .acceptCondition(RandomChance.builder(0.125F))));
         }
 
         @Override
@@ -50,7 +61,7 @@ public class LootTables extends LootTableProvider {
         }
 
         private void registerShearsRecipe(Block block) {
-            this.registerLootTable(block, droppingWithShears(block, ItemLootEntry.builder(block)));
+            this.registerLootTable(block, onlyWithShears(block));
         }
     }
 }

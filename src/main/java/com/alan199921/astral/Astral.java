@@ -21,7 +21,6 @@ import com.alan199921.astral.commands.AstralCommands;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
-import com.alan199921.astral.items.AstralItemGroups;
 import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.world.AstralFeatures;
@@ -53,9 +52,6 @@ import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_ITEMS
 public class Astral {
     public static final String MOD_ID = "astral";
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
-
-
-    public static final AstralItemGroups setup = new AstralItemGroups();
 
     public Astral() {
         // Register the setup method for modloading

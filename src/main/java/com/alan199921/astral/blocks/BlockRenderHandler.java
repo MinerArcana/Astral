@@ -1,10 +1,14 @@
 package com.alan199921.astral.blocks;
 
+import com.alan199921.astral.items.AstralItems;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ShearableDoublePlantBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.item.BlockItem;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.world.GrassColors;
 import net.minecraft.world.biome.BiomeColors;
@@ -34,6 +38,7 @@ public class BlockRenderHandler {
 
     public static void registerBiomeBasedBlockColors() {
         final BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+        final ItemColors itemColors = Minecraft.getInstance().getItemColors();
         blockColors.register((blockState, lightReader, blockPos, i) -> {
             if (blockState.get(ShearableDoublePlantBlock.PLANT_HALF) == DoubleBlockHalf.UPPER) {
                 if (lightReader != null && blockPos != null) {
@@ -52,6 +57,14 @@ public class BlockRenderHandler {
             }
             return addEtherealTint(GrassColors.get(0.5D, 1.0D));
         }, ETHEREAL_GRASS.get(), ETHEREAL_FERN.get());
+
+        itemColors.register((itemStack, tintIndex) -> {
+            BlockState blockstate = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
+            return blockColors.getColor(blockstate, null, null, tintIndex);
+        }, AstralItems.ETHEREAL_FERN_ITEM.get(), AstralItems.ETHEREAL_GRASS_ITEM.get());
+
+        itemColors.register((itemStack, i) -> addEtherealTint(GrassColors.get(0.5D, 1.0D)), AstralItems.LARGE_ETHEREAL_FERN_ITEM.get(), AstralItems.TALL_ETHEREAL_GRASS_ITEM.get());
+
     }
 
     public static int addEtherealTint(int colorInt) {

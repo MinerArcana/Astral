@@ -1,6 +1,3 @@
 {
-  "parent": "block/tinted_cross",
-  "textures": {
-    "cross": "astral:block/ethereal_fern"
-  }
+  "parent": "block/fern"
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "block/grass"
+      "model": "astral:block/ethereal_grass"
     }
   }
 }

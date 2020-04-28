@@ -17,5 +17,9 @@ public class DataGenerators {
         generator.addProvider(advancements);
         generator.addProvider(new EnglishLocalizaton(generator, advancements));
         generator.addProvider(new Recipes(generator));
+        if (event.includeClient()) {
+            generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
+            generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
+        }
     }
 }

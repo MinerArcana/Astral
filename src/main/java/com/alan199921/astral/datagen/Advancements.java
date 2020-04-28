@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 public class Advancements extends AdvancementProvider {
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-    private DataGenerator dataGenerator;
+    private final DataGenerator dataGenerator;
     private Advancement root;
     private Advancement craftTravelingMedicine;
     private Advancement becomeAstral;

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "block/fern"
+      "model": "astral:block/ethereal_fern"
     }
   }
 }

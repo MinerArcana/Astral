@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.item.BlockNamedItem;
@@ -9,15 +8,15 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 
-public class Feverweed extends BlockNamedItem {
+public class FeverweedItem extends BlockNamedItem {
 
     /**
      * Feverweed heals 1 saturation and hunger
      * Gives luck 2 and hunger 2 for 15 seconds by default (duration is affected by configs)
      */
-    public Feverweed() {
+    public FeverweedItem() {
         super(AstralBlocks.FEVERWEED_BLOCK.get(), new Item.Properties()
-                .group(Astral.setup.astralItems)
+                .group(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .saturation(-1F)
