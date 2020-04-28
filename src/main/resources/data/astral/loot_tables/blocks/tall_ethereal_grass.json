@@ -17,11 +17,11 @@
                   }
                 }
               ],
-              "name": "astral:ethereal_leaves"
+              "name": "astral:tall_ethereal_grass"
             },
             {
               "type": "minecraft:item",
-              "name": "astral:ethereal_leaves"
+              "name": "astral:tall_ethereal_grass"
             }
           ]
         }

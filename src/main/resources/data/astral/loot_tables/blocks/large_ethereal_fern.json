@@ -17,11 +17,11 @@
                   }
                 }
               ],
-              "name": "astral:ethereal_leaves"
+              "name": "astral:large_ethereal_fern"
             },
             {
               "type": "minecraft:item",
-              "name": "astral:ethereal_leaves"
+              "name": "astral:large_ethereal_fern"
             }
           ]
         }
