@@ -30,6 +30,10 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(TALL_ETHEREAL_GRASS_ITEM, mcLoc("item/tall_grass"));
         forBlockItem(ETHEREAL_GRASS_ITEM, mcLoc("item/grass"));
         forBlockItem(ETHEREAL_FERN_ITEM, mcLoc("item/fern"));
+        singleTexture(ETHEREAL_DOOR_ITEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ethereal_door"));
+        forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ethereal_trapdoor_bottom"));
+        forBlockItem(ETHEREAL_PLANKS_ITEM);
+        forBlockItem(STRIPPED_ETHEREAL_LOG_ITEM);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

@@ -20,14 +20,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public class EtherealWood extends LogBlock {
-    public EtherealWood() {
+public class EtherealLogs extends LogBlock implements Ethereal {
+    public EtherealLogs() {
         super(MaterialColor.SAND, Block.Properties
                 .create(Material.WOOD, MaterialColor.SAND)
                 .hardnessAndResistance(2.0F)
                 .sound(SoundType.WOOD)
                 .notSolid());
     }
+
+    public EtherealLogs(MaterialColor verticalColorIn, Properties properties) {
+        super(verticalColorIn, properties);
+    }
+
 
     /**
      * Render the block as invisible if the player does not have Astral Travel
@@ -86,4 +91,5 @@ public class EtherealWood extends LogBlock {
     public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return 0;
     }
+
 }

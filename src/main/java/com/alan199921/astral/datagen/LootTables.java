@@ -44,6 +44,9 @@ public class LootTables extends LootTableProvider {
             etherealPlants.forEach(this::registerShearsRecipe);
             this.registerLootTable(LARGE_ETHEREAL_FERN.get(), onlyWithShears(ETHEREAL_FERN.get()));
             this.registerLootTable(TALL_ETHEREAL_GRASS.get(), onlyWithShears(ETHEREAL_GRASS.get()));
+            this.registerLootTable(ETHEREAL_PLANKS.get(), dropping(ETHEREAL_PLANKS.get()));
+            this.registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
+            this.registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
 //            this.registerLootTable(AstralBlocks.LARGE_ETHEREAL_FERN.get(), droppingWithShears(AstralBlocks.LARGE_ETHEREAL_FERN.get(), withSurvivesExplosion(AstralBlocks.LARGE_ETHEREAL_FERN.get(), ItemLootEntry
 //                    .builder(Items.WHEAT_SEEDS))
 //                    .acceptCondition(BlockStateProperty
@@ -57,7 +60,9 @@ public class LootTables extends LootTableProvider {
         @Override
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
-            return etherealPlants;
+            final List<Block> astralBlocks = this.etherealPlants;
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get()));
+            return astralBlocks;
         }
 
         private void registerShearsRecipe(Block block) {

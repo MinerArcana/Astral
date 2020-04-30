@@ -56,6 +56,35 @@ public class Recipes extends RecipeProvider {
                 .patternLine(" F ")
                 .addCriterion("cauldron", hasItem(Items.CAULDRON))
                 .build(consumer);
+
+        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.ETHEREAL_PLANKS_ITEM.get(), 4)
+                .addIngredient(AstralItems.ETHEREAL_WOOD_ITEM.get())
+                .addCriterion("ethereal_wood", hasItem(AstralItems.ETHEREAL_WOOD_ITEM.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(AstralItems.ETHEREAL_DOOR_ITEM.get(), 3)
+                .key('W', AstralItems.ETHEREAL_PLANKS_ITEM.get())
+                .patternLine("WW ")
+                .patternLine("WW ")
+                .patternLine("WW ")
+                .addCriterion("ethereal_door", hasItem(AstralItems.ETHEREAL_PLANKS_ITEM.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(AstralItems.METAPHORIC_BONE.get(), 4)
+                .key('P', AstralItems.ETHEREAL_PLANKS_ITEM.get())
+                .patternLine("   ")
+                .patternLine(" P ")
+                .patternLine(" P ")
+                .addCriterion("ethereal_planks", hasItem(AstralItems.ETHEREAL_PLANKS_ITEM.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(AstralItems.ETHEREAL_TRAPDOOR_ITEM.get(), 2)
+                .key('P', AstralItems.ETHEREAL_PLANKS_ITEM.get())
+                .patternLine("   ")
+                .patternLine("PPP")
+                .patternLine("PPP")
+                .addCriterion("ethereal_planks", hasItem(AstralItems.ETHEREAL_PLANKS_ITEM.get()))
+                .build(consumer);
     }
 
     @Nonnull

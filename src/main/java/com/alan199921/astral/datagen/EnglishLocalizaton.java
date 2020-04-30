@@ -56,6 +56,9 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHEREAL_GRASS.get(), "Ethereal Grass");
         add(TALL_ETHEREAL_GRASS.get(), "Tall Ethereal Grass");
         add(ETHEREAL_PLANKS.get(), "Ethereal Planks");
+        add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
+        add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");
+        add(ETHEREAL_DOOR.get(), "Ethereal Door");
     }
 
     private void addItems() {
@@ -76,6 +79,9 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(TALL_ETHEREAL_GRASS_ITEM.get(), "Tall Ethereal Grass");
         add(METAPHORIC_BONE.get(), "Metaphoric Bone");
         add(ETHEREAL_PLANKS_ITEM.get(), "Ethereal Planks");
+        add(ETHEREAL_DOOR_ITEM.get(), "Ethereal Door");
+        add(ETHEREAL_TRAPDOOR_ITEM.get(), "Ethereal Trapdoor");
+        add(STRIPPED_ETHEREAL_LOG_ITEM.get(), "Stripped Ethereal Log");
     }
 
     private void addPotions() {

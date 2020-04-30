@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " P ",
+    " P "
+  ],
+  "key": {
+    "P": {
+      "item": "astral:ethereal_planks"
+    }
+  },
+  "result": {
+    "item": "astral:metaphoric_bone",
+    "count": 4
+  }
+}

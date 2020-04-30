@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "astral:mushrooms"
+      "tag": "forge:mushrooms"
     },
     {
       "item": "minecraft:poisonous_potato"
