@@ -9,6 +9,10 @@
     "astral:ethereal_grass",
     "astral:ethereal_fern",
     "astral:tall_ethereal_grass",
-    "astral:large_ethereal_fern"
+    "astral:large_ethereal_fern",
+    "astral:ethereal_planks",
+    "astral:ethereal_trapdoor",
+    "astral:ethereal_door",
+    "astral:stripped_ethereal_log"
   ]
 }
