@@ -4,6 +4,7 @@ import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.etherealblocks.Ethereal;
 import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.block.BlockState;
+import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,9 +24,8 @@ public class EtherealBlockHandler {
             final BlockState blockState = world.getBlockState(event.getPos().offset(event.getFace()));
             if (blockState.getBlock() instanceof Ethereal) {
                 BlockPos blockPos = event.getPos().offset(event.getFace());
-                world.addParticle(ParticleTypes.PORTAL, blockPos.getX() + random.nextDouble(), blockPos.getY(), blockPos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
+                world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockState), blockPos.getX() + random.nextDouble(), blockPos.getY() + random.nextDouble() / 2, blockPos.getZ() + random.nextDouble(), 0.0D, 1D, 0.0D);
             }
         }
-//        world.addParticle(ParticleTypes.LARGE_SMOKE, event.getPos().getX() + .5, event.getPos().getY() + .5, event.getPos().getZ() + .5, 0.0D, 0.0D, 0.0D);
     }
 }
