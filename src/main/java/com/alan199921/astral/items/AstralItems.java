@@ -44,6 +44,7 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> ETHEREAL_DOOR_ITEM = ITEMS.register("ethereal_door", () -> convertToBlockItem(ETHEREAL_DOOR.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_TRAPDOOR_ITEM = ITEMS.register("ethereal_trapdoor", () -> convertToBlockItem(ETHEREAL_TRAPDOOR.get()));
     public static final RegistryObject<BlockNamedItem> STRIPPED_ETHEREAL_LOG_ITEM = ITEMS.register("stripped_ethereal_log", () -> convertToBlockItem(STRIPPED_ETHEREAL_LOG.get()));
+    public static final RegistryObject<BlockNamedItem> STRIPPED_ETHEREAL_WOOD_ITEM = ITEMS.register("stripped_ethereal_wood", () -> convertToBlockItem(STRIPPED_ETHEREAL_WOOD.get()));
 //    public static final RegistryObject<Item> DREAMCORD = ITEMS.register("dreamcord", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
 //    public static final RegistryObject<Item> DREAMWEAVE = ITEMS.register("dreamweave", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
 

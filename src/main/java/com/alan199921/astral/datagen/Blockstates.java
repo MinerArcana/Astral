@@ -43,7 +43,7 @@ public class Blockstates extends BlockStateProvider {
         doorBlock(ETHEREAL_DOOR.get(), modLoc("block/ethereal_door_bottom"), modLoc("block/ethereal_door_top"));
         trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ethereal_trapdoor"), true);
         logBlock(STRIPPED_ETHEREAL_LOG.get());
-//        simpleBlock(STRIPPED_ETHEREAL_WOOD.get());
+        axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ethereal_log"), modLoc("block/stripped_ethereal_log"));
     }
 
     private ModelFile modelDefault(Block block) {

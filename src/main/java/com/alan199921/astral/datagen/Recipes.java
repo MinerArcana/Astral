@@ -85,6 +85,12 @@ public class Recipes extends RecipeProvider {
                 .patternLine("PPP")
                 .addCriterion("ethereal_planks", hasItem(AstralItems.ETHEREAL_PLANKS_ITEM.get()))
                 .build(consumer);
+
+        ShapelessRecipeBuilder.shapelessRecipe(AstralItems.STRIPPED_ETHEREAL_WOOD_ITEM.get(), 4)
+                .addIngredient(AstralItems.STRIPPED_ETHEREAL_LOG_ITEM.get())
+                .addCriterion("stripped_ethereal_log", hasItem(AstralItems.STRIPPED_ETHEREAL_LOG_ITEM.get()))
+                .build(consumer);
+
     }
 
     @Nonnull

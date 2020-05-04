@@ -59,6 +59,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
         add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");
         add(ETHEREAL_DOOR.get(), "Ethereal Door");
+        add(STRIPPED_ETHEREAL_WOOD.get(), "Stripped Ethereal Wood");
+
     }
 
     private void addItems() {
@@ -82,6 +84,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHEREAL_DOOR_ITEM.get(), "Ethereal Door");
         add(ETHEREAL_TRAPDOOR_ITEM.get(), "Ethereal Trapdoor");
         add(STRIPPED_ETHEREAL_LOG_ITEM.get(), "Stripped Ethereal Log");
+        add(STRIPPED_ETHEREAL_WOOD_ITEM.get(), "Stripped Ethereal Wood");
     }
 
     private void addPotions() {
