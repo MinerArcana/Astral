@@ -23,11 +23,15 @@ import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.items.AstralItems;
 import com.alan199921.astral.network.AstralNetwork;
+import com.alan199921.astral.particle.AstralParticles;
+import com.alan199921.astral.particle.EtherealReplaceParticle;
 import com.alan199921.astral.world.AstralFeatures;
 import com.alan199921.astral.world.OverworldVegetation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -67,6 +71,7 @@ public class Astral {
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
+        AstralParticles.register(modEventBus);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
 
@@ -110,6 +115,10 @@ public class Astral {
             BlockRenderHandler.registerBiomeBasedBlockColors();
         }
 
+        @SubscribeEvent
+        public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+            Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), EtherealReplaceParticle.Factory::new);
+        }
     }
 
     @SubscribeEvent

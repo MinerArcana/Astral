@@ -24,7 +24,9 @@ public class EtherealBlockHandler {
             final BlockState blockState = world.getBlockState(event.getPos().offset(event.getFace()));
             if (blockState.getBlock() instanceof Ethereal) {
                 BlockPos blockPos = event.getPos().offset(event.getFace());
-                world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockState), blockPos.getX() + random.nextDouble(), blockPos.getY() + random.nextDouble() / 2, blockPos.getZ() + random.nextDouble(), 0.0D, 1D, 0.0D);
+                for (int i = 0; i < 3; i++) {
+                    world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockState), blockPos.getX() + random.nextDouble(), blockPos.getY() + random.nextDouble() / 2, blockPos.getZ() + random.nextDouble(), 0.0D, 0D, 0.0D);
+                }
             }
         }
     }
