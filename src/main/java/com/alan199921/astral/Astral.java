@@ -117,7 +117,7 @@ public class Astral {
 
         @SubscribeEvent
         public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-            Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), EtherealReplaceParticle.Factory::new);
+            Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
         }
     }
 
