@@ -7,6 +7,7 @@ import net.minecraft.client.particle.DiggingParticle;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,6 +31,13 @@ public class EtherealReplaceParticle extends DiggingParticle {
 
     }
 
+    @Override
+    public void tick() {
+        if (this.age++ >= this.maxAge) {
+            this.setExpired();
+        }
+    }
+
     @Nonnull
     @Override
     public IParticleRenderType getRenderType() {
@@ -37,8 +45,8 @@ public class EtherealReplaceParticle extends DiggingParticle {
     }
 
     @Override
-    public float getScale(float scaleFactor) {
-        return 0.5F;
+    public int getBrightnessForRender(float partialTick) {
+        return WorldRenderer.getCombinedLight(this.world, new BlockPos(posX, posY, posZ));
     }
 
     @OnlyIn(Dist.CLIENT)
