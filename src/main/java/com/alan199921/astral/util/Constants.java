@@ -11,4 +11,5 @@ public class Constants {
     public static final String COMMANDS_BURN_SUCCESS_SINGLE = "commands.burn.success.single";
     public static final String COMMANDS_BURN_SUCCESS_MULTIPLE = "commands.burn.success.multiple";
     public static final AttributeModifier DISABLES_GRAVITY = new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
+    public static final int ETHEREAL_BLOCK_OPACITY = 0;
 }

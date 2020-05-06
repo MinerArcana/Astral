@@ -2,6 +2,7 @@ package com.alan199921.astral.blocks.etherealblocks;
 
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.tags.AstralTags;
+import com.alan199921.astral.util.Constants;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -15,8 +16,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface Ethereal {
-
-    int ETHEREAL_BLOCK_OPACITY = 0;
 
     /**
      * Render the block as invisible if the player does not have Astral Travel
@@ -62,7 +61,7 @@ public interface Ethereal {
     }
 
     static int getOpacity() {
-        return ETHEREAL_BLOCK_OPACITY;
+        return Constants.ETHEREAL_BLOCK_OPACITY;
     }
 
 
