@@ -5,6 +5,7 @@ import com.alan199921.astral.blocks.etherealblocks.Ethereal;
 import com.alan199921.astral.effects.AstralEffects;
 import com.alan199921.astral.particle.AstralParticles;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItem;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,7 +21,7 @@ public class EtherealBlockHandler {
     public static void etherealParticles(PlayerInteractEvent.RightClickBlock event) {
         World world = event.getWorld();
         Random random = world.getRandom();
-        if (!event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getFace() != null) {
+        if (!event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getPlayer().getHeldItem(event.getHand()).getItem() instanceof BlockItem && event.getFace() != null) {
             final BlockState blockState = world.getBlockState(event.getPos().offset(event.getFace()));
             if (blockState.getBlock() instanceof Ethereal) {
                 BlockPos blockPos = event.getPos().offset(event.getFace());
