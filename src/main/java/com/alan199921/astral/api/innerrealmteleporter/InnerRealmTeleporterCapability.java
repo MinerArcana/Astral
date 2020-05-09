@@ -11,11 +11,15 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.DimensionManager;
 
 import java.util.HashMap;
 import java.util.UUID;
+
+import static com.alan199921.astral.dimensions.AstralDimensions.INNER_REALM;
 
 public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapability {
     private final InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
@@ -29,7 +33,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            ServerWorld innerRealmWorld = player.getServer().getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
+            ServerWorld innerRealmWorld = player.getServer().getWorld(DimensionType.byName(INNER_REALM));
             final BlockPos playerSpawnPos = getSpawn(player);
             Chunk spawnChunk = innerRealmWorld.getChunkAt(playerSpawnPos);
             innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
@@ -55,7 +59,9 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void teleport(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            World innerRealmWorld = player.getServer().getWorld(DimensionType.byName(AstralDimensions.INNER_REALM));
+            DimensionType innerRealm = DimensionManager.registerOrGetDimension(INNER_REALM, AstralDimensions.innerRealm, null, true);
+            Dimension dimension = innerRealm.create(player.world);
+            World innerRealmWorld = dimension.getWorld();
             boolean firstTime = false;
             if (!spawnLocations.containsKey(player.getUniqueID())) {
                 addPlayerToHashMap(player);
@@ -66,7 +72,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
                 prepareSpawnChunk(player);
             }
             if (!innerRealmWorld.isRemote()) {
-                TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), DimensionType.byName(AstralDimensions.INNER_REALM));
+                TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), DimensionType.byName(INNER_REALM));
             }
         }
     }

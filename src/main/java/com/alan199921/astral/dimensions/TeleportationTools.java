@@ -65,7 +65,7 @@ public class TeleportationTools {
             return;
         }
 
-//        player.isInvulnerableDimensionChange();
+        player.isInvulnerableDimensionChange();
         DimensionType dimensiontype = player.dimension;
 
         ServerWorld srcWorld = player.server.getWorld(dimensiontype);

@@ -31,6 +31,13 @@ public interface Ethereal {
         return defaultReturn;
     }
 
+    /**
+     * Returns whether an entity could break the Ethereal block
+     *
+     * @param entity        The entity breaking the block
+     * @param defaultReturn The boolean returned from the super function
+     * @return If the entity can destroy the Ethereal block
+     */
     static boolean canEntityDestroy(Entity entity, boolean defaultReturn) {
         if (entity instanceof LivingEntity) {
             return ((LivingEntity) entity).isPotionActive(AstralEffects.ASTRAL_TRAVEL);
@@ -42,7 +49,7 @@ public interface Ethereal {
      * Allows Astral entities and items to not pass through Ethereal blocks
      *
      * @param context The context of the shape query
-     * @return super (usually a regular shape) if the entity is Astral, empty if not
+     * @return usually a regular shape if the entity is Astral, empty if not
      */
     static VoxelShape getCollisionShape(ISelectionContext context, VoxelShape parentReturn) {
         if (context.getEntity() instanceof LivingEntity && ((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
@@ -51,6 +58,12 @@ public interface Ethereal {
         return VoxelShapes.empty();
     }
 
+    /**
+     * Gets the VoxelShape of the block
+     *
+     * @param parentShape The default shape of a block
+     * @return The solid shape if the player has Astral Travel, empty shape if the player does not
+     */
     @OnlyIn(Dist.CLIENT)
     static VoxelShape getShape(VoxelShape parentShape) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
@@ -60,9 +73,12 @@ public interface Ethereal {
         return parentShape;
     }
 
+    /**
+     * Returns the opacity of the block
+     *
+     * @return 0 as Ethereal blocks are transparent
+     */
     static int getOpacity() {
         return Constants.ETHEREAL_BLOCK_OPACITY;
     }
-
-
 }
