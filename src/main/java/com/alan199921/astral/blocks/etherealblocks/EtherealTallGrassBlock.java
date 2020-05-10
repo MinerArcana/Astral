@@ -1,5 +1,6 @@
 package com.alan199921.astral.blocks.etherealblocks;
 
+import com.alan199921.astral.blocks.AstralBlocks;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -45,4 +46,10 @@ public class EtherealTallGrassBlock extends TallGrassBlock implements Ethereal {
     public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
+
+    @Override
+    protected boolean isValidGround(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+        return super.isValidGround(state, worldIn, pos) || state.getBlock() == AstralBlocks.ETHER_GRASS.get() || state.getBlock() == AstralBlocks.ETHER_DIRT.get();
+    }
+
 }
