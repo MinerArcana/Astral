@@ -11,7 +11,9 @@ import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.util.Constants;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -39,6 +41,7 @@ public class StartAndEndHandling {
         //Only players need the startup effects
         if (event.getPotionEffect().getPotion().equals(AstralEffects.ASTRAL_TRAVEL) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+            playerEntity.getDataManager().set(Entity.POSE, Pose.SLEEPING);
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Only apply modifier if it does not exist
                 if (!playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
@@ -115,13 +118,17 @@ public class StartAndEndHandling {
             final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
             if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
-                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.updatePlayer(player.getUniqueID(), serverWorld));
+                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(bodyLink -> {
+                    if (bodyLink.getInfo(player.getUniqueID()) != null) {
+                        bodyLink.updatePlayer(player.getUniqueID(), serverWorld);
+                    }
+                });
             }
         }
     }
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
-        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
         if (physicalBodyEntity != null) {
             //Store player UUID to body entity and give it a name
             physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
@@ -142,7 +149,7 @@ public class StartAndEndHandling {
 
     @SubscribeEvent
     public static void startTrackingAstralEntity(PlayerEvent.StartTracking event) {
-        if (event.getTarget().isLiving()) {
+        if (event.getTarget() instanceof LivingEntity) {
             LivingEntity livingTarget = event.getEntityLiving();
             if (livingTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
                 AstralNetwork.sendAstralEffectStarting(livingTarget.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL), event.getEntity());

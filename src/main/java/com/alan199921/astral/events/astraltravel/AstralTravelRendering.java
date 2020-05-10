@@ -3,19 +3,20 @@ package com.alan199921.astral.events.astraltravel;
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.effects.AstralEffects;
-import com.alan199921.astral.events.AstralRendering;
+import com.alan199921.astral.events.AstralHealthBarRendering;
 import com.alan199921.astral.util.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Astral.MOD_ID)
+@Mod.EventBusSubscriber(modid = Astral.MOD_ID, value = Dist.CLIENT)
 public class AstralTravelRendering {
 
     @SubscribeEvent
@@ -50,12 +51,12 @@ public class AstralTravelRendering {
                 }
                 if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
                     event.setCanceled(true);
-                    AstralRendering.renderAstralHearts(minecraft, playerEntity);
+                    AstralHealthBarRendering.renderAstralHearts(minecraft, playerEntity);
                 }
             }
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
                 if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !iSleepManager.isEntityTraveling()) {
-                    AstralRendering.renderAstralScreenFade(iSleepManager.getSleep());
+                    AstralHealthBarRendering.renderAstralScreenFade(iSleepManager.getSleep());
                 }
             });
         }

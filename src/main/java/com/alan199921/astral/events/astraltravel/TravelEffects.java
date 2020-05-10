@@ -22,11 +22,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -96,7 +98,12 @@ public class TravelEffects {
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
         if (isAstralTravelActive(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
-            event.setCanceled(!AstralTags.ASTRAL_INTERACT.contains(targetedBlock));
+            if (!AstralTags.ASTRAL_INTERACT.contains(targetedBlock)) {
+                event.setUseBlock(Event.Result.DENY);
+            }
+            else {
+                event.setUseBlock(Event.Result.DEFAULT);
+            }
         }
     }
 
@@ -164,6 +171,13 @@ public class TravelEffects {
                 });
             }
 
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralFalling(LivingFallEvent event) {
+        if (event.getEntityLiving().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+            event.setCanceled(true);
         }
     }
 }

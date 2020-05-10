@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "astral:block/ethereal_wood"
+    },
+    "axis=z": {
+      "model": "astral:block/ethereal_wood",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "astral:block/ethereal_wood",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

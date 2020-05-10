@@ -51,6 +51,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         return dataManager.get(handsInventory);
     }
 
+    @Nonnull
     @Override
     public Iterable<ItemStack> getArmorInventoryList() {
         NonNullList<ItemStack> itemStackList = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -59,6 +60,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         return itemStackList;
     }
 
+    @Nonnull
     @Override
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
         switch (slotIn.getSlotType()) {
@@ -72,7 +74,7 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
 
         dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.of(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "astral:ethereal_wood"
+    }
+  ],
+  "result": {
+    "item": "astral:ethereal_planks",
+    "count": 4
+  }
+}

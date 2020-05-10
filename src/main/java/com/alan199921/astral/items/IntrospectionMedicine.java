@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.entity.LivingEntity;
@@ -19,7 +18,7 @@ public class IntrospectionMedicine extends Item {
                         .hunger(1)
                         .saturation(-2F)
                         .build())
-                .group(Astral.setup.astralItems)
+                .group(AstralItems.ASTRAL_ITEMS)
                 .maxStackSize(1)
         );
     }

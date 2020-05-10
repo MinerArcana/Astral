@@ -1,6 +1,19 @@
 {
   "replace": "false",
   "values": [
-    "astral:enlightenment_key"
+    "astral:enlightenment_key",
+    "astral:ether_dirt",
+    "astral:ether_grass",
+    "astral:ethereal_wood",
+    "astral:ethereal_leaves",
+    "astral:ethereal_grass",
+    "astral:ethereal_fern",
+    "astral:tall_ethereal_grass",
+    "astral:large_ethereal_fern",
+    "astral:ethereal_planks",
+    "astral:ethereal_trapdoor",
+    "astral:ethereal_door",
+    "astral:metaphoric_bone",
+    "astral:stripped_ethereal_log"
   ]
 }

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "astral:block/large_ethereal_fern_top"
+    },
+    "half=lower": {
+      "model": "astral:block/large_ethereal_fern_bottom"
+    }
+  }
+}

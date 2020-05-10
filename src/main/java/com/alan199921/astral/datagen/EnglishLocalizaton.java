@@ -29,7 +29,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         addBlocks();
         addPotions();
         addConstants();
-        add(AstralEntityRegistry.PHYSICAL_BODY_ENTITY, "Physical Body");
+        add(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
         add(AstralEffects.ASTRAL_TRAVEL, "Astral Travel");
         add("itemGroup.astral", "Astral");
     }
@@ -42,22 +42,49 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void addBlocks() {
-        add(EGO_MEMBRANE, "Ego Membrane");
-        add(ASTRAL_MERIDIAN, "Astral Meridian");
-        add(SNOWBERRY_BUSH, "Snowberry Bush");
-        add(FEVERWEED_BLOCK, "Feverweed");
-        add(OFFERING_BRAZIER, "Offering Brazier");
-        add(ETHER_DIRT, "Ether Dirt");
+        add(EGO_MEMBRANE.get(), "Ego Membrane");
+        add(ASTRAL_MERIDIAN.get(), "Astral Meridian");
+        add(SNOWBERRY_BUSH.get(), "Snowberry Bush");
+        add(FEVERWEED_BLOCK.get(), "Feverweed");
+        add(OFFERING_BRAZIER.get(), "Offering Brazier");
+        add(ETHER_DIRT.get(), "Ether Dirt");
+        add(ETHERIC_POWDER.get(), "Etheric Powder");
+        add(ETHEREAL_WOOD.get(), "Ethereal Wood");
+        add(ETHEREAL_LEAVES.get(), "Ethereal Leaves");
+        add(ETHEREAL_FERN.get(), "Ethereal Fern");
+        add(LARGE_ETHEREAL_FERN.get(), "Large Ethereal Fern");
+        add(ETHEREAL_GRASS.get(), "Ethereal Grass");
+        add(TALL_ETHEREAL_GRASS.get(), "Tall Ethereal Grass");
+        add(ETHEREAL_PLANKS.get(), "Ethereal Planks");
+        add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
+        add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");
+        add(ETHEREAL_DOOR.get(), "Ethereal Door");
+        add(STRIPPED_ETHEREAL_WOOD.get(), "Stripped Ethereal Wood");
+
     }
 
     private void addItems() {
-        add(ENLIGHTENMENT_KEY, "Key of Enlightenment");
-        add(TRAVELING_MEDICINE, "Traveling Medicine");
-        add(FEVERWEED, "Feverweed");
-        add(SNOWBERRY, "Snowberries");
-        add(INTROSPECTION_MEDICINE, "Introspection Medicine");
-        add(OFFERING_BRAZIER_ITEM, "Offering Brazier");
-        add(ETHER_DIRT_ITEM, "Ether Dirt");
+        add(ENLIGHTENMENT_KEY.get(), "Key of Enlightenment");
+        add(TRAVELING_MEDICINE.get(), "Traveling Medicine");
+        add(FEVERWEED.get(), "Feverweed");
+        add(SNOWBERRY.get(), "Snowberries");
+        add(INTROSPECTION_MEDICINE.get(), "Introspection Medicine");
+        add(OFFERING_BRAZIER_ITEM.get(), "Offering Brazier");
+        add(ETHER_DIRT_ITEM.get(), "Ether Dirt");
+        add(ETHER_GRASS_ITEM.get(), "Ether Grass");
+        add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
+        add(ETHEREAL_WOOD_ITEM.get(), "Ethereal Wood");
+        add(ETHEREAL_LEAVES_ITEM.get(), "Ethereal Leaves");
+        add(ETHEREAL_FERN_ITEM.get(), "Ethereal Fern");
+        add(LARGE_ETHEREAL_FERN_ITEM.get(), "Large Ethereal Fern");
+        add(ETHEREAL_GRASS_ITEM.get(), "Ethereal Grass");
+        add(TALL_ETHEREAL_GRASS_ITEM.get(), "Tall Ethereal Grass");
+        add(METAPHORIC_BONE.get(), "Metaphoric Bone");
+        add(ETHEREAL_PLANKS_ITEM.get(), "Ethereal Planks");
+        add(ETHEREAL_DOOR_ITEM.get(), "Ethereal Door");
+        add(ETHEREAL_TRAPDOOR_ITEM.get(), "Ethereal Trapdoor");
+        add(STRIPPED_ETHEREAL_LOG_ITEM.get(), "Stripped Ethereal Log");
+        add(STRIPPED_ETHEREAL_WOOD_ITEM.get(), "Stripped Ethereal Wood");
     }
 
     private void addPotions() {
@@ -92,6 +119,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(advancements.getSpectralWorld(), "Spectral World", "Expand your mind with images of The Nether");
         add(advancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
         add(advancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
+        add(advancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
     }
 
     private void add(Potion potion, String potionName, String splashPotionName, String lingeringPotionName, String arrowName) {

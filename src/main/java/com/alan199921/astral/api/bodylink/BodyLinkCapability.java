@@ -5,7 +5,6 @@ import com.alan199921.astral.api.psychicinventory.InventoryType;
 import com.alan199921.astral.dimensions.TeleportationTools;
 import com.alan199921.astral.entities.PhysicalBodyEntity;
 import com.alan199921.astral.util.Constants;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -14,7 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
@@ -30,7 +29,7 @@ import java.util.UUID;
  */
 public class BodyLinkCapability implements IBodyLinkCapability {
     public static final UUID healthId = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
-    private Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
+    private final Map<UUID, BodyInfo> bodyInfoMap = new HashMap<>();
 
     /**
      * Resets the player entity's stats
@@ -111,33 +110,34 @@ public class BodyLinkCapability implements IBodyLinkCapability {
     @Override
     public void handleMergeWithBody(UUID playerID, ServerWorld world) {
         PlayerEntity player = world.getPlayerByUuid(playerID);
-        //Retrieve the body entity object  from the capability
-        player.setMotion(0, 0, 0);
-        player.setVelocity(0, 0, 0);
-        player.isAirBorne = false;
-        //Teleport the player
-        if (bodyInfoMap.containsKey(playerID)) {
-            final BodyInfo bodyInfo = bodyInfoMap.get(playerID);
-            final BlockPos pos = bodyInfo.getPos();
-            TeleportationTools.performTeleport(player, bodyInfo.getDimensionType(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
-            //Get the inventory and transfer items
-            AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerID).setInventoryType(InventoryType.PHYSICAL, player.inventory));
-            if (!player.world.isRemote()) {
-                ServerWorld serverWorld = (ServerWorld) player.getEntityWorld();
-                final Entity entity = serverWorld.getEntityByUuid(bodyInfo.getBodyId());
-                if (entity instanceof PhysicalBodyEntity) {
-                    resetPlayerStats(player, (PhysicalBodyEntity) entity);
-                    entity.onKillCommand();
+        if (player != null) {
+            player.setMotion(0, 0, 0);
+            player.isAirBorne = false;
+            player.fallDistance = 0;
+            //Teleport the player
+            if (bodyInfoMap.containsKey(playerID)) {
+                final BodyInfo bodyInfo = bodyInfoMap.get(playerID);
+                final BlockPos pos = bodyInfo.getPos();
+                TeleportationTools.performTeleport(player, bodyInfo.getDimensionType(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
+                //Get the inventory and transfer items
+                AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerID).setInventoryType(InventoryType.PHYSICAL, player.inventory));
+                if (!player.world.isRemote()) {
+                    ServerWorld serverWorld = (ServerWorld) player.getEntityWorld();
+                    final Entity entity = serverWorld.getEntityByUuid(bodyInfo.getBodyId());
+                    if (entity instanceof PhysicalBodyEntity) {
+                        resetPlayerStats(player, (PhysicalBodyEntity) entity);
+                        entity.onKillCommand();
+                    }
                 }
             }
-        }
-        //If body is not found, teleport player to their spawn location (bed or world spawn)
-        else {
-            if (player instanceof ServerPlayerEntity) {
-                teleportPlayerToSpawn((ServerPlayerEntity) player);
+            //If body is not found, teleport player to their spawn location (bed or world spawn)
+            else {
+                if (player instanceof ServerPlayerEntity) {
+                    teleportPlayerToSpawn((ServerPlayerEntity) player);
+                }
             }
+            bodyInfoMap.remove(playerID);
         }
-        bodyInfoMap.remove(playerID);
     }
 
     private void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
@@ -146,13 +146,13 @@ public class BodyLinkCapability implements IBodyLinkCapability {
         if (serverPlayerEntity.getBedPosition().isPresent()) {
             BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
             TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_BED)));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED));
         }
         //Teleport to spawn
         else {
             BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
             TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
-            serverPlayerEntity.sendMessage(TextComponentUtils.toTextComponent(() -> I18n.format(Constants.SLEEPWALKING_SPAWN)));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN));
         }
         resetPlayerStats(serverPlayerEntity);
     }

@@ -15,7 +15,7 @@ public class AstralTiles {
 
     @SubscribeEvent
     public static void registerTE(RegistryEvent.Register<TileEntityType<?>> event) {
-        TileEntityType<?> offeringBrazierTileEntity = TileEntityType.Builder.create(OfferingBrazierTile::new, AstralBlocks.OFFERING_BRAZIER).build(null);
+        TileEntityType<?> offeringBrazierTileEntity = TileEntityType.Builder.create(OfferingBrazierTile::new, AstralBlocks.OFFERING_BRAZIER.get()).build(null);
         offeringBrazierTileEntity.setRegistryName(Astral.MOD_ID, "offering_brazier_tile");
         event.getRegistry().register(offeringBrazierTileEntity);
     }

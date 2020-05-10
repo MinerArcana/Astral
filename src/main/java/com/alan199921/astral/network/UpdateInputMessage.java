@@ -1,6 +1,6 @@
 package com.alan199921.astral.network;
 
-import com.alan199921.astral.flight.InputHandler;
+import com.alan199921.astral.events.astraltravel.flight.InputHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -12,13 +12,13 @@ import java.util.function.Supplier;
  * https://github.com/BlakeBr0/IronJetpacks/blob/b4ef8c4a59050f2c7368a16721a2d88ae60b19ce/src/main/java/com/blakebr0/ironjetpacks/network/message/UpdateInputMessage.java
  */
 public class UpdateInputMessage {
-    private boolean up;
-    private boolean down;
-    private boolean forwards;
-    private boolean backwards;
-    private boolean left;
-    private boolean right;
-    private boolean sprint;
+    private final boolean up;
+    private final boolean down;
+    private final boolean forwards;
+    private final boolean backwards;
+    private final boolean left;
+    private final boolean right;
+    private final boolean sprint;
 
     public UpdateInputMessage(boolean up, boolean down, boolean forwards, boolean backwards, boolean left, boolean right, boolean sprint) {
         this.up = up;

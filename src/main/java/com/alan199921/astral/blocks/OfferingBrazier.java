@@ -29,6 +29,7 @@ public class OfferingBrazier extends Block {
                 .create(Material.ROCK)
                 .hardnessAndResistance(3.5f)
                 .lightValue(13)
+                .notSolid()
         );
         setDefaultState(this.getStateContainer().getBaseState().with(AbstractFurnaceBlock.LIT, false));
     }

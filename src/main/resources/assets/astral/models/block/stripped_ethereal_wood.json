@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "side": "astral:block/stripped_ethereal_log",
+    "end": "astral:block/stripped_ethereal_log"
+  }
+}

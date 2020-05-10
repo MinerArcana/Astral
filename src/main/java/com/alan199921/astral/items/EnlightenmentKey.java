@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.blocks.AstralMeridian;
@@ -19,7 +18,7 @@ import javax.annotation.Nonnull;
 
 public class EnlightenmentKey extends Item {
     public EnlightenmentKey() {
-        super(new Item.Properties().group(Astral.setup.astralItems));
+        super(new Item.Properties().group(AstralItems.ASTRAL_ITEMS));
     }
 
     @Override
@@ -28,7 +27,7 @@ public class EnlightenmentKey extends Item {
         World world = context.getWorld();
         if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
             IChunk meridianChunk = world.getChunk(context.getPos());
-            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN) {
+            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
                 BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
                 int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
                 InnerRealmUtils innerRealmUtils = new InnerRealmUtils();

@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 public class Advancements extends AdvancementProvider {
     private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-    private DataGenerator dataGenerator;
+    private final DataGenerator dataGenerator;
     private Advancement root;
     private Advancement craftTravelingMedicine;
     private Advancement becomeAstral;
@@ -49,6 +49,7 @@ public class Advancements extends AdvancementProvider {
     private Advancement yourWings;
     private Advancement enterStronghold;
     private Advancement radiantPower;
+    private Advancement reaperCreeper;
 
     public Advancements(DataGenerator dataGenerator) {
         super(dataGenerator);
@@ -131,9 +132,13 @@ public class Advancements extends AdvancementProvider {
         return medicalInsight;
     }
 
+    public Advancement getReaperCreeper() {
+        return reaperCreeper;
+    }
+
     private void registerAdvancements(Consumer<Advancement> consumer) {
         root = Advancement.Builder.builder()
-                .withDisplay(new DisplayBuilder(AstralItems.FEVERWEED, "root")
+                .withDisplay(new DisplayBuilder(AstralItems.FEVERWEED.get(), "root")
                         .hidden(true)
                         .showToast(false)
                         .announceToChat(false)
@@ -144,8 +149,8 @@ public class Advancements extends AdvancementProvider {
 
         craftTravelingMedicine = Advancement.Builder.builder()
                 .withParent(root)
-                .withCriterion("craft_traveling_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.TRAVELING_MEDICINE))
-                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE, "craft_traveling_medicine").build())
+                .withCriterion("craft_traveling_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.TRAVELING_MEDICINE.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "craft_traveling_medicine").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_traveling_medicine").toString());
 
         becomeAstral = Advancement.Builder.builder()
@@ -165,14 +170,14 @@ public class Advancements extends AdvancementProvider {
 
         craftIntrospectionMedicine = Advancement.Builder.builder()
                 .withParent(root)
-                .withCriterion("craft_introspection_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.INTROSPECTION_MEDICINE))
-                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE, "craft_introspection_medicine").build())
+                .withCriterion("craft_introspection_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.INTROSPECTION_MEDICINE.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE.get(), "craft_introspection_medicine").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_introspection_medicine").toString());
 
         innerRealm = Advancement.Builder.builder()
                 .withParent(craftIntrospectionMedicine)
                 .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM)))
-                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY, "inner_realm").build())
+                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "inner_realm").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
 
@@ -272,6 +277,12 @@ public class Advancements extends AdvancementProvider {
                 .withDisplay(new DisplayBuilder(Items.ELYTRA, "your_wings").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "your_wings").toString());
+
+        reaperCreeper = Advancement.Builder.builder()
+                .withParent(becomeAstral)
+                .withCriterion("use_etheric_powder", InventoryChangeTrigger.Instance.forItems(AstralItems.ETHERIC_POWDER_ITEM.get()))
+                .withDisplay(new DisplayBuilder(AstralItems.ETHERIC_POWDER_ITEM.get(), "reaper_creeper").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "reaper_creeper").toString());
 
     }
 

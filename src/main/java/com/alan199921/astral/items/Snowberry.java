@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.blocks.AstralBlocks;
 import com.alan199921.astral.configs.AstralConfig;
 import net.minecraft.item.BlockNamedItem;
@@ -15,15 +14,15 @@ public class Snowberry extends BlockNamedItem {
      * Gives regeneration 2 and nausea 2 for 15 seconds (depends on configs)
      */
     public Snowberry() {
-        super(AstralBlocks.SNOWBERRY_BUSH.getBlock(), new Item.Properties()
-                .group(Astral.setup.astralItems)
+        super(AstralBlocks.SNOWBERRY_BUSH.get(), new Item.Properties()
+                .group(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
                         .setAlwaysEdible()
                         .saturation(-1F)
                         .hunger(1)
                         .fastToEat()
-                        .effect(new EffectInstance(Effects.NAUSEA, AstralConfig.getHerbEffectDurations().getSnowberryNauseaDuration(), 1), 1)
-                        .effect(new EffectInstance(Effects.REGENERATION, AstralConfig.getHerbEffectDurations().getSnowberryRegenerationDuration(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.NAUSEA, AstralConfig.getHerbEffectDurations().getSnowberryNauseaDuration(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.REGENERATION, AstralConfig.getHerbEffectDurations().getSnowberryRegenerationDuration(), 1), 1)
                         .build()));
     }
 }

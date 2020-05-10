@@ -1,0 +1,35 @@
+{
+  "parent": "astral:get_astral_travel",
+  "display": {
+    "icon": {
+      "item": "astral:etheric_powder"
+    },
+    "title": {
+      "translate": "astral.advancement.reaper_creeper.name"
+    },
+    "description": {
+      "translate": "astral.advancement.reaper_creeper.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "use_etheric_powder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:etheric_powder"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "use_etheric_powder"
+    ]
+  ]
+}

@@ -2,7 +2,8 @@
   "parent": "astral:dimensional_travel",
   "display": {
     "icon": {
-      "item": "minecraft:elytra"
+      "item": "minecraft:elytra",
+      "nbt": "{Damage:0}"
     },
     "title": {
       "translate": "astral.advancement.your_wings.name"

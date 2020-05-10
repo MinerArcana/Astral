@@ -1,6 +1,5 @@
 package com.alan199921.astral.items;
 
-import com.alan199921.astral.Astral;
 import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.effects.AstralEffects;
 import net.minecraft.entity.LivingEntity;
@@ -18,7 +17,7 @@ public class TravelingMedicine extends Item {
      */
     public TravelingMedicine() {
         super(new Item.Properties()
-                .group(Astral.setup.astralItems)
+                .group(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
                         .fastToEat()
                         .setAlwaysEdible()
@@ -31,7 +30,7 @@ public class TravelingMedicine extends Item {
 
     @Override
     @Nonnull
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAction(@Nonnull ItemStack stack) {
         return UseAction.DRINK;
     }
 

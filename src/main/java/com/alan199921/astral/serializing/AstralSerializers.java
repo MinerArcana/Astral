@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
@@ -67,9 +66,4 @@ public class AstralSerializers {
             return itemStackHandlerLazyOptional;
         }
     };
-
-    static {
-        DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
-        DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-    }
 }
