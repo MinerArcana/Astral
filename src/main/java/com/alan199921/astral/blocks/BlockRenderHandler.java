@@ -1,6 +1,7 @@
 package com.alan199921.astral.blocks;
 
 import com.alan199921.astral.items.AstralItems;
+import com.google.common.primitives.Ints;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShearableDoublePlantBlock;
 import net.minecraft.client.Minecraft;
@@ -72,6 +73,6 @@ public class BlockRenderHandler {
         int adjustedBlue = color.getBlue() + 50;
         int adjustedRed = color.getRed() - 10;
         int adjustedGreen = color.getGreen() + 40;
-        return new Color(adjustedRed, adjustedGreen, adjustedBlue).getRGB();
+        return new Color(Ints.constrainToRange(adjustedRed, 0, 255), Ints.constrainToRange(adjustedGreen, 0, 255), Ints.constrainToRange(adjustedBlue, 0, 255)).getRGB();
     }
 }
