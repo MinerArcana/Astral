@@ -3,6 +3,8 @@ package com.alan199921.astral;
 import com.alan199921.astral.api.NBTCapStorage;
 import com.alan199921.astral.api.bodylink.BodyLinkCapability;
 import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
+import com.alan199921.astral.api.constructtracker.ConstructTracker;
+import com.alan199921.astral.api.constructtracker.IConstructTracker;
 import com.alan199921.astral.api.heightadjustment.HeightAdjustmentCapability;
 import com.alan199921.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
@@ -78,8 +80,23 @@ public class Astral {
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
+        modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
+
+    public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
+        makeRegistry("mental_constructs", MentalConstructType.class);
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        AstralMentalConstructs.register(modBus);
+    }
+
+    private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {
+        new RegistryBuilder<T>()
+                .setName(new ResourceLocation("transport", name))
+                .setType(type)
+                .create();
+    }
+
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
@@ -105,21 +122,9 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
+            CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
         }
 
-        @SubscribeEvent
-        public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
-            makeRegistry("mental_constructs", MentalConstructType.class);
-            IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-            AstralMentalConstructs.register(modBus);
-        }
-
-        private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {
-            new RegistryBuilder<T>()
-                    .setName(new ResourceLocation("transport", name))
-                    .setType(type)
-                    .create();
-        }
     }
 
     @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

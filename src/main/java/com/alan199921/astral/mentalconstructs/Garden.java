@@ -11,14 +11,15 @@ public class Garden extends MentalConstruct {
     private float saturationCounter = 0;
 
     @Override
-    void performEffect(PlayerEntity player, int level) {
-        final float newSaturation = player.getFoodStats().getSaturationLevel();
-        saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
-        if (saturationCounter / (1 + level * .1) >= 1) {
-            player.getFoodStats().addStats(1, 0);
+    public void performEffect(PlayerEntity player, int level) {
+        if (level > -1) {
+            final float newSaturation = player.getFoodStats().getSaturationLevel();
+            saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
+            if (saturationCounter / (1 + level * .1) >= 1) {
+                player.getFoodStats().addStats(1, 0);
+            }
+            saturationSnapshot = newSaturation;
         }
-        saturationSnapshot = newSaturation;
-
     }
 
     @Override

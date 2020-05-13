@@ -6,5 +6,5 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct> implements INBTSerializable<CompoundNBT> {
-    abstract void performEffect(PlayerEntity player, int level);
+    public abstract void performEffect(PlayerEntity player, int level);
 }

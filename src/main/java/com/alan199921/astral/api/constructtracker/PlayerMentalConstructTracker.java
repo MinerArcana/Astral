@@ -1,6 +1,10 @@
-package com.alan199921.astral.mentalconstructs;
+package com.alan199921.astral.api.constructtracker;
 
+import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
+import com.alan199921.astral.mentalconstructs.MentalConstruct;
+import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import javafx.util.Pair;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.RegistryObject;
@@ -11,9 +15,15 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
     private final HashMap<String, Pair<MentalConstruct, Integer>> mentalConstructs = new HashMap<>();
 
     public PlayerMentalConstructTracker() {
-        for (RegistryObject<MentalConstructType> mentalConstruct : AstralMentalConstructs.MENTAL_CONSTRUCTS.getEntries()) {
-            mentalConstructs.put(mentalConstruct.getId().getPath(), new Pair<>(mentalConstruct.get().create(), -1));
+        for (RegistryObject<MentalConstructType> construct : AstralMentalConstructs.MENTAL_CONSTRUCTS.getEntries()) {
+            mentalConstructs.put(construct.getId().getPath(), new Pair<>(construct.get().create(), -1));
         }
+    }
+
+    public void modifyConstructInfo(MentalConstructType type, int level) {
+        final String constructName = type.getRegistryName().getPath();
+        final Pair<MentalConstruct, Integer> updatedConstruct = mentalConstructs.getOrDefault(constructName, new Pair<>(type.create(), level));
+        mentalConstructs.put(constructName, new Pair<>(updatedConstruct.getKey(), level));
     }
 
     @Override
@@ -36,6 +46,12 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
             createdMentalConstruct.deserializeNBT(constructNbt.getCompound("constructInfo"));
             int level = constructNbt.getInt("level");
             mentalConstructs.put(mentalConstruct.getId().getPath(), new Pair<>(createdMentalConstruct, level));
+        }
+    }
+
+    public void performAllEffects(PlayerEntity playerEntity) {
+        for (Pair<MentalConstruct, Integer> mentalConstructIntegerPair : mentalConstructs.values()) {
+            mentalConstructIntegerPair.getKey().performEffect(playerEntity, mentalConstructIntegerPair.getValue());
         }
     }
 }
