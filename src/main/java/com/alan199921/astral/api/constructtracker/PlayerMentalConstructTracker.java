@@ -3,11 +3,11 @@ package com.alan199921.astral.api.constructtracker;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.mentalconstructs.MentalConstructType;
-import javafx.util.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.RegistryObject;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 
@@ -16,14 +16,14 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
 
     public PlayerMentalConstructTracker() {
         for (RegistryObject<MentalConstructType> construct : AstralMentalConstructs.MENTAL_CONSTRUCTS.getEntries()) {
-            mentalConstructs.put(construct.getId().getPath(), new Pair<>(construct.get().create(), -1));
+            mentalConstructs.put(construct.getId().getPath(), Pair.of(construct.get().create(), -1));
         }
     }
 
     public void modifyConstructInfo(MentalConstructType type, int level) {
         final String constructName = type.getRegistryName().getPath();
-        final Pair<MentalConstruct, Integer> updatedConstruct = mentalConstructs.getOrDefault(constructName, new Pair<>(type.create(), level));
-        mentalConstructs.put(constructName, new Pair<>(updatedConstruct.getKey(), level));
+        final Pair<MentalConstruct, Integer> updatedConstruct = mentalConstructs.getOrDefault(constructName, Pair.of(type.create(), level));
+        mentalConstructs.put(constructName, Pair.of(updatedConstruct.getKey(), level));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
             CompoundNBT constructNbt = nbt.getCompound(mentalConstruct.getId().getPath());
             createdMentalConstruct.deserializeNBT(constructNbt.getCompound("constructInfo"));
             int level = constructNbt.getInt("level");
-            mentalConstructs.put(mentalConstruct.getId().getPath(), new Pair<>(createdMentalConstruct, level));
+            mentalConstructs.put(mentalConstruct.getId().getPath(), Pair.of(createdMentalConstruct, level));
         }
     }
 
