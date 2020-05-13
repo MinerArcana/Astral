@@ -15,7 +15,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryManager;
 
 public class AstralAPI {
-    public static final Lazy<IForgeRegistry<MentalConstructType<?>>> MENTAL_CONSTRUCT_TYPES = Lazy.of(() -> RegistryManager.ACTIVE.getRegistry(MentalConstructType.class));
+    public static final Lazy<IForgeRegistry<MentalConstructType>> MENTAL_CONSTRUCT_TYPES = Lazy.of(() -> RegistryManager.ACTIVE.getRegistry(MentalConstructType.class));
 
     @CapabilityInject(ISleepManager.class)
     public static Capability<ISleepManager> sleepManagerCapability;

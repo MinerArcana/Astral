@@ -3,14 +3,9 @@ package com.alan199921.astral.mentalconstructs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 
-public class ComfortableCushion extends MentalConstruct {
+public class Garden extends MentalConstruct {
     private float saturationSnapshot;
     private float saturationCounter;
-
-    public ComfortableCushion(PlayerEntity playerEntity) {
-        saturationSnapshot = playerEntity.getFoodStats().getSaturationLevel();
-        saturationCounter = 0;
-    }
 
     @Override
     void performEffect(PlayerEntity player) {
@@ -25,17 +20,16 @@ public class ComfortableCushion extends MentalConstruct {
 
     @Override
     public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundNBT nbt = super.serializeNBT();
         nbt.putFloat("saturationSnapshot", saturationSnapshot);
         nbt.putFloat("saturationCounter", saturationCounter);
-        nbt.putInt("level", getConstructLevel());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
+        super.deserializeNBT(nbt);
         saturationSnapshot = nbt.getFloat("saturationSnapshot");
         saturationCounter = nbt.getFloat("saturationCounter");
-        setConstructLevel(nbt.getInt("level"));
     }
 }

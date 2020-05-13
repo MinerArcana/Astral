@@ -107,7 +107,6 @@ public class Astral {
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
         }
 
-        @SuppressWarnings("unchecked")
         @SubscribeEvent
         public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
             makeRegistry("mental_constructs", MentalConstructType.class);
