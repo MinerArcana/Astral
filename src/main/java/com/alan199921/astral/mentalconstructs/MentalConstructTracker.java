@@ -3,25 +3,30 @@ package com.alan199921.astral.mentalconstructs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 
 public class MentalConstructTracker implements IMentalConstructTracker {
-    private final HashMap<PlayerEntity, List<MentalConstruct>> mentalConstructTracker = new HashMap<>();
+    private final HashMap<UUID, PlayerMentalConstructTracker> playerConstructTracker = new HashMap<>();
 
     @Override
-    public List<MentalConstruct> getMentalConstructsForPlayer(PlayerEntity player) {
-        return mentalConstructTracker.getOrDefault(player, new ArrayList<>());
+    public PlayerMentalConstructTracker getMentalConstructsForPlayer(PlayerEntity player) {
+        return playerConstructTracker.getOrDefault(player.getUniqueID(), new PlayerMentalConstructTracker());
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        return null;
+        CompoundNBT nbt = new CompoundNBT();
+        playerConstructTracker.forEach((uuid, playerMentalConstructTracker) -> nbt.put(uuid.toString(), playerMentalConstructTracker.serializeNBT()));
+        return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-
+        for (String s : nbt.keySet()) {
+            PlayerMentalConstructTracker tracker = new PlayerMentalConstructTracker();
+            tracker.deserializeNBT((CompoundNBT) nbt.get(s));
+            playerConstructTracker.put(UUID.fromString(s), tracker);
+        }
     }
 }

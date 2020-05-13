@@ -7,7 +7,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
 public class AstralMentalConstructs {
-    private static final DeferredRegister<MentalConstructType> MENTAL_CONSTRUCTS = new DeferredRegister<>(AstralAPI.MENTAL_CONSTRUCT_TYPES.get(), Astral.MOD_ID);
+    public static final DeferredRegister<MentalConstructType> MENTAL_CONSTRUCTS = new DeferredRegister<>(AstralAPI.MENTAL_CONSTRUCT_TYPES.get(), Astral.MOD_ID);
 
     public static final RegistryObject<MentalConstructType> GARDEN = MENTAL_CONSTRUCTS.register("garden", () -> new MentalConstructType(Garden::new));
 
