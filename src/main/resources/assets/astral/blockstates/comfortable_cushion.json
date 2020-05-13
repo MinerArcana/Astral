@@ -1,13 +1,13 @@
 {
   "variants": {
     "type=top": {
-      "model": "minecraft:block/light_blue_wool"
+      "model": "astral:block/comfortable_cushion"
     },
     "type=bottom": {
-      "model": "minecraft:block/light_blue_wool"
+      "model": "astral:block/comfortable_cushion"
     },
     "type=double": {
-      "model": "minecraft:block/light_blue_wool"
+      "model": "astral:block/comfortable_cushion"
     }
   }
 }

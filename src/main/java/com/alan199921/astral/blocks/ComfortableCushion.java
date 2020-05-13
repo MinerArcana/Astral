@@ -1,6 +1,7 @@
 package com.alan199921.astral.blocks;
 
 import com.alan199921.astral.api.AstralAPI;
+import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.BlockState;
@@ -15,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -28,13 +30,20 @@ public class ComfortableCushion extends SlabBlock {
 
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if (worldIn instanceof ServerWorld) {
+        if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
             AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(AstralMentalConstructs.GARDEN.get(), calculateGardenLevel(worldIn, pos)));
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
+    /**
+     * Calculates the level the Garden mental construct is based off the number of water, dirt, leaf, and wood blocks in a 7 block area multiplied by the number of plant blocks
+     *
+     * @param worldIn The world used to get the blockstates of the blocks being checked
+     * @param pos     The BlockPos of the comfortable cushion
+     * @return The level of the Garden
+     */
     private int calculateGardenLevel(World worldIn, BlockPos pos) {
         final Stream<BlockPos> gardenRegion = BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3));
 
@@ -46,6 +55,12 @@ public class ComfortableCushion extends SlabBlock {
                 .orElse(0);
     }
 
+    /**
+     * Creates a pair of two integers based off the block or fluid at one BlockPos
+     *
+     * @param pair A pair that represents the block or fluid at one BlockPos
+     * @return A pair with 1 as the key if the BlockPos contains a water, dirt, leaf, or wood block and 0 otherwise, and 1 as the value if the BlockPos contains a plant and 0 otherwise
+     */
     private Pair<Integer, Integer> sumStates(Pair<BlockState, IFluidState> pair) {
         int containsObject = 0;
         int containsPlant = 0;
