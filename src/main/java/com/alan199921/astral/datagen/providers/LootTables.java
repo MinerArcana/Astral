@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;

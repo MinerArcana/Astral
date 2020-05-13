@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;

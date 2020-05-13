@@ -17,4 +17,6 @@ public class AstralTags {
     public static final Tag<Block> FEVERWEED_SUSTAIN = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "feverweed_sustain"));
     public static final Tag<Item> MUSHROOMS = ItemTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "mushrooms"));
     public static final Tag<EntityType<?>> NEUTRAL_MOBS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "neutral_mobs"));
+    public static final Tag<Block> GARDEN_OBJECTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_objects"));
+    public static final Tag<Block> GARDEN_PLANTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_plants"));
 }

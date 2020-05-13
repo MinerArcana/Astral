@@ -15,12 +15,16 @@ public class Garden extends MentalConstruct {
         if (level > -1) {
             final float newSaturation = player.getFoodStats().getSaturationLevel();
             saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
-            if (saturationCounter / (1 + level * .1) >= 1 && player.getFoodStats().needFood()) {
-                saturationCounter = 0;
+            if (saturationCounter >= getConversionRatio(level) && player.getFoodStats().needFood()) {
+                saturationCounter = saturationCounter - getConversionRatio(level);
                 player.getFoodStats().addStats(1, 0);
             }
             saturationSnapshot = newSaturation;
         }
+    }
+
+    public float getConversionRatio(int level) {
+        return (float) (1 / (.25 * Math.log10(level + 1.5)) + .5);
     }
 
     @Override
