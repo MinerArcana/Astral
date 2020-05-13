@@ -3,8 +3,8 @@ package com.alan199921.astral.blocks;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.tags.AstralTags;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SlabBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
@@ -21,7 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
-public class ComfortableCushion extends Block {
+public class ComfortableCushion extends SlabBlock {
     public ComfortableCushion() {
         super(Properties.create(Material.WOOL));
     }

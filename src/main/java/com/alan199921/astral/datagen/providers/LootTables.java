@@ -55,13 +55,14 @@ public class LootTables extends LootTableProvider {
 //                                    .newBuilder()
 //                                    .withProp(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)))
 //                    .acceptCondition(RandomChance.builder(0.125F))));
+            this.registerLootTable(COMFORTABLE_CUSHION.get(), dropping(COMFORTABLE_CUSHION.get()));
         }
 
         @Override
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
             final List<Block> astralBlocks = this.etherealPlants;
-            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get()));
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get()));
             return astralBlocks;
         }
 

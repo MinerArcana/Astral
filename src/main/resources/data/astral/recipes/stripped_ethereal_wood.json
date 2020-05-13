@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "astral:stripped_ethereal_log"
+    }
+  ],
+  "result": {
+    "item": "astral:stripped_ethereal_wood",
+    "count": 4
+  }
+}

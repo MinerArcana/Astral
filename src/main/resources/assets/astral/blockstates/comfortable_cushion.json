@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=top": {
+      "model": "minecraft:block/light_blue_wool"
+    },
+    "type=bottom": {
+      "model": "minecraft:block/light_blue_wool"
+    },
+    "type=double": {
+      "model": "minecraft:block/light_blue_wool"
+    }
+  }
+}
