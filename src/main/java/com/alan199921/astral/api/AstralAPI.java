@@ -3,14 +3,20 @@ package com.alan199921.astral.api;
 import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
 import com.alan199921.astral.api.psychicinventory.IPsychicInventory;
 import com.alan199921.astral.api.sleepmanager.ISleepManager;
+import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 public class AstralAPI {
+    public static final Lazy<IForgeRegistry<MentalConstructType<?>>> MENTAL_CONSTRUCT_TYPES = Lazy.of(() -> RegistryManager.ACTIVE.getRegistry(MentalConstructType.class));
+
     @CapabilityInject(ISleepManager.class)
     public static Capability<ISleepManager> sleepManagerCapability;
 
