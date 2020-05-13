@@ -12,7 +12,7 @@ public class MentalConstructEvents {
     @SubscribeEvent
     public static void passiveMentalConstructs(TickEvent.PlayerTickEvent event) {
         if (event.player instanceof ServerPlayerEntity) {
-            AstralAPI.getConstructTracker(((ServerPlayerEntity) event.player).getServerWorld()).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(event.player).performAllEffects(event.player));
+            AstralAPI.getConstructTracker(((ServerPlayerEntity) event.player).getServerWorld()).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(event.player).performAllPassiveEffects(event.player));
         }
     }
 }

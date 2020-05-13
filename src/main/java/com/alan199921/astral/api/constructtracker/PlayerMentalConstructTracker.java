@@ -49,9 +49,11 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         }
     }
 
-    public void performAllEffects(PlayerEntity playerEntity) {
+    public void performAllPassiveEffects(PlayerEntity playerEntity) {
         for (Pair<MentalConstruct, Integer> mentalConstructIntegerPair : mentalConstructs.values()) {
-            mentalConstructIntegerPair.getKey().performEffect(playerEntity, mentalConstructIntegerPair.getValue());
+            if (mentalConstructIntegerPair.getKey().getEffectType() == MentalConstruct.EffectType.PASSIVE) {
+                mentalConstructIntegerPair.getKey().performEffect(playerEntity, mentalConstructIntegerPair.getValue());
+            }
         }
     }
 }

@@ -7,4 +7,10 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct> implements INBTSerializable<CompoundNBT> {
     public abstract void performEffect(PlayerEntity player, int level);
+
+    public abstract EffectType getEffectType();
+
+    public enum EffectType {
+        PASSIVE, CONDITIONAL, ACTIVE
+    }
 }

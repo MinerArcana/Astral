@@ -24,6 +24,11 @@ public class Garden extends MentalConstruct {
     }
 
     @Override
+    public EffectType getEffectType() {
+        return EffectType.PASSIVE;
+    }
+
+    @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putFloat("saturationSnapshot", saturationSnapshot);
