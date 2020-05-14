@@ -1,5 +1,6 @@
 package com.alan199921.astral.api.constructtracker;
 
+import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.blocks.MentalConstructController;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.mentalconstructs.MentalConstruct;
@@ -7,6 +8,7 @@ import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -21,8 +23,8 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
     private final Map<String, MentalConstructEntry> mentalConstructs = new HashMap<>();
 
     public PlayerMentalConstructTracker() {
-        for (RegistryObject<MentalConstructType> construct : AstralMentalConstructs.MENTAL_CONSTRUCTS.getEntries()) {
-            mentalConstructs.put(construct.getId().toString(), new MentalConstructEntry(construct.get().create()));
+        for (Map.Entry<ResourceLocation, MentalConstructType> construct : AstralAPI.MENTAL_CONSTRUCT_TYPES.get().getEntries()) {
+            mentalConstructs.put(construct.getKey().toString(), new MentalConstructEntry(construct.getValue().create()));
         }
     }
 
