@@ -3,6 +3,7 @@ package com.alan199921.astral.blocks;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
+import com.alan199921.astral.mentalconstructs.Garden;
 import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.tags.AstralTags;
 import net.minecraft.block.Block;
@@ -36,7 +37,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), calculateGardenLevel(worldIn, pos)));
+            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), calculateLevel(worldIn, pos)));
             worldIn.setBlockState(pos, state.with(MentalConstruct.TRACKED_CONSTRUCT, true));
             return ActionResultType.SUCCESS;
         }
@@ -55,7 +56,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
      * @param pos     The BlockPos of the comfortable cushion
      * @return The level of the Garden
      */
-    private int calculateGardenLevel(World worldIn, BlockPos pos) {
+    public int calculateLevel(World worldIn, BlockPos pos) {
         final Stream<BlockPos> gardenRegion = BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3));
 
         //Get number of water blocks, dirt blocks, leaf blocks, and wood blocks and multiply them by the number of plants
@@ -88,28 +89,25 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
         return Pair.of(world.getBlockState(pos), world.getFluidState(pos));
     }
 
-    /**
-     * When the block is replaced, look into the mental construct tracker and check if this construct is enabling a mental construct bonus. If it is, reset the BlockPos of the PlayerTracker Triple and set the level of that mental construct bonus to -1
-     *
-     * @param state    The state of the block
-     * @param worldIn  The world the block is in
-     * @param pos      The pos of the block
-     * @param newState The new state of the block
-     * @param isMoving If the block is moving
-     */
     @Override
     public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
-        if (worldIn instanceof ServerWorld) {
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(AstralMentalConstructs.GARDEN.get(), worldIn, pos));
-        }
+        MentalConstructController.onReplaced(worldIn, pos, this);
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
     public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
-        if (state.get(MentalConstruct.TRACKED_CONSTRUCT) && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
-            AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(AstralMentalConstructs.GARDEN.get(), worldIn, pos, calculateGardenLevel(worldIn, pos)));
-        }
+        MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos));
         super.tick(state, worldIn, pos, rand);
+    }
+
+    @Override
+    public boolean hasComparatorInputOverride(BlockState state) {
+        return state.get(MentalConstruct.TRACKED_CONSTRUCT);
+    }
+
+    @Override
+    public int getComparatorInputOverride(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+        return MentalConstructController.getComparatorInputOverride(blockState, (int) Math.ceil(Garden.getConversionRatio(calculateLevel(worldIn, pos))), super.getComparatorInputOverride(blockState, worldIn, pos));
     }
 }

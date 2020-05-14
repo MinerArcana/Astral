@@ -23,7 +23,7 @@ public class Garden extends MentalConstruct {
         }
     }
 
-    public float getConversionRatio(int level) {
+    public static float getConversionRatio(int level) {
         return (float) (1 / (.25 * Math.log10(level + 1.5)) + .5);
     }
 
