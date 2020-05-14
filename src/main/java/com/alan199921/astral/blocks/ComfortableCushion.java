@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 public class ComfortableCushion extends SlabBlock implements MentalConstructController {
     public ComfortableCushion() {
-        super(Properties.create(Material.WOOL));
+        super(Properties.create(Material.WOOL).tickRandomly());
         this.setDefaultState(this.getStateContainer().getBaseState().with(MentalConstruct.TRACKED_CONSTRUCT, false));
     }
 
@@ -37,7 +37,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
             AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), calculateGardenLevel(worldIn, pos)));
-            state.with(MentalConstruct.TRACKED_CONSTRUCT, true);
+            worldIn.setBlockState(pos, state.with(MentalConstruct.TRACKED_CONSTRUCT, true));
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
@@ -107,7 +107,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
 
     @Override
     public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
-        if (state.get(MentalConstruct.TRACKED_CONSTRUCT) && worldIn.getGameTime() % 100 == 0 && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
+        if (state.get(MentalConstruct.TRACKED_CONSTRUCT) && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
             AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(AstralMentalConstructs.GARDEN.get(), worldIn, pos, calculateGardenLevel(worldIn, pos)));
         }
         super.tick(state, worldIn, pos, rand);
