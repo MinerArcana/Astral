@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.RegistryObject;
 
+import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class MentalConstructEntry implements INBTSerializable<CompoundNBT> {
@@ -24,21 +25,16 @@ public class MentalConstructEntry implements INBTSerializable<CompoundNBT> {
         level = -1;
     }
 
-    public Optional<ResourceLocation> getConstructWorld() {
-        return Optional.ofNullable(constructWorld);
+    public ResourceLocation getConstructWorld() {
+        return constructWorld;
     }
 
-    public void setConstructWorld(World constructWorld) {
-        if (constructWorld != null) {
-            this.constructWorld = constructWorld.getDimension().getType().getRegistryName();
-        }
-        else {
-            this.constructWorld = null;
-        }
+    public void setConstructWorld(@Nonnull World constructWorld) {
+        this.constructWorld = constructWorld.getDimension().getType().getRegistryName();
     }
 
-    public Optional<BlockPos> getConstructPos() {
-        return Optional.ofNullable(constructPos);
+    public BlockPos getConstructPos() {
+        return constructPos;
     }
 
     public void setConstructPos(BlockPos constructPos) {

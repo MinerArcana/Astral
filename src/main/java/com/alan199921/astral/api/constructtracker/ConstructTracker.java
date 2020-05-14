@@ -40,7 +40,13 @@ public class ConstructTracker implements IConstructTracker {
 
     @Override
     public void resetConstructEffect(MentalConstructType mentalConstruct, World worldIn, BlockPos blockPos) {
-        playerConstructTracker.values().forEach(playerMentalConstructTracker -> playerMentalConstructTracker.resetConstructEffect(mentalConstruct, worldIn, blockPos));
+        playerConstructTracker.values().stream().filter(tracker -> {
+            if (tracker.getMentalConstructs().containsKey(mentalConstruct.getRegistryName().toString())) {
+                final MentalConstructEntry entry = tracker.getMentalConstructs().get(mentalConstruct.getRegistryName().toString());
+                return entry.getConstructPos().equals(blockPos) && worldIn.getDimension().getType().getRegistryName().toString().equals(entry.getConstructWorld().toString());
+            }
+            return false;
+        }).forEach(filteredTracker -> filteredTracker.removeMentalConstruct(mentalConstruct));
     }
 
     @Override
