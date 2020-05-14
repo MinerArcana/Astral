@@ -26,7 +26,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
-import java.util.stream.Stream;
 
 public class ComfortableCushion extends SlabBlock implements MentalConstructController {
     public ComfortableCushion() {
@@ -57,10 +56,10 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
      * @return The level of the Garden
      */
     public int calculateLevel(World worldIn, BlockPos pos) {
-        final Stream<BlockPos> gardenRegion = BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3));
-
         //Get number of water blocks, dirt blocks, leaf blocks, and wood blocks and multiply them by the number of plants
-        return gardenRegion.map(blockPos -> this.getStates(worldIn, blockPos))
+        //TODO Add config option to limit number of "valid" blocks to prevent people from making cubes of organic matter
+        return BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3))
+                .map(blockPos -> this.getStates(worldIn, blockPos))
                 .map(this::sumStates)
                 .reduce((objectPlantPair1, objectPlantPair2) -> Pair.of(objectPlantPair1.getLeft() + objectPlantPair2.getLeft(), objectPlantPair1.getRight() + objectPlantPair2.getRight()))
                 .map(totalCountPair -> totalCountPair.getLeft() * totalCountPair.getRight())
