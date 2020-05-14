@@ -3,12 +3,15 @@ package com.alan199921.astral.blocks;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
+import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.tags.AstralTags;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -21,20 +24,28 @@ import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 import java.util.stream.Stream;
 
-public class ComfortableCushion extends SlabBlock {
+public class ComfortableCushion extends SlabBlock implements MentalConstructController {
     public ComfortableCushion() {
         super(Properties.create(Material.WOOL));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(MentalConstruct.TRACKED_CONSTRUCT, false));
     }
 
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(AstralMentalConstructs.GARDEN.get(), calculateGardenLevel(worldIn, pos)));
+            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), calculateGardenLevel(worldIn, pos)));
+            state.with(MentalConstruct.TRACKED_CONSTRUCT, true);
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder.add(MentalConstruct.TRACKED_CONSTRUCT));
     }
 
     /**
@@ -75,5 +86,30 @@ public class ComfortableCushion extends SlabBlock {
 
     public Pair<BlockState, IFluidState> getStates(IWorld world, BlockPos pos) {
         return Pair.of(world.getBlockState(pos), world.getFluidState(pos));
+    }
+
+    /**
+     * When the block is replaced, look into the mental construct tracker and check if this construct is enabling a mental construct bonus. If it is, reset the BlockPos of the PlayerTracker Triple and set the level of that mental construct bonus to -1
+     *
+     * @param state    The state of the block
+     * @param worldIn  The world the block is in
+     * @param pos      The pos of the block
+     * @param newState The new state of the block
+     * @param isMoving If the block is moving
+     */
+    @Override
+    public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+        if (worldIn instanceof ServerWorld) {
+            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(AstralMentalConstructs.GARDEN.get(), worldIn, pos));
+        }
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+        if (state.get(MentalConstruct.TRACKED_CONSTRUCT) && worldIn.getGameTime() % 100 == 0 && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
+            AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(AstralMentalConstructs.GARDEN.get(), worldIn, pos, calculateGardenLevel(worldIn, pos)));
+        }
+        super.tick(state, worldIn, pos, rand);
     }
 }

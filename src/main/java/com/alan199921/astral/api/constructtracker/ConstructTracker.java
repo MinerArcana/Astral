@@ -1,13 +1,18 @@
 package com.alan199921.astral.api.constructtracker;
 
+import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ConstructTracker implements IConstructTracker {
-    private final HashMap<UUID, PlayerMentalConstructTracker> playerConstructTracker = new HashMap<>();
+    private final Map<UUID, PlayerMentalConstructTracker> playerConstructTracker = new HashMap<>();
 
     @Override
     public PlayerMentalConstructTracker getMentalConstructsForPlayer(PlayerEntity player) {
@@ -31,5 +36,15 @@ public class ConstructTracker implements IConstructTracker {
             tracker.deserializeNBT((CompoundNBT) nbt.get(s));
             playerConstructTracker.put(UUID.fromString(s), tracker);
         }
+    }
+
+    @Override
+    public void resetConstructEffect(MentalConstructType mentalConstruct, World worldIn, BlockPos blockPos) {
+        playerConstructTracker.values().forEach(playerMentalConstructTracker -> playerMentalConstructTracker.resetConstructEffect(mentalConstruct, worldIn, blockPos));
+    }
+
+    @Override
+    public void updateAllPlayers(MentalConstructType mentalConstructType, ServerWorld world, BlockPos blockPos, int level) {
+        playerConstructTracker.values().forEach(playerMentalConstructTracker -> playerMentalConstructTracker.modifyConstructInfo(blockPos, world, mentalConstructType, level));
     }
 }

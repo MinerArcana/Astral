@@ -33,6 +33,11 @@ public class Garden extends MentalConstruct {
     }
 
     @Override
+    public MentalConstructType getType() {
+        return AstralMentalConstructs.GARDEN.get();
+    }
+
+    @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
         nbt.putFloat("saturationSnapshot", saturationSnapshot);

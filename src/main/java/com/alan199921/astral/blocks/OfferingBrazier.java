@@ -67,7 +67,7 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult blockRayTraceResult) {
+    public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
         TileEntity entity = world.getTileEntity(blockPos);
         if (entity instanceof OfferingBrazierTile) {
             //If the block does not have a bound player, sets the bound player to the player
