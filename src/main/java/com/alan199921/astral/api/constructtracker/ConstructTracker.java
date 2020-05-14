@@ -1,5 +1,6 @@
 package com.alan199921.astral.api.constructtracker;
 
+import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -42,8 +43,8 @@ public class ConstructTracker implements IConstructTracker {
     public void resetConstructEffect(MentalConstructType mentalConstruct, World worldIn, BlockPos blockPos) {
         playerConstructTracker.values().stream().filter(tracker -> {
             if (tracker.getMentalConstructs().containsKey(mentalConstruct.getRegistryName().toString())) {
-                final MentalConstructEntry entry = tracker.getMentalConstructs().get(mentalConstruct.getRegistryName().toString());
-                return entry.getConstructPos().equals(blockPos) && worldIn.getDimension().getType().getRegistryName().toString().equals(entry.getConstructWorld().toString());
+                final MentalConstruct entry = tracker.getMentalConstructs().get(mentalConstruct.getRegistryName().toString());
+                return entry.getConstructPos().equals(blockPos) && worldIn.getDimension().getType().getRegistryName().toString().equals(entry.getDimensionName().toString());
             }
             return false;
         }).forEach(filteredTracker -> filteredTracker.removeMentalConstruct(mentalConstruct));

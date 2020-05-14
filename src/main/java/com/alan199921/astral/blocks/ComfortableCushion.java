@@ -4,8 +4,8 @@ import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.mentalconstructs.Garden;
-import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.tags.AstralTags;
+import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SlabBlock;
@@ -30,14 +30,14 @@ import java.util.Random;
 public class ComfortableCushion extends SlabBlock implements MentalConstructController {
     public ComfortableCushion() {
         super(Properties.create(Material.WOOL).tickRandomly());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(MentalConstruct.TRACKED_CONSTRUCT, false));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false));
     }
 
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
             AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), calculateLevel(worldIn, pos)));
-            worldIn.setBlockState(pos, state.with(MentalConstruct.TRACKED_CONSTRUCT, true));
+            worldIn.setBlockState(pos, state.with(Constants.TRACKED_CONSTRUCT, true));
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
@@ -45,7 +45,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(MentalConstruct.TRACKED_CONSTRUCT));
+        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT));
     }
 
     /**
@@ -102,7 +102,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
 
     @Override
     public boolean hasComparatorInputOverride(BlockState state) {
-        return state.get(MentalConstruct.TRACKED_CONSTRUCT);
+        return state.get(Constants.TRACKED_CONSTRUCT);
     }
 
     @Override

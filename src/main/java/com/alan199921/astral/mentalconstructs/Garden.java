@@ -10,21 +10,19 @@ public class Garden extends MentalConstruct {
     private float saturationSnapshot = 0;
     private float saturationCounter = 0;
 
-    @Override
-    public void performEffect(PlayerEntity player, int level) {
-        if (level > -1) {
-            final float newSaturation = player.getFoodStats().getSaturationLevel();
-            saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
-            if (saturationCounter >= getConversionRatio(level) && player.getFoodStats().needFood()) {
-                saturationCounter = saturationCounter - getConversionRatio(level);
-                player.getFoodStats().addStats(1, 0);
-            }
-            saturationSnapshot = newSaturation;
-        }
-    }
-
     public static float getConversionRatio(int level) {
         return (float) (1 / (.25 * Math.log10(level + 1.5)) + .5);
+    }
+
+    @Override
+    public void performEffect(PlayerEntity player, int level) {
+        final float newSaturation = player.getFoodStats().getSaturationLevel();
+        saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
+        if (saturationCounter >= getConversionRatio(level) && player.getFoodStats().needFood()) {
+            saturationCounter = saturationCounter - getConversionRatio(level);
+            player.getFoodStats().addStats(1, 0);
+        }
+        saturationSnapshot = newSaturation;
     }
 
     @Override
@@ -39,7 +37,7 @@ public class Garden extends MentalConstruct {
 
     @Override
     public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+        CompoundNBT nbt = super.serializeNBT();
         nbt.putFloat("saturationSnapshot", saturationSnapshot);
         nbt.putFloat("saturationCounter", saturationCounter);
         return nbt;
@@ -47,6 +45,7 @@ public class Garden extends MentalConstruct {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
+        super.deserializeNBT(nbt);
         saturationSnapshot = nbt.getFloat("saturationSnapshot");
         saturationCounter = nbt.getFloat("saturationCounter");
     }

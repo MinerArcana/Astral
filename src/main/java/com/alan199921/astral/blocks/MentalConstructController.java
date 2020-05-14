@@ -3,7 +3,7 @@ package com.alan199921.astral.blocks;
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.dimensions.AstralDimensions;
 import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
-import com.alan199921.astral.mentalconstructs.MentalConstruct;
+import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -14,14 +14,15 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 
 public interface MentalConstructController {
+
     static int getComparatorInputOverride(BlockState blockState, int redstoneLevel, int defaultOverrideValue) {
-        return blockState.get(MentalConstruct.TRACKED_CONSTRUCT) ? redstoneLevel : defaultOverrideValue;
+        return blockState.get(Constants.TRACKED_CONSTRUCT) ? redstoneLevel : defaultOverrideValue;
     }
 
     int calculateLevel(World world, BlockPos pos);
 
     static void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, int level) {
-        if (state.get(MentalConstruct.TRACKED_CONSTRUCT) && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
+        if (state.get(Constants.TRACKED_CONSTRUCT) && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM)) {
             AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(AstralMentalConstructs.GARDEN.get(), worldIn, pos, level));
         }
     }
