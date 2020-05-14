@@ -19,7 +19,7 @@ public class ConstructTracker implements IConstructTracker {
         if (!playerConstructTracker.containsKey(player.getUniqueID())) {
             playerConstructTracker.put(player.getUniqueID(), new PlayerMentalConstructTracker());
         }
-        return playerConstructTracker.getOrDefault(player.getUniqueID(), new PlayerMentalConstructTracker());
+        return playerConstructTracker.get(player.getUniqueID());
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ConstructTracker implements IConstructTracker {
     public void deserializeNBT(CompoundNBT nbt) {
         for (String s : nbt.keySet()) {
             PlayerMentalConstructTracker tracker = new PlayerMentalConstructTracker();
-            tracker.deserializeNBT((CompoundNBT) nbt.get(s));
+            tracker.deserializeNBT(nbt.getCompound(s));
             playerConstructTracker.put(UUID.fromString(s), tracker);
         }
     }
