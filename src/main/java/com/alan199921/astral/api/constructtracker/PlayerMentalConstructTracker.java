@@ -2,7 +2,6 @@ package com.alan199921.astral.api.constructtracker;
 
 import com.alan199921.astral.api.AstralAPI;
 import com.alan199921.astral.blocks.MentalConstructController;
-import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan199921.astral.mentalconstructs.MentalConstruct;
 import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,11 +50,14 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        for (RegistryObject<MentalConstructType> mentalConstruct : AstralMentalConstructs.MENTAL_CONSTRUCTS.getEntries()) {
-            final MentalConstruct createdMentalConstruct = mentalConstruct.get().create();
-            MentalConstructEntry entry = new MentalConstructEntry(createdMentalConstruct);
-            entry.deserializeNBT(nbt.getCompound(mentalConstruct.getId().toString()));
-            mentalConstructs.put(mentalConstruct.getId().toString(), entry);
+        for (String mentalConstructKey : nbt.keySet()) {
+            final ResourceLocation resourceLocation = new ResourceLocation(mentalConstructKey);
+            if (AstralAPI.MENTAL_CONSTRUCT_TYPES.get().containsKey(resourceLocation)) {
+                MentalConstruct construct = AstralAPI.MENTAL_CONSTRUCT_TYPES.get().getValue(resourceLocation).create();
+                final MentalConstructEntry entry = new MentalConstructEntry(construct);
+                entry.deserializeNBT(nbt.getCompound(mentalConstructKey));
+                mentalConstructs.put(mentalConstructKey, entry);
+            }
         }
     }
 
