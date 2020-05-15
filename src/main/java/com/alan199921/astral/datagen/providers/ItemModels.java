@@ -37,6 +37,8 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(STRIPPED_ETHEREAL_WOOD_ITEM);
 
         forBlockItem(COMFORTABLE_CUSHION_ITEM, modLoc("block/comfortable_cushion"));
+        forItem(DREAMCORD);
+        forItem(DREAMWEAVE);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

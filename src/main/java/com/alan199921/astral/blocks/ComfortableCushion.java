@@ -8,16 +8,23 @@ import com.alan199921.astral.tags.AstralTags;
 import com.alan199921.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
+import net.minecraft.block.FurnaceBlock;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.DyeColor;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
@@ -25,12 +32,21 @@ import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
-public class ComfortableCushion extends SlabBlock implements MentalConstructController {
+public class ComfortableCushion extends Block implements MentalConstructController {
+    protected static final VoxelShape CUSHION_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 6.0D, 15.0D, 4.0D, 14.0D);
+
+
     public ComfortableCushion() {
-        super(Properties.create(Material.WOOL).tickRandomly());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false));
+        super(Properties.create(Material.WOOL, DyeColor.LIGHT_BLUE).tickRandomly().hardnessAndResistance(0.8f).sound(SoundType.CLOTH).notSolid());
+        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(FurnaceBlock.FACING, Direction.NORTH));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return CUSHION_SHAPE;
     }
 
     @Override
@@ -45,7 +61,7 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT));
+        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT, FurnaceBlock.FACING));
     }
 
     /**
@@ -64,6 +80,12 @@ public class ComfortableCushion extends SlabBlock implements MentalConstructCont
                 .reduce((objectPlantPair1, objectPlantPair2) -> Pair.of(objectPlantPair1.getLeft() + objectPlantPair2.getLeft(), objectPlantPair1.getRight() + objectPlantPair2.getRight()))
                 .map(totalCountPair -> totalCountPair.getLeft() * totalCountPair.getRight())
                 .orElse(0);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FurnaceBlock.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     /**

@@ -1,38 +1,47 @@
 {
   "credit": "Made with Blockbench",
-  "parent": "block/slab",
   "textures": {
-    "0": "block/light_blue_wool",
-    "particle": "block/light_blue_wool"
+    "0": "astral:block/comfortable_cushion",
+    "particle": "astral:block/comfortable_cushion"
   },
   "elements": [
     {
       "from": [
+        1,
         0,
-        0,
-        0
+        6
       ],
       "to": [
-        16,
-        8,
-        16
+        15,
+        4,
+        14
       ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          8,
+          8,
+          16
+        ]
+      },
       "faces": {
         "north": {
           "uv": [
             0,
-            0,
-            16,
+            3,
+            14,
             8
           ],
+          "rotation": 180,
           "texture": "#0"
         },
         "east": {
           "uv": [
             0,
             0,
-            16,
-            8
+            8,
+            4
           ],
           "texture": "#0"
         },
@@ -40,8 +49,8 @@
           "uv": [
             0,
             0,
-            16,
-            8
+            9,
+            5
           ],
           "texture": "#0"
         },
@@ -49,8 +58,8 @@
           "uv": [
             0,
             0,
-            16,
-            8
+            8,
+            4
           ],
           "texture": "#0"
         },
@@ -58,8 +67,8 @@
           "uv": [
             0,
             0,
-            16,
-            16
+            14,
+            8
           ],
           "texture": "#0"
         },
@@ -67,8 +76,8 @@
           "uv": [
             0,
             0,
-            16,
-            16
+            14,
+            8
           ],
           "texture": "#0"
         }

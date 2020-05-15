@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "astral:dreamweave"
+    ]
+  },
+  "criteria": {
+    "dreamcord": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:dreamcord"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "astral:dreamweave"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dreamcord",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -86,6 +86,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(STRIPPED_ETHEREAL_LOG_ITEM.get(), "Stripped Ethereal Log");
         add(STRIPPED_ETHEREAL_WOOD_ITEM.get(), "Stripped Ethereal Wood");
         add(COMFORTABLE_CUSHION_ITEM.get(), "Comfortable Cushion");
+        add(DREAMCORD.get(), "Dreamcord");
+        add(DREAMWEAVE.get(), "Dreamweave");
     }
 
     private void addPotions() {
