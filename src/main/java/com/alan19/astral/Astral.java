@@ -115,7 +115,7 @@ public class Astral {
 
     private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {
         new RegistryBuilder<T>()
-                .setName(new ResourceLocation("transport", name))
+                .setName(new ResourceLocation(Astral.MOD_ID, name))
                 .setType(type)
                 .create();
     }
