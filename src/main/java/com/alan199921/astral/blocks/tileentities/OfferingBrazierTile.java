@@ -2,6 +2,7 @@ package com.alan199921.astral.blocks.tileentities;
 
 import com.alan199921.astral.api.AstralAPI;
 import net.minecraft.block.AbstractFurnaceBlock;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class OfferingBrazierTile extends TileEntity implements ITickableTileEntity {
-    private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
+    private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
     private Optional<UUID> boundPlayer = Optional.empty();
@@ -126,6 +127,11 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
         }
     }
 
+    /**
+     * Offering Braziers can accept fuel items in slot 0, and non-fuel and tile entities in slot 1
+     *
+     * @return The IItemHandler for the Offering Braizer
+     */
     private IItemHandler createHandler() {
         return new ItemStackHandler(2) {
             @Override
@@ -144,7 +150,8 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
                     return AbstractFurnaceTileEntity.isFuel(stack) && super.isItemValid(slot, stack);
                 }
                 else {
-                    return super.isItemValid(slot, stack);
+                    final Block blockFromItem = Block.getBlockFromItem(stack.getItem());
+                    return !AbstractFurnaceTileEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.getDefaultState()) && super.isItemValid(slot, stack);
                 }
             }
         };
