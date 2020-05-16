@@ -1,6 +1,6 @@
 package com.alan19.astral.blocks;
 
-import com.alan19.astral.blocks.tileentities.OfferingBrazierTile;
+import com.alan19.astral.blocks.tileentities.OfferingBrazierTileEntity;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -52,7 +52,7 @@ public class OfferingBrazier extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new OfferingBrazierTile();
+        return new OfferingBrazierTileEntity();
     }
 
     @Override
@@ -60,8 +60,8 @@ public class OfferingBrazier extends Block {
         super.onBlockPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
         if (livingEntity instanceof PlayerEntity) {
             TileEntity tileEntity = world.getTileEntity(blockPos);
-            if (tileEntity instanceof OfferingBrazierTile) {
-                ((OfferingBrazierTile) tileEntity).setUUID(livingEntity.getUniqueID());
+            if (tileEntity instanceof OfferingBrazierTileEntity) {
+                ((OfferingBrazierTileEntity) tileEntity).setUUID(livingEntity.getUniqueID());
             }
         }
     }
@@ -69,18 +69,18 @@ public class OfferingBrazier extends Block {
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
         TileEntity entity = world.getTileEntity(blockPos);
-        if (entity instanceof OfferingBrazierTile) {
+        if (entity instanceof OfferingBrazierTileEntity) {
             //If the block does not have a bound player, sets the bound player to the player
-            if (!((OfferingBrazierTile) entity).getBoundPlayer().isPresent()) {
-                ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
+            if (!((OfferingBrazierTileEntity) entity).getBoundPlayer().isPresent()) {
+                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUniqueID());
             }
             //Sneak click to bind a player, regular right click inserts/extracts
             if (!playerEntity.isCrouching()) {
-                ((OfferingBrazierTile) entity).extractInsertItem(playerEntity, hand);
+                ((OfferingBrazierTileEntity) entity).extractInsertItem(playerEntity, hand);
                 return ActionResultType.CONSUME;
             }
             else if (playerEntity.isCrouching()) {
-                ((OfferingBrazierTile) entity).setUUID(playerEntity.getUniqueID());
+                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUniqueID());
                 return ActionResultType.PASS;
             }
         }
@@ -91,7 +91,7 @@ public class OfferingBrazier extends Block {
     public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof OfferingBrazierTile) {
+            if (tileentity instanceof OfferingBrazierTileEntity) {
                 tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> IntStream.range(0, itemHandler.getSlots()).forEach(i -> Block.spawnAsEntity(worldIn, pos, itemHandler.getStackInSlot(i))));
 
                 worldIn.updateComparatorOutputLevel(pos, this);

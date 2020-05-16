@@ -24,19 +24,24 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OfferingBrazierTile extends TileEntity implements ITickableTileEntity {
+public class OfferingBrazierTileEntity extends TileEntity implements ITickableTileEntity {
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
     private Optional<UUID> boundPlayer = Optional.empty();
     private ItemStack lastStack = ItemStack.EMPTY;
 
-    public OfferingBrazierTile() {
-        super(AstralTiles.OFFERING_BRAZIER_TILE);
+    public OfferingBrazierTileEntity() {
+        super(AstralTiles.OFFERING_BRAZIER_TILE.get());
     }
 
     public Optional<UUID> getBoundPlayer() {
         return boundPlayer;
+    }
+
+    @Override
+    public boolean hasFastRenderer() {
+        return false;
     }
 
     @Nonnull
@@ -162,7 +167,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
     }
 
     @Override
-    public void read(CompoundNBT nbt) {
+    public void read(@Nonnull CompoundNBT nbt) {
         super.read(nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
@@ -178,7 +183,7 @@ public class OfferingBrazierTile extends TileEntity implements ITickableTileEnti
 
     @Override
     @Nonnull
-    public CompoundNBT write(CompoundNBT nbt) {
+    public CompoundNBT write(@Nonnull CompoundNBT nbt) {
         super.write(nbt);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("progress", progress);

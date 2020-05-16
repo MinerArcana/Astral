@@ -19,6 +19,7 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.BlockRenderHandler;
+import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.entities.AstralEntityRegistry;
@@ -29,6 +30,7 @@ import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealReplaceParticle;
+import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.OverworldVegetation;
 import net.minecraft.client.Minecraft;
@@ -44,6 +46,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -69,19 +72,39 @@ public class Astral {
         // Register the setup method for modloading
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::registerModels);
+        modEventBus.addListener(this::setRenderLayers);
+        modEventBus.addListener(this::registerParticleFactories);
 
         // Register and load configs
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, AstralConfig.initialize());
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
+
         AstralEntityRegistry.register(modEventBus);
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
+        AstralTiles.register(modEventBus);
+
         modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
+    }
+
+    public void registerModels(ModelRegistryEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
+    }
+
+    public void setRenderLayers(FMLClientSetupEvent event) {
+        BlockRenderHandler.setRenderLayers();
+        BlockRenderHandler.registerBiomeBasedBlockColors();
+        ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER_TILE.get(), OfferingBrazierTileEntityRenderer::new);
+    }
+
+    public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
     }
 
     public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
@@ -125,25 +148,6 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
         }
 
-    }
-
-    @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientEvents {
-        @SubscribeEvent
-        public static void registerModels(ModelRegistryEvent event) {
-            RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
-        }
-
-        @SubscribeEvent
-        public static void setRenderLayers(FMLClientSetupEvent event) {
-            BlockRenderHandler.setRenderLayers();
-            BlockRenderHandler.registerBiomeBasedBlockColors();
-        }
-
-        @SubscribeEvent
-        public static void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-            Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
-        }
     }
 
     @SubscribeEvent
