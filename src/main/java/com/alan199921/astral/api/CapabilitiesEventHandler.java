@@ -2,6 +2,7 @@ package com.alan199921.astral.api;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.api.bodylink.BodyLinkProvider;
+import com.alan199921.astral.api.constructtracker.ConstructTrackerProvider;
 import com.alan199921.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan199921.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan199921.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
@@ -23,6 +24,7 @@ public class CapabilitiesEventHandler {
     private static final ResourceLocation HEIGHT_ADJUSTMENT = new ResourceLocation(Astral.MOD_ID, "height_adjustment");
     private static final ResourceLocation PSYCHIC_INVENTORY = new ResourceLocation(Astral.MOD_ID, "psychic_inventory");
     private static final ResourceLocation SLEEP_MANAGER = new ResourceLocation(Astral.MOD_ID, "sleep_manager");
+    private static final ResourceLocation CONSTRUCT_TRACKER = new ResourceLocation(Astral.MOD_ID, "construct_tracker");
 
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e) {
@@ -32,6 +34,7 @@ public class CapabilitiesEventHandler {
             e.addCapability(INNER_REALM_CHUNK_CLAIM, new InnerRealmChunkClaimProvider());
             e.addCapability(PSYCHIC_INVENTORY, new PsychicInventoryProvider());
             e.addCapability(BODY_LINK, new BodyLinkProvider());
+            e.addCapability(CONSTRUCT_TRACKER, new ConstructTrackerProvider());
         }
     }
 

@@ -3,6 +3,8 @@ package com.alan199921.astral;
 import com.alan199921.astral.api.NBTCapStorage;
 import com.alan199921.astral.api.bodylink.BodyLinkCapability;
 import com.alan199921.astral.api.bodylink.IBodyLinkCapability;
+import com.alan199921.astral.api.constructtracker.ConstructTracker;
+import com.alan199921.astral.api.constructtracker.IConstructTracker;
 import com.alan199921.astral.api.heightadjustment.HeightAdjustmentCapability;
 import com.alan199921.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan199921.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
@@ -22,6 +24,8 @@ import com.alan199921.astral.configs.AstralConfig;
 import com.alan199921.astral.entities.AstralEntityRegistry;
 import com.alan199921.astral.entities.PhysicalBodyEntityRenderer;
 import com.alan199921.astral.items.AstralItems;
+import com.alan199921.astral.mentalconstructs.AstralMentalConstructs;
+import com.alan199921.astral.mentalconstructs.MentalConstructType;
 import com.alan199921.astral.network.AstralNetwork;
 import com.alan199921.astral.particle.AstralParticles;
 import com.alan199921.astral.particle.EtherealReplaceParticle;
@@ -29,11 +33,13 @@ import com.alan199921.astral.world.AstralFeatures;
 import com.alan199921.astral.world.OverworldVegetation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -47,6 +53,8 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_GAME_PROFILE;
 import static com.alan199921.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER;
@@ -72,8 +80,23 @@ public class Astral {
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
+        modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
+
+    public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
+        makeRegistry("mental_constructs", MentalConstructType.class);
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        AstralMentalConstructs.register(modBus);
+    }
+
+    private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {
+        new RegistryBuilder<T>()
+                .setName(new ResourceLocation("transport", name))
+                .setType(type)
+                .create();
+    }
+
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
@@ -99,7 +122,9 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
+            CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
         }
+
     }
 
     @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

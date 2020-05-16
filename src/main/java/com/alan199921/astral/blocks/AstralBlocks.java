@@ -62,6 +62,9 @@ public class AstralBlocks {
     public static final RegistryObject<EtherealDoor> ETHEREAL_DOOR = BLOCKS.register("ethereal_door", EtherealDoor::new);
     public static final RegistryObject<EtherealTrapdoor> ETHEREAL_TRAPDOOR = BLOCKS.register("ethereal_trapdoor", EtherealTrapdoor::new);
 
+    //Mental Constructs
+    public static final RegistryObject<ComfortableCushion> COMFORTABLE_CUSHION = BLOCKS.register("comfortable_cushion", ComfortableCushion::new);
+
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
     }

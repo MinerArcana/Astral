@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "WWW",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "item": "astral:dreamweave"
+    }
+  },
+  "result": {
+    "item": "astral:comfortable_cushion"
+  }
+}

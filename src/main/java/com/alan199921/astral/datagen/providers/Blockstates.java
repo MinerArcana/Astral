@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -16,8 +16,11 @@ import java.io.IOException;
 import static com.alan199921.astral.blocks.AstralBlocks.*;
 
 public class Blockstates extends BlockStateProvider {
+    private final ExistingFileHelper exFileHelper;
+
     public Blockstates(DataGenerator gen, String modid, ExistingFileHelper exFileHelper) {
         super(gen, modid, exFileHelper);
+        this.exFileHelper = exFileHelper;
     }
 
     @Override
@@ -44,6 +47,7 @@ public class Blockstates extends BlockStateProvider {
         trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ethereal_trapdoor"), true);
         logBlock(STRIPPED_ETHEREAL_LOG.get());
         axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ethereal_log"), modLoc("block/stripped_ethereal_log"));
+        horizontalBlock(COMFORTABLE_CUSHION.get(), new ModelFile.ExistingModelFile(modLoc("block/comfortable_cushion"), exFileHelper));
     }
 
     private ModelFile modelDefault(Block block) {

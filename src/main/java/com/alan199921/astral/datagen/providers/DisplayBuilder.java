@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import com.alan199921.astral.Astral;
 import net.minecraft.advancements.DisplayInfo;
@@ -9,8 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class DisplayBuilder {
-    private String advancementName;
-    private IItemProvider displayItem;
+    private final String advancementName;
+    private final IItemProvider displayItem;
     private FrameType frameType = FrameType.TASK;
     private boolean showToast = true;
     private boolean announceToChat = true;

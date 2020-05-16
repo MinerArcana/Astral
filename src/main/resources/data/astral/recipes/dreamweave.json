@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " CC",
+    " CC"
+  ],
+  "key": {
+    "C": {
+      "item": "astral:dreamcord"
+    }
+  },
+  "result": {
+    "item": "astral:dreamweave"
+  }
+}

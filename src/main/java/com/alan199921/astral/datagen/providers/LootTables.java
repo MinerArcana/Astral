@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
@@ -38,6 +38,7 @@ public class LootTables extends LootTableProvider {
 
     private static class Blocks extends BlockLootTables {
         private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_ETHEREAL_FERN.get(), ETHEREAL_FERN.get(), ETHEREAL_GRASS.get(), TALL_ETHEREAL_GRASS.get(), ETHEREAL_LEAVES.get()));
+        private final List<Block> knownBlocks = new ArrayList<>();
 
         @Override
         protected void addTables() {
@@ -55,13 +56,14 @@ public class LootTables extends LootTableProvider {
 //                                    .newBuilder()
 //                                    .withProp(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)))
 //                    .acceptCondition(RandomChance.builder(0.125F))));
+            this.registerLootTable(COMFORTABLE_CUSHION.get(), dropping(COMFORTABLE_CUSHION.get()));
         }
 
         @Override
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
             final List<Block> astralBlocks = this.etherealPlants;
-            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get()));
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get()));
             return astralBlocks;
         }
 

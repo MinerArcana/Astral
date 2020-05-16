@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import com.alan199921.astral.Astral;
 import com.alan199921.astral.items.AstralItems;
@@ -91,6 +91,21 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("stripped_ethereal_log", hasItem(AstralItems.STRIPPED_ETHEREAL_LOG_ITEM.get()))
                 .build(consumer);
 
+        ShapedRecipeBuilder.shapedRecipe(AstralItems.DREAMWEAVE.get(), 1)
+                .key('C', AstralItems.DREAMCORD.get())
+                .patternLine("   ")
+                .patternLine(" CC")
+                .patternLine(" CC")
+                .addCriterion("dreamcord", hasItem(AstralItems.DREAMCORD.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(AstralItems.COMFORTABLE_CUSHION_ITEM.get(), 1)
+                .key('W', AstralItems.DREAMWEAVE.get())
+                .patternLine("   ")
+                .patternLine("WWW")
+                .patternLine("WWW")
+                .addCriterion("dreamweave", hasItem(AstralItems.DREAMWEAVE.get()))
+                .build(consumer);
     }
 
     @Nonnull

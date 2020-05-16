@@ -1,4 +1,4 @@
-package com.alan199921.astral.datagen;
+package com.alan199921.astral.datagen.providers;
 
 import com.alan199921.astral.Astral;
 import net.minecraft.data.DataGenerator;
@@ -35,6 +35,10 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forBlockItem(STRIPPED_ETHEREAL_LOG_ITEM);
         forBlockItem(STRIPPED_ETHEREAL_WOOD_ITEM);
+
+        forBlockItem(COMFORTABLE_CUSHION_ITEM, modLoc("block/comfortable_cushion"));
+        forItem(DREAMCORD);
+        forItem(DREAMWEAVE);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

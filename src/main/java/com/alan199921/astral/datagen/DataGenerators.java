@@ -1,6 +1,7 @@
 package com.alan199921.astral.datagen;
 
 import com.alan199921.astral.Astral;
+import com.alan199921.astral.datagen.providers.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +18,7 @@ public class DataGenerators {
         generator.addProvider(advancements);
         generator.addProvider(new EnglishLocalizaton(generator, advancements));
         generator.addProvider(new Recipes(generator));
+        generator.addProvider(new Tags(generator));
         if (event.includeClient()) {
             generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
             generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));

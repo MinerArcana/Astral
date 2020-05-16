@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:bee_growables",
+    "#minecraft:flower_pots",
+    "#minecraft:flowers"
+  ]
+}
