@@ -33,8 +33,7 @@ public class OfferingBrazierTileEntityRenderer extends TileEntityRenderer<Offeri
         ItemStack item = offeringBrazierTileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new).getStackInSlot(1);
         if (!item.isEmpty()) {
             matrixStackIn.push();
-            matrixStackIn.translate(0.5, 0.5, 0.5);
-            matrixStackIn.scale(0.4f, 0.4f, 0.4f);
+            matrixStackIn.translate(0.5, 0.6, 0.5);
             itemRenderer.renderItem(item, ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             matrixStackIn.pop();
         }

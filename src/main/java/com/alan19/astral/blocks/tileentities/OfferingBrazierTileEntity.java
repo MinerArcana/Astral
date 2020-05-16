@@ -1,6 +1,7 @@
 package com.alan19.astral.blocks.tileentities;
 
 import com.alan19.astral.api.AstralAPI;
+import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +23,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 public class OfferingBrazierTileEntity extends TileEntity implements ITickableTileEntity {
@@ -32,7 +34,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     private ItemStack lastStack = ItemStack.EMPTY;
 
     public OfferingBrazierTileEntity() {
-        super(AstralTiles.OFFERING_BRAZIER_TILE.get());
+        super(AstralTiles.OFFERING_BRAZIER.get());
     }
 
     public Optional<UUID> getBoundPlayer() {
@@ -74,6 +76,15 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                             ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
                             lastStack.shrink(1);
                         });
+                    }
+                    if (world != null) {
+                        final Random random = new Random();
+                        for (int i = 0; i < 20; i++) {
+                            double randX = pos.getX() + 0.3125 + random.nextDouble() * 0.3125;
+                            double randZ = pos.getZ() + 0.3125 + random.nextDouble() * .3125;
+                            double randY = pos.getY() + 0.625 + random.nextDouble() * 0.375;
+                            world.addParticle(AstralParticles.ETHEREAL_FLAME.get(), randX, randY, randZ, 0, 0, 0);
+                        }
                     }
                     progress = 0;
                 }

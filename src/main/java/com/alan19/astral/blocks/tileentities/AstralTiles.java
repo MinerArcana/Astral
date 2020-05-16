@@ -11,9 +11,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class AstralTiles {
     public static final DeferredRegister<TileEntityType<?>> TILE_ENTITIES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, Astral.MOD_ID);
 
-    public static final RegistryObject<TileEntityType<OfferingBrazierTileEntity>> OFFERING_BRAZIER_TILE = TILE_ENTITIES.register("offering_brazier_tile", () -> TileEntityType.Builder.create(OfferingBrazierTileEntity::new, AstralBlocks.OFFERING_BRAZIER.get()).build(null));
+    public static final RegistryObject<TileEntityType<OfferingBrazierTileEntity>> OFFERING_BRAZIER = TILE_ENTITIES.register("offering_brazier_tile", () -> TileEntityType.Builder.create(OfferingBrazierTileEntity::new, AstralBlocks.OFFERING_BRAZIER.get()).build(null));
 
     public static void register(IEventBus modBus) {
-        modBus.register(TILE_ENTITIES);
+        TILE_ENTITIES.register(modBus);
     }
 }

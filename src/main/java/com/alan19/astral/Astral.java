@@ -29,6 +29,7 @@ import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
+import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.world.AstralFeatures;
@@ -93,26 +94,6 @@ public class Astral {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
     }
 
-    public void registerModels(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
-    }
-
-    public void setRenderLayers(FMLClientSetupEvent event) {
-        BlockRenderHandler.setRenderLayers();
-        BlockRenderHandler.registerBiomeBasedBlockColors();
-        ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER_TILE.get(), OfferingBrazierTileEntityRenderer::new);
-    }
-
-    public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
-    }
-
-    public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
-        makeRegistry("mental_constructs", MentalConstructType.class);
-        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        AstralMentalConstructs.register(modBus);
-    }
-
     private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {
         new RegistryBuilder<T>()
                 .setName(new ResourceLocation(Astral.MOD_ID, name))
@@ -120,6 +101,31 @@ public class Astral {
                 .create();
     }
 
+    @SubscribeEvent
+    public static void serverLoad(FMLServerAboutToStartEvent event) {
+        AstralCommands.registerCommands(event.getServer().getCommandManager().getDispatcher());
+    }
+
+    public void registerModels(ModelRegistryEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
+    }
+
+    public void setRenderLayers(FMLClientSetupEvent event) {
+        BlockRenderHandler.setRenderLayers();
+        BlockRenderHandler.registerBiomeBasedBlockColors();
+        ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new);
+    }
+
+    public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
+        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
+        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);
+    }
+
+    public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
+        makeRegistry("mental_constructs", MentalConstructType.class);
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        AstralMentalConstructs.register(modBus);
+    }
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
@@ -148,11 +154,6 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
         }
 
-    }
-
-    @SubscribeEvent
-    public static void serverLoad(FMLServerAboutToStartEvent event) {
-        AstralCommands.registerCommands(event.getServer().getCommandManager().getDispatcher());
     }
 
 }

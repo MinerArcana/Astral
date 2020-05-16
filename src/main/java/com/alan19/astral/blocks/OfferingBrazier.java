@@ -1,26 +1,34 @@
 package com.alan19.astral.blocks;
 
 import com.alan19.astral.blocks.tileentities.OfferingBrazierTileEntity;
-import net.minecraft.block.AbstractFurnaceBlock;
+import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.stream.IntStream;
+
+import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 
 public class OfferingBrazier extends Block {
 
@@ -31,17 +39,17 @@ public class OfferingBrazier extends Block {
                 .lightValue(13)
                 .notSolid()
         );
-        setDefaultState(this.getStateContainer().getBaseState().with(AbstractFurnaceBlock.LIT, false));
+        setDefaultState(this.getStateContainer().getBaseState().with(LIT, false));
     }
 
     @Override
     public int getLightValue(BlockState state) {
-        return state.getBlockState().get(AbstractFurnaceBlock.LIT) ? 13 : 0;
+        return state.getBlockState().get(LIT) ? 13 : 0;
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(AbstractFurnaceBlock.LIT));
+        super.fillStateContainer(builder.add(LIT));
     }
 
     @Override
@@ -77,11 +85,11 @@ public class OfferingBrazier extends Block {
             //Sneak click to bind a player, regular right click inserts/extracts
             if (!playerEntity.isCrouching()) {
                 ((OfferingBrazierTileEntity) entity).extractInsertItem(playerEntity, hand);
-                return ActionResultType.CONSUME;
+                return ActionResultType.SUCCESS;
             }
             else if (playerEntity.isCrouching()) {
                 ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUniqueID());
-                return ActionResultType.PASS;
+                return ActionResultType.SUCCESS;
             }
         }
         return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
@@ -100,4 +108,24 @@ public class OfferingBrazier extends Block {
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
     }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void animateTick(BlockState stateIn, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+        if (stateIn.get(LIT)) {
+            double d0 = (double) pos.getX() + 0.5D;
+            double d1 = pos.getY();
+            double d2 = (double) pos.getZ() + 0.5D;
+            if (rand.nextDouble() < 0.1D) {
+                worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            }
+
+            final double x = pos.getX() + 0.125 + rand.nextDouble() * 0.75;
+            final double y = pos.getY() + .5;
+            final double z = pos.getZ() + +0.125 + rand.nextDouble() * 0.75;
+            worldIn.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
+            worldIn.addParticle(AstralParticles.ETHEREAL_FLAME.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+        }
+    }
+
 }
