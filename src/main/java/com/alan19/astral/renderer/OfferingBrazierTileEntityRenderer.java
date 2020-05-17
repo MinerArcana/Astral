@@ -5,11 +5,13 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -30,11 +32,21 @@ public class OfferingBrazierTileEntityRenderer extends TileEntityRenderer<Offeri
 
     private void renderInventory(OfferingBrazierTileEntity offeringBrazierTileEntity, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        ItemStack item = offeringBrazierTileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new).getStackInSlot(1);
-        if (!item.isEmpty()) {
+        final IItemHandler itemHandler = offeringBrazierTileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new);
+        ItemStack fuel = itemHandler.getStackInSlot(0);
+        ItemStack burning = itemHandler.getStackInSlot(1);
+        if (!burning.isEmpty()) {
             matrixStackIn.push();
             matrixStackIn.translate(0.5, 0.6, 0.5);
-            itemRenderer.renderItem(item, ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            itemRenderer.renderItem(burning, ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            matrixStackIn.pop();
+        }
+        if (!fuel.isEmpty()) {
+            matrixStackIn.push();
+            matrixStackIn.translate(0.5, 0.4, 0.5);
+            matrixStackIn.scale(.5f, .5f, .5f);
+            matrixStackIn.rotate(new Quaternion(-90, 0, 0, true));
+            itemRenderer.renderItem(fuel, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             matrixStackIn.pop();
         }
     }

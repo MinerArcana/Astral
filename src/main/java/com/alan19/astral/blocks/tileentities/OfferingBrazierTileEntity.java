@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -84,6 +85,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                             double randZ = pos.getZ() + 0.3125 + random.nextDouble() * .3125;
                             double randY = pos.getY() + 0.625 + random.nextDouble() * 0.375;
                             world.addParticle(AstralParticles.ETHEREAL_FLAME.get(), randX, randY, randZ, 0, 0, 0);
+                            world.addParticle(ParticleTypes.LARGE_SMOKE, randX, randY, randZ, 0, 0, 0);
                         }
                     }
                     progress = 0;

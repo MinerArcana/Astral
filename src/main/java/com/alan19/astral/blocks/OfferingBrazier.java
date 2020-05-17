@@ -17,11 +17,15 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,13 +123,47 @@ public class OfferingBrazier extends Block {
             if (rand.nextDouble() < 0.1D) {
                 worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
-
-            final double x = pos.getX() + 0.125 + rand.nextDouble() * 0.75;
-            final double y = pos.getY() + .5;
-            final double z = pos.getZ() + +0.125 + rand.nextDouble() * 0.75;
-            worldIn.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(AstralParticles.ETHEREAL_FLAME.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+            TileEntity tileEntity = worldIn.getTileEntity(pos);
+            boolean lastItem = false;
+            if (tileEntity instanceof OfferingBrazierTileEntity) {
+                final LazyOptional<IItemHandler> capability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+                final IItemHandler iItemHandler = capability.orElseGet(ItemStackHandler::new);
+                lastItem = iItemHandler.getStackInSlot(0).isEmpty();
+            }
+            for (int i = 0; i < (lastItem ? 4 : 2); i++) {
+                final double x = pos.getX() + 0.125 + rand.nextDouble() * 0.75;
+                final double y = pos.getY() + .5;
+                final double z = pos.getZ() + +0.125 + rand.nextDouble() * 0.75;
+                worldIn.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(AstralParticles.ETHEREAL_FLAME.get(), x, y, z, 0.0D, 0.0D, 0.0D);
+            }
         }
     }
 
+    @Override
+    public boolean hasComparatorInputOverride(@Nonnull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(@Nonnull BlockState blockState, World worldIn, @Nonnull BlockPos pos) {
+        final TileEntity tileEntity = worldIn.getTileEntity(pos);
+        if (tileEntity instanceof OfferingBrazierTileEntity) {
+            final IItemHandler brazierInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new);
+            int i = 0;
+            float f = 0.0F;
+
+            for (int j = 0; j < brazierInventory.getSlots(); ++j) {
+                ItemStack itemstack = brazierInventory.getStackInSlot(j);
+                if (!itemstack.isEmpty()) {
+                    f += (float) itemstack.getCount() / (float) Math.min(brazierInventory.getSlotLimit(j), itemstack.getMaxStackSize());
+                    i++;
+                }
+            }
+
+            f /= (float) brazierInventory.getSlots();
+            return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+        }
+        return 0;
+    }
 }
