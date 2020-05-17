@@ -35,6 +35,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     private int progress = 0;
     private Optional<UUID> boundPlayer = Optional.empty();
     private ItemStack lastStack = ItemStack.EMPTY;
+    private boolean sync = true;
 
     public OfferingBrazierTileEntity() {
         super(AstralTiles.OFFERING_BRAZIER.get());
@@ -65,7 +66,10 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 burnTicks--;
             }
             if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
-                updateOfferingBrazierInventory();
+                if (world instanceof ServerWorld && world.getGameTime() % 5 == 0) {
+                    updateOfferingBrazierInventory();
+                    sync = false;
+                }
                 if (lastStack != inventory.getStackInSlot(1)) {
                     progress = 0;
                     lastStack = inventory.getStackInSlot(1);
@@ -123,6 +127,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 extractItem(playerEntity, inventory);
             }
         });
+        updateOfferingBrazierInventory();
     }
 
     public void extractItem(PlayerEntity playerEntity, IItemHandler inventory) {
@@ -212,6 +217,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         itemHandler.getStackInSlot(1).write(itemSlot);
         updateTag.put("fuel", fuelSlot);
         updateTag.put("item", itemSlot);
+        updateTag.putInt("burnTicks", burnTicks);
         return updateTag;
     }
 
@@ -224,7 +230,10 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         if (itemHandler.getStackInSlot(1).isEmpty()) {
             itemHandler.insertItem(1, ItemStack.read(tag.getCompound("item")), false);
         }
-        updateOfferingBrazierInventory();
+        burnTicks = tag.getInt("burnTicks");
+        if (world instanceof ServerWorld) {
+            updateOfferingBrazierInventory();
+        }
     }
 
     @Override

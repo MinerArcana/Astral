@@ -5,19 +5,21 @@ import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,6 +39,15 @@ import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 @SuppressWarnings("deprecated")
 public class OfferingBrazier extends Block {
 
+    protected static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
+    protected static final VoxelShape COLUMN_SHAPE = Block.makeCuboidShape(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 10.0D);
+    protected static final VoxelShape TOP_SHAPE = Block.makeCuboidShape(0, 4, 0, 15, 6, 15);
+    protected static final VoxelShape NORTH = Block.makeCuboidShape(0, 6, 0, 16, 8, 2);
+    protected static final VoxelShape SOUTH = Block.makeCuboidShape(0, 6, 14, 16, 8, 16);
+    protected static final VoxelShape EAST = Block.makeCuboidShape(14, 6, 0, 16, 8, 16);
+    protected static final VoxelShape WEST = Block.makeCuboidShape(0, 6, 0, 2, 8, 16);
+    protected static final VoxelShape SHAPE = VoxelShapes.or(BASE_SHAPE, COLUMN_SHAPE, TOP_SHAPE, NORTH, SOUTH, EAST, WEST);
+
     public OfferingBrazier() {
         super(Block.Properties
                 .create(Material.ROCK)
@@ -45,6 +56,11 @@ public class OfferingBrazier extends Block {
                 .notSolid()
         );
         setDefaultState(this.getStateContainer().getBaseState().with(LIT, false));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
     }
 
     @Override
@@ -113,6 +129,16 @@ public class OfferingBrazier extends Block {
 
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.isImmuneToFire() && state.get(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
+            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1.0F);
+        }
+
+        super.onEntityCollision(state, worldIn, pos, entityIn);
+
     }
 
     @Override
