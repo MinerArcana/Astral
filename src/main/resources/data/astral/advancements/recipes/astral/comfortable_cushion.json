@@ -6,12 +6,12 @@
     ]
   },
   "criteria": {
-    "dreamweave": {
+    "light_blue_wool": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "astral:dreamweave"
+            "item": "minecraft:light_blue_wool"
           }
         ]
       }
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "dreamweave",
+      "light_blue_wool",
       "has_the_recipe"
     ]
   ]

@@ -100,11 +100,11 @@ public class Recipes extends RecipeProvider {
                 .build(consumer);
 
         ShapedRecipeBuilder.shapedRecipe(AstralItems.COMFORTABLE_CUSHION_ITEM.get(), 1)
-                .key('W', AstralItems.DREAMWEAVE.get())
+                .key('W', Items.LIGHT_BLUE_WOOL)
                 .patternLine("   ")
                 .patternLine("WWW")
                 .patternLine("WWW")
-                .addCriterion("dreamweave", hasItem(AstralItems.DREAMWEAVE.get()))
+                .addCriterion("light_blue_wool", hasItem(Items.LIGHT_BLUE_WOOL))
                 .build(consumer);
     }
 
