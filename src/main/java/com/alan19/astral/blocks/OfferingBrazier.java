@@ -40,7 +40,7 @@ import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 public class OfferingBrazier extends Block {
 
     protected static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
-    protected static final VoxelShape COLUMN_SHAPE = Block.makeCuboidShape(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 10.0D);
+    protected static final VoxelShape COLUMN_SHAPE = Block.makeCuboidShape(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D);
     protected static final VoxelShape TOP_SHAPE = Block.makeCuboidShape(0, 4, 0, 15, 6, 15);
     protected static final VoxelShape NORTH = Block.makeCuboidShape(0, 6, 0, 16, 8, 2);
     protected static final VoxelShape SOUTH = Block.makeCuboidShape(0, 6, 14, 16, 8, 16);

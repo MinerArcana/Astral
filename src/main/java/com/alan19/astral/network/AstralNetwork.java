@@ -7,6 +7,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -58,6 +60,12 @@ public class AstralNetwork {
                 .consumer(SendAstralTravelEnding::handle)
                 .add();
 
+        channel.messageBuilder(SendOfferingBrazierFinished.class, 6)
+                .decoder(SendOfferingBrazierFinished::decode)
+                .encoder(SendOfferingBrazierFinished::encode)
+                .consumer(SendOfferingBrazierFinished::handle)
+                .add();
+
         return channel;
     }
 
@@ -83,5 +91,9 @@ public class AstralNetwork {
 
     public static void sendClientAstralTravelEnd(ServerPlayerEntity playerEntity) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelEnding(playerEntity.getEntityId()));
+    }
+
+    public static void sendOfferingBrazierFinishParticles(BlockPos blockPos, Chunk chunk) {
+        Astral.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SendOfferingBrazierFinished(blockPos));
     }
 }

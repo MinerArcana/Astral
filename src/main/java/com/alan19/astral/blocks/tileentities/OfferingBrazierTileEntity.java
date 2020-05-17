@@ -1,7 +1,7 @@
 package com.alan19.astral.blocks.tileentities;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.particle.AstralParticles;
+import com.alan19.astral.network.AstralNetwork;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +25,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 public class OfferingBrazierTileEntity extends TileEntity implements ITickableTileEntity {
@@ -35,7 +33,6 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     private int progress = 0;
     private Optional<UUID> boundPlayer = Optional.empty();
     private ItemStack lastStack = ItemStack.EMPTY;
-    private boolean sync = true;
 
     public OfferingBrazierTileEntity() {
         super(AstralTiles.OFFERING_BRAZIER.get());
@@ -61,56 +58,43 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Override
     public void tick() {
-        handler.ifPresent(inventory -> boundPlayer.ifPresent(uuid -> {
-            if (hasFuel()) {
-                burnTicks--;
+        if (world instanceof ServerWorld) {
+            if (world.getGameTime() % 10 == 0) {
+                updateOfferingBrazierInventory();
             }
-            if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
-                if (world instanceof ServerWorld && world.getGameTime() % 5 == 0) {
-                    updateOfferingBrazierInventory();
-                    sync = false;
+            handler.ifPresent(inventory -> boundPlayer.ifPresent(uuid -> {
+                if (hasFuel()) {
+                    burnTicks--;
                 }
-                if (lastStack != inventory.getStackInSlot(1)) {
-                    progress = 0;
-                    lastStack = inventory.getStackInSlot(1);
-                }
-                else {
-                    progress++;
-                }
-                if (progress >= 200 && boundPlayer.isPresent()) {
-                    if (world instanceof ServerWorld) {
+                if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
+                    if (lastStack != inventory.getStackInSlot(1)) {
+                        progress = 0;
+                        lastStack = inventory.getStackInSlot(1);
+                    }
+                    else {
+                        progress++;
+                    }
+                    if (progress >= 200 && boundPlayer.isPresent()) {
                         AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
                             final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
                             ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
                             lastStack.shrink(1);
                         });
+                        AstralNetwork.sendOfferingBrazierFinishParticles(pos, world.getChunkAt(pos));
+                        updateOfferingBrazierInventory();
+                        progress = 0;
                     }
-                    if (world != null) {
-                        final Random random = new Random();
-                        for (int i = 0; i < 20; i++) {
-                            double randX = pos.getX() + 0.3125 + random.nextDouble() * 0.3125;
-                            double randZ = pos.getZ() + 0.3125 + random.nextDouble() * .3125;
-                            double randY = pos.getY() + 0.625 + random.nextDouble() * 0.375;
-                            world.addParticle(AstralParticles.ETHEREAL_FLAME.get(), randX, randY, randZ, 0, 0, 0);
-                            world.addParticle(ParticleTypes.LARGE_SMOKE, randX, randY, randZ, 0, 0, 0);
-                        }
-                    }
-                    progress = 0;
                 }
-            }
-            else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
-                this.getWorld().setBlockState(pos, this.getWorld().getBlockState(pos).with(AbstractFurnaceBlock.LIT, true));
-                final ItemStack fuelInSlot = inventory.getStackInSlot(0);
-                burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
-                fuelInSlot.shrink(1);
-            }
-            if (burnTicks <= 0) {
-                this.getWorld().setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, false), 3);
-            }
-            else {
-                this.getWorld().setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, true), 3);
-            }
-        }));
+                else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
+                    this.world.setBlockState(pos, getBlockState().with(AbstractFurnaceBlock.LIT, true));
+                    final ItemStack fuelInSlot = inventory.getStackInSlot(0);
+                    burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
+                    fuelInSlot.shrink(1);
+                    updateOfferingBrazierInventory();
+                }
+                this.world.setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, burnTicks > 0));
+            }));
+        }
     }
 
     private boolean hasFuel() {
@@ -217,23 +201,14 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         itemHandler.getStackInSlot(1).write(itemSlot);
         updateTag.put("fuel", fuelSlot);
         updateTag.put("item", itemSlot);
-        updateTag.putInt("burnTicks", burnTicks);
         return updateTag;
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT tag) {
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
-        if (itemHandler.getStackInSlot(0).isEmpty()) {
-            itemHandler.insertItem(0, ItemStack.read(tag.getCompound("fuel")), false);
-        }
-        if (itemHandler.getStackInSlot(1).isEmpty()) {
-            itemHandler.insertItem(1, ItemStack.read(tag.getCompound("item")), false);
-        }
-        burnTicks = tag.getInt("burnTicks");
-        if (world instanceof ServerWorld) {
-            updateOfferingBrazierInventory();
-        }
+        ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.read(tag.getCompound("fuel")));
+        ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.read(tag.getCompound("item")));
     }
 
     @Override
