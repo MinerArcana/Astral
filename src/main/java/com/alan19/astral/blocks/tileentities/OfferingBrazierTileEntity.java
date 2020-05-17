@@ -67,23 +67,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                     burnTicks--;
                 }
                 if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
-                    if (lastStack != inventory.getStackInSlot(1)) {
-                        progress = 0;
-                        lastStack = inventory.getStackInSlot(1);
-                    }
-                    else {
-                        progress++;
-                    }
-                    if (progress >= 200 && boundPlayer.isPresent()) {
-                        AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
-                            final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
-                            ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
-                            lastStack.shrink(1);
-                        });
-                        AstralNetwork.sendOfferingBrazierFinishParticles(pos, world.getChunkAt(pos));
-                        updateOfferingBrazierInventory();
-                        progress = 0;
-                    }
+                    burnItems(inventory, uuid);
                 }
                 else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
                     this.world.setBlockState(pos, getBlockState().with(AbstractFurnaceBlock.LIT, true));
@@ -94,6 +78,26 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 }
                 this.world.setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, burnTicks > 0));
             }));
+        }
+    }
+
+    public void burnItems(IItemHandler inventory, UUID uuid) {
+        if (lastStack != inventory.getStackInSlot(1)) {
+            progress = 0;
+            lastStack = inventory.getStackInSlot(1);
+        }
+        else {
+            progress++;
+        }
+        if (progress >= 200 && boundPlayer.isPresent()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
+                final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
+                ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
+                lastStack.shrink(1);
+            });
+            AstralNetwork.sendOfferingBrazierFinishParticles(pos, world.getChunkAt(pos));
+            updateOfferingBrazierInventory();
+            progress = 0;
         }
     }
 
