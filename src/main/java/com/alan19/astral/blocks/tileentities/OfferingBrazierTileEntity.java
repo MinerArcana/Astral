@@ -7,6 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -63,6 +65,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 burnTicks--;
             }
             if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
+                updateOfferingBrazierInventory();
                 if (lastStack != inventory.getStackInSlot(1)) {
                     progress = 0;
                     lastStack = inventory.getStackInSlot(1);
@@ -177,6 +180,51 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     public void setUUID(UUID uuid) {
         boundPlayer = Optional.of(uuid);
+    }
+
+    public void updateOfferingBrazierInventory() {
+        requestModelDataUpdate();
+        this.markDirty();
+        if (this.getWorld() != null) {
+            this.getWorld().notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), 3);
+        }
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.getPos(), -1, this.getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+    }
+
+    @Override
+    @Nonnull
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT updateTag = new CompoundNBT();
+        final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
+        CompoundNBT fuelSlot = new CompoundNBT();
+        CompoundNBT itemSlot = new CompoundNBT();
+        itemHandler.getStackInSlot(0).write(fuelSlot);
+        itemHandler.getStackInSlot(1).write(itemSlot);
+        updateTag.put("fuel", fuelSlot);
+        updateTag.put("item", itemSlot);
+        return updateTag;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundNBT tag) {
+        final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
+        if (itemHandler.getStackInSlot(0).isEmpty()) {
+            itemHandler.insertItem(0, ItemStack.read(tag.getCompound("fuel")), false);
+        }
+        if (itemHandler.getStackInSlot(1).isEmpty()) {
+            itemHandler.insertItem(1, ItemStack.read(tag.getCompound("item")), false);
+        }
+        updateOfferingBrazierInventory();
     }
 
     @Override

@@ -34,6 +34,7 @@ import java.util.stream.IntStream;
 
 import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 
+@SuppressWarnings("deprecated")
 public class OfferingBrazier extends Block {
 
     public OfferingBrazier() {
@@ -68,7 +69,7 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+    public void onBlockPlacedBy(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
         super.onBlockPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
         if (livingEntity instanceof PlayerEntity) {
             TileEntity tileEntity = world.getTileEntity(blockPos);
@@ -78,6 +79,7 @@ public class OfferingBrazier extends Block {
         }
     }
 
+    @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
         TileEntity entity = world.getTileEntity(blockPos);
