@@ -1,5 +1,6 @@
 package com.alan19.astral.blocks.etherealblocks;
 
+import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -47,4 +48,8 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
         return Ethereal.getOpacity();
     }
 
+    @Override
+    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+        return AstralTags.ETHEREAL_GROWTH_PLANTABLE_ON.contains(state.getBlock());
+    }
 }

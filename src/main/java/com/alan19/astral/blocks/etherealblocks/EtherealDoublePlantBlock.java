@@ -1,6 +1,6 @@
 package com.alan19.astral.blocks.etherealblocks;
 
-import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.tags.AstralTags;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -48,7 +48,7 @@ public class EtherealDoublePlantBlock extends DoublePlantBlock {
     }
 
     @Override
-    protected boolean isValidGround(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return super.isValidGround(state, worldIn, pos) || state.getBlock() == AstralBlocks.ETHER_GRASS.get() || state.getBlock() == AstralBlocks.ETHER_DIRT.get();
+    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+        return AstralTags.ETHEREAL_GROWTH_PLANTABLE_ON.contains(state.getBlock());
     }
 }

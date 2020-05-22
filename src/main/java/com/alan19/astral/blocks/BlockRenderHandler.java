@@ -36,6 +36,7 @@ public class BlockRenderHandler {
         RenderTypeLookup.setRenderLayer(TALL_ETHEREAL_GRASS.get(), cutout);
         RenderTypeLookup.setRenderLayer(LARGE_ETHEREAL_FERN.get(), cutout);
         RenderTypeLookup.setRenderLayer(COMFORTABLE_CUSHION.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ETHEREAL_SAPLING.get(), cutout);
     }
 
     public static void registerBiomeBasedBlockColors() {
