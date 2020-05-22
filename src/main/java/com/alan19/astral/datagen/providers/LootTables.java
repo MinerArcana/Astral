@@ -48,22 +48,16 @@ public class LootTables extends LootTableProvider {
             this.registerLootTable(ETHEREAL_PLANKS.get(), dropping(ETHEREAL_PLANKS.get()));
             this.registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
             this.registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
-//            this.registerLootTable(AstralBlocks.LARGE_ETHEREAL_FERN.get(), droppingWithShears(AstralBlocks.LARGE_ETHEREAL_FERN.get(), withSurvivesExplosion(AstralBlocks.LARGE_ETHEREAL_FERN.get(), ItemLootEntry
-//                    .builder(Items.WHEAT_SEEDS))
-//                    .acceptCondition(BlockStateProperty
-//                            .builder(AstralBlocks.LARGE_ETHEREAL_FERN.get())
-//                            .fromProperties(StatePropertiesPredicate.Builder
-//                                    .newBuilder()
-//                                    .withProp(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)))
-//                    .acceptCondition(RandomChance.builder(0.125F))));
             this.registerLootTable(COMFORTABLE_CUSHION.get(), dropping(COMFORTABLE_CUSHION.get()));
+            this.registerLootTable(ETHEREAL_SAPLING.get(), dropping(ETHEREAL_SAPLING.get()));
+
         }
 
         @Override
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
             final List<Block> astralBlocks = this.etherealPlants;
-            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get()));
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get(), ETHEREAL_SAPLING.get()));
             return astralBlocks;
         }
 

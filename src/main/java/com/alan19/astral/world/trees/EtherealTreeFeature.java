@@ -25,8 +25,6 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
             return false;
         }
         int height = treeConfig.baseHeight + (rand.nextInt(2) * (rand.nextInt(2) - rand.nextInt(3)));
-
-
         placeTrunk(generationReader, rand, blockPos, blockPosSet, mutableBoundingBox, treeConfig, height);
         placeCanopy(generationReader, rand, height, blockPos, blockPosSet, mutableBoundingBox, treeConfig);
         return true;

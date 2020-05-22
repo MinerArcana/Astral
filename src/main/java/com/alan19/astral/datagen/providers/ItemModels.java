@@ -11,6 +11,8 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.fml.RegistryObject;
 
+import javax.annotation.Nonnull;
+
 import static com.alan19.astral.items.AstralItems.*;
 
 public class ItemModels extends ModelProvider<ItemModelBuilder> {
@@ -30,7 +32,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(TALL_ETHEREAL_GRASS_ITEM, mcLoc("item/tall_grass"));
         forBlockItem(ETHEREAL_GRASS_ITEM, mcLoc("item/grass"));
         forBlockItem(ETHEREAL_FERN_ITEM, mcLoc("item/fern"));
-        singleTexture(ETHEREAL_DOOR_ITEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ethereal_door"));
+        forBlockItemWithParent(ETHEREAL_DOOR_ITEM, modLoc("item/ethereal_door"));
         forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ethereal_trapdoor_bottom"));
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forBlockItem(STRIPPED_ETHEREAL_LOG_ITEM);
@@ -39,6 +41,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(COMFORTABLE_CUSHION_ITEM, modLoc("block/comfortable_cushion"));
         forItem(DREAMCORD);
         forItem(DREAMWEAVE);
+        forBlockItemWithParent(ETHEREAL_SAPLING_ITEM, modLoc("block/ethereal_sapling"));
     }
 
     private void forItem(RegistryObject<? extends Item> item) {
@@ -51,9 +54,13 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
 
     private void forBlockItem(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
         getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(modelLocation));
-
     }
 
+    private void forBlockItemWithParent(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
+        singleTexture(item.getId().getPath(), generatedItem, "layer0", modelLocation);
+    }
+
+    @Nonnull
     @Override
     public String getName() {
         return "Astral item models";
