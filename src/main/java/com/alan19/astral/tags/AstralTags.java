@@ -19,5 +19,5 @@ public class AstralTags {
     public static final Tag<EntityType<?>> NEUTRAL_MOBS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "neutral_mobs"));
     public static final Tag<Block> GARDEN_OBJECTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_objects"));
     public static final Tag<Block> GARDEN_PLANTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_plants"));
-    public static final Tag<Block> ETHEREAL_GROWTH_PLANTABLE_ON = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "ethereal_growth_plantable_on"));
+    public static final Tag<Block> ETHEREAL_VEGETATION_PLANTABLE_ON = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "ethereal_vegetation_plantable_on"));
 }

@@ -49,6 +49,6 @@ public class EtherealDoublePlantBlock extends DoublePlantBlock {
 
     @Override
     protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return AstralTags.ETHEREAL_GROWTH_PLANTABLE_ON.contains(state.getBlock());
+        return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
 }

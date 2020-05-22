@@ -50,6 +50,6 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
 
     @Override
     protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
-        return AstralTags.ETHEREAL_GROWTH_PLANTABLE_ON.contains(state.getBlock());
+        return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
 }
