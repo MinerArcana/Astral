@@ -31,10 +31,15 @@ public class BlockRenderHandler {
         RenderTypeLookup.setRenderLayer(FEVERWEED_BLOCK.get(), cutout);
         RenderTypeLookup.setRenderLayer(SNOWBERRY_BUSH.get(), cutout);
         RenderTypeLookup.setRenderLayer(OFFERING_BRAZIER.get(), cutout);
-        RenderTypeLookup.setRenderLayer(ETHEREAL_GRASS.get(), cutout);
-        RenderTypeLookup.setRenderLayer(ETHEREAL_FERN.get(), cutout);
-        RenderTypeLookup.setRenderLayer(TALL_ETHEREAL_GRASS.get(), cutout);
-        RenderTypeLookup.setRenderLayer(LARGE_ETHEREAL_FERN.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_SWARD.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_CYST.get(), cutout);
+        RenderTypeLookup.setRenderLayer(TALL_CYAN_SWARD.get(), cutout);
+        RenderTypeLookup.setRenderLayer(LARGE_CYAN_CYST.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_BELLEVINE.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_BLISTERWART.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_KLORID.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_MORKEL.get(), cutout);
+        RenderTypeLookup.setRenderLayer(CYAN_PODS.get(), cutout);
         RenderTypeLookup.setRenderLayer(COMFORTABLE_CUSHION.get(), cutout);
         RenderTypeLookup.setRenderLayer(ETHEREAL_SAPLING.get(), cutout);
     }
@@ -53,13 +58,13 @@ public class BlockRenderHandler {
                 return addEtherealTint(BiomeColors.getGrassColor(lightReader, blockPos));
             }
             return -1;
-        }, LARGE_ETHEREAL_FERN.get(), TALL_ETHEREAL_GRASS.get());
+        }, LARGE_CYAN_CYST.get(), TALL_CYAN_SWARD.get());
         blockColors.register((blockState, lightReader, blockPos, i) -> {
             if (lightReader != null && blockPos != null) {
                 return addEtherealTint(BiomeColors.getGrassColor(lightReader, blockPos));
             }
             return addEtherealTint(GrassColors.get(0.5D, 1.0D));
-        }, ETHEREAL_GRASS.get(), ETHEREAL_FERN.get());
+        }, CYAN_SWARD.get(), CYAN_CYST.get());
 
         itemColors.register((itemStack, tintIndex) -> {
             BlockState blockstate = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();

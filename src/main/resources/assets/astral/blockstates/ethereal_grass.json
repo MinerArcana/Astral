@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "astral:block/ethereal_grass"
+      "model": "astral:block/cyan_sward"
     }
   }
 }

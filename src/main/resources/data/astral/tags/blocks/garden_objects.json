@@ -3,6 +3,7 @@
   "values": [
     "#minecraft:logs",
     "#minecraft:leaves",
-    "#forge:dirt"
+    "#forge:dirt",
+    "#astral:etheric_growths"
   ]
 }

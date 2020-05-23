@@ -2,8 +2,10 @@ package com.alan19.astral.world.islands;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.trees.EtherealTreeConfig;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.nbt.CompoundNBT;
@@ -84,7 +86,6 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                     world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
                     break;
                 case 2:
-
                     if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                         world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
                         ConfiguredFeature<EtherealTreeConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
@@ -94,24 +95,18 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                     }
                     break;
                 case 3:
-                case 7:
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up(), AstralBlocks.ETHEREAL_FERN.get().getDefaultState(), 2);
-                    break;
                 case 4:
-                case 8:
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up(), AstralBlocks.ETHEREAL_GRASS.get().getDefaultState(), 2);
-                    break;
                 case 5:
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up(), AstralBlocks.LARGE_ETHEREAL_FERN.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up().up(), AstralBlocks.LARGE_ETHEREAL_FERN.get().getDefaultState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
-                    break;
                 case 6:
                     world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up(), AstralBlocks.TALL_ETHEREAL_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up().up(), AstralBlocks.TALL_ETHEREAL_GRASS.get().getDefaultState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
+                    world.setBlockState(blockPos.up(), AstralTags.SMALL_ETHERIC_GROWTHS.getRandomElement(random).getDefaultState(), 2);
+                    break;
+                case 7:
+                case 8:
+                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                    Block randomLargeEthericGrowth = AstralTags.LARGE_ETHERIC_GROWTHS.getRandomElement(random);
+                    world.setBlockState(blockPos.up(), randomLargeEthericGrowth.getDefaultState(), 2);
+                    world.setBlockState(blockPos.up().up(), randomLargeEthericGrowth.getDefaultState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
                     break;
                 default:
                     world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);

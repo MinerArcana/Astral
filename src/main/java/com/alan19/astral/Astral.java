@@ -114,7 +114,6 @@ public class Astral {
 
     public void setRenderLayers(FMLClientSetupEvent event) {
         BlockRenderHandler.setRenderLayers();
-        BlockRenderHandler.registerBiomeBasedBlockColors();
         ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new);
     }
 

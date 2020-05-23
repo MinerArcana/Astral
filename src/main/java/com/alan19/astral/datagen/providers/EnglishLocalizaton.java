@@ -51,10 +51,10 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHERIC_POWDER.get(), "Etheric Powder");
         add(ETHEREAL_WOOD.get(), "Ethereal Wood");
         add(ETHEREAL_LEAVES.get(), "Ethereal Leaves");
-        add(ETHEREAL_FERN.get(), "Ethereal Fern");
-        add(LARGE_ETHEREAL_FERN.get(), "Large Ethereal Fern");
-        add(ETHEREAL_GRASS.get(), "Ethereal Grass");
-        add(TALL_ETHEREAL_GRASS.get(), "Tall Ethereal Grass");
+        add(CYAN_CYST.get(), "Ethereal Fern");
+        add(LARGE_CYAN_CYST.get(), "Large Ethereal Fern");
+        add(CYAN_SWARD.get(), "Ethereal Grass");
+        add(TALL_CYAN_SWARD.get(), "Tall Ethereal Grass");
         add(ETHEREAL_PLANKS.get(), "Ethereal Planks");
         add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
         add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");

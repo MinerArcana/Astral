@@ -37,14 +37,14 @@ public class LootTables extends LootTableProvider {
     }
 
     private static class Blocks extends BlockLootTables {
-        private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_ETHEREAL_FERN.get(), ETHEREAL_FERN.get(), ETHEREAL_GRASS.get(), TALL_ETHEREAL_GRASS.get(), ETHEREAL_LEAVES.get()));
+        private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_CYAN_CYST.get(), CYAN_CYST.get(), CYAN_SWARD.get(), TALL_CYAN_SWARD.get(), ETHEREAL_LEAVES.get()));
         private final List<Block> knownBlocks = new ArrayList<>();
 
         @Override
         protected void addTables() {
             etherealPlants.forEach(this::registerShearsRecipe);
-            this.registerLootTable(LARGE_ETHEREAL_FERN.get(), onlyWithShears(ETHEREAL_FERN.get()));
-            this.registerLootTable(TALL_ETHEREAL_GRASS.get(), onlyWithShears(ETHEREAL_GRASS.get()));
+            this.registerLootTable(LARGE_CYAN_CYST.get(), onlyWithShears(CYAN_CYST.get()));
+            this.registerLootTable(TALL_CYAN_SWARD.get(), onlyWithShears(CYAN_SWARD.get()));
             this.registerLootTable(ETHEREAL_PLANKS.get(), dropping(ETHEREAL_PLANKS.get()));
             this.registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
             this.registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));

@@ -1,7 +1,6 @@
 package com.alan19.astral.datagen.providers;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -25,23 +24,29 @@ public class Blockstates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        getVariantBuilder(LARGE_ETHEREAL_FERN.get())
+        getVariantBuilder(LARGE_CYAN_CYST.get())
                 .partialState()
                 .with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
-                .addModels(new ConfiguredModel(models().withExistingParent("large_ethereal_fern_top", "block/large_fern_top")))
+                .addModels(new ConfiguredModel(models().cross("cyan_cyst_top", modLoc("block/cyan_cyst_top"))))
                 .partialState().with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
-                .addModels(new ConfiguredModel(models().withExistingParent("large_ethereal_fern_bottom", "block/large_fern_bottom")));
+                .addModels(new ConfiguredModel(models().cross("cyan_cyst_bottom", modLoc("block/cyan_cyst_bottom"))));
 
-        getVariantBuilder(TALL_ETHEREAL_GRASS.get())
+        getVariantBuilder(TALL_CYAN_SWARD.get())
                 .partialState()
                 .with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
-                .addModels(new ConfiguredModel(models().withExistingParent("tall_ethereal_grass_top", "block/tall_grass_top")))
+                .addModels(new ConfiguredModel(models().cross("cyan_sward_top", modLoc("block/cyan_sward_top"))))
                 .partialState()
                 .with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
-                .addModels(new ConfiguredModel(models().withExistingParent("tall_ethereal_grass_bottom", "block/tall_grass_bottom")));
+                .addModels(new ConfiguredModel(models().cross("cyan_sward_bottom", modLoc("block/cyan_sward_bottom"))));
 
-        simpleBlock(ETHEREAL_FERN.get(), new ConfiguredModel(models().withExistingParent("ethereal_fern", mcLoc(Blocks.FERN.getRegistryName().getPath()))));
-        simpleBlock(ETHEREAL_GRASS.get(), new ConfiguredModel(models().withExistingParent("ethereal_grass", mcLoc(Blocks.GRASS.getRegistryName().getPath()))));
+        simpleBlock(CYAN_CYST.get(), new ConfiguredModel(models().cross("cyan_cyst", modLoc("block/cyan_cyst"))));
+        simpleBlock(CYAN_SWARD.get(), new ConfiguredModel(models().cross("cyan_sward", modLoc("block/cyan_sward"))));
+        simpleBlock(CYAN_BELLEVINE.get(), new ConfiguredModel(models().cross("cyan_bellevine", modLoc("block/cyan_bellevine"))));
+        simpleBlock(CYAN_BLISTERWART.get(), new ConfiguredModel(models().cross("cyan_blisterwart", modLoc("block/cyan_blisterwart"))));
+        simpleBlock(CYAN_KLORID.get(), new ConfiguredModel(models().cross("cyan_klorid", modLoc("block/cyan_klorid"))));
+        simpleBlock(CYAN_MORKEL.get(), new ConfiguredModel(models().cross("cyan_morkel", modLoc("block/cyan_morkel"))));
+        simpleBlock(CYAN_PODS.get(), new ConfiguredModel(models().cross("cyan_pods", modLoc("block/cyan_pods"))));
+
         simpleBlock(ETHEREAL_PLANKS.get());
         doorBlock(ETHEREAL_DOOR.get(), modLoc("block/ethereal_door_bottom"), modLoc("block/ethereal_door_top"));
         trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ethereal_trapdoor"), true);

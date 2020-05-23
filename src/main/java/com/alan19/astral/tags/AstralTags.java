@@ -15,9 +15,11 @@ public class AstralTags {
     public static final Tag<Item> ASTRAL_PICKUP = ItemTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "astral_pickup"));
     public static final Tag<Block> SNOWBERRY_SUSTAIN = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "snowberry_sustain"));
     public static final Tag<Block> FEVERWEED_SUSTAIN = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "feverweed_sustain"));
-    public static final Tag<Item> MUSHROOMS = ItemTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "mushrooms"));
     public static final Tag<EntityType<?>> NEUTRAL_MOBS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "neutral_mobs"));
     public static final Tag<Block> GARDEN_OBJECTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_objects"));
     public static final Tag<Block> GARDEN_PLANTS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "garden_plants"));
     public static final Tag<Block> ETHEREAL_VEGETATION_PLANTABLE_ON = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "ethereal_vegetation_plantable_on"));
+    public static final Tag<Block> ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "etheric_growths"));
+    public static final Tag<Block> SMALL_ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "small_etheric_growths"));
+    public static final Tag<Block> LARGE_ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "large_etheric_growths"));
 }

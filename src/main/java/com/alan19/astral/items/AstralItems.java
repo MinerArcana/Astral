@@ -35,10 +35,10 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> ETHERIC_POWDER_ITEM = ITEMS.register("etheric_powder", () -> convertToBlockItem(ETHERIC_POWDER.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_LEAVES_ITEM = ITEMS.register("ethereal_leaves", () -> convertToBlockItem(ETHEREAL_LEAVES.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_WOOD_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(ETHEREAL_WOOD.get()));
-    public static final RegistryObject<BlockNamedItem> ETHEREAL_FERN_ITEM = ITEMS.register("ethereal_fern", () -> convertToBlockItem(ETHEREAL_FERN.get()));
-    public static final RegistryObject<BlockNamedItem> LARGE_ETHEREAL_FERN_ITEM = ITEMS.register("large_ethereal_fern", () -> convertToBlockItem(LARGE_ETHEREAL_FERN.get()));
-    public static final RegistryObject<BlockNamedItem> ETHEREAL_GRASS_ITEM = ITEMS.register("ethereal_grass", () -> convertToBlockItem(ETHEREAL_GRASS.get()));
-    public static final RegistryObject<BlockNamedItem> TALL_ETHEREAL_GRASS_ITEM = ITEMS.register("tall_ethereal_grass", () -> convertToBlockItem(TALL_ETHEREAL_GRASS.get()));
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_FERN_ITEM = ITEMS.register("ethereal_fern", () -> convertToBlockItem(CYAN_CYST.get()));
+    public static final RegistryObject<BlockNamedItem> LARGE_ETHEREAL_FERN_ITEM = ITEMS.register("large_ethereal_fern", () -> convertToBlockItem(LARGE_CYAN_CYST.get()));
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_GRASS_ITEM = ITEMS.register("ethereal_grass", () -> convertToBlockItem(CYAN_SWARD.get()));
+    public static final RegistryObject<BlockNamedItem> TALL_ETHEREAL_GRASS_ITEM = ITEMS.register("tall_ethereal_grass", () -> convertToBlockItem(TALL_CYAN_SWARD.get()));
     public static final RegistryObject<Item> METAPHORIC_BONE = ITEMS.register("metaphoric_bone", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_PLANKS_ITEM = ITEMS.register("ethereal_planks", () -> convertToBlockItem(ETHEREAL_PLANKS.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_DOOR_ITEM = ITEMS.register("ethereal_door", () -> convertToBlockItem(ETHEREAL_DOOR.get()));

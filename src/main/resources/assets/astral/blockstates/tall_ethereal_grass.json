@@ -1,10 +1,10 @@
 {
   "variants": {
     "half=upper": {
-      "model": "astral:block/tall_ethereal_grass_top"
+      "model": "astral:block/cyan_sward_top"
     },
     "half=lower": {
-      "model": "astral:block/tall_ethereal_grass_bottom"
+      "model": "astral:block/cyan_sward_bottom"
     }
   }
 }

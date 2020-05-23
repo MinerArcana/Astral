@@ -3,23 +3,10 @@ package com.alan19.astral.blocks;
 import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.etherealblocks.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.RotatedPillarBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AxeItem;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import javax.annotation.Nonnull;
 
 public class AstralBlocks {
     public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Astral.MOD_ID);
@@ -37,24 +24,20 @@ public class AstralBlocks {
     public static final RegistryObject<EtherDirt> ETHER_DIRT = BLOCKS.register("ether_dirt", EtherDirt::new);
     public static final RegistryObject<EtherGrass> ETHER_GRASS = BLOCKS.register("ether_grass", EtherGrass::new);
     public static final RegistryObject<EthericPowder> ETHERIC_POWDER = BLOCKS.register("etheric_powder", EthericPowder::new);
-    public static final RegistryObject<EtherealTallGrassBlock> ETHEREAL_GRASS = BLOCKS.register("ethereal_grass", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> ETHEREAL_FERN = BLOCKS.register("ethereal_fern", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealDoublePlantBlock> TALL_ETHEREAL_GRASS = BLOCKS.register("tall_ethereal_grass", EtherealDoublePlantBlock::new);
-    public static final RegistryObject<EtherealDoublePlantBlock> LARGE_ETHEREAL_FERN = BLOCKS.register("large_ethereal_fern", EtherealDoublePlantBlock::new);
+
+    //Etheric Growths
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_SWARD = BLOCKS.register("ethereal_grass", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_CYST = BLOCKS.register("ethereal_fern", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealDoublePlantBlock> TALL_CYAN_SWARD = BLOCKS.register("tall_ethereal_grass", EtherealDoublePlantBlock::new);
+    public static final RegistryObject<EtherealDoublePlantBlock> LARGE_CYAN_CYST = BLOCKS.register("large_ethereal_fern", EtherealDoublePlantBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_BELLEVINE = BLOCKS.register("cyan_bellevine", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_BLISTERWART = BLOCKS.register("cyan_blisterwart", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_KLORID = BLOCKS.register("cyan_klorid", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_MORKEL = BLOCKS.register("cyan_morkel", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EtherealTallGrassBlock> CYAN_PODS = BLOCKS.register("cyan_pods", EtherealTallGrassBlock::new);
 
     //Ethereal Trees
-    public static final RegistryObject<EtherealLog> ETHEREAL_WOOD = BLOCKS.register("ethereal_wood", () -> new EtherealLog() {
-        @Override
-        public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-            if (player.getHeldItem(handIn).getItem() instanceof AxeItem) {
-                worldIn.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                worldIn.setBlockState(pos, AstralBlocks.STRIPPED_ETHEREAL_LOG.get().getDefaultState().with(RotatedPillarBlock.AXIS, state.get(RotatedPillarBlock.AXIS)), 11);
-                player.getHeldItem(handIn).damageItem(1, player, playerEntity -> playerEntity.sendBreakAnimation(handIn));
-                return ActionResultType.SUCCESS;
-            }
-            return ActionResultType.PASS;
-        }
-    });
+    public static final RegistryObject<EtherealLog> ETHEREAL_WOOD = BLOCKS.register("ethereal_wood", StrippableEtherealLog::new);
     public static final RegistryObject<EtherealLeaves> ETHEREAL_LEAVES = BLOCKS.register("ethereal_leaves", EtherealLeaves::new);
     public static final RegistryObject<EtherealLog> STRIPPED_ETHEREAL_LOG = BLOCKS.register("stripped_ethereal_log", EtherealLog::new);
     public static final RegistryObject<StrippedEtherealWood> STRIPPED_ETHEREAL_WOOD = BLOCKS.register("stripped_ethereal_wood", StrippedEtherealWood::new);
