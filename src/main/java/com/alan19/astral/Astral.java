@@ -34,6 +34,7 @@ import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.OverworldVegetation;
+import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.ResourceLocation;
@@ -89,6 +90,7 @@ public class Astral {
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
         AstralTiles.register(modEventBus);
+        AstralBiomes.register(modEventBus);
 
         modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
