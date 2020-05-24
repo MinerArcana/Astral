@@ -1,19 +1,23 @@
 {
-  "replace": "false",
+  "replace": false,
   "values": [
     "astral:ether_dirt",
     "astral:ether_grass",
-    "astral:etheric_powder",
-    "astral:ethereal_wood",
-    "astral:ethereal_leaves",
     "astral:ethereal_grass",
     "astral:ethereal_fern",
-    "astral:tall_ethereal_grass",
-    "astral:large_ethereal_fern",
-    "astral:ethereal_planks",
-    "astral:ethereal_trapdoor",
-    "astral:ethereal_door",
+    "astral:cyan_bellevine",
+    "astral:cyan_blisterwart",
+    "astral:cyan_klorid",
+    "astral:cyan_morkel",
+    "astral:cyan_pods",
+    "astral:ethereal_wood",
+    "astral:ethereal_leaves",
     "astral:stripped_ethereal_log",
-    "astral:ethereal_sapling"
+    "astral:stripped_ethereal_wood",
+    "astral:ethereal_planks",
+    "astral:ethereal_door",
+    "astral:ethereal_trapdoor",
+    "astral:ethereal_sapling",
+    "astral:etheric_powder"
   ]
 }
