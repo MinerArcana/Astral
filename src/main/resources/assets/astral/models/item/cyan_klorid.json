@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "astral:block/cyan_cyst_top"
+    "layer0": "astral:block/cyan_klorid"
   }
 }

@@ -28,10 +28,15 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(ETHER_DIRT_ITEM);
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forItem(METAPHORIC_BONE);
-        forBlockItem(LARGE_CYAN_CYST_ITEM, mcLoc("item/large_fern"));
-        forBlockItem(TALL_CYAN_SWARD_ITEM, mcLoc("item/tall_grass"));
-        forBlockItem(CYAN_SWARD_ITEM, mcLoc("item/grass"));
-        forBlockItem(CYAN_CYST_ITEM, mcLoc("item/fern"));
+        forBlockItemWithParent(LARGE_CYAN_CYST_ITEM, modLoc("block/cyan_cyst_top"));
+        forBlockItemWithParent(TALL_CYAN_SWARD_ITEM, modLoc("block/cyan_sward_top"));
+        forBlockItemWithParent(CYAN_CYST_ITEM, modLoc("block/cyan_cyst"));
+        forBlockItemWithParent(CYAN_SWARD_ITEM, modLoc("block/cyan_sward"));
+        forBlockItemWithParent(CYAN_BELLEVINE_ITEM);
+        forBlockItemWithParent(CYAN_BLISTERWART_ITEM);
+        forBlockItemWithParent(CYAN_KLORID_ITEM);
+        forBlockItemWithParent(CYAN_MORKEL_ITEM);
+        forBlockItemWithParent(CYAN_PODS_ITEM);
         forBlockItemWithParent(ETHEREAL_DOOR_ITEM, modLoc("item/ethereal_door"));
         forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ethereal_trapdoor_bottom"));
         forBlockItem(ETHEREAL_PLANKS_ITEM);
@@ -58,6 +63,10 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
 
     private void forBlockItemWithParent(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
         singleTexture(item.getId().getPath(), generatedItem, "layer0", modelLocation);
+    }
+
+    private void forBlockItemWithParent(RegistryObject<? extends BlockNamedItem> item) {
+        singleTexture(item.getId().getPath(), generatedItem, "layer0", modLoc("block/" + item.getId().getPath()));
     }
 
     @Nonnull

@@ -41,7 +41,7 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> CYAN_SWARD_ITEM = ITEMS.register("ethereal_grass", () -> convertToBlockItem(AstralBlocks.CYAN_SWARD.get()));
     public static final RegistryObject<BlockNamedItem> TALL_CYAN_SWARD_ITEM = ITEMS.register("tall_ethereal_grass", () -> convertToBlockItem(TALL_CYAN_SWARD.get()));
     public static final RegistryObject<BlockNamedItem> CYAN_BELLEVINE_ITEM = ITEMS.register("cyan_bellevine", () -> convertToBlockItem(CYAN_BELLEVINE.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_BLISTERWART_ITEM = ITEMS.register("cyan_blisterwat", () -> convertToBlockItem(CYAN_BLISTERWART.get()));
+    public static final RegistryObject<BlockNamedItem> CYAN_BLISTERWART_ITEM = ITEMS.register("cyan_blisterwart", () -> convertToBlockItem(CYAN_BLISTERWART.get()));
     public static final RegistryObject<BlockNamedItem> CYAN_KLORID_ITEM = ITEMS.register("cyan_klorid", () -> convertToBlockItem(CYAN_KLORID.get()));
     public static final RegistryObject<BlockNamedItem> CYAN_MORKEL_ITEM = ITEMS.register("cyan_morkel", () -> convertToBlockItem(CYAN_MORKEL.get()));
     public static final RegistryObject<BlockNamedItem> CYAN_PODS_ITEM = ITEMS.register("cyan_pods", () -> convertToBlockItem(CYAN_PODS.get()));

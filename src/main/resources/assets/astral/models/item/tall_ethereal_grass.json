@@ -1,3 +1,6 @@
 {
-  "parent": "item/tall_grass"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "astral:block/cyan_sward_top"
+  }
 }

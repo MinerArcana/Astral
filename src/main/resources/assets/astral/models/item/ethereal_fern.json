@@ -1,3 +1,6 @@
 {
-  "parent": "item/fern"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "astral:block/cyan_cyst"
+  }
 }
