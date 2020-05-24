@@ -43,8 +43,15 @@ public class LootTables extends LootTableProvider {
         @Override
         protected void addTables() {
             etherealPlants.forEach(this::registerShearsRecipe);
-            this.registerLootTable(LARGE_CYAN_CYST.get(), onlyWithShears(CYAN_CYST.get()));
-            this.registerLootTable(TALL_CYAN_SWARD.get(), onlyWithShears(CYAN_SWARD.get()));
+            this.registerLootTable(LARGE_CYAN_CYST.get(), dropping(CYAN_CYST.get()));
+            this.registerLootTable(TALL_CYAN_SWARD.get(), dropping(CYAN_SWARD.get()));
+            this.registerLootTable(CYAN_CYST.get(), dropping(CYAN_CYST.get()));
+            this.registerLootTable(CYAN_SWARD.get(), dropping(CYAN_SWARD.get()));
+            this.registerLootTable(CYAN_BELLEVINE.get(), dropping(CYAN_BELLEVINE.get()));
+            this.registerLootTable(CYAN_BLISTERWART.get(), dropping(CYAN_BLISTERWART.get()));
+            this.registerLootTable(CYAN_KLORID.get(), dropping(CYAN_KLORID.get()));
+            this.registerLootTable(CYAN_MORKEL.get(), dropping(CYAN_MORKEL.get()));
+            this.registerLootTable(CYAN_PODS.get(), dropping(CYAN_PODS.get()));
             this.registerLootTable(ETHEREAL_PLANKS.get(), dropping(ETHEREAL_PLANKS.get()));
             this.registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
             this.registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
@@ -56,7 +63,7 @@ public class LootTables extends LootTableProvider {
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
             final List<Block> astralBlocks = this.etherealPlants;
-            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get(), ETHEREAL_SAPLING.get()));
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get(), ETHEREAL_SAPLING.get(), CYAN_CYST.get(), CYAN_SWARD.get(), CYAN_BELLEVINE.get(), CYAN_BLISTERWART.get(), CYAN_KLORID.get(), CYAN_MORKEL.get(), CYAN_PODS.get(), LARGE_CYAN_CYST.get(), TALL_CYAN_SWARD.get()));
             return astralBlocks;
         }
 

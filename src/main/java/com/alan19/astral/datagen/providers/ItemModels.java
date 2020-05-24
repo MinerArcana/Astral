@@ -28,10 +28,10 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(ETHER_DIRT_ITEM);
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forItem(METAPHORIC_BONE);
-        forBlockItem(LARGE_ETHEREAL_FERN_ITEM, mcLoc("item/large_fern"));
-        forBlockItem(TALL_ETHEREAL_GRASS_ITEM, mcLoc("item/tall_grass"));
-        forBlockItem(ETHEREAL_GRASS_ITEM, mcLoc("item/grass"));
-        forBlockItem(ETHEREAL_FERN_ITEM, mcLoc("item/fern"));
+        forBlockItem(LARGE_CYAN_CYST_ITEM, mcLoc("item/large_fern"));
+        forBlockItem(TALL_CYAN_SWARD_ITEM, mcLoc("item/tall_grass"));
+        forBlockItem(CYAN_SWARD_ITEM, mcLoc("item/grass"));
+        forBlockItem(CYAN_CYST_ITEM, mcLoc("item/fern"));
         forBlockItemWithParent(ETHEREAL_DOOR_ITEM, modLoc("item/ethereal_door"));
         forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ethereal_trapdoor_bottom"));
         forBlockItem(ETHEREAL_PLANKS_ITEM);

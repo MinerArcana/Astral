@@ -69,9 +69,9 @@ public class BlockRenderHandler {
         itemColors.register((itemStack, tintIndex) -> {
             BlockState blockstate = ((BlockItem) itemStack.getItem()).getBlock().getDefaultState();
             return blockColors.getColor(blockstate, null, null, tintIndex);
-        }, AstralItems.ETHEREAL_FERN_ITEM.get(), AstralItems.ETHEREAL_GRASS_ITEM.get());
+        }, AstralItems.CYAN_CYST_ITEM.get(), AstralItems.CYAN_SWARD_ITEM.get());
 
-        itemColors.register((itemStack, i) -> addEtherealTint(GrassColors.get(0.5D, 1.0D)), AstralItems.LARGE_ETHEREAL_FERN_ITEM.get(), AstralItems.TALL_ETHEREAL_GRASS_ITEM.get());
+        itemColors.register((itemStack, i) -> addEtherealTint(GrassColors.get(0.5D, 1.0D)), AstralItems.LARGE_CYAN_CYST_ITEM.get(), AstralItems.TALL_CYAN_SWARD_ITEM.get());
 
     }
 
