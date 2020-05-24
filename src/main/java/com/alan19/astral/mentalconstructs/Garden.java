@@ -11,7 +11,7 @@ public class Garden extends MentalConstruct {
     private float saturationCounter = 0;
 
     public static float getConversionRatio(int level) {
-        return (float) (1 / (.25 * Math.log10(level + 1.5)) + .5);
+        return 14 / (.002f * level + 1) + 1;
     }
 
     @Override
