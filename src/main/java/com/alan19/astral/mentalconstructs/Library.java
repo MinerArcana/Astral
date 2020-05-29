@@ -6,7 +6,8 @@ public class Library extends MentalConstruct {
     @Override
     public void performEffect(PlayerEntity player, int level) {
         if (player.experienceLevel < level) {
-            player.experienceLevel += 1;
+            player.addExperienceLevel(1);
+            player.experience = 0;
         }
     }
 

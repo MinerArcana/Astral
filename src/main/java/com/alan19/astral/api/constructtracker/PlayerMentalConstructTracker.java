@@ -4,6 +4,7 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.mentalconstructs.MentalConstruct;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.util.Constants;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,10 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         DimensionType oldConstructWorld = DimensionType.byName(entry.getDimensionName());
         if (oldConstructWorld != null) {
             BlockPos oldPos = entry.getConstructPos();
-            world.getServer().getWorld(oldConstructWorld).getBlockState(oldPos).with(Constants.TRACKED_CONSTRUCT, false);
+            final BlockState blockState = world.getServer().getWorld(oldConstructWorld).getBlockState(oldPos);
+            if (blockState.getProperties().contains(Constants.TRACKED_CONSTRUCT)) {
+                blockState.with(Constants.TRACKED_CONSTRUCT, false);
+            }
         }
         entry.setLevel(level);
         entry.setConstructPos(pos);
