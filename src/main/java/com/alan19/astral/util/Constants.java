@@ -2,6 +2,7 @@ package com.alan19.astral.util;
 
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.IntegerProperty;
 
 import java.util.UUID;
 
@@ -14,4 +15,5 @@ public class Constants {
     public static final AttributeModifier DISABLES_GRAVITY = new AttributeModifier(astralGravity, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
     public static final int ETHEREAL_BLOCK_OPACITY = 0;
     public static final BooleanProperty TRACKED_CONSTRUCT = BooleanProperty.create("tracked_construct");
+    public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
 }

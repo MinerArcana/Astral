@@ -3,6 +3,7 @@ package com.alan19.astral.blocks;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
+import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,9 +35,9 @@ public interface MentalConstructController {
      * @param pos     The pos of the block
      * @param block   The instance of the block
      */
-    static void onReplaced(@Nonnull World worldIn, @Nonnull BlockPos pos, Block block) {
+    static void onReplaced(@Nonnull World worldIn, @Nonnull BlockPos pos, Block block, MentalConstructType type) {
         if (worldIn instanceof ServerWorld) {
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(AstralMentalConstructs.GARDEN.get(), worldIn, pos));
+            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(type, worldIn, pos));
             worldIn.updateComparatorOutputLevel(pos, block);
         }
     }

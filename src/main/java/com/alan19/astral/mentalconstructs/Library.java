@@ -6,7 +6,7 @@ public class Library extends MentalConstruct {
     @Override
     public void performEffect(PlayerEntity player, int level) {
         if (player.experienceLevel < level) {
-            player.giveExperiencePoints((int) Math.max(1, player.experience * (1 + level * .01)));
+            player.experienceLevel += 1;
         }
     }
 
@@ -17,6 +17,8 @@ public class Library extends MentalConstruct {
 
     @Override
     public MentalConstructType getType() {
-        return AstralMentalConstructs.GARDEN.get();
+        return AstralMentalConstructs.LIBRARY.get();
     }
+
+
 }

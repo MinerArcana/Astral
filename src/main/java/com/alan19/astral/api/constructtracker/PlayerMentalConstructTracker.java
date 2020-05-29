@@ -16,17 +16,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNBT> {
-    private final Map<String, MentalConstruct> mentalConstructs = new HashMap<>();
+    //Map of mental construct ResourceLocation as String to Mental Construct info
+    private final Map<ResourceLocation, MentalConstruct> mentalConstructs = new HashMap<>();
 
-    public Map<String, MentalConstruct> getMentalConstructs() {
+    public Map<ResourceLocation, MentalConstruct> getMentalConstructs() {
         return mentalConstructs;
     }
 
     public void modifyConstructInfo(BlockPos pos, ServerWorld world, MentalConstructType type, int level) {
-        if (!mentalConstructs.containsKey(type.getRegistryName().toString())) {
-            mentalConstructs.put(type.getRegistryName().toString(), type.create());
+        if (!mentalConstructs.containsKey(type.getRegistryName())) {
+            mentalConstructs.put(type.getRegistryName(), type.create());
         }
-        final MentalConstruct entry = mentalConstructs.get(type.getRegistryName().toString());
+        final MentalConstruct entry = mentalConstructs.get(type.getRegistryName());
         DimensionType oldConstructWorld = DimensionType.byName(entry.getDimensionName());
         if (oldConstructWorld != null) {
             BlockPos oldPos = entry.getConstructPos();
@@ -41,7 +42,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT nbt = new CompoundNBT();
-        mentalConstructs.forEach((key, value) -> nbt.put(key, value.serializeNBT()));
+        mentalConstructs.forEach((key, value) -> nbt.put(key.toString(), value.serializeNBT()));
         return nbt;
     }
 
@@ -52,7 +53,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
             if (AstralAPI.MENTAL_CONSTRUCT_TYPES.get().containsKey(resourceLocation)) {
                 MentalConstruct construct = AstralAPI.MENTAL_CONSTRUCT_TYPES.get().getValue(resourceLocation).create();
                 construct.deserializeNBT(nbt.getCompound(mentalConstructKey));
-                mentalConstructs.put(mentalConstructKey, construct);
+                mentalConstructs.put(resourceLocation, construct);
             }
         }
     }
@@ -71,6 +72,6 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
      * @param mentalConstruct The mental construct to remove
      */
     public void removeMentalConstruct(MentalConstructType mentalConstruct) {
-        mentalConstructs.remove(mentalConstruct.getRegistryName().toString());
+        mentalConstructs.remove(mentalConstruct.getRegistryName());
     }
 }

@@ -48,6 +48,7 @@ public class AstralBlocks {
 
     //Mental Constructs
     public static final RegistryObject<ComfortableCushion> COMFORTABLE_CUSHION = BLOCKS.register("comfortable_cushion", ComfortableCushion::new);
+    public static final RegistryObject<IndexOfKnowledge> INDEX_OF_KNOWLEDGE = BLOCKS.register("index_of_knowledge", IndexOfKnowledge::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

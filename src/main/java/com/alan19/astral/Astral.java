@@ -39,6 +39,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -76,7 +77,7 @@ public class Astral {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::registerModels);
         modEventBus.addListener(this::setRenderLayers);
-        modEventBus.addListener(this::registerParticleFactories);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(this::registerParticleFactories));
 
         // Register and load configs
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
@@ -117,6 +118,7 @@ public class Astral {
         ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new);
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);

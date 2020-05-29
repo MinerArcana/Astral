@@ -6,10 +6,7 @@ import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.Garden;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FurnaceBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.IFluidState;
@@ -61,7 +58,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT, FurnaceBlock.FACING));
+        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT, AbstractFurnaceBlock.FACING));
     }
 
     /**
@@ -112,7 +109,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     @Override
     public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
-        MentalConstructController.onReplaced(worldIn, pos, this);
+        MentalConstructController.onReplaced(worldIn, pos, this, AstralMentalConstructs.GARDEN.get());
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
