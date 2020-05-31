@@ -53,6 +53,7 @@ public class AstralBlocks {
     //Other Ethereal Blocks
     public static final RegistryObject<MetaphoricStone> METAPHORIC_STONE = BLOCKS.register("metaphoric_stone", MetaphoricStone::new);
     public static final RegistryObject<BoneSheets> BONE_SHEETS = BLOCKS.register("bone_sheets", BoneSheets::new);
+    public static final RegistryObject<MetaphoricFleshBlock> METAPHORIC_FLESH_BLOCK = BLOCKS.register("metaphoric_flesh_block", MetaphoricFleshBlock::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

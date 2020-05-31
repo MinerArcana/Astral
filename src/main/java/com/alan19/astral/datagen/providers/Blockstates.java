@@ -54,6 +54,7 @@ public class Blockstates extends BlockStateProvider {
         axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ethereal_log"), modLoc("block/stripped_ethereal_log"));
         horizontalBlock(COMFORTABLE_CUSHION.get(), new ModelFile.ExistingModelFile(modLoc("block/comfortable_cushion"), exFileHelper));
         simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ethereal_sapling", modLoc("block/ethereal_sapling"))));
+        simpleBlock(METAPHORIC_FLESH_BLOCK.get());
     }
 
     private ModelFile modelDefault(Block block) {

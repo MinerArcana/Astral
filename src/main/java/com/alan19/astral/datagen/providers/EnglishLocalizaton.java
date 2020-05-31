@@ -68,8 +68,9 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(COMFORTABLE_CUSHION.get(), "Comfortable Cushion");
         add(ETHEREAL_SAPLING.get(), "Ethereal Sapling");
         add(INDEX_OF_KNOWLEDGE.get(), "Index of Knowledge");
-        add(BONE_SHEETS.get(), "Block of Metaphoric Bone");
+        add(BONE_SHEETS.get(), "Metaphoric Bone Block");
         add(METAPHORIC_STONE.get(), "Metaphoric Stone");
+        add(METAPHORIC_FLESH_BLOCK.get(), "Metaphoric Flesh Block");
     }
 
     private void addItems() {
@@ -104,11 +105,12 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(DREAMWEAVE.get(), "Dreamweave");
         add(ETHEREAL_SAPLING_ITEM.get(), "Ethereal Sapling");
         add(INDEX_OF_KNOWLEDGE_ITEM.get(), "Index of Knowledge");
-        add(BONE_SHEETS_ITEM.get(), "Block of Metaphoric Bone");
+        add(BONE_SHEETS_ITEM.get(), "Metaphoric Bone Block");
         add(METAPHORIC_STONE_ITEM.get(), "Metaphoric Stone");
         add(SLEEPLESS_EYE.get(), "Sleepless Eye");
         add(CRYSTAL_CHITIN.get(), "Crystal Chitin");
         add(METAPHORIC_FLESH.get(), "Metaphoric Flesh");
+        add(METAPHORIC_FLESH_BLOCK_ITEM.get(), "Metaphoric Flesh Block");
     }
 
     private void addPotions() {

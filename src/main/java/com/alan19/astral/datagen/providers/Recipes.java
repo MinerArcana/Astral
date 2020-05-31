@@ -115,6 +115,7 @@ public class Recipes extends RecipeProvider {
 
         createTwoByTwoRecipe(consumer, BONE_SHEETS_ITEM.get(), METAPHORIC_BONE.get(), 1);
         createTwoByTwoRecipe(consumer, Items.GLASS, CRYSTAL_CHITIN.get(), 1, new ResourceLocation(Astral.MOD_ID, "chitin_glass"));
+        createTwoByTwoRecipe(consumer, METAPHORIC_FLESH_BLOCK_ITEM.get(), METAPHORIC_FLESH.get(), 1);
     }
 
     private ShapedRecipeBuilder generateTwoByTwoRecipeBuilder(Item output, Item input, int count) {

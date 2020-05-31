@@ -47,6 +47,8 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forItem(DREAMCORD);
         forItem(DREAMWEAVE);
         forBlockItemWithParent(ETHEREAL_SAPLING_ITEM, modLoc("block/ethereal_sapling"));
+        forBlockItem(METAPHORIC_FLESH_BLOCK_ITEM);
+        forItem(METAPHORIC_FLESH);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {
