@@ -97,4 +97,13 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
         super.tick(state, worldIn, pos, rand);
     }
 
+    @Override
+    public boolean hasComparatorInputOverride(@Nonnull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+        return Math.min(calculateLevel(worldIn, pos), blockState.get(Constants.LIBRARY_LEVEL));
+    }
 }
