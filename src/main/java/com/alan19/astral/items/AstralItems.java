@@ -59,6 +59,8 @@ public class AstralItems {
     public static final RegistryObject<MetaphoricFlesh> METAPHORIC_FLESH = ITEMS.register("metaphoric_flesh", MetaphoricFlesh::new);
     public static final RegistryObject<SleeplessEye> SLEEPLESS_EYE = ITEMS.register("sleepless_eye", SleeplessEye::new);
     public static final RegistryObject<CrystalChitin> CRYSTAL_CHITIN = ITEMS.register("crystal_chitin", CrystalChitin::new);
+    public static final RegistryObject<BlockNamedItem> METAPHORIC_STONE_ITEM = ITEMS.register("metaphoric_stone", () -> convertToBlockItem(METAPHORIC_STONE.get()));
+    public static final RegistryObject<BlockNamedItem> BONE_SHEETS_ITEM = ITEMS.register("bone_sheets", () -> convertToBlockItem(BONE_SHEETS.get()));
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab

@@ -50,6 +50,10 @@ public class AstralBlocks {
     public static final RegistryObject<ComfortableCushion> COMFORTABLE_CUSHION = BLOCKS.register("comfortable_cushion", ComfortableCushion::new);
     public static final RegistryObject<IndexOfKnowledge> INDEX_OF_KNOWLEDGE = BLOCKS.register("index_of_knowledge", IndexOfKnowledge::new);
 
+    //Other Ethereal Blocks
+    public static final RegistryObject<MetaphoricStone> METAPHORIC_STONE = BLOCKS.register("metaphoric_stone", MetaphoricStone::new);
+    public static final RegistryObject<BoneSheets> BONE_SHEETS = BLOCKS.register("bone_sheets", BoneSheets::new);
+
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);
     }

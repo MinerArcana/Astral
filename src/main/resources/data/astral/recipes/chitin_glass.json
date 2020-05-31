@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
-    " DD",
-    " DD"
+    " CC",
+    " CC"
   ],
   "key": {
-    "D": {
-      "item": "astral:dreamcord"
+    "C": {
+      "item": "astral:crystal_chitin"
     }
   },
   "result": {
-    "item": "astral:dreamweave"
+    "item": "minecraft:glass"
   }
 }

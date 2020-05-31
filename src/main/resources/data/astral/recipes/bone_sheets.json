@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
-    " DD",
-    " DD"
+    " MM",
+    " MM"
   ],
   "key": {
-    "D": {
-      "item": "astral:dreamcord"
+    "M": {
+      "item": "astral:metaphoric_bone"
     }
   },
   "result": {
-    "item": "astral:dreamweave"
+    "item": "astral:bone_sheets"
   }
 }

@@ -59,7 +59,7 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT).add(Constants.LIBRARY_LEVEL));
+        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT).add(Constants.LIBRARY_LEVEL).add(Constants.CAPPED_LEVEL));
     }
 
     /**

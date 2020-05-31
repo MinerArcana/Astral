@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "ESE",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "astral:metaphoric_stone"
+    },
+    "E": {
+      "item": "astral:sleepless_eye"
+    },
+    "B": {
+      "item": "minecraft:book"
+    }
+  },
+  "result": {
+    "item": "astral:index_of_knowledge"
+  }
+}

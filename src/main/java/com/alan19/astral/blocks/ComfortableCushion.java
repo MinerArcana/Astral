@@ -115,7 +115,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     @Override
     public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
-        MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos));
+        MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos), AstralMentalConstructs.GARDEN.get());
         super.tick(state, worldIn, pos, rand);
     }
 

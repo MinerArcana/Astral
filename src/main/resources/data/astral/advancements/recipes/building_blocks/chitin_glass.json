@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "astral:chitin_glass"
+    ]
+  },
+  "criteria": {
+    "crystal_chitin": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:crystal_chitin"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "astral:chitin_glass"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "crystal_chitin",
+      "has_the_recipe"
+    ]
+  ]
+}
