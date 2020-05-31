@@ -7,12 +7,14 @@ import com.alan19.astral.util.Constants;
 import com.alan19.astral.util.ExperienceHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SPlaySoundEventPacket;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.LecternTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -22,6 +24,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 
@@ -56,13 +59,29 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
         super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT).add(Constants.LIBRARY_LEVEL));
     }
 
+    /**
+     * Calculates the maximum level for the Index of Knowledge, which is equal to the number of bookshelves in a 3 block radius * .25, plus the number of lecterns with books in a 3 block radius * .5
+     *
+     * @param world The world the Index of Knowledge is in
+     * @param pos   The BlockPos of the Index of Knowledge
+     * @return The maximum level of the Index of Knowledge
+     */
     @Override
     public int calculateLevel(World world, BlockPos pos) {
-        return 5;
+        return BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3))
+                .map(blockPos -> sumStates(world, blockPos))
+                .reduce((integerIntegerPair, integerIntegerPair2) -> Pair.of(integerIntegerPair.getLeft() + integerIntegerPair2.getLeft(), integerIntegerPair.getRight() * +integerIntegerPair2.getRight()))
+                .map(integerIntegerPair -> (int) (integerIntegerPair.getLeft() * .25 + integerIntegerPair.getRight() * .5))
+                .orElse(0);
     }
 
+    private Pair<Integer, Integer> sumStates(World world, BlockPos blockPos) {
+        return Pair.of(world.getBlockState(blockPos).getBlock() == Blocks.BOOKSHELF ? 1 : 0, world.getTileEntity(blockPos) instanceof LecternTileEntity && ((LecternTileEntity) world.getTileEntity(blockPos)).hasBook() ? 1 : 0);
+    }
+
+
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         MentalConstructController.onReplaced(worldIn, pos, this, AstralMentalConstructs.LIBRARY.get());
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }

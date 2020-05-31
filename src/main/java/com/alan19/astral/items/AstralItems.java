@@ -56,6 +56,9 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> COMFORTABLE_CUSHION_ITEM = ITEMS.register("comfortable_cushion", () -> convertToBlockItem(COMFORTABLE_CUSHION.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_SAPLING_ITEM = ITEMS.register("ethereal_sapling", () -> convertToBlockItem(ETHEREAL_SAPLING.get()));
     public static final RegistryObject<BlockNamedItem> INDEX_OF_KNOWLEDGE_ITEM = ITEMS.register("index_of_knowledge", () -> convertToBlockItem(INDEX_OF_KNOWLEDGE.get()));
+    public static final RegistryObject<MetaphoricFlesh> METAPHORIC_FLESH = ITEMS.register("metaphoric_flesh", MetaphoricFlesh::new);
+    public static final RegistryObject<SleeplessEye> SLEEPLESS_EYE = ITEMS.register("sleepless_eye", SleeplessEye::new);
+    public static final RegistryObject<CrystalChitin> CRYSTAL_CHITIN = ITEMS.register("crystal_chitin", CrystalChitin::new);
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab
