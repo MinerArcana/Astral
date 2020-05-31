@@ -16,4 +16,5 @@ public class Constants {
     public static final int ETHEREAL_BLOCK_OPACITY = 0;
     public static final BooleanProperty TRACKED_CONSTRUCT = BooleanProperty.create("tracked_construct");
     public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
+    public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
 }

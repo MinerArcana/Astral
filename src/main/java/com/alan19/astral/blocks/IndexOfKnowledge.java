@@ -27,30 +27,33 @@ import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class IndexOfKnowledge extends Block implements MentalConstructController {
     public IndexOfKnowledge() {
         super(Block.Properties.create(Material.ROCK, MaterialColor.RED).hardnessAndResistance(1.5F));
-        this.setDefaultState(getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(Constants.LIBRARY_LEVEL, 0));
+        this.setDefaultState(getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(Constants.LIBRARY_LEVEL, 0).with(Constants.CAPPED_LEVEL, false));
     }
 
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
+        final int libraryLevel = state.get(Constants.LIBRARY_LEVEL);
         if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM) && handIn == Hand.MAIN_HAND) {
-            final int libraryLevel = state.get(Constants.LIBRARY_LEVEL);
             int levelRequirement = (libraryLevel + 1) * 10;
             if (player.experienceLevel >= levelRequirement && calculateLevel(worldIn, pos) > libraryLevel) {
                 ExperienceHelper.drainPlayerXP(player, ExperienceHelper.getExperienceForLevel(levelRequirement));
-                AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.LIBRARY.get(), libraryLevel + 1));
                 worldIn.setBlockState(pos, state.with(Constants.TRACKED_CONSTRUCT, true));
                 worldIn.setBlockState(pos, state.with(Constants.LIBRARY_LEVEL, libraryLevel + 1));
+                AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.LIBRARY.get(), Math.min(calculateLevel(worldIn, pos), state.get(Constants.LIBRARY_LEVEL))));
                 if (player instanceof ServerPlayerEntity) {
                     ((ServerPlayerEntity) player).connection.sendPacket(new SPlaySoundEventPacket());
                 }
                 worldIn.playSound(null, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
+                state.with(Constants.CAPPED_LEVEL, libraryLevel >= calculateLevel(worldIn, pos));
                 return ActionResultType.SUCCESS;
             }
         }
+        state.with(Constants.CAPPED_LEVEL, libraryLevel >= calculateLevel(worldIn, pos));
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 
@@ -85,4 +88,13 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
         MentalConstructController.onReplaced(worldIn, pos, this, AstralMentalConstructs.LIBRARY.get());
         super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
+
+    @Override
+    public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+        final int libraryLevel = state.get(Constants.LIBRARY_LEVEL);
+        state.with(Constants.CAPPED_LEVEL, libraryLevel >= calculateLevel(worldIn, pos));
+        MentalConstructController.tick(state, worldIn, pos, Math.min(calculateLevel(worldIn, pos), libraryLevel), AstralMentalConstructs.LIBRARY.get());
+        super.tick(state, worldIn, pos, rand);
+    }
+
 }
