@@ -49,6 +49,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItemWithParent(ETHEREAL_SAPLING_ITEM, modLoc("block/ethereal_sapling"));
         forBlockItem(METAPHORIC_FLESH_BLOCK_ITEM);
         forItem(METAPHORIC_FLESH);
+        forItem(CRYSTAL_CHITIN);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {
