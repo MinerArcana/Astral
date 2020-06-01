@@ -138,8 +138,9 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     @Override
-    public boolean func_225577_a_(@Nonnull IWorld world, @Nonnull ChunkGenerator<?> chunkGenerator, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox, @Nonnull ChunkPos chunkPos) {
-        this.chunkGenerator = chunkGenerator;
-        return super.func_225577_a_(world, chunkGenerator, random, mutableBoundingBox, chunkPos);
+    public boolean create(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<?> chunkGeneratorIn, @Nonnull Random randomIn, @Nonnull MutableBoundingBox mutableBoundingBoxIn, @Nonnull ChunkPos chunkPosIn) {
+        this.chunkGenerator = chunkGeneratorIn;
+        return super.create(worldIn, chunkGeneratorIn, randomIn, mutableBoundingBoxIn, chunkPosIn);
     }
+
 }

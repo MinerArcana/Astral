@@ -8,7 +8,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.AbstractTreeFeature;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -20,13 +19,13 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
     }
 
     @Override
-    protected boolean func_225557_a_(@Nonnull IWorldGenerationReader generationReader, @Nonnull Random rand, @Nonnull BlockPos blockPos, @Nonnull Set<BlockPos> blockPosSet, @Nonnull Set<BlockPos> blockPosSet1, @Nonnull MutableBoundingBox mutableBoundingBox, @Nonnull EtherealTreeConfig treeConfig) {
+    protected boolean place(IWorldGenerationReader generationReader, Random rand, BlockPos positionIn, Set<BlockPos> blockPosSet, Set<BlockPos> blockPosSet1, MutableBoundingBox boundingBoxIn, EtherealTreeConfig configIn) {
         if (!(generationReader instanceof IWorld)) {
             return false;
         }
-        int height = treeConfig.baseHeight + (rand.nextInt(2) * (rand.nextInt(2) - rand.nextInt(3)));
-        placeTrunk(generationReader, rand, blockPos, blockPosSet, mutableBoundingBox, treeConfig, height);
-        placeCanopy(generationReader, rand, height, blockPos, blockPosSet, mutableBoundingBox, treeConfig);
+        int height = configIn.baseHeight + (rand.nextInt(2) * (rand.nextInt(2) - rand.nextInt(3)));
+        placeTrunk(generationReader, rand, positionIn, blockPosSet, boundingBoxIn, configIn, height);
+        placeCanopy(generationReader, rand, height, positionIn, blockPosSet, boundingBoxIn, configIn);
         return true;
     }
 

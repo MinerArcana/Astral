@@ -20,7 +20,7 @@ archivesBaseName = 'astral'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200423-1.15.1'
+    mappings channel: 'snapshot', version: '20200531-1.15.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -71,7 +71,11 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.1.48'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-29.147")
+    compileOnly fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.3")
+    runtimeOnly fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.3")
 }
 
 repositories {
@@ -84,6 +88,10 @@ repositories {
         // for JEI
         name "progwml6"
         url "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        name "brassgoggledcoders"
+        url "https://maven.teamacronymcoders.com/"
     }
 }
 
@@ -114,6 +122,5 @@ publishing {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
-
     }
 }
