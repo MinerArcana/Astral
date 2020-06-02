@@ -10,7 +10,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 public class DisplayBuilder {
     private final String advancementName;
-    private final IItemProvider displayItem;
+    private final ItemStack displayItem;
     private FrameType frameType = FrameType.TASK;
     private boolean showToast = true;
     private boolean announceToChat = true;
@@ -19,7 +19,13 @@ public class DisplayBuilder {
 
     public DisplayBuilder(IItemProvider displayItem, String advancementName) {
         this.advancementName = advancementName;
+        this.displayItem = new ItemStack(displayItem);
+    }
+
+    public DisplayBuilder(ItemStack displayItem, String advancementName) {
+        this.advancementName = advancementName;
         this.displayItem = displayItem;
+
     }
 
     public DisplayBuilder frameType(FrameType frameType) {
@@ -48,6 +54,6 @@ public class DisplayBuilder {
     }
 
     public DisplayInfo build() {
-        return new DisplayInfo(new ItemStack(displayItem), new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".name"), new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".desc"), background, frameType, showToast, announceToChat, hidden);
+        return new DisplayInfo(displayItem, new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".name"), new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".desc"), background, frameType, showToast, announceToChat, hidden);
     }
 }

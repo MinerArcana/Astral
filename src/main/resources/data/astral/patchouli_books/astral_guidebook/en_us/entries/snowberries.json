@@ -1,0 +1,23 @@
+{
+  "name": "Snowberries",
+  "category": "plants",
+  "icon": "astral:snowberry",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Snowberries grow in bushes found in biomes that are both snowy and forested. Snowberry Bushes grow in small groups and accumulate snow around them when found in the wild. Grown Snowberry Bushes have sharp branches, inflicting damage and slowing entities walking through it.",
+      "title": "Snowberry Bushes"
+    },
+    {
+      "type": "spotlight",
+      "item": "astral:snowberry",
+      "title": "Snowberries",
+      "text": "Snowberries are edible and provide Regeneration II and Nausea II when eaten, making it a great treat for injured adventurers out of combat."
+    },
+    {
+      "type": "text",
+      "text": "You can grow Snowberries by planting them on dirt and snow. When there's berries on the bush, you can right click the bush to harvest them, or wait a little longer to harvest a few more berries. Harvesting a bush will cause the berries to grow back faster, as opposed to breaking it and planting a new bush.",
+      "title": "Growing Snowberries"
+    }
+  ]
+}

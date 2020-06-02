@@ -20,8 +20,8 @@ public class DataGenerators {
         generator.addProvider(new Recipes(generator));
         generator.addProvider(new BlockTagsGenerator(generator));
         generator.addProvider(new ItemTagGenerator(generator));
-            generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
-            generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
+        generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
+        generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
         generator.addProvider(new PatchouliBooks(generator, Astral.MOD_ID, "en_us"));
     }
 }

@@ -1,0 +1,23 @@
+{
+  "name": "Feverweed",
+  "category": "plants",
+  "icon": "astral:feverweed",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Feverweed grow in biomes that are warm and rainy. They grow in patches on the surface of the biome, and can be passed through safely.",
+      "title": "Feverweed Patches"
+    },
+    {
+      "type": "spotlight",
+      "item": "astral:feverweed",
+      "title": "Feverweed",
+      "text": "Feverweed is edible and provide Luck II and Hunger II when eaten, making it easier to get rare drops."
+    },
+    {
+      "type": "text",
+      "text": "You can grow Feverweed by planting it on Grass or Dirt blocks and wait for it to spread slowly. It spreads similarly to a mushroom, but will spread regardless of light level",
+      "title": "Growing Feverweed"
+    }
+  ]
+}

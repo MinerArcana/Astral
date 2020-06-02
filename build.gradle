@@ -51,21 +51,24 @@ minecraft {
         }
 
         data {
-            workingDirectory project.file('run')
+            workingDirectory project.file("run")
+            environment 'target', 'fmluserdevdata'
+            properties 'fml.earlyprogresswindow': 'false'
 
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            args '--all', '--output', file('src/generated/resources/'),
+                    '--mod', 'astral', '--reports',
+                    '--existing', sourceSets.main.resources.srcDirs[0]
+        }
+    }
+}
 
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'astral', '--all', '--output', file('src/generated/resources/')
-
-            mods {
-                astral {
-                    source sourceSets.main
-                }
-            }
+sourceSets {
+    main {
+        resources {
+            srcDirs = [
+                    "$rootDir/src/main/resources",
+                    "$rootDir/src/generated/resources"
+            ]
         }
     }
 }
@@ -73,9 +76,8 @@ minecraft {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-29.147")
-    compileOnly fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.3")
-    runtimeOnly fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.3")
+    compile fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-34.182")
+    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.4")
 }
 
 repositories {

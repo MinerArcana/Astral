@@ -17,7 +17,9 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.feature.Feature;
@@ -164,7 +166,7 @@ public class Advancements extends AdvancementProvider {
         brewStrongAstralPotion = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
                 .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(AstralPotions.STRONG_ASTRAL_TRAVEL_POTION))
-                .withDisplay(new DisplayBuilder(Items.POTION, brewStrongAstralPotionName).build())
+                .withDisplay(new DisplayBuilder(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), AstralPotions.STRONG_ASTRAL_TRAVEL_POTION), brewStrongAstralPotionName).build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, brewStrongAstralPotionName).toString());
 
