@@ -2,7 +2,7 @@ package com.alan19.astral.datagen.providers;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entities.AstralEntityRegistry;
+import com.alan19.astral.entities.AstralEntities;
 import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
@@ -29,7 +29,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         addBlocks();
         addPotions();
         addConstants();
-        add(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
+        add(AstralEntities.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
         add(AstralEffects.ASTRAL_TRAVEL, "Astral Travel");
         add("itemGroup.astral", "Astral");
     }

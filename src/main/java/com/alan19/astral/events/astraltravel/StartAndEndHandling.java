@@ -7,8 +7,8 @@ import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.effects.AstralTravelEffect;
-import com.alan19.astral.entities.AstralEntityRegistry;
-import com.alan19.astral.entities.PhysicalBodyEntity;
+import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.util.Constants;
 import net.minecraft.entity.Entity;
@@ -128,7 +128,7 @@ public class StartAndEndHandling {
     }
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
-        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
         if (physicalBodyEntity != null) {
             //Store player UUID to body entity and give it a name
             physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());

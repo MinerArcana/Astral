@@ -1,4 +1,4 @@
-package com.alan19.astral.entities;
+package com.alan19.astral.entities.physicalbody;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;

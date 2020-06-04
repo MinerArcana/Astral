@@ -52,7 +52,7 @@ public interface Ethereal {
      * @return usually a regular shape if the entity is Astral, empty if not
      */
     static VoxelShape getCollisionShape(ISelectionContext context, VoxelShape parentReturn) {
-        if (context.getEntity() instanceof LivingEntity && ((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
+        if (context.getEntity() instanceof LivingEntity && (((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL) || AstralTags.ASTRAL_ENTITIES.contains(context.getEntity().getType())) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
             return parentReturn;
         }
         return VoxelShapes.empty();

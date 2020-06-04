@@ -1,4 +1,4 @@
-package com.alan19.astral.entities;
+package com.alan19.astral.entities.physicalbody;
 
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 

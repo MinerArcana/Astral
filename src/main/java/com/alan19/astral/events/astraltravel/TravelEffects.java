@@ -6,7 +6,7 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entities.PhysicalBodyEntity;
+import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.events.AstralEntityDamage;
 import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;

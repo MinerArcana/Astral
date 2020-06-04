@@ -22,8 +22,8 @@ import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.configs.AstralConfig;
-import com.alan19.astral.entities.AstralEntityRegistry;
-import com.alan19.astral.entities.PhysicalBodyEntityRenderer;
+import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entities.physicalbody.PhysicalBodyEntityRenderer;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
@@ -85,7 +85,7 @@ public class Astral {
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
 
-        AstralEntityRegistry.register(modEventBus);
+        AstralEntities.register(modEventBus);
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
@@ -110,7 +110,7 @@ public class Astral {
     }
 
     public void registerModels(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AstralEntities.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
     }
 
     public void setRenderLayers(FMLClientSetupEvent event) {
