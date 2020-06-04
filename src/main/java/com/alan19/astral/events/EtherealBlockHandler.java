@@ -21,7 +21,7 @@ public class EtherealBlockHandler {
     public static void etherealParticles(PlayerInteractEvent.RightClickBlock event) {
         World world = event.getWorld();
         Random random = world.getRandom();
-        if (!event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL) && event.getPlayer().getHeldItem(event.getHand()).getItem() instanceof BlockItem && event.getFace() != null) {
+        if (!event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && event.getPlayer().getHeldItem(event.getHand()).getItem() instanceof BlockItem && event.getFace() != null) {
             final BlockState blockState = world.getBlockState(event.getPos().offset(event.getFace()));
             if (blockState.getBlock() instanceof Ethereal) {
                 BlockPos blockPos = event.getPos().offset(event.getFace());

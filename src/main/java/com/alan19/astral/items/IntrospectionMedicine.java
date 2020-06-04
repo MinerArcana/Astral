@@ -29,7 +29,7 @@ public class IntrospectionMedicine extends Item {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
-            playerEntity.addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL, Integer.MAX_VALUE));
+            playerEntity.addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE));
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(cap -> cap.setGoingToInnerRealm(true));
         }
         super.onItemUseFinish(stack, worldIn, entityLiving);

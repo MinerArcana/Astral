@@ -25,7 +25,7 @@ public class MentalConstructEvents {
 
     @SubscribeEvent
     public static void libraryMinXP(LivingHealEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity && !((ServerPlayerEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+        if (event.getEntity() instanceof ServerPlayerEntity && !((ServerPlayerEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) event.getEntity();
             AstralAPI.getConstructTracker(playerEntity.getServerWorld()).ifPresent(tracker -> {
                 final Map<ResourceLocation, MentalConstruct> mentalConstructs = tracker.getMentalConstructsForPlayer(playerEntity).getMentalConstructs();

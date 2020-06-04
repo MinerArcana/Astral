@@ -1,9 +1,12 @@
 package com.alan19.astral.effects;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectType;
+
+import javax.annotation.Nonnull;
 
 public class AstralTravelEffect extends Effect {
     public AstralTravelEffect() {
@@ -35,5 +38,10 @@ public class AstralTravelEffect extends Effect {
     @Override
     public boolean isReady(int duration, int amplifier) {
         return (duration % (60 - (amplifier * 5))) == 0;
+    }
+
+    @Override
+    public double getAttributeModifierAmount(int amplifier, @Nonnull AttributeModifier modifier) {
+        return 3 * (double) (amplifier + 1);
     }
 }

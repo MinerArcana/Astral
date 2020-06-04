@@ -1,5 +1,8 @@
-package com.alan19.astral.entities.physicalbody;
+package com.alan19.astral.renderer.entity;
 
+import com.alan19.astral.entities.physicalbody.NonRotatingBipedModel;
+import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
+import com.alan19.astral.entities.physicalbody.PhysicalBodyModel;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;

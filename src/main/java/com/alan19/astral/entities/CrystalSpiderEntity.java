@@ -1,10 +1,12 @@
 package com.alan19.astral.entities;
 
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -15,10 +17,17 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class CrystalSpider extends SpiderEntity {
+public class CrystalSpiderEntity extends SpiderEntity {
 
-    public CrystalSpider(EntityType<? extends SpiderEntity> type, World worldIn) {
+    public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(12.0D);
+        this.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).setBaseValue(2);
     }
 
     @Override
@@ -35,7 +44,7 @@ public class CrystalSpider extends SpiderEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(4, new CrystalSpider.AttackGoal(this));
+        this.goalSelector.addGoal(4, new CrystalSpiderEntity.AttackGoal(this));
         this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
         this.targetSelector.addGoal(2, new TargetGoal<>(this, PlayerEntity.class));
         this.targetSelector.addGoal(3, new TargetGoal<>(this, IronGolemEntity.class));
@@ -103,7 +112,7 @@ public class CrystalSpider extends SpiderEntity {
         @Override
         @ParametersAreNonnullByDefault
         protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
-            return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL);
+            return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
         }
     }
 }

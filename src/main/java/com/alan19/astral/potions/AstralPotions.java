@@ -37,9 +37,9 @@ public class AstralPotions {
     @SubscribeEvent
     public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
         int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "astral_travel_potion", baseAstralTravelDuration, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "astral_travel_potion", baseAstralTravelDuration, 0);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
+        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
 
         //Register more complex potions
         AstralConfig.PotionEffectDurations baseBrewDurations = AstralConfig.getPotionEffectDurations();

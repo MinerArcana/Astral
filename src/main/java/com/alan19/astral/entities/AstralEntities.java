@@ -14,7 +14,7 @@ public class AstralEntities {
     private static final DeferredRegister<EntityType<?>> ENTITIES = new DeferredRegister<>(ForgeRegistries.ENTITIES, Astral.MOD_ID);
 
     public static final RegistryObject<EntityType<PhysicalBodyEntity>> PHYSICAL_BODY_ENTITY = ENTITIES.register(PHYSICAL_BODY, AstralEntities::getPhysicalBody);
-    public static final RegistryObject<EntityType<CrystalSpider>> CRYSTAL_SPIDER = ENTITIES.register("crystal_spider", AstralEntities::getCrystalSpider);
+    public static final RegistryObject<EntityType<CrystalSpiderEntity>> CRYSTAL_SPIDER = ENTITIES.register("crystal_spider", AstralEntities::getCrystalSpider);
 
     public static void register(IEventBus modBus) {
         ENTITIES.register(modBus);
@@ -26,8 +26,8 @@ public class AstralEntities {
                 .build(PHYSICAL_BODY);
     }
 
-    private static EntityType<CrystalSpider> getCrystalSpider() {
-        return EntityType.Builder.create(CrystalSpider::new, EntityClassification.MONSTER)
+    private static EntityType<CrystalSpiderEntity> getCrystalSpider() {
+        return EntityType.Builder.create(CrystalSpiderEntity::new, EntityClassification.MONSTER)
                 .size(0.7F, 0.5F)
                 .build("crystal_spider");
     }

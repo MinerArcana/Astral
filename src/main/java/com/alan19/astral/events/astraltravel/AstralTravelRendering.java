@@ -21,7 +21,7 @@ public class AstralTravelRendering {
 
     @SubscribeEvent
     public static void reloadWhenAstralTravelEnds(TickEvent.ClientTickEvent event) {
-        if (Minecraft.getInstance().player != null && RenderingUtils.shouldReloadRenderers() && !Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+        if (Minecraft.getInstance().player != null && RenderingUtils.shouldReloadRenderers() && !Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
             RenderingUtils.reloadRenderers();
             RenderingUtils.setReloadRenderers(false);
         }
@@ -29,7 +29,7 @@ public class AstralTravelRendering {
 
     @SubscribeEvent
     public static void renderAstralEntities(RenderLivingEvent<LivingEntity, EntityModel<LivingEntity>> event) {
-        if (Minecraft.getInstance().player != null && !TravelEffects.isAstralTravelActive(Minecraft.getInstance().player) && TravelEffects.isAstralTravelActive(event.getEntity())) {
+        if (Minecraft.getInstance().player != null && !TravelEffects.isEntityAstral(Minecraft.getInstance().player) && TravelEffects.isEntityAstral(event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -44,7 +44,7 @@ public class AstralTravelRendering {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
-            if (TravelEffects.isAstralTravelActive(playerEntity)) {
+            if (TravelEffects.isEntityAstral(playerEntity)) {
                 //Cancel rendering of hunger bar
                 if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
                     event.setCanceled(true);
@@ -55,7 +55,7 @@ public class AstralTravelRendering {
                 }
             }
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
-                if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) && !iSleepManager.isEntityTraveling()) {
+                if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
                     AstralHealthBarRendering.renderAstralScreenFade(iSleepManager.getSleep());
                 }
             });

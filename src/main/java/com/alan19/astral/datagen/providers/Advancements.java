@@ -157,7 +157,7 @@ public class Advancements extends AdvancementProvider {
 
         becomeAstral = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
-                .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL)))
+                .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL.get())))
                 .withDisplay(new DisplayBuilder(Items.PHANTOM_MEMBRANE, "get_astral_travel").build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "get_astral_travel").toString());

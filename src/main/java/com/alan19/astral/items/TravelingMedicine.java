@@ -23,7 +23,7 @@ public class TravelingMedicine extends Item {
                         .setAlwaysEdible()
                         .saturation(-2F)
                         .hunger(1)
-                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL, AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 0), 1)
+                        .effect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), AstralConfig.getHerbEffectDurations().getTravellingMedicineDuration(), 0), 1)
                         .build())
                 .maxStackSize(1));
     }

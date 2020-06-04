@@ -26,7 +26,7 @@ public class StartTrackingAstralPotionMessage {
     }
 
     public static StartTrackingAstralPotionMessage decode(PacketBuffer packetBuffer) {
-        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.ASTRAL_TRAVEL, packetBuffer.readInt(), packetBuffer.readInt()));
+        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), packetBuffer.readInt(), packetBuffer.readInt()));
     }
 
     public static void encode(StartTrackingAstralPotionMessage message, PacketBuffer packetBuffer) {

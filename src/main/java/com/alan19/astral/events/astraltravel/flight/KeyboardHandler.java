@@ -55,7 +55,7 @@ public class KeyboardHandler {
 
     @SubscribeEvent
     public static void cancelRegularMovement(InputUpdateEvent event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL)) {
+        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
             final MovementInput movementInput = event.getMovementInput();
             movementInput.backKeyDown = false;
             movementInput.forwardKeyDown = false;
