@@ -15,6 +15,7 @@ public class AstralEffects {
 
     private static final DeferredRegister<Effect> EFFECTS = new DeferredRegister<>(ForgeRegistries.POTIONS, Astral.MOD_ID);
 
+    public static final RegistryObject<Effect> MIND_VENOM = EFFECTS.register("mind_venom", MindVenomEffect::new);
     public static final RegistryObject<Effect> ASTRAL_TRAVEL = EFFECTS.register("astral_travel", () -> new AstralTravelEffect().addAttributesModifier(Constants.ASTRAL_ATTACK_DAMAGE, Constants.ASTRAL_EFFECT_DAMAGE_BOOST.toString(), 0, AttributeModifier.Operation.ADDITION));
 
     public static void register(IEventBus modBus) {

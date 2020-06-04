@@ -60,7 +60,7 @@ public class AstralNetwork {
                 .consumer(SendAstralTravelEnding::handle)
                 .add();
 
-        channel.messageBuilder(SendOfferingBrazierFinished.class, 6)
+        channel.messageBuilder(SendOfferingBrazierFinished.class, 7)
                 .decoder(SendOfferingBrazierFinished::decode)
                 .encoder(SendOfferingBrazierFinished::encode)
                 .consumer(SendOfferingBrazierFinished::handle)

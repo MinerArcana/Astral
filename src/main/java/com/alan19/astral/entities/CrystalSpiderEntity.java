@@ -3,17 +3,17 @@ package com.alan19.astral.entities;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -114,5 +114,29 @@ public class CrystalSpiderEntity extends SpiderEntity {
         protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
             return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
         }
+    }
+
+    @Override
+    public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
+        if (super.attackEntityAsMob(entityIn)) {
+            if (entityIn instanceof LivingEntity) {
+                int mindVenomDuration = 0;
+                if (this.world.getDifficulty() == Difficulty.NORMAL) {
+                    mindVenomDuration = 7;
+                }
+                else if (this.world.getDifficulty() == Difficulty.HARD) {
+                    mindVenomDuration = 15;
+                }
+
+                if (mindVenomDuration > 0) {
+                    ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
+                }
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 }
