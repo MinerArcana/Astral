@@ -69,7 +69,7 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
-        if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource())) {
+        if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             event.getEntityLiving().attackEntityFrom(new AstralDamage(), (float) ((LivingEntity) event.getSource().getTrueSource()).getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue());
         }

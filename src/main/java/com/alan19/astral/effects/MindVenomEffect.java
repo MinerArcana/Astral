@@ -1,5 +1,6 @@
 package com.alan19.astral.effects;
 
+import com.alan19.astral.util.ExperienceHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
@@ -15,11 +16,11 @@ public class MindVenomEffect extends Effect {
 
     @Override
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn instanceof PlayerEntity && ((PlayerEntity) entityLivingBaseIn).experienceTotal > 0) {
+        if (entityLivingBaseIn instanceof PlayerEntity && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
             final PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
             playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .05, 1) * -1);
         }
-        else if (entityLivingBaseIn.getHealth() > 1.0F) {
+        else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
             entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0F);
         }
 
