@@ -1,6 +1,7 @@
-package com.alan19.astral.util;
+package com.alan19.astral.entities;
 
 import com.alan19.astral.events.AstralDamageSource;
+import com.alan19.astral.util.Constants;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -10,8 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
-public class MobUtils {
-    public static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
+public interface IAstralBeing {
+
+    static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
         float attackDamage = (float) self.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue();
         final IAttributeInstance knockbackAttribute = self.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
         float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
@@ -35,7 +37,7 @@ public class MobUtils {
         return flag;
     }
 
-    public static void handleThornAndBaneOfArthropods(LivingEntity self, Entity target) {
+    static void handleThornAndBaneOfArthropods(LivingEntity self, Entity target) {
         if (target instanceof LivingEntity) {
             EnchantmentHelper.applyThornEnchantments((LivingEntity) target, self);
         }
@@ -43,7 +45,7 @@ public class MobUtils {
         EnchantmentHelper.applyArthropodEnchantments(self, target);
     }
 
-    public static void handleShieldBreak(LivingEntity self, Entity target) {
+    static void handleShieldBreak(LivingEntity self, Entity target) {
         if (target instanceof PlayerEntity) {
             PlayerEntity playerentity = (PlayerEntity) target;
             ItemStack mainHand = self.getHeldItemMainhand();
@@ -58,11 +60,10 @@ public class MobUtils {
         }
     }
 
-    public static void handleKnockback(LivingEntity self, Entity target, float knockback) {
+    static void handleKnockback(LivingEntity self, Entity target, float knockback) {
         if (knockback > 0.0F && target instanceof LivingEntity) {
             ((LivingEntity) target).knockBack(self, knockback * 0.5F, MathHelper.sin(self.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(self.rotationYaw * ((float) Math.PI / 180F)));
             self.setMotion(self.getMotion().mul(0.6D, 1.0D, 0.6D));
         }
     }
-
 }

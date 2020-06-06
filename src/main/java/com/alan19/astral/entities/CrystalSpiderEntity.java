@@ -2,7 +2,6 @@ package com.alan19.astral.entities;
 
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.util.Constants;
-import com.alan19.astral.util.MobUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -18,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class CrystalSpiderEntity extends SpiderEntity {
+public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
@@ -119,7 +118,7 @@ public class CrystalSpiderEntity extends SpiderEntity {
 
     @Override
     public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
-        boolean isAttackSuccessful = MobUtils.attackEntityAsMobWithAstralDamage(this, entityIn);
+        boolean isAttackSuccessful = IAstralBeing.attackEntityAsMobWithAstralDamage(this, entityIn);
         if (isAttackSuccessful) {
             if (entityIn instanceof LivingEntity) {
                 int mindVenomDuration = 0;

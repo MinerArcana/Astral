@@ -6,11 +6,11 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entities.IAstralBeing;
 import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
-import com.alan19.astral.util.MobUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -71,7 +71,7 @@ public class TravelEffects {
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
         if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
-            MobUtils.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
+            IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
         if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && event.getSource().getDamageType().equals(IAstralDamage.DAMAGE_NAME)) {
             event.setCanceled(true);
@@ -144,7 +144,7 @@ public class TravelEffects {
             return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && sleepManager.isEntityTraveling();
         }
         else {
-            return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ASTRAL_ENTITIES.contains(livingEntity.getType());
+            return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(livingEntity.getType());
         }
     }
 

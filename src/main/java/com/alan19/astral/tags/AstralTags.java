@@ -22,5 +22,6 @@ public class AstralTags {
     public static final Tag<Block> ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "etheric_growths"));
     public static final Tag<Block> SMALL_ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "small_etheric_growths"));
     public static final Tag<Block> LARGE_ETHERIC_GROWTHS = BlockTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "large_etheric_growths"));
-    public static final Tag<EntityType<?>> ASTRAL_ENTITIES = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "astral_entities"));
+    public static final Tag<EntityType<?>> ETHEREAL_BEINGS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "ethereal_beings"));
+    public static final Tag<EntityType<?>> SPIRITUAL_BEINGS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "spiritual_beings"));
 }
