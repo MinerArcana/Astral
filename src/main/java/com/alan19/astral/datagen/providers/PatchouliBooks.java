@@ -42,8 +42,8 @@ public class PatchouliBooks extends PatchouliBookProvider {
         final ItemStack potionItemStack = new ItemStack(Items.POTION);
         final EntryBuilder brewPage = plantsCategory.addEntry("brews", "Astral Brews", potionItemStack).addSimpleTextPage("You can create potions that extends the effects of Feverweed and Snowberries by adding them to Thick Potions in a Brewing Stand. Adding Glowstone and Redstone to those potions strengthen the potency and duration of the effects, respectively.");
         brewPage.setAdvancement("minecraft:nether/brew_potion");
-        brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, AstralPotions.SNOWBERRY_BREW)).setTitle("Snowberry Brew").setText("Provides Regeneration II and Hunger II for 30 seconds");
-        brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, AstralPotions.FEVERWEED_BREW)).setTitle("Feverweed Brew").setText("Provides Luck II and Hunger II for 30 seconds");
+        brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, AstralPotions.SNOWBERRY_BREW.getBasePotion().get())).setTitle("Snowberry Brew").setText("Provides Regeneration II and Hunger II for 30 seconds");
+        brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, AstralPotions.FEVERWEED_BREW.getBasePotion().get())).setTitle("Feverweed Brew").setText("Provides Luck II and Hunger II for 30 seconds");
 
         bookBuilder.build(consumer);
     }

@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class Dreamweb extends EtherealBlock {
-    public Dreamweb() {
+public class CrystalWeb extends EtherealBlock {
+    public CrystalWeb() {
         super(Block.Properties.create(Material.WEB).doesNotBlockMovement().hardnessAndResistance(4.0F).notSolid());
     }
 

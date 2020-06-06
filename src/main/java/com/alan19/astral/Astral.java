@@ -31,6 +31,7 @@ import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
+import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.world.AstralFeatures;
@@ -94,6 +95,8 @@ public class Astral {
         AstralTiles.register(modEventBus);
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
+        AstralPotions.register(modEventBus);
+        MinecraftForge.EVENT_BUS.addListener(AstralPotions::addBrewingRecipes);
 
         modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));

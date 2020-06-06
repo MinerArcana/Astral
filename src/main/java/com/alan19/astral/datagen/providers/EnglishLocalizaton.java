@@ -3,6 +3,7 @@ package com.alan19.astral.datagen.providers;
 import com.alan19.astral.Astral;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.potions.PotionRegistryGroup;
 import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
@@ -81,7 +82,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(BONE_SHEETS.get(), "Metaphoric Bone Block");
         add(METAPHORIC_STONE.get(), "Metaphoric Stone");
         add(METAPHORIC_FLESH_BLOCK.get(), "Metaphoric Flesh Block");
-        add(DREAMWEB.get(), "Dreamweb");
+        add(CRYSTAL_WEB.get(), "Crystal Web");
     }
 
     private void addItems() {
@@ -122,19 +123,20 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(CRYSTAL_CHITIN.get(), "Crystal Chitin");
         add(METAPHORIC_FLESH.get(), "Metaphoric Flesh");
         add(METAPHORIC_FLESH_BLOCK_ITEM.get(), "Metaphoric Flesh Block");
-        add(DREAMWEB_ITEM.get(), "Dreamweb");
+        add(CRYSTAL_WEB_ITEM.get(), "Crystal Web");
     }
 
     private void addPotions() {
-        processPotionFamily("Potion of Astral Travel", "Splash Potion of Astral Travel", "Lingering Potion of Astral Travel", "Arrow of Astral Travel", ASTRAL_TRAVEL_POTION, LONG_ASTRAL_TRAVEL_POTION, STRONG_ASTRAL_TRAVEL_POTION);
-        processPotionFamily("Feverweed Brew", "Splashing Feverweed Brew", "Feverweed Mist", "Arrow of Feverweed", FEVERWEED_BREW, LONG_FEVERWEED_BREW, STRONG_FEVERWEED_BREW);
-        processPotionFamily("Snowberry Brew", "Splashing Snowberry Brew", "Snowberry Mist", "Arrow of Snowberry", SNOWBERRY_BREW, LONG_SNOWBERRY_BREW, STRONG_SNOWBERRY_BREW);
+        processPotionFamily("Potion of Astral Travel", "Splash Potion of Astral Travel", "Lingering Potion of Astral Travel", "Arrow of Astral Travel", ASTRAL_TRAVEL_POTION);
+        processPotionFamily("Feverweed Brew", "Splashing Feverweed Brew", "Feverweed Mist", "Arrow of Feverweed", FEVERWEED_BREW);
+        processPotionFamily("Snowberry Brew", "Splashing Snowberry Brew", "Snowberry Mist", "Arrow of Snowberry", SNOWBERRY_BREW);
+        processPotionFamily("Potion of Mind Venom", "Splash Potion of Mind Venom", "Lingering Potion of Mind Venom", "Arrow of Mind Venom", MIND_VENOM_POTION);
     }
 
-    private void processPotionFamily(String potionName, String splashPotionName, String lingeringPotionName, String arrowName, Potion... potions) {
-        for (Potion potion : potions) {
-            add(potion, potionName, splashPotionName, lingeringPotionName, arrowName);
-        }
+    private void processPotionFamily(String potionName, String splashPotionName, String lingeringPotionName, String arrowName, PotionRegistryGroup potionRegistryGroup) {
+        potionRegistryGroup.getBasePotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
+        potionRegistryGroup.getLongPotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
+        potionRegistryGroup.getStrongPotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
     }
 
     private void addAdvancements() {

@@ -54,7 +54,7 @@ public class AstralBlocks {
     public static final RegistryObject<MetaphoricStone> METAPHORIC_STONE = BLOCKS.register("metaphoric_stone", MetaphoricStone::new);
     public static final RegistryObject<BoneSheets> BONE_SHEETS = BLOCKS.register("bone_sheets", BoneSheets::new);
     public static final RegistryObject<MetaphoricFleshBlock> METAPHORIC_FLESH_BLOCK = BLOCKS.register("metaphoric_flesh_block", MetaphoricFleshBlock::new);
-    public static final RegistryObject<Dreamweb> DREAMWEB = BLOCKS.register("dreamweb", Dreamweb::new);
+    public static final RegistryObject<CrystalWeb> CRYSTAL_WEB = BLOCKS.register("crystal_web", CrystalWeb::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

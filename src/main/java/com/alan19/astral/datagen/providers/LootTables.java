@@ -58,14 +58,14 @@ public class LootTables extends LootTableProvider {
             this.registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
             this.registerLootTable(COMFORTABLE_CUSHION.get(), dropping(COMFORTABLE_CUSHION.get()));
             this.registerLootTable(ETHEREAL_SAPLING.get(), dropping(ETHEREAL_SAPLING.get()));
-            this.registerLootTable(DREAMWEB.get(), droppingWithSilkTouch(DREAMWEB.get(), AstralItems.DREAMCORD.get()));
+            this.registerLootTable(CRYSTAL_WEB.get(), droppingWithSilkTouch(CRYSTAL_WEB.get(), AstralItems.DREAMCORD.get()));
         }
 
         @Override
         @Nonnull
         protected Iterable<Block> getKnownBlocks() {
             final List<Block> astralBlocks = this.etherealPlants;
-            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get(), ETHEREAL_SAPLING.get(), CYAN_CYST.get(), CYAN_SWARD.get(), CYAN_BELLEVINE.get(), CYAN_BLISTERWART.get(), CYAN_KLORID.get(), CYAN_MORKEL.get(), CYAN_PODS.get(), LARGE_CYAN_CYST.get(), TALL_CYAN_SWARD.get(), DREAMWEB.get()));
+            astralBlocks.addAll(Arrays.asList(ETHEREAL_PLANKS.get(), ETHEREAL_TRAPDOOR.get(), ETHEREAL_DOOR.get(), COMFORTABLE_CUSHION.get(), ETHEREAL_SAPLING.get(), CYAN_CYST.get(), CYAN_SWARD.get(), CYAN_BELLEVINE.get(), CYAN_BLISTERWART.get(), CYAN_KLORID.get(), CYAN_MORKEL.get(), CYAN_PODS.get(), LARGE_CYAN_CYST.get(), TALL_CYAN_SWARD.get(), CRYSTAL_WEB.get()));
             return astralBlocks;
         }
 

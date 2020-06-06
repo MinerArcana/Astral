@@ -165,8 +165,8 @@ public class Advancements extends AdvancementProvider {
         final String brewStrongAstralPotionName = "brew_strong_astral_potion";
         brewStrongAstralPotion = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
-                .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(AstralPotions.STRONG_ASTRAL_TRAVEL_POTION))
-                .withDisplay(new DisplayBuilder(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), AstralPotions.STRONG_ASTRAL_TRAVEL_POTION), brewStrongAstralPotionName).build())
+                .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()))
+                .withDisplay(new DisplayBuilder(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()), brewStrongAstralPotionName).build())
                 .withRewards(new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key"))))
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, brewStrongAstralPotionName).toString());
 
