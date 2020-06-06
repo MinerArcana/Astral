@@ -1,26 +1,36 @@
 package com.alan19.astral.potions;
 
+import com.alan19.astral.Astral;
 import com.alan19.astral.configs.AstralConfig;
-import com.alan19.astral.effects.AstralEffects;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import static com.alan19.astral.effects.AstralEffects.ASTRAL_TRAVEL;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralPotions {
+    private static final DeferredRegister<Potion> POTIONS = new DeferredRegister<>(ForgeRegistries.POTION_TYPES, Astral.MOD_ID);
 
-    @ObjectHolder("astral:astral_travel_potion")
-    public static final Potion ASTRAL_TRAVEL_POTION = null;
-    @ObjectHolder("astral:long_astral_travel_potion")
-    public static final Potion LONG_ASTRAL_TRAVEL_POTION = null;
-    @ObjectHolder("astral:strong_astral_travel_potion")
-    public static final Potion STRONG_ASTRAL_TRAVEL_POTION = null;
+    public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION;
+
+    static {
+        final int astralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
+        ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion",
+                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration),
+                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration * 2),
+                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration / 2, 1)).register(POTIONS);
+    }
+
     @ObjectHolder("astral:feverweed_brew")
     public static final Potion FEVERWEED_BREW = null;
     @ObjectHolder("astral:long_feverweed_brew")
@@ -37,9 +47,9 @@ public class AstralPotions {
     @SubscribeEvent
     public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
         int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "astral_travel_potion", baseAstralTravelDuration, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL.get(), "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
+        registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "astral_travel_potion", baseAstralTravelDuration, 0);
+        registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
+        registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
 
         //Register more complex potions
         AstralConfig.PotionEffectDurations baseBrewDurations = AstralConfig.getPotionEffectDurations();
@@ -73,4 +83,7 @@ public class AstralPotions {
         eventRegistry.register(potion);
     }
 
+    public static void register(IEventBus modBus) {
+        POTIONS.register(modBus);
+    }
 }
