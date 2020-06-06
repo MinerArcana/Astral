@@ -7,12 +7,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.util.IItemProvider;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.Optional;
@@ -56,20 +54,19 @@ public class PotionRegistryGroup {
         this.name = name;
         this.baseEffect = baseEffect;
         this.baseReagent = baseReagent;
-        MinecraftForge.EVENT_BUS.addListener(this::registerBrewingRecipes);
     }
 
     @SubscribeEvent
-    public void registerBrewingRecipes(final FMLCommonSetupEvent event) {
+    public void registerBrewingRecipes() {
         BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(potionBase.get()), baseReagent.get(), potionToItemStack(basePotion.get()));
-        BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(potionBase.get()), baseReagent.get(), potionToItemStack(basePotion.get()));
+        BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(potionBase.get()), baseReagent.get(), potionToSplashPotionItemStack(basePotion.get()));
         if (longEffect != null) {
-            BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(basePotion.get()), longReagent.get(), potionToSplashPotionItemStack(longPotion.get()));
-            BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(basePotion.get()), longReagent.get(), potionToItemStack(longPotion.get()));
+            BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(basePotion.get()), longReagent.get(), potionToItemStack(longPotion.get()));
+            BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(basePotion.get()), longReagent.get(), potionToSplashPotionItemStack(longPotion.get()));
         }
         if (strongEffect != null) {
-            BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(basePotion.get()), strongReagent.get(), potionToSplashPotionItemStack(strongPotion.get()));
-            BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(basePotion.get()), strongReagent.get(), potionToItemStack(strongPotion.get()));
+            BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(basePotion.get()), strongReagent.get(), potionToItemStack(strongPotion.get()));
+            BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(basePotion.get()), strongReagent.get(), potionToSplashPotionItemStack(strongPotion.get()));
         }
 
 

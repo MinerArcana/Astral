@@ -96,6 +96,7 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
+        modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
