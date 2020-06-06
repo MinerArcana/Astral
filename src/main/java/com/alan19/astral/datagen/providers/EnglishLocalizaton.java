@@ -29,9 +29,19 @@ public class EnglishLocalizaton extends LanguageProvider {
         addBlocks();
         addPotions();
         addConstants();
-        add(AstralEntities.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
-        add(AstralEffects.ASTRAL_TRAVEL.get(), "Astral Travel");
+        addEntities();
+        addEffects();
         add("itemGroup.astral", "Astral");
+    }
+
+    private void addEntities() {
+        add(AstralEntities.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
+        add(AstralEntities.CRYSTAL_SPIDER.get(), "Crystal Spider");
+    }
+
+    private void addEffects() {
+        add(AstralEffects.ASTRAL_TRAVEL.get(), "Astral Travel");
+        add(AstralEffects.MIND_VENOM.get(), "Mind Venom");
     }
 
     private void addConstants() {
@@ -71,6 +81,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(BONE_SHEETS.get(), "Metaphoric Bone Block");
         add(METAPHORIC_STONE.get(), "Metaphoric Stone");
         add(METAPHORIC_FLESH_BLOCK.get(), "Metaphoric Flesh Block");
+        add(DREAMWEB.get(), "Dreamweb");
     }
 
     private void addItems() {
@@ -111,6 +122,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(CRYSTAL_CHITIN.get(), "Crystal Chitin");
         add(METAPHORIC_FLESH.get(), "Metaphoric Flesh");
         add(METAPHORIC_FLESH_BLOCK_ITEM.get(), "Metaphoric Flesh Block");
+        add(DREAMWEB_ITEM.get(), "Dreamweb");
     }
 
     private void addPotions() {
