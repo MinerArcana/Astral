@@ -12,6 +12,7 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class PotionRegistryGroup {
@@ -28,16 +29,22 @@ public class PotionRegistryGroup {
     private Supplier<Ingredient> longCatalyst = () -> Ingredient.fromItems(Items.REDSTONE);
     private Supplier<Ingredient> strongCatalyst = () -> Ingredient.fromItems(Items.GLOWSTONE);
 
-    public Potion getBasePotion() {
-        return basePotion.get();
+    public Optional<Potion> getOptionalPotionRegistryObject(RegistryObject<Potion> potion) {
+        return Optional.ofNullable(potion)
+                .filter(RegistryObject::isPresent)
+                .map(RegistryObject::get);
     }
 
-    public Potion getLongPotion() {
-        return longPotion.get();
+    public Optional<Potion> getBasePotion() {
+        return getOptionalPotionRegistryObject(basePotion);
     }
 
-    public Potion getStrongPotion() {
-        return strongPotion.get();
+    public Optional<Potion> getLongPotion() {
+        return getOptionalPotionRegistryObject(longPotion);
+    }
+
+    public Optional<Potion> getStrongPotion() {
+        return getOptionalPotionRegistryObject(strongPotion);
     }
 
     public PotionRegistryGroup(String name, Supplier<EffectInstance> baseEffect, Supplier<Ingredient> baseCatalyst) {
