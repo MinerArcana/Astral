@@ -8,6 +8,7 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -32,7 +33,12 @@ public class EnglishLocalizaton extends LanguageProvider {
         addConstants();
         addEntities();
         addEffects();
+        add(Constants.ASTRAL_ATTACK_DAMAGE, "Astral Attack Damage");
         add("itemGroup.astral", "Astral");
+    }
+
+    private void add(IAttribute attribute, String name) {
+        add("attribute.name." + attribute.getName(), name);
     }
 
     private void addEntities() {
