@@ -21,15 +21,13 @@ import static com.alan19.astral.effects.AstralEffects.ASTRAL_TRAVEL;
 public class AstralPotions {
     private static final DeferredRegister<Potion> POTIONS = new DeferredRegister<>(ForgeRegistries.POTION_TYPES, Astral.MOD_ID);
 
-    public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION;
+    public static final int ASTRAL_TRAVEL_DURATION = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
 
-    static {
-        final int astralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
-        ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion",
-                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration),
-                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration * 2),
-                new EffectInstance(ASTRAL_TRAVEL.get(), astralTravelDuration / 2, 1)).register(POTIONS);
-    }
+    //    public static final RegistryObject<Potion> ASTRAL_TRAVEL_POTION = POTIONS.register("astral_travel_potion", () -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION)));
+//    public static final RegistryObject<Potion> LONG_ASTRAL_TRAVEL_POTION = POTIONS.register("long_astral_travel_potion", () -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION * 2)));
+//    public static final RegistryObject<Potion> STRONG_ASTRAL_TRAVEL_POTION = POTIONS.register("strong_astral_travel_potion", () -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION / 2, 1)));
+    public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion", () -> new EffectInstance())
+
 
     @ObjectHolder("astral:feverweed_brew")
     public static final Potion FEVERWEED_BREW = null;
@@ -46,7 +44,7 @@ public class AstralPotions {
 
     @SubscribeEvent
     public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
-        int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
+        int baseAstralTravelDuration = ASTRAL_TRAVEL_DURATION;
         registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "astral_travel_potion", baseAstralTravelDuration, 0);
         registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
         registerPotion(event.getRegistry(), ASTRAL_TRAVEL.get(), "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
