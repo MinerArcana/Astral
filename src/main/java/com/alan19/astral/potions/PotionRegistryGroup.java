@@ -1,6 +1,5 @@
 package com.alan19.astral.potions;
 
-import com.alan19.astral.Astral;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -13,14 +12,12 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PotionRegistryGroup {
     private final String name;
 
@@ -59,11 +56,11 @@ public class PotionRegistryGroup {
         this.name = name;
         this.baseEffect = baseEffect;
         this.baseReagent = baseReagent;
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.addListener(this::registerBrewingRecipes);
     }
 
     @SubscribeEvent
-    public void registerBrewingRecipes(FMLCommonSetupEvent event) {
+    public void registerBrewingRecipes(final FMLCommonSetupEvent event) {
         BrewingRecipeRegistry.addRecipe(PotionIngredient.asPotion(potionBase.get()), baseReagent.get(), potionToItemStack(basePotion.get()));
         BrewingRecipeRegistry.addRecipe(PotionIngredient.asSplashPotion(potionBase.get()), baseReagent.get(), potionToItemStack(basePotion.get()));
         if (longEffect != null) {
