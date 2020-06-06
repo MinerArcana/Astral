@@ -9,7 +9,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -50,9 +49,5 @@ public class AstralPotions {
 
     public static void register(IEventBus modBus) {
         POTIONS.register(modBus);
-    }
-
-    public static void addBrewingRecipes(FMLCommonSetupEvent event) {
-
     }
 }
