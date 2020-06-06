@@ -7,10 +7,10 @@ import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
-import com.alan19.astral.events.AstralDamage;
 import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
+import com.alan19.astral.util.MobUtils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -71,7 +71,7 @@ public class TravelEffects {
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
         if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
-            event.getEntityLiving().attackEntityFrom(new AstralDamage(), (float) ((LivingEntity) event.getSource().getTrueSource()).getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue());
+            MobUtils.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
         if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && event.getSource().getDamageType().equals(IAstralDamage.DAMAGE_NAME)) {
             event.setCanceled(true);

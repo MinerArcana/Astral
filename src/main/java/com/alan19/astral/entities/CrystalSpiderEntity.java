@@ -1,19 +1,16 @@
 package com.alan19.astral.entities;
 
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.events.AstralDamageSource;
 import com.alan19.astral.util.Constants;
+import com.alan19.astral.util.MobUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
@@ -122,42 +119,8 @@ public class CrystalSpiderEntity extends SpiderEntity {
 
     @Override
     public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
-        float attackDamage = (float) this.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue();
-        float knockback = (float) this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).getValue();
-        if (entityIn instanceof LivingEntity) {
-            attackDamage += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((LivingEntity) entityIn).getCreatureAttribute());
-            knockback += (float) EnchantmentHelper.getKnockbackModifier(this);
-        }
-
-        int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(this);
-        if (fireAspectModifier > 0) {
-            entityIn.setFire(fireAspectModifier * 4);
-        }
-
-        boolean flag = entityIn.attackEntityFrom(AstralDamageSource.causeAstralMobDamage(this), attackDamage);
-        if (flag) {
-            if (knockback > 0.0F && entityIn instanceof LivingEntity) {
-                ((LivingEntity) entityIn).knockBack(this, knockback * 0.5F, MathHelper.sin(this.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(this.rotationYaw * ((float) Math.PI / 180F)));
-                this.setMotion(this.getMotion().mul(0.6D, 1.0D, 0.6D));
-            }
-
-            if (entityIn instanceof PlayerEntity) {
-                PlayerEntity playerentity = (PlayerEntity) entityIn;
-                ItemStack mainHand = this.getHeldItemMainhand();
-                ItemStack itemstack1 = playerentity.isHandActive() ? playerentity.getActiveItemStack() : ItemStack.EMPTY;
-                if (!mainHand.isEmpty() && !itemstack1.isEmpty() && mainHand.canDisableShield(itemstack1, playerentity, this) && itemstack1.isShield(playerentity)) {
-                    float f2 = 0.25F + (float) EnchantmentHelper.getEfficiencyModifier(this) * 0.05F;
-                    if (this.rand.nextFloat() < f2) {
-                        playerentity.getCooldownTracker().setCooldown(mainHand.getItem(), 100);
-                        this.world.setEntityState(playerentity, (byte) 30);
-                    }
-                }
-            }
-
-            this.applyEnchantments(this, entityIn);
-            this.setLastAttackedEntity(entityIn);
-        }
-        if (flag) {
+        boolean isAttackSuccessful = MobUtils.attackEntityAsMobWithAstralDamage(this, entityIn);
+        if (isAttackSuccessful) {
             if (entityIn instanceof LivingEntity) {
                 int mindVenomDuration = 0;
                 if (this.world.getDifficulty() == Difficulty.NORMAL) {
