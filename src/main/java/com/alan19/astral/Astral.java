@@ -23,7 +23,7 @@ import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;

@@ -3,7 +3,7 @@ package com.alan19.astral.api.bodylink;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.dimensions.TeleportationTools;
-import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
+import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.util.Constants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;

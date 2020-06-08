@@ -1,4 +1,4 @@
-package com.alan19.astral.entities.physicalbody;
+package com.alan19.astral.entity.physicalbody;
 
 import net.minecraft.client.renderer.entity.model.BipedModel;
 

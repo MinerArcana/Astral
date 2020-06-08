@@ -1,6 +1,6 @@
 package com.alan19.astral.datagen.providers;
 
-import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.EntityTypeTagsProvider;

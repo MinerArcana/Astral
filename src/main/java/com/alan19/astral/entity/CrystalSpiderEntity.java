@@ -1,4 +1,4 @@
-package com.alan19.astral.entities;
+package com.alan19.astral.entity;
 
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.util.Constants;

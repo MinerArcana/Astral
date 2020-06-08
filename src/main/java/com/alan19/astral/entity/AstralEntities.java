@@ -1,7 +1,7 @@
-package com.alan19.astral.entities;
+package com.alan19.astral.entity;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.entities.physicalbody.PhysicalBodyEntity;
+import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.eventbus.api.IEventBus;

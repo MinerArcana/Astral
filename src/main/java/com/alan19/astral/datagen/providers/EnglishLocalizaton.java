@@ -2,7 +2,7 @@ package com.alan19.astral.datagen.providers;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.potions.PotionRegistryGroup;
 import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;

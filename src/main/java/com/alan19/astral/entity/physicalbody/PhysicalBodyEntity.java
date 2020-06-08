@@ -1,4 +1,4 @@
-package com.alan19.astral.entities.physicalbody;
+package com.alan19.astral.entity.physicalbody;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.bodylink.BodyInfo;

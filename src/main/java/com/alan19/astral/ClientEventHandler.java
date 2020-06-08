@@ -1,6 +1,6 @@
 package com.alan19.astral;
 
-import com.alan19.astral.entities.AstralEntities;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.renderer.entity.CrystalSpiderRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import net.minecraft.client.Minecraft;
