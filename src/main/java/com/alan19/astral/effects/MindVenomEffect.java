@@ -11,16 +11,21 @@ import javax.annotation.Nonnull;
 
 public class MindVenomEffect extends Effect {
     protected MindVenomEffect() {
-        super(EffectType.HARMFUL, 11918123);
+        super(EffectType.HARMFUL, 7486647);
     }
 
     @Override
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof PlayerEntity && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
             final PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
-            playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .05, 1) * -1);
+            if (playerEntity.experienceLevel <= 5) {
+                playerEntity.giveExperiencePoints(-5);
+            }
+            else {
+                playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .05, 1) * -1);
+            }
         }
-        else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
+        else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) <= 0) {
             entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0F);
         }
 

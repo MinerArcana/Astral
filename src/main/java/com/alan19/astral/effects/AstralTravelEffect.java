@@ -22,7 +22,7 @@ public class AstralTravelEffect extends Effect {
      */
     @Override
     public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (!entityLivingBaseIn.getEntityWorld().isRemote() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth()) {
+        if (!entityLivingBaseIn.getEntityWorld().isRemote() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth() && !entityLivingBaseIn.isPotionActive(AstralEffects.MIND_VENOM.get())) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
                 if (playerEntity.experienceTotal > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
