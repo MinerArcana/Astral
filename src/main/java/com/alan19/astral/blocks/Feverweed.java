@@ -38,7 +38,7 @@ public class Feverweed extends BushBlock {
 
             for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
                 if (worldIn.getBlockState(blockpos).getBlock() == this) {
-                    --i;
+                    i--;
                     if (i <= 0) {
                         return;
                     }

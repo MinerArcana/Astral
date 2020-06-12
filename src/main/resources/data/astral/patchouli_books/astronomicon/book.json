@@ -1,6 +1,7 @@
 {
   "name": "Astronomicon",
   "landing_text": "Mechanics of Astral Travel",
+  "model": "astral:astronomicon",
   "subtitle": "Mechanics of Astral Travel",
   "creative_tab": "astral"
 }

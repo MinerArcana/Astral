@@ -24,7 +24,8 @@ public class PatchouliBooks extends PatchouliBookProvider {
 
     @Override
     protected void addBooks(Consumer<BookBuilder> consumer) {
-        final BookBuilder bookBuilder = createBookBuilder("astral_guidebook", "Astronomicon", "Mechanics of Astral Travel");
+        final BookBuilder bookBuilder = createBookBuilder("astronomicon", "Astronomicon", "Mechanics of Astral Travel");
+        bookBuilder.setModel(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
         bookBuilder.setSubtitle("Mechanics of Astral Travel");
         bookBuilder.setCreativeTab(AstralItems.ASTRAL_ITEMS.getPath());
         final Snowberry snowberryItemStack = AstralItems.SNOWBERRY.get();
@@ -55,6 +56,20 @@ public class PatchouliBooks extends PatchouliBookProvider {
         final EntryBuilder astralTravelPage = plantsCategory.addEntry("astral_travel", "Astral Travel", PotionUtils.addPotionToItemStack(potionItemStack.copy(), AstralPotions.ASTRAL_TRAVEL_POTION.getBasePotion().get()));
         astralTravelPage.addSimpleTextPage("While Astral Traveling your spirit soars across the land and through the skies, free from gravity. Your physical goods stay with your physical body. There are resources to be collected while Astral Traveling, search high in the sky over oceans to find Etheric Isles.");
 
+        final CategoryBuilder introspectiveArts = bookBuilder.addCategory("introspective_arts", "Introspective Arts", "Some plants found in the Overworld allow you to gaze inwards, opening realm of possibilities.", new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get()));
+
+        final EntryBuilder introspectionMedicineEntry = introspectiveArts.addEntry("introspection_medicine", "Introspection Medicine", new ItemStack(AstralItems.INTROSPECTION_MEDICINE.get()));
+        introspectionMedicineEntry.addSimpleTextPage("Made from Mushrooms, Poisonous Potatoes, and Feverweed this allows you to shut off your senses and perceive your inner realm, the Mindscape.");
+        introspectionMedicineEntry.addCraftingPage(new ResourceLocation(Astral.MOD_ID, "introspection_medicine"));
+
+        final EntryBuilder innerRealmEntry = introspectiveArts.addEntry("inner_realm", "Inner Realm", new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get()));
+        innerRealmEntry.addSimpleTextPage("While introspective your focus is in your mindscape. Each Inner realm begins as a certain volume of space. The Ego membranes define the limits of your inner realm, and you can attempt to break them to leave and return your focus to your body.");
+        innerRealmEntry.addSpotlightPage(new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get())).setText("In each Ego Membrane wall there will be an Astral Meridian block which can be used with Keys of Enlightenment to expand your sense of self and give you more room.");
+        innerRealmEntry.addSimpleTextPage("While in your Inner Realm you have access to your Astral Inventory with the resources gathered from Etheric Isles and the creatures which live among them. Some Resources can be transferred from the waking world via the Offering Brazier.");
+        innerRealmEntry.addSimpleTextPage("These resources are needed to create Mental Constructs.");
+
+        final EntryBuilder offeringBrazierEntry = introspectiveArts.addEntry("offering_brazier", "Offering Brazier", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));
+        offeringBrazierEntry.addCraftingPage(new ResourceLocation(Astral.MOD_ID, "offering_brazier"));
         bookBuilder.build(consumer);
     }
 }

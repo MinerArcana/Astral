@@ -50,6 +50,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(METAPHORIC_FLESH_BLOCK_ITEM);
         forItem(METAPHORIC_FLESH);
         forItem(CRYSTAL_CHITIN);
+        singleTexture("astronomicon", mcLoc("item/handheld"), "layer0", modLoc("item/astronomicon"));
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

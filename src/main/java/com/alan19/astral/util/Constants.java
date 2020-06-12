@@ -3,8 +3,10 @@ package com.alan19.astral.util;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
+import vazkii.patchouli.common.item.PatchouliItems;
 
 import java.util.UUID;
 
@@ -21,4 +23,10 @@ public class Constants {
     public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
     public static final IAttribute ASTRAL_ATTACK_DAMAGE = new RangedAttribute(null, "astral.astralAttackDamage", 0.0D, 0.0D, 2048.0D);
+
+    public static ItemStack getAstronomicon() {
+        final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
+        patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
+        return patchouliBook;
+    }
 }

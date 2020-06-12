@@ -8,6 +8,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.IWorldGenerationReader;
 import net.minecraft.world.gen.feature.AbstractTreeFeature;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
@@ -19,6 +20,7 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     protected boolean place(IWorldGenerationReader generationReader, Random rand, BlockPos positionIn, Set<BlockPos> blockPosSet, Set<BlockPos> blockPosSet1, MutableBoundingBox boundingBoxIn, EtherealTreeConfig configIn) {
         if (!(generationReader instanceof IWorld)) {
             return false;
@@ -31,7 +33,7 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
 
     private void placeTrunk(IWorldGenerationReader generationReader, Random rand, BlockPos blockPos, Set<BlockPos> blockPosSet, MutableBoundingBox mutableBoundingBox, EtherealTreeConfig treeConfig, int height) {
         while (height > 0) {
-            this.func_227216_a_(generationReader, rand, blockPos, blockPosSet, mutableBoundingBox, treeConfig);
+            this.setLog(generationReader, rand, blockPos, blockPosSet, mutableBoundingBox, treeConfig);
 
             blockPos = blockPos.up();
             height--;
@@ -64,7 +66,7 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
             for (int z = -range; z <= range; z++) {
                 if (Math.abs(x) + Math.abs(z) <= range) {
                     BlockPos blockpos = blockPos.add(x, 0, z);
-                    this.func_227219_b_(worldIn, randomIn, blockpos, blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
+                    this.setLeaf(worldIn, randomIn, blockpos, blockPosSet, mutableBoundingBoxIn, treeFeatureConfigIn);
                 }
             }
         }
@@ -73,7 +75,7 @@ public class EtherealTreeFeature extends AbstractTreeFeature<EtherealTreeConfig>
 
     protected void placeAir(IWorldGenerationReader worldIn, BlockPos blockPos, Set<BlockPos> blockPosSet, MutableBoundingBox mutableBoundingBoxIn) {
         if (isAirOrLeaves(worldIn, blockPos)) {
-            this.func_227217_a_(worldIn, blockPos, Blocks.AIR.getDefaultState(), mutableBoundingBoxIn);
+            this.setBlockState(worldIn, blockPos, Blocks.AIR.getDefaultState(), mutableBoundingBoxIn);
             blockPosSet.add(blockPos.toImmutable());
         }
     }
