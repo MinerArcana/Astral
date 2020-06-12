@@ -1,4 +1,4 @@
-package com.alan19.astral.datagen.providers;
+package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
 import net.minecraft.data.DataGenerator;

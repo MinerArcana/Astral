@@ -1,7 +1,7 @@
-package com.alan19.astral.datagen;
+package com.alan19.astral.data;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.datagen.providers.*;
+import com.alan19.astral.data.providers.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

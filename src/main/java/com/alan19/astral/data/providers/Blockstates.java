@@ -1,4 +1,4 @@
-package com.alan19.astral.datagen.providers;
+package com.alan19.astral.data.providers;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.DoublePlantBlock;
