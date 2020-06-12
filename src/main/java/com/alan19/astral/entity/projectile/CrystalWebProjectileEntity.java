@@ -2,6 +2,7 @@ package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.items.AstralItems;
 import net.minecraft.entity.Entity;
@@ -26,7 +27,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import javax.annotation.Nonnull;
 
 @OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
-public class CrystalWebProjectileEntity extends DamagingProjectileEntity implements IRendersAsItem {
+public class CrystalWebProjectileEntity extends DamagingProjectileEntity implements IRendersAsItem, IAstralBeing {
     public CrystalWebProjectileEntity(EntityType<? extends DamagingProjectileEntity> entityType, World world) {
         super(entityType, world);
     }

@@ -38,8 +38,8 @@ public class PotionRegistryGroup {
                 .map(RegistryObject::get);
     }
 
-    public Optional<Potion> getBasePotion() {
-        return convertSupplierToOptional(basePotion);
+    public RegistryObject<Potion> getBasePotion() {
+        return basePotion;
     }
 
     public Optional<Potion> getLongPotion() {

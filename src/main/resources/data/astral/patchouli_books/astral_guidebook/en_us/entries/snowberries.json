@@ -1,18 +1,18 @@
 {
-  "name": "Snowberries",
+  "name": "Snowberry Bush / Snowberries",
   "category": "plants",
   "icon": "astral:snowberry",
   "pages": [
     {
       "type": "text",
-      "text": "Snowberries grow in bushes found in biomes that are both snowy and forested. Snowberry Bushes grow in small groups and accumulate snow around them when found in the wild. Grown Snowberry Bushes have sharp branches, inflicting damage and slowing entities walking through it.",
+      "text": "These berry bushes generate in Snowy Biomes in small clumps, shedding snow under them.  Like many other bushes they can slow or hurt you while walking through them. They can be placed on or adjacent to sufficiently cold blocks.",
       "title": "Snowberry Bushes"
     },
     {
       "type": "spotlight",
       "item": "astral:snowberry",
       "title": "Snowberries",
-      "text": "Snowberries are edible and provide Regeneration II and Nausea II when eaten, making it a great treat for injured adventurers out of combat."
+      "text": "Consuming the berry inflicts Nausea 2 and Regeneration 2 for 15 seconds."
     },
     {
       "type": "text",

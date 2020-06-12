@@ -19,7 +19,7 @@ public class ItemTagGenerator extends ItemTagsProvider {
     @Override
     protected void registerTags() {
         final Item[] etherealItems = AstralItems.ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof BlockNamedItem).filter(item -> ((BlockNamedItem) item).getBlock() instanceof Ethereal).collect(Collectors.toList()).toArray(new Item[]{});
-        getBuilder(AstralTags.ASTRAL_PICKUP).add(etherealItems);
-        getBuilder(AstralTags.ASTRAL_PICKUP).add(AstralItems.ENLIGHTENMENT_KEY.get(), AstralItems.ETHERIC_POWDER_ITEM.get());
+        getBuilder(AstralTags.ASTRAL_PICKUP).add(etherealItems).add(AstralItems.ENLIGHTENMENT_KEY.get(), AstralItems.ETHERIC_POWDER_ITEM.get());
+        getBuilder(AstralTags.BASIC_ASTRAL_PLANTS).add(AstralItems.FEVERWEED.get(), AstralItems.SNOWBERRY.get());
     }
 }
