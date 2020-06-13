@@ -20,13 +20,11 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nonnull;
 
-@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
+//@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
 public class CrystalWebProjectileEntity extends DamagingProjectileEntity implements IRendersAsItem, IAstralBeing {
     public CrystalWebProjectileEntity(EntityType<? extends DamagingProjectileEntity> entityType, World world) {
         super(entityType, world);

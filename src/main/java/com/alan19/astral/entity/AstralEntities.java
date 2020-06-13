@@ -2,6 +2,7 @@ package com.alan19.astral.entity;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
+import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,6 +16,7 @@ public class AstralEntities {
 
     public static final RegistryObject<EntityType<PhysicalBodyEntity>> PHYSICAL_BODY_ENTITY = ENTITIES.register(PHYSICAL_BODY, AstralEntities::getPhysicalBody);
     public static final RegistryObject<EntityType<CrystalSpiderEntity>> CRYSTAL_SPIDER = ENTITIES.register("crystal_spider", AstralEntities::getCrystalSpider);
+    public static final RegistryObject<EntityType<CrystalWebProjectileEntity>> CRYSTAL_WEB_PROJECTILE_ENTITY = ENTITIES.register("crystal_web_projectile", AstralEntities::getCrystalWeb);
 
     public static void register(IEventBus modBus) {
         ENTITIES.register(modBus);
@@ -30,5 +32,11 @@ public class AstralEntities {
         return EntityType.Builder.create(CrystalSpiderEntity::new, EntityClassification.MONSTER)
                 .size(0.7F, 0.5F)
                 .build("crystal_spider");
+    }
+
+    private static EntityType<CrystalWebProjectileEntity> getCrystalWeb() {
+        return EntityType.Builder.create(CrystalWebProjectileEntity::new, EntityClassification.MISC)
+                .size(1F, 1F)
+                .build("crystal_web_projectile");
     }
 }

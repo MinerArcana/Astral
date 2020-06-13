@@ -8,6 +8,9 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Difficulty;
@@ -18,6 +21,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
+    private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
@@ -41,6 +45,11 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
         //Do nothing when falling
     }
 
+    @Override
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(ATTACKING, true);
+    }
 
     @Override
     protected void registerGoals() {
@@ -52,6 +61,35 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.goalSelector.addGoal(7, new WebAttackGoal(this));
+    }
+
+    public void setAttacking(boolean attacking) {
+        dataManager.set(ATTACKING, attacking);
+    }
+
+    @Override
+    public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
+        boolean isAttackSuccessful = IAstralBeing.attackEntityAsMobWithAstralDamage(this, entityIn);
+        if (isAttackSuccessful) {
+            if (entityIn instanceof LivingEntity) {
+                int mindVenomDuration = 0;
+                if (this.world.getDifficulty() == Difficulty.NORMAL) {
+                    mindVenomDuration = 7;
+                }
+                else if (this.world.getDifficulty() == Difficulty.HARD) {
+                    mindVenomDuration = 15;
+                }
+
+                if (mindVenomDuration > 0) {
+                    ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
+                }
+            }
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     static class AttackGoal extends MeleeAttackGoal {
@@ -113,30 +151,6 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
         @ParametersAreNonnullByDefault
         protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
             return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
-        }
-    }
-
-    @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
-        boolean isAttackSuccessful = IAstralBeing.attackEntityAsMobWithAstralDamage(this, entityIn);
-        if (isAttackSuccessful) {
-            if (entityIn instanceof LivingEntity) {
-                int mindVenomDuration = 0;
-                if (this.world.getDifficulty() == Difficulty.NORMAL) {
-                    mindVenomDuration = 7;
-                }
-                else if (this.world.getDifficulty() == Difficulty.HARD) {
-                    mindVenomDuration = 15;
-                }
-
-                if (mindVenomDuration > 0) {
-                    ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
-                }
-            }
-            return true;
-        }
-        else {
-            return false;
         }
     }
 }
