@@ -57,8 +57,8 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(METAPHORIC_FLESH_BLOCK.get());
         simpleBlock(METAPHORIC_STONE.get());
         simpleBlock(BONE_SHEETS.get());
-        simpleBlock(INDEX_OF_KNOWLEDGE.get());
-        simpleBlock(CRYSTAL_WEB.get());
+        simpleBlock(INDEX_OF_KNOWLEDGE.get(), new ModelFile.ExistingModelFile(modLoc("block/index_of_knowledge"), exFileHelper));
+        simpleBlock(CRYSTAL_WEB.get(), new ConfiguredModel(models().cross("crystal_web", modLoc("block/crystal_web"))));
     }
 
     private ModelFile modelDefault(Block block) {
