@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public class EtherealDoublePlantBlock extends DoublePlantBlock {
+public class EtherealDoublePlantBlock extends DoublePlantBlock implements Ethereal {
     public EtherealDoublePlantBlock() {
         super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0).sound(SoundType.PLANT));
     }
