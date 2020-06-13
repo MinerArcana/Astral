@@ -42,6 +42,7 @@ public class BlockRenderHandler {
         RenderTypeLookup.setRenderLayer(CYAN_PODS.get(), cutout);
         RenderTypeLookup.setRenderLayer(COMFORTABLE_CUSHION.get(), cutout);
         RenderTypeLookup.setRenderLayer(ETHEREAL_SAPLING.get(), cutout);
+        RenderTypeLookup.setRenderLayer(METAPHORIC_FLESH_BLOCK.get(), cutout);
     }
 
     public static void registerBiomeBasedBlockColors() {

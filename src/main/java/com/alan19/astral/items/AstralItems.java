@@ -2,6 +2,10 @@ package com.alan19.astral.items;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.items.tools.PhantasmalAxe;
+import com.alan19.astral.items.tools.PhantasmalPickaxe;
+import com.alan19.astral.items.tools.PhantasmalShovel;
+import com.alan19.astral.items.tools.PhantasmalSword;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
@@ -63,7 +67,11 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> BONE_SHEETS_ITEM = ITEMS.register("bone_sheets", () -> convertToBlockItem(BONE_SHEETS.get()));
     public static final RegistryObject<BlockNamedItem> METAPHORIC_FLESH_BLOCK_ITEM = ITEMS.register("metaphoric_flesh_block", () -> convertToBlockItem(METAPHORIC_FLESH_BLOCK.get()));
     public static final RegistryObject<BlockNamedItem> CRYSTAL_WEB_ITEM = ITEMS.register("crystal_web", () -> convertToBlockItem(CRYSTAL_WEB.get()));
-
+    public static final RegistryObject<PhantomEdge> PHANTOM_EDGE = ITEMS.register("phantom_edge", PhantomEdge::new);
+    public static final RegistryObject<PhantasmalSword> PHANTASMAL_SWORD = ITEMS.register("phantasmal_sword", PhantasmalSword::new);
+    public static final RegistryObject<PhantasmalPickaxe> PHANTASMAL_PICKAXE = ITEMS.register("phantasmal_pickaxe", PhantasmalPickaxe::new);
+    public static final RegistryObject<PhantasmalShovel> PHANTASMAL_SHOVEL = ITEMS.register("phantasmal_shovel", PhantasmalShovel::new);
+    public static final RegistryObject<PhantasmalAxe> PHANTASMAL_AXE = ITEMS.register("phantasmal_axe", PhantasmalAxe::new);
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab

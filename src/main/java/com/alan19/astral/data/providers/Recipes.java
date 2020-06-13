@@ -1,9 +1,13 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.data.ShapelessNBTRecipeBuilder;
+import com.alan19.astral.tags.AstralTags;
+import com.alan19.astral.util.Constants;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
@@ -116,6 +120,49 @@ public class Recipes extends RecipeProvider {
         createTwoByTwoRecipe(consumer, BONE_SHEETS_ITEM.get(), METAPHORIC_BONE.get(), 1);
         createTwoByTwoRecipe(consumer, Items.GLASS, CRYSTAL_CHITIN.get(), 1, new ResourceLocation(Astral.MOD_ID, "chitin_glass"));
         createTwoByTwoRecipe(consumer, METAPHORIC_FLESH_BLOCK_ITEM.get(), METAPHORIC_FLESH.get(), 1);
+
+        ShapelessNBTRecipeBuilder.shapelessRecipe(Constants.getAstronomicon())
+                .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
+                .addIngredient(Ingredient.fromItems(Items.PAPER), 3)
+                .addCriterion("basic_astral_plants", hasItem(AstralTags.BASIC_ASTRAL_PLANTS))
+                .build(consumer, new ResourceLocation(Astral.MOD_ID, "astronomicon"));
+
+        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SWORD.get())
+                .key('P', PHANTOM_EDGE.get())
+                .key('B', METAPHORIC_BONE.get())
+                .patternLine(" P ")
+                .patternLine(" P ")
+                .patternLine(" B ")
+                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_PICKAXE.get())
+                .key('P', PHANTOM_EDGE.get())
+                .key('B', METAPHORIC_BONE.get())
+                .patternLine("PPP")
+                .patternLine(" B ")
+                .patternLine(" B ")
+                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SHOVEL.get())
+                .key('P', PHANTOM_EDGE.get())
+                .key('B', METAPHORIC_BONE.get())
+                .patternLine(" P ")
+                .patternLine(" B ")
+                .patternLine(" B ")
+                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_AXE.get())
+                .key('P', PHANTOM_EDGE.get())
+                .key('B', METAPHORIC_BONE.get())
+                .patternLine("PP ")
+                .patternLine("PB ")
+                .patternLine(" B ")
+                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
+                .build(consumer);
+
     }
 
     private ShapedRecipeBuilder generateTwoByTwoRecipeBuilder(Item output, Item input, int count) {

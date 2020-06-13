@@ -55,6 +55,10 @@ public class Blockstates extends BlockStateProvider {
         horizontalBlock(COMFORTABLE_CUSHION.get(), new ModelFile.ExistingModelFile(modLoc("block/comfortable_cushion"), exFileHelper));
         simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ethereal_sapling", modLoc("block/ethereal_sapling"))));
         simpleBlock(METAPHORIC_FLESH_BLOCK.get());
+        simpleBlock(METAPHORIC_STONE.get());
+        simpleBlock(BONE_SHEETS.get());
+        simpleBlock(INDEX_OF_KNOWLEDGE.get());
+        simpleBlock(CRYSTAL_WEB.get());
     }
 
     private ModelFile modelDefault(Block block) {

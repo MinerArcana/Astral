@@ -51,6 +51,16 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forItem(METAPHORIC_FLESH);
         forItem(CRYSTAL_CHITIN);
         singleTexture("astronomicon", mcLoc("item/handheld"), "layer0", modLoc("item/astronomicon"));
+        forItem(SLEEPLESS_EYE);
+        forItem(PHANTOM_EDGE);
+        forBlockItem(INDEX_OF_KNOWLEDGE_ITEM, modLoc("block/index_of_knowledge"));
+        forBlockItem(METAPHORIC_STONE_ITEM);
+        forBlockItem(BONE_SHEETS_ITEM);
+        forBlockItem(CRYSTAL_WEB_ITEM);
+        forItem(PHANTASMAL_SWORD);
+        forItem(PHANTASMAL_SHOVEL);
+        forItem(PHANTASMAL_PICKAXE);
+        forItem(PHANTASMAL_AXE);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

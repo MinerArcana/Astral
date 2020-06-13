@@ -130,6 +130,11 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(METAPHORIC_FLESH.get(), "Metaphoric Flesh");
         add(METAPHORIC_FLESH_BLOCK_ITEM.get(), "Metaphoric Flesh Block");
         add(CRYSTAL_WEB_ITEM.get(), "Crystal Web");
+        add(PHANTOM_EDGE.get(), "Phantom Edge");
+        add(PHANTASMAL_SWORD.get(), "Phantasmal Sword");
+        add(PHANTASMAL_PICKAXE.get(), "Phantasmal Pickaxe");
+        add(PHANTASMAL_SHOVEL.get(), "Phantasmal Shovel");
+        add(PHANTASMAL_AXE.get(), "Phantasmal Axe");
     }
 
     private void addPotions() {
