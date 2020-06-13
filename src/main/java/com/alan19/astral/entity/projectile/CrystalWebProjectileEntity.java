@@ -5,12 +5,14 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.items.AstralItems;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -21,10 +23,12 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-//@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
 public class CrystalWebProjectileEntity extends DamagingProjectileEntity implements IRendersAsItem, IAstralBeing {
     public CrystalWebProjectileEntity(EntityType<? extends DamagingProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -54,14 +58,18 @@ public class CrystalWebProjectileEntity extends DamagingProjectileEntity impleme
     }
 
     private void handleBlockCollision(@Nonnull BlockRayTraceResult result) {
-        final BlockPos newWebBlockLocation = result.getPos().offset(result.getFace());
-        if (world.isAirBlock(newWebBlockLocation)) {
-            boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, this.shootingEntity);
-            if (flag) {
-                world.setBlockState(getPosition(), AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
+        final Stream<BlockPos> allInBox = BlockPos.getAllInBox(result.getPos().add(-1, -1, -1), result.getPos().add(1, 1, 1));
+        boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, this.shootingEntity);
+        if (flag) {
+            final Optional<BlockPos> webPos = allInBox.filter(blockPos -> world.isAirBlock(blockPos)).findFirst();
+            if (webPos.isPresent()) {
+                world.setBlockState(webPos.get(), AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
             }
-            remove();
+            else {
+                Block.spawnAsEntity(world, result.getPos(), new ItemStack(AstralItems.DREAMCORD.get()));
+            }
         }
+        remove();
     }
 
     private void handleEntityCollision(Entity entity) {
@@ -75,5 +83,11 @@ public class CrystalWebProjectileEntity extends DamagingProjectileEntity impleme
         if (flag) {
             world.setBlockState(getPosition(), AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
         }
+    }
+
+    @Override
+    @Nonnull
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

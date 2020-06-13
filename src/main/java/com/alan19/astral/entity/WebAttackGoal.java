@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class WebAttackGoal extends Goal {
     private final CrystalSpiderEntity parentEntity;
-    private int attackTimer;
+    public int attackTimer;
 
     public WebAttackGoal(CrystalSpiderEntity crystalSpiderEntity) {
         this.parentEntity = crystalSpiderEntity;
@@ -42,7 +42,6 @@ public class WebAttackGoal extends Goal {
     /**
      * Keep ticking a continuous task that has already been started
      */
-    @Override
     public void tick() {
         LivingEntity livingentity = this.parentEntity.getAttackTarget();
         if (livingentity != null && livingentity.getDistanceSq(this.parentEntity) < 4096.0D && this.parentEntity.canEntityBeSeen(livingentity)) {
@@ -56,7 +55,8 @@ public class WebAttackGoal extends Goal {
                 Vec3d vec3d = this.parentEntity.getLook(1.0F);
                 world.playEvent(null, 1016, new BlockPos(this.parentEntity), 0);
                 CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), world);
-                crystalWebProjectileEntity.setPosition(this.parentEntity.getPosX() + vec3d.x * 4.0D, this.parentEntity.getPosYHeight(0.5D) + 0.5D, crystalWebProjectileEntity.getPosZ() + vec3d.z * 4.0D);
+                crystalWebProjectileEntity.setPosition(this.parentEntity.getPosX() + vec3d.x * 4.0D, this.parentEntity.getPosYHeight(0.5D) + 0.5D, this.parentEntity.getPosZ() + vec3d.z * 4.0D);
+                crystalWebProjectileEntity.setMotion((livingentity.getPosX() - (this.parentEntity.getPosX() + vec3d.x * 4.0D)) / 4, (livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D))) / 4, (livingentity.getPosZ() - (this.parentEntity.getPosZ() + vec3d.z * 4.0D)) / 4);
                 world.addEntity(crystalWebProjectileEntity);
                 this.attackTimer = -40;
             }
