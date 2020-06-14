@@ -1,6 +1,7 @@
 package com.alan19.astral.entity;
 
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -12,7 +13,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 
@@ -20,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
+public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
     private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
@@ -61,7 +64,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(7, new WebAttackGoal(this));
+        this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25D, 40, 20.0F));
     }
 
     public void setAttacking(boolean attacking) {
@@ -90,6 +93,17 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing {
         else {
             return false;
         }
+    }
+
+    @Override
+    public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
+        CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(world, this);
+        final double x = target.getPosX() - getPosX();
+        final double y = target.getPosYHeight(0.3333333333333333D) - crystalWebProjectileEntity.getPosY();
+        final double z = target.getPosZ() - getPosZ();
+        crystalWebProjectileEntity.shoot(x, y + MathHelper.sqrt(x * x + z * z) * 0.2F, z, .5F, 10F);
+        world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_LLAMA_SPIT, getSoundCategory(), 1.0F, 2.0F + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F);
+        world.addEntity(crystalWebProjectileEntity);
     }
 
     static class AttackGoal extends MeleeAttackGoal {

@@ -25,9 +25,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem, IAstralBeing, IProjectile {
 
@@ -150,12 +148,17 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
     }
 
     public void onHit(RayTraceResult result) {
-        RayTraceResult.Type type = result.getType();
-        if (type == RayTraceResult.Type.ENTITY && this.projectileOwner != null) {
-            handleEntityCollision(((EntityRayTraceResult) result).getEntity());
+        RayTraceResult.Type resultType = result.getType();
+        if (resultType == RayTraceResult.Type.ENTITY && projectileOwner != null) {
+            Entity entity = ((EntityRayTraceResult) result).getEntity();
+            entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.projectileOwner), 2F);
+            if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && entity instanceof LivingEntity) {
+                ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
+            }
+            this.applyEnchantments(this.projectileOwner, entity);
         }
-        else if (type == RayTraceResult.Type.BLOCK && !this.world.isRemote) {
-            handleBlockCollision((BlockRayTraceResult) result);
+        else if (resultType == RayTraceResult.Type.BLOCK && !this.world.isRemote) {
+            this.remove();
         }
 
     }
@@ -211,25 +214,10 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
         return new ItemStack(AstralItems.CRYSTAL_WEB_ITEM.get());
     }
 
-    private void handleBlockCollision(@Nonnull BlockRayTraceResult result) {
-        boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, projectileOwner);
-        if (flag) {
-            setWeb(world, result.getPos());
-        }
-        remove();
-    }
-
-    private void handleEntityCollision(Entity entity) {
-        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.projectileOwner), 2F);
-        if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && entity instanceof LivingEntity) {
-            ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
-        }
-        this.applyEnchantments(this.projectileOwner, entity);
-        remove();
-        boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, this.projectileOwner);
-        if (flag) {
-            setWeb(world, getPosition());
-        }
+    @Override
+    public void remove() {
+        setWeb(world, getPosition());
+        super.remove();
     }
 
     private void setWeb(World world, BlockPos pos) {
@@ -237,15 +225,7 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
             world.setBlockState(pos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
         }
         else {
-            final Stream<BlockPos> allInBox = BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1));
-            final Optional<BlockPos> webPos = allInBox.filter(world::isAirBlock).findFirst();
-            if (webPos.isPresent()) {
-                world.setBlockState(webPos.get(), AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
-            }
-            else {
-                Block.spawnAsEntity(world, pos, new ItemStack(AstralItems.DREAMCORD.get()));
-            }
-
+            Block.spawnAsEntity(world, pos, new ItemStack(AstralItems.DREAMCORD.get()));
         }
     }
 }
