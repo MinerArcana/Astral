@@ -35,8 +35,9 @@ public class AstralEntities {
     }
 
     private static EntityType<CrystalWebProjectileEntity> getCrystalWeb() {
-        return EntityType.Builder.create(CrystalWebProjectileEntity::new, EntityClassification.MISC)
-                .size(1F, 1F)
+        EntityType.Builder<CrystalWebProjectileEntity> crystalWebProjectileEntityBuilder = EntityType.Builder.create(CrystalWebProjectileEntity::new, EntityClassification.MISC);
+        crystalWebProjectileEntityBuilder.size(1F, 1F);
+        return crystalWebProjectileEntityBuilder
                 .build("crystal_web_projectile");
     }
 }

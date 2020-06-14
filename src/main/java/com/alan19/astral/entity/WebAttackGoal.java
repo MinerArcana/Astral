@@ -3,8 +3,8 @@ package com.alan19.astral.entity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class WebAttackGoal extends Goal {
@@ -42,22 +42,19 @@ public class WebAttackGoal extends Goal {
     /**
      * Keep ticking a continuous task that has already been started
      */
+    @Override
     public void tick() {
         LivingEntity livingentity = this.parentEntity.getAttackTarget();
         if (livingentity != null && livingentity.getDistanceSq(this.parentEntity) < 4096.0D && this.parentEntity.canEntityBeSeen(livingentity)) {
             World world = this.parentEntity.world;
             this.attackTimer++;
-            if (this.attackTimer == 10) {
-                world.playEvent(null, 1015, new BlockPos(this.parentEntity), 0);
-            }
-
             if (this.attackTimer == 20) {
-                Vec3d vec3d = this.parentEntity.getLook(1.0F);
-                world.playEvent(null, 1016, new BlockPos(this.parentEntity), 0);
-                CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), world);
-                crystalWebProjectileEntity.setPosition(this.parentEntity.getPosX() + vec3d.x * 4.0D, this.parentEntity.getPosYHeight(0.5D) + 0.5D, this.parentEntity.getPosZ() + vec3d.z * 4.0D);
-                crystalWebProjectileEntity.setMotion((livingentity.getPosX() - (this.parentEntity.getPosX() + vec3d.x * 4.0D)) / 4, (livingentity.getPosYHeight(0.5D) - (0.5D + this.parentEntity.getPosYHeight(0.5D))) / 4, (livingentity.getPosZ() - (this.parentEntity.getPosZ() + vec3d.z * 4.0D)) / 4);
-                world.addEntity(crystalWebProjectileEntity);
+                world.playSound(null, parentEntity.getPosX(), parentEntity.getPosY(), parentEntity.getPosZ(), SoundEvents.ENTITY_LLAMA_SPIT, parentEntity.getSoundCategory(), 1.0F, 1.0F + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F);
+                CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(world, parentEntity);
+                final double x = livingentity.getPosX() - parentEntity.getPosX();
+                final double y = livingentity.getPosYHeight(0.3333333333333333D) - crystalWebProjectileEntity.getPosY();
+                final double z = livingentity.getPosZ() - parentEntity.getPosZ();
+                crystalWebProjectileEntity.shoot(x, y + MathHelper.sqrt(x * x + z * z) * 0.2F, z, .5F, 10F);
                 this.attackTimer = -40;
             }
         }
