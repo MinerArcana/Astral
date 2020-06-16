@@ -56,7 +56,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(INDEX_OF_KNOWLEDGE_ITEM, modLoc("block/index_of_knowledge"));
         forBlockItem(METAPHORIC_STONE_ITEM);
         forBlockItem(BONE_SHEETS_ITEM);
-        forBlockItem(CRYSTAL_WEB_ITEM);
+        forBlockItemWithParent(CRYSTAL_WEB_ITEM);
         forItem(PHANTASMAL_SWORD);
         forItem(PHANTASMAL_SHOVEL);
         forItem(PHANTASMAL_PICKAXE);
