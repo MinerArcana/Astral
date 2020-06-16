@@ -48,7 +48,7 @@ public class CrystalWeb extends EtherealBlock {
         super.tick(state, worldIn, pos, rand);
         if (rand.nextInt(30) == 0 && pos.getY() >= 128) {
             final int moonPhase = worldIn.getMoonPhase();
-            if (getBoxForMoonPhase(moonPhase, pos).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 5) {
+            if (BlockPos.getAllInBox(pos.add(-2, -1, -2), pos.add(2, 1, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 5) {
                 final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
                 worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
