@@ -5,6 +5,7 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.CrystalSpiderEntity;
 import com.alan19.astral.entity.IAstralBeing;
+import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.items.AstralItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -151,7 +152,9 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
         RayTraceResult.Type resultType = result.getType();
         if (resultType == RayTraceResult.Type.ENTITY && projectileOwner != null) {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
-            entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.projectileOwner), 2F);
+            if (entity instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entity)) {
+                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.projectileOwner), 2F);
+            }
             if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && entity instanceof LivingEntity) {
                 ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }

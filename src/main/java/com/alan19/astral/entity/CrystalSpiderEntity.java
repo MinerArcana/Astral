@@ -64,7 +64,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(7, new RangedAttackGoal(this, 1.25D, 40, 20.0F));
+        this.goalSelector.addGoal(7, new WebAttackGoal(this, 1.25D, 20, 10F));
     }
 
     public void setAttacking(boolean attacking) {
