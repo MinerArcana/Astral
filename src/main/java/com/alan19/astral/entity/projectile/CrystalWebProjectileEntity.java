@@ -159,6 +159,7 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
                 ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }
             this.applyEnchantments(this.projectileOwner, entity);
+            this.remove();
         }
         else if (resultType == RayTraceResult.Type.BLOCK && !this.world.isRemote) {
             this.remove();
