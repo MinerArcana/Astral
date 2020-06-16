@@ -44,6 +44,7 @@ public class EnglishLocalizaton extends LanguageProvider {
     private void addEntities() {
         add(AstralEntities.PHYSICAL_BODY_ENTITY.get(), "Physical Body");
         add(AstralEntities.CRYSTAL_SPIDER.get(), "Crystal Spider");
+        add(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), "Crystal Web");
     }
 
     private void addEffects() {

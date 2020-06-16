@@ -99,8 +99,6 @@ public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
                 j = -5;
             }
 
-            int k = x + 7;
-            int l = z + 7;
             int i1 = generator.func_222531_c(x, z, Heightmap.Type.WORLD_SURFACE_WG);
             int j1 = generator.func_222531_c(x, z + j, Heightmap.Type.WORLD_SURFACE_WG);
             int k1 = generator.func_222531_c(x + i, z, Heightmap.Type.WORLD_SURFACE_WG);

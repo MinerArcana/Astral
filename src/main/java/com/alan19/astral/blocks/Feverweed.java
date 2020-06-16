@@ -34,6 +34,7 @@ public class Feverweed extends BushBlock {
     @Override
     public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
+            //If there are more than 5 blocks of Feverweed in a 9 * 2 * 9 cube centered on the block, do nothing
             int i = 5;
 
             for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
