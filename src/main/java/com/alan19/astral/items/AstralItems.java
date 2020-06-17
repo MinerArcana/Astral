@@ -64,7 +64,7 @@ public class AstralItems {
     public static final RegistryObject<SleeplessEye> SLEEPLESS_EYE = ITEMS.register("sleepless_eye", SleeplessEye::new);
     public static final RegistryObject<CrystalChitin> CRYSTAL_CHITIN = ITEMS.register("crystal_chitin", CrystalChitin::new);
     public static final RegistryObject<BlockNamedItem> METAPHORIC_STONE_ITEM = ITEMS.register("metaphoric_stone", () -> convertToBlockItem(METAPHORIC_STONE.get()));
-    public static final RegistryObject<BlockNamedItem> BONE_SHEETS_ITEM = ITEMS.register("bone_sheets", () -> convertToBlockItem(BONE_SHEETS.get()));
+    public static final RegistryObject<BlockNamedItem> BONE_SHEETS_ITEM = ITEMS.register("bone_sheets", () -> convertToBlockItem(METAPHORIC_BONE_BLOCK.get()));
     public static final RegistryObject<BlockNamedItem> METAPHORIC_FLESH_BLOCK_ITEM = ITEMS.register("metaphoric_flesh_block", () -> convertToBlockItem(METAPHORIC_FLESH_BLOCK.get()));
     public static final RegistryObject<BlockNamedItem> CRYSTAL_WEB_ITEM = ITEMS.register("crystal_web", () -> convertToBlockItem(CRYSTAL_WEB.get()));
     public static final RegistryObject<PhantomEdge> PHANTOM_EDGE = ITEMS.register("phantom_edge", PhantomEdge::new);

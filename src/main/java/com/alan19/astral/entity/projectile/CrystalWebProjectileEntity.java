@@ -28,6 +28,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nonnull;
 import java.util.UUID;
 
+@OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
 public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem, IAstralBeing, IProjectile {
 
     public static final String OWNER_UUID = "OwnerUUID";

@@ -88,7 +88,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(COMFORTABLE_CUSHION.get(), "Comfortable Cushion");
         add(ETHEREAL_SAPLING.get(), "Ethereal Sapling");
         add(INDEX_OF_KNOWLEDGE.get(), "Index of Knowledge");
-        add(BONE_SHEETS.get(), "Metaphoric Bone Block");
+        add(METAPHORIC_BONE_BLOCK.get(), "Metaphoric Bone Block");
         add(METAPHORIC_STONE.get(), "Metaphoric Stone");
         add(METAPHORIC_FLESH_BLOCK.get(), "Metaphoric Flesh Block");
         add(CRYSTAL_WEB.get(), "Crystal Web");

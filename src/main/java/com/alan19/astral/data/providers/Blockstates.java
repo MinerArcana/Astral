@@ -56,7 +56,7 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ethereal_sapling", modLoc("block/ethereal_sapling"))));
         simpleBlock(METAPHORIC_FLESH_BLOCK.get());
         simpleBlock(METAPHORIC_STONE.get());
-        simpleBlock(BONE_SHEETS.get());
+        simpleBlock(METAPHORIC_BONE_BLOCK.get());
         simpleBlock(INDEX_OF_KNOWLEDGE.get(), new ModelFile.ExistingModelFile(modLoc("block/index_of_knowledge"), exFileHelper));
         simpleBlock(CRYSTAL_WEB.get(), new ConfiguredModel(models().cross("crystal_web", modLoc("block/crystal_web"))));
     }

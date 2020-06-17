@@ -1,11 +1,18 @@
 package com.alan19.astral.util;
 
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.world.storage.loot.conditions.Alternative;
+import net.minecraft.world.storage.loot.conditions.MatchTool;
 import net.minecraftforge.common.BiomeManager;
 import vazkii.patchouli.common.item.PatchouliItems;
 
@@ -24,6 +31,7 @@ public class Constants {
     public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
     public static final IAttribute ASTRAL_ATTACK_DAMAGE = new RangedAttribute(null, "astral.astralAttackDamage", 0.0D, 0.0D, 2048.0D);
+    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().item(Items.SHEARS)));
 
     public static ItemStack getAstronomicon() {
         final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
