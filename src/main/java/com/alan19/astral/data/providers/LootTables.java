@@ -1,5 +1,6 @@
 package com.alan19.astral.data.providers;
 
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.items.AstralItems;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
@@ -7,8 +8,12 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.data.loot.EntityLootTables;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
+import net.minecraft.world.storage.loot.functions.SetCount;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -29,7 +34,7 @@ public class LootTables extends LootTableProvider {
     @Override
     @Nonnull
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
-        return ImmutableList.of(Pair.of(Blocks::new, LootParameterSets.BLOCK));
+        return ImmutableList.of(Pair.of(AstralBlockLootTables::new, LootParameterSets.BLOCK), Pair.of(AstralEntityLootTables::new, LootParameterSets.ENTITY));
     }
 
     @Override
@@ -37,9 +42,8 @@ public class LootTables extends LootTableProvider {
         map.forEach((name, table) -> LootTableManager.func_227508_a_(validationtracker, name, table));
     }
 
-    private static class Blocks extends BlockLootTables {
+    private static class AstralBlockLootTables extends BlockLootTables {
         private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_CYAN_CYST.get(), CYAN_CYST.get(), CYAN_SWARD.get(), TALL_CYAN_SWARD.get(), ETHEREAL_LEAVES.get()));
-        private final List<Block> knownBlocks = new ArrayList<>();
 
         @Override
         protected void addTables() {
@@ -71,6 +75,24 @@ public class LootTables extends LootTableProvider {
 
         private void registerShearsRecipe(Block block) {
             this.registerLootTable(block, onlyWithShears(block));
+        }
+    }
+
+    private static class AstralEntityLootTables extends EntityLootTables {
+        @Override
+        protected void addTables() {
+            registerLootTable(AstralEntities.CRYSTAL_SPIDER.get(), new LootTable.Builder()
+                    .addLootPool(LootPool.builder()
+                            .rolls(ConstantRange.of(1))
+                            .addEntry(ItemLootEntry.builder(AstralItems.DREAMCORD.get())
+                                    .acceptFunction(SetCount.builder(RandomValueRange.of(0, 2)))
+                                    .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))))));
+        }
+
+        @Override
+        @Nonnull
+        protected Iterable<EntityType<?>> getKnownEntities() {
+            return ImmutableList.of(AstralEntities.CRYSTAL_SPIDER.get());
         }
     }
 }

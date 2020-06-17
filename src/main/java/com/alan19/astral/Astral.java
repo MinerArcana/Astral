@@ -34,6 +34,7 @@ import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
+import com.alan19.astral.util.Constants;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.OverworldVegetation;
 import com.alan19.astral.world.biome.AstralBiomes;
@@ -44,6 +45,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
@@ -142,7 +144,7 @@ public class Astral {
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-
+        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD

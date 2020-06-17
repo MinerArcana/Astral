@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraftforge.common.BiomeManager;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 import java.util.UUID;
@@ -29,4 +30,6 @@ public class Constants {
         patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
         return patchouliBook;
     }
+
+    public static final BiomeManager.BiomeType ASTRAL = BiomeManager.BiomeType.create("astral");
 }

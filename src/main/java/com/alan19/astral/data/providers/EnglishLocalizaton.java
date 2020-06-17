@@ -5,6 +5,7 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.potions.PotionRegistryGroup;
 import com.alan19.astral.util.Constants;
+import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.data.DataGenerator;
@@ -34,6 +35,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         addEntities();
         addEffects();
         add(Constants.ASTRAL_ATTACK_DAMAGE, "Astral Attack Damage");
+        add(AstralBiomes.PSYSCAPE_BIOME.get(), "Psyscape");
         add("itemGroup.astral", "Astral");
     }
 
