@@ -58,10 +58,10 @@ public class StartAndEndHandling {
                     }
                 });
             }
-        }
-        //Apply Astral Travel to entity on client
-        if (event.getEntityLiving().world instanceof ServerWorld) {
-            AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
+            //Apply Astral Travel to entity on client
+            if (event.getEntityLiving().world instanceof ServerWorld) {
+                AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
+            }
         }
     }
 
