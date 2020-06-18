@@ -18,24 +18,19 @@ import net.minecraft.world.storage.loot.functions.SetCount;
 import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 
 
 public class AstralBlockLootTables extends BlockLootTables {
-    private final List<Block> etherealPlants = new ArrayList<>(Arrays.asList(LARGE_CYAN_CYST.get(), CYAN_CYST.get(), CYAN_SWARD.get(), TALL_CYAN_SWARD.get(), ETHEREAL_LEAVES.get()));
 
     @Override
     protected void addTables() {
-        etherealPlants.forEach(this::registerShearsRecipe);
-        registerLootTable(LARGE_CYAN_CYST.get(), dropping(CYAN_CYST.get()));
-        registerLootTable(TALL_CYAN_SWARD.get(), dropping(CYAN_SWARD.get()));
-        registerLootTable(CYAN_CYST.get(), dropping(CYAN_CYST.get()));
-        registerLootTable(CYAN_SWARD.get(), dropping(CYAN_SWARD.get()));
+        registerLootTable(LARGE_CYAN_CYST.get(), onlyWithSilkTouchOrShears(CYAN_CYST.get()));
+        registerLootTable(TALL_CYAN_SWARD.get(), onlyWithSilkTouchOrShears(CYAN_SWARD.get()));
+        registerLootTable(CYAN_CYST.get(), onlyWithSilkTouchOrShears(CYAN_CYST.get()));
+        registerLootTable(CYAN_SWARD.get(), onlyWithSilkTouchOrShears(CYAN_SWARD.get()));
         registerLootTable(CYAN_BELLEVINE.get(), dropping(CYAN_BELLEVINE.get()));
         registerLootTable(CYAN_BLISTERWART.get(), dropping(CYAN_BLISTERWART.get()));
         registerLootTable(CYAN_KLORID.get(), dropping(CYAN_KLORID.get()));
@@ -93,7 +88,9 @@ public class AstralBlockLootTables extends BlockLootTables {
                         .rolls(ConstantRange.of(1))
                         .addEntry(AlternativesLootEntry.builder(ItemLootEntry.builder(ETHEREAL_LEAVES.get())
                                         .acceptCondition(Constants.SILK_TOUCH_OR_SHEARS),
-                                ItemLootEntry.builder(AstralItems.ETHEREAL_SAPLING_ITEM.get()).acceptCondition(SurvivesExplosion.builder()).acceptCondition(TableBonus.builder(Enchantments.FORTUNE, .05f, .0625f, 0.083333336f, 0.1f)))))
+                                ItemLootEntry.builder(AstralItems.ETHEREAL_SAPLING_ITEM.get())
+                                        .acceptCondition(SurvivesExplosion.builder())
+                                        .acceptCondition(TableBonus.builder(Enchantments.FORTUNE, .05f, .0625f, 0.083333336f, 0.1f)))))
                 .addLootPool(new LootPool.Builder()
                         .rolls(ConstantRange.of(1))
                         .addEntry(ItemLootEntry.builder(AstralItems.METAPHORIC_BONE.get())
@@ -120,7 +117,11 @@ public class AstralBlockLootTables extends BlockLootTables {
         return BLOCKS.getEntries().stream().map(RegistryObject::get).collect(Collectors.toList());
     }
 
-    private void registerShearsRecipe(Block block) {
-        this.registerLootTable(block, onlyWithShears(block));
+    private LootTable.Builder onlyWithSilkTouchOrShears(Block block) {
+        return LootTable.builder()
+                .addLootPool(LootPool.builder()
+                        .rolls(ConstantRange.of(1))
+                        .acceptCondition(Constants.SILK_TOUCH_OR_SHEARS)
+                        .addEntry(ItemLootEntry.builder(block)));
     }
 }
