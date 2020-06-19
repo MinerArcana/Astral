@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "astral:physical_body",
     "astral:crystal_spider",
     "astral:crystal_web_projectile"
   ]

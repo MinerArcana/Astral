@@ -1,6 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.EntityTypeTagsProvider;
@@ -14,7 +15,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void registerTags() {
-        AstralEntities.ENTITIES.getEntries().forEach(this::addAstralBeing);
+        AstralEntities.ENTITIES.getEntries().stream().filter(entityType -> entityType.get() instanceof IAstralBeing).forEach(this::addAstralBeing);
         getBuilder(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
     }
 

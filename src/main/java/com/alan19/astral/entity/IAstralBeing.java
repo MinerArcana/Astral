@@ -1,6 +1,6 @@
 package com.alan19.astral.entity;
 
-import com.alan19.astral.events.AstralDamageSource;
+import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import com.alan19.astral.util.Constants;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.ForgeHooks;
 
 public interface IAstralBeing {
 
@@ -26,15 +27,19 @@ public interface IAstralBeing {
         if (fireAspectModifier > 0) {
             target.setFire(fireAspectModifier * 4);
         }
-
-        boolean flag = target.attackEntityFrom(AstralDamageSource.causeAstralMobDamage(self), attackDamage);
-        if (flag) {
-            handleKnockback(self, target, knockback);
-            handleShieldBreak(self, target);
-            handleThornAndBaneOfArthropods(self, target);
-            self.setLastAttackedEntity(target);
+        if (target instanceof LivingEntity && ForgeHooks.onPlayerAttack((LivingEntity) target, new AstralEntityDamage(self), attackDamage)) {
+            boolean flag = target.attackEntityFrom(new AstralEntityDamage(self), attackDamage);
+            if (flag) {
+                handleKnockback(self, target, knockback);
+                handleShieldBreak(self, target);
+                handleThornAndBaneOfArthropods(self, target);
+                self.setLastAttackedEntity(target);
+            }
+            return flag;
         }
-        return flag;
+        else {
+            return false;
+        }
     }
 
     static void handleThornAndBaneOfArthropods(LivingEntity self, Entity target) {

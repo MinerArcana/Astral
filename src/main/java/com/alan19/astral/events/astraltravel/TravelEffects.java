@@ -69,11 +69,13 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
+        //Replace Astral entity's Physical Damage with Astral damage
         if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
-        if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && event.getSource().getDamageType().equals(IAstralDamage.DAMAGE_NAME)) {
+        //Cancel Magic Damage against non Astral entities and Physical Damage against Astral Entities
+        if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && IAstralDamage.isDamageAstral(event.getSource())) {
             event.setCanceled(true);
         }
     }
@@ -139,7 +141,7 @@ public class TravelEffects {
      * @return Whether the entity should be receving the benefits of Astral Travel
      */
     public static boolean isEntityAstral(LivingEntity livingEntity) {
-        if (livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
+        if (livingEntity instanceof PlayerEntity && livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
             final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(SleepManager::new);
             return livingEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && sleepManager.isEntityTraveling();
         }

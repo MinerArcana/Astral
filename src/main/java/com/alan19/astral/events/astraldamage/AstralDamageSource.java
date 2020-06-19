@@ -1,5 +1,6 @@
-package com.alan19.astral.events;
+package com.alan19.astral.events.astraldamage;
 
+import com.alan19.astral.events.IAstralDamage;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
