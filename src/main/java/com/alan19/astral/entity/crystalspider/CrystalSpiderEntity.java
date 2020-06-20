@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
     private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
-    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
+    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1.1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
