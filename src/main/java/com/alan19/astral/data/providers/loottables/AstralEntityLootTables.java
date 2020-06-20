@@ -20,11 +20,17 @@ public class AstralEntityLootTables extends EntityLootTables {
                         .addEntry(ItemLootEntry.builder(AstralItems.DREAMCORD.get())
                                 .acceptFunction(SetCount.builder(RandomValueRange.of(0, 2)))
                                 .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))))));
+        registerLootTable(EntityType.PHANTOM, new LootTable.Builder()
+                .addLootPool(LootPool.builder()
+                        .rolls(ConstantRange.of(1))
+                        .addEntry(ItemLootEntry.builder(AstralItems.PHANTOM_EDGE.get())
+                                .acceptFunction(SetCount.builder(RandomValueRange.of(0, 2)))
+                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))))));
     }
 
     @Override
     @Nonnull
     protected Iterable<EntityType<?>> getKnownEntities() {
-        return ImmutableList.of(AstralEntities.CRYSTAL_SPIDER.get());
+        return ImmutableList.of(AstralEntities.CRYSTAL_SPIDER.get(), EntityType.PHANTOM);
     }
 }

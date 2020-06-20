@@ -100,11 +100,11 @@ public class Recipes extends RecipeProvider {
         createTwoByTwoRecipe(consumer, DREAMWEAVE.get(), DREAMCORD.get(), 1);
 
         ShapedRecipeBuilder.shapedRecipe(COMFORTABLE_CUSHION_ITEM.get(), 1)
-                .key('W', Items.LIGHT_BLUE_WOOL)
+                .key('W', DREAMWEAVE.get())
                 .patternLine("   ")
                 .patternLine("WWW")
                 .patternLine("WWW")
-                .addCriterion("light_blue_wool", hasItem(Items.LIGHT_BLUE_WOOL))
+                .addCriterion("dreamweave", hasItem(DREAMWEAVE.get()))
                 .build(consumer);
 
         ShapedRecipeBuilder.shapedRecipe(INDEX_OF_KNOWLEDGE_ITEM.get(), 1)
@@ -160,6 +160,14 @@ public class Recipes extends RecipeProvider {
                 .patternLine("PP ")
                 .patternLine("PB ")
                 .patternLine(" B ")
+                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
+                .build(consumer);
+
+        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SHEARS.get())
+                .key('P', PHANTOM_EDGE.get())
+                .patternLine("   ")
+                .patternLine(" P ")
+                .patternLine("P  ")
                 .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
                 .build(consumer);
 

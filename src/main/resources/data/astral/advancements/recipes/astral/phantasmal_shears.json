@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "astral:comfortable_cushion"
+      "astral:phantasmal_shears"
     ]
   },
   "criteria": {
-    "dreamweave": {
+    "phantom_edge": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "astral:dreamweave"
+            "item": "astral:phantom_edge"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "astral:comfortable_cushion"
+        "recipe": "astral:phantasmal_shears"
       }
     }
   },
   "requirements": [
     [
-      "dreamweave",
+      "phantom_edge",
       "has_the_recipe"
     ]
   ]

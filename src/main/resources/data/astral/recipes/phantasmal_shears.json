@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
-    "WWW",
-    "WWW"
+    " P ",
+    "P  "
   ],
   "key": {
-    "W": {
-      "item": "astral:dreamweave"
+    "P": {
+      "item": "astral:phantom_edge"
     }
   },
   "result": {
-    "item": "astral:comfortable_cushion"
+    "item": "astral:phantasmal_shears"
   }
 }
