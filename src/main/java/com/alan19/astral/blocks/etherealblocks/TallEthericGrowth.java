@@ -13,9 +13,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public class EtherealTallGrassBlock extends TallGrassBlock implements Ethereal {
-    public EtherealTallGrassBlock() {
-        super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0F).sound(SoundType.PLANT));
+public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
+    public TallEthericGrowth() {
+        super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0).sound(SoundType.PLANT));
     }
 
     @Nonnull

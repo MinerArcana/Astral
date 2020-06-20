@@ -121,6 +121,9 @@ public class TravelEffects {
         if (event.getEntity() instanceof LivingEntity && !AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isEntityAstral((LivingEntity) event.getEntity()) && AstralDimensions.isEntityNotInInnerRealm(event.getEntity())) {
             event.setCanceled(true);
         }
+        if (event.getEntity() instanceof LivingEntity && AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && !isEntityAstral((LivingEntity) event.getEntity())) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

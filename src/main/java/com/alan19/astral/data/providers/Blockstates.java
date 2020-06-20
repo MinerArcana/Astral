@@ -9,6 +9,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.io.IOException;
 
@@ -24,28 +25,17 @@ public class Blockstates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        getVariantBuilder(LARGE_CYAN_CYST.get())
-                .partialState()
-                .with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
-                .addModels(new ConfiguredModel(models().cross("cyan_cyst_top", modLoc("block/cyan_cyst_top"))))
-                .partialState().with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
-                .addModels(new ConfiguredModel(models().cross("cyan_cyst_bottom", modLoc("block/cyan_cyst_bottom"))));
+        tallPlant(TALL_REDBULB);
+        tallPlant(TALL_CYANGRASS);
+        tallPlant(TALL_GENTLEGRASS);
+        tallPlant(TALL_WILDWEED);
 
-        getVariantBuilder(TALL_CYAN_SWARD.get())
-                .partialState()
-                .with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
-                .addModels(new ConfiguredModel(models().cross("cyan_sward_top", modLoc("block/cyan_sward_top"))))
-                .partialState()
-                .with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
-                .addModels(new ConfiguredModel(models().cross("cyan_sward_bottom", modLoc("block/cyan_sward_bottom"))));
-
-        simpleBlock(CYAN_CYST.get(), new ConfiguredModel(models().cross("cyan_cyst", modLoc("block/cyan_cyst"))));
-        simpleBlock(CYAN_SWARD.get(), new ConfiguredModel(models().cross("cyan_sward", modLoc("block/cyan_sward"))));
-        simpleBlock(CYAN_BELLEVINE.get(), new ConfiguredModel(models().cross("cyan_bellevine", modLoc("block/cyan_bellevine"))));
-        simpleBlock(CYAN_BLISTERWART.get(), new ConfiguredModel(models().cross("cyan_blisterwart", modLoc("block/cyan_blisterwart"))));
-        simpleBlock(CYAN_KLORID.get(), new ConfiguredModel(models().cross("cyan_klorid", modLoc("block/cyan_klorid"))));
-        simpleBlock(CYAN_MORKEL.get(), new ConfiguredModel(models().cross("cyan_morkel", modLoc("block/cyan_morkel"))));
-        simpleBlock(CYAN_PODS.get(), new ConfiguredModel(models().cross("cyan_pods", modLoc("block/cyan_pods"))));
+        simpleCross(REDBULB);
+        simpleCross(GENTLEGRASS);
+        simpleCross(CYANGRASS);
+        simpleCross(WILDWEED);
+        simpleCross(BLUECAP_MUSHROOM);
+        simpleCross(RUSTCAP_MUSHROOM);
 
         simpleBlock(ETHEREAL_PLANKS.get());
         doorBlock(ETHEREAL_DOOR.get(), modLoc("block/ethereal_door_bottom"), modLoc("block/ethereal_door_top"));
@@ -59,6 +49,21 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(METAPHORIC_BONE_BLOCK.get());
         simpleBlock(INDEX_OF_KNOWLEDGE.get(), new ModelFile.ExistingModelFile(modLoc("block/index_of_knowledge"), exFileHelper));
         simpleBlock(CRYSTAL_WEB.get(), new ConfiguredModel(models().cross("crystal_web", modLoc("block/crystal_web"))));
+    }
+
+    private void simpleCross(RegistryObject<? extends Block> block) {
+        simpleBlock(block.get(), new ConfiguredModel(models().cross(block.getId().getPath(), modLoc("block/" + block.getId().getPath()))));
+    }
+
+    private void tallPlant(RegistryObject<? extends DoublePlantBlock> registryObject) {
+        final String topPath = registryObject.getId().getPath() + "_top";
+        final String bottomPath = registryObject.getId().getPath() + "_bottom";
+        getVariantBuilder(registryObject.get())
+                .partialState()
+                .with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER)
+                .addModels(new ConfiguredModel(models().cross(topPath, modLoc("block/" + topPath))))
+                .partialState().with(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER)
+                .addModels(new ConfiguredModel(models().cross(registryObject.getId().getPath(), modLoc("block/" + bottomPath))));
     }
 
     private ModelFile modelDefault(Block block) {

@@ -6,6 +6,7 @@ import com.alan19.astral.items.tools.PhantasmalAxe;
 import com.alan19.astral.items.tools.PhantasmalPickaxe;
 import com.alan19.astral.items.tools.PhantasmalShovel;
 import com.alan19.astral.items.tools.PhantasmalSword;
+import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
@@ -23,7 +24,7 @@ public class AstralItems {
     public static final ItemGroup ASTRAL_ITEMS = new ItemGroup("astral") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(SNOWBERRY_BUSH.get());
+            return Constants.getAstronomicon();
         }
     };
 
@@ -40,15 +41,16 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> ETHERIC_POWDER_ITEM = ITEMS.register("etheric_powder", () -> convertToBlockItem(ETHERIC_POWDER.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_LEAVES_ITEM = ITEMS.register("ethereal_leaves", () -> convertToBlockItem(ETHEREAL_LEAVES.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_WOOD_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(ETHEREAL_WOOD.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_CYST_ITEM = ITEMS.register("ethereal_fern", () -> convertToBlockItem(CYAN_CYST.get()));
-    public static final RegistryObject<BlockNamedItem> LARGE_CYAN_CYST_ITEM = ITEMS.register("large_ethereal_fern", () -> convertToBlockItem(AstralBlocks.LARGE_CYAN_CYST.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_SWARD_ITEM = ITEMS.register("ethereal_grass", () -> convertToBlockItem(AstralBlocks.CYAN_SWARD.get()));
-    public static final RegistryObject<BlockNamedItem> TALL_CYAN_SWARD_ITEM = ITEMS.register("tall_ethereal_grass", () -> convertToBlockItem(TALL_CYAN_SWARD.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_BELLEVINE_ITEM = ITEMS.register("cyan_bellevine", () -> convertToBlockItem(CYAN_BELLEVINE.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_BLISTERWART_ITEM = ITEMS.register("cyan_blisterwart", () -> convertToBlockItem(CYAN_BLISTERWART.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_KLORID_ITEM = ITEMS.register("cyan_klorid", () -> convertToBlockItem(CYAN_KLORID.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_MORKEL_ITEM = ITEMS.register("cyan_morkel", () -> convertToBlockItem(CYAN_MORKEL.get()));
-    public static final RegistryObject<BlockNamedItem> CYAN_PODS_ITEM = ITEMS.register("cyan_pods", () -> convertToBlockItem(CYAN_PODS.get()));
+    public static final RegistryObject<BlockNamedItem> REDBULB_ITEM = ITEMS.register("redbulb", () -> convertToBlockItem(REDBULB.get()));
+    public static final RegistryObject<BlockNamedItem> CYANGRASS_ITEM = ITEMS.register("cyangrass", () -> convertToBlockItem(CYANGRASS.get()));
+    public static final RegistryObject<BlockNamedItem> GENTLEGRASS_ITEM = ITEMS.register("gentlegrass", () -> convertToBlockItem(GENTLEGRASS.get()));
+    public static final RegistryObject<BlockNamedItem> WILDWEED_ITEM = ITEMS.register("wildweed", () -> convertToBlockItem(AstralBlocks.WILDWEED.get()));
+    public static final RegistryObject<BlockNamedItem> TALL_REDBULB_ITEM = ITEMS.register("tall_redbulb", () -> convertToBlockItem(TALL_REDBULB.get()));
+    public static final RegistryObject<BlockNamedItem> TALL_CYANGRASS_ITEM = ITEMS.register("tall_cyangrass", () -> convertToBlockItem(TALL_CYANGRASS.get()));
+    public static final RegistryObject<BlockNamedItem> TALL_GENTLEGRASS_ITEM = ITEMS.register("tall_gentlegrass", () -> convertToBlockItem(TALL_GENTLEGRASS.get()));
+    public static final RegistryObject<BlockNamedItem> TALL_WILDWEED_ITEM = ITEMS.register("tall_wildweed", () -> convertToBlockItem(TALL_WILDWEED.get()));
+    public static final RegistryObject<BlockNamedItem> BLUECAP_MUSHROOM_ITEM = ITEMS.register("bluecap_mushroom", () -> convertToBlockItem(BLUECAP_MUSHROOM.get()));
+    public static final RegistryObject<BlockNamedItem> RUSTCAP_MUSHROOM_ITEM = ITEMS.register("rustcap_mushroom", () -> convertToBlockItem(RUSTCAP_MUSHROOM.get()));
     public static final RegistryObject<Item> METAPHORIC_BONE = ITEMS.register("metaphoric_bone", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_PLANKS_ITEM = ITEMS.register("ethereal_planks", () -> convertToBlockItem(ETHEREAL_PLANKS.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_DOOR_ITEM = ITEMS.register("ethereal_door", () -> convertToBlockItem(ETHEREAL_DOOR.get()));

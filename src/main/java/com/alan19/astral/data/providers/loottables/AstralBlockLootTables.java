@@ -27,15 +27,16 @@ public class AstralBlockLootTables extends BlockLootTables {
 
     @Override
     protected void addTables() {
-        registerLootTable(LARGE_CYAN_CYST.get(), onlyWithSilkTouchOrShears(CYAN_CYST.get()));
-        registerLootTable(TALL_CYAN_SWARD.get(), onlyWithSilkTouchOrShears(CYAN_SWARD.get()));
-        registerLootTable(CYAN_CYST.get(), onlyWithSilkTouchOrShears(CYAN_CYST.get()));
-        registerLootTable(CYAN_SWARD.get(), onlyWithSilkTouchOrShears(CYAN_SWARD.get()));
-        registerLootTable(CYAN_BELLEVINE.get(), dropping(CYAN_BELLEVINE.get()));
-        registerLootTable(CYAN_BLISTERWART.get(), dropping(CYAN_BLISTERWART.get()));
-        registerLootTable(CYAN_KLORID.get(), dropping(CYAN_KLORID.get()));
-        registerLootTable(CYAN_MORKEL.get(), dropping(CYAN_MORKEL.get()));
-        registerLootTable(CYAN_PODS.get(), dropping(CYAN_PODS.get()));
+        registerLootTable(REDBULB.get(), onlyWithSilkTouchOrShears(REDBULB.get()));
+        registerLootTable(CYANGRASS.get(), onlyWithSilkTouchOrShears(CYANGRASS.get()));
+        registerLootTable(GENTLEGRASS.get(), onlyWithSilkTouchOrShears(GENTLEGRASS.get()));
+        registerLootTable(WILDWEED.get(), onlyWithSilkTouchOrShears(WILDWEED.get()));
+        registerLootTable(TALL_REDBULB.get(), onlyWithSilkTouchOrShears(TALL_REDBULB.get()));
+        registerLootTable(TALL_CYANGRASS.get(), onlyWithSilkTouchOrShears(TALL_CYANGRASS.get()));
+        registerLootTable(TALL_GENTLEGRASS.get(), onlyWithSilkTouchOrShears(TALL_GENTLEGRASS.get()));
+        registerLootTable(TALL_WILDWEED.get(), onlyWithSilkTouchOrShears(TALL_WILDWEED.get()));
+        registerLootTable(BLUECAP_MUSHROOM.get(), dropping(BLUECAP_MUSHROOM.get()));
+        registerLootTable(RUSTCAP_MUSHROOM.get(), dropping(RUSTCAP_MUSHROOM.get()));
         registerLootTable(ETHEREAL_PLANKS.get(), dropping(ETHEREAL_PLANKS.get()));
         registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
         registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
