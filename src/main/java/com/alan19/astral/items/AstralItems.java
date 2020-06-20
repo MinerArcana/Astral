@@ -2,10 +2,7 @@ package com.alan19.astral.items;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
-import com.alan19.astral.items.tools.PhantasmalAxe;
-import com.alan19.astral.items.tools.PhantasmalPickaxe;
-import com.alan19.astral.items.tools.PhantasmalShovel;
-import com.alan19.astral.items.tools.PhantasmalSword;
+import com.alan19.astral.items.tools.*;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockNamedItem;
@@ -74,6 +71,7 @@ public class AstralItems {
     public static final RegistryObject<PhantasmalPickaxe> PHANTASMAL_PICKAXE = ITEMS.register("phantasmal_pickaxe", PhantasmalPickaxe::new);
     public static final RegistryObject<PhantasmalShovel> PHANTASMAL_SHOVEL = ITEMS.register("phantasmal_shovel", PhantasmalShovel::new);
     public static final RegistryObject<PhantasmalAxe> PHANTASMAL_AXE = ITEMS.register("phantasmal_axe", PhantasmalAxe::new);
+    public static final RegistryObject<PhantasmalShears> PHANTASMAL_SHEARS = ITEMS.register("phantasmal_shears", PhantasmalShears::new);
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab

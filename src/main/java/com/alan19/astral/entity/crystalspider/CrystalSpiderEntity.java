@@ -1,10 +1,13 @@
-package com.alan19.astral.entity;
+package com.alan19.astral.entity.crystalspider;
 
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -22,9 +25,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.UUID;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
     private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
+    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -.95, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
@@ -62,9 +67,10 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         this.targetSelector.addGoal(3, new TargetGoal<>(this, IronGolemEntity.class));
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(7, new WebAttackGoal(this, 1.25D, 20, 10F));
+        this.goalSelector.addGoal(1, new SwimGoal(this));
+//        this.goalSelector.addGoal(6, new CrystalSpiderGlidingGoal(this, .8));
     }
 
     public void setAttacking(boolean attacking) {
@@ -166,5 +172,22 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
             return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
         }
+    }
+
+    @Override
+    public void livingTick() {
+        super.livingTick();
+        final IAttributeInstance gravityAttribute = getAttribute(LivingEntity.ENTITY_GRAVITY);
+        if (getPosY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
+            gravityAttribute.applyModifier(REDUCED_GRAVITY);
+        }
+        else if (getPosY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
+            gravityAttribute.removeModifier(REDUCED_GRAVITY);
+        }
+    }
+
+    @Override
+    public boolean isInWater() {
+        return super.isInWater() || getPosY() < 128;
     }
 }

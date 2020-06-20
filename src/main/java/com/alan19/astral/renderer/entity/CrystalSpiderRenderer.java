@@ -1,7 +1,7 @@
 package com.alan19.astral.renderer.entity;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.entity.CrystalSpiderEntity;
+import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.SpiderRenderer;

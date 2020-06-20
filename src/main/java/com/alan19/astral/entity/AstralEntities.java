@@ -1,6 +1,7 @@
 package com.alan19.astral.entity;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import net.minecraft.entity.EntityClassification;

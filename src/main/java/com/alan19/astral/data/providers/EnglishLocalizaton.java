@@ -140,6 +140,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(PHANTASMAL_PICKAXE.get(), "Phantasmal Pickaxe");
         add(PHANTASMAL_SHOVEL.get(), "Phantasmal Shovel");
         add(PHANTASMAL_AXE.get(), "Phantasmal Axe");
+        add(PHANTASMAL_SHEARS.get(), "Phantasmal Shears");
     }
 
     private void addPotions() {

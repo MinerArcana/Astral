@@ -62,6 +62,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forItem(PHANTASMAL_SHOVEL);
         forItem(PHANTASMAL_PICKAXE);
         forItem(PHANTASMAL_AXE);
+        forItem(PHANTASMAL_SHEARS);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

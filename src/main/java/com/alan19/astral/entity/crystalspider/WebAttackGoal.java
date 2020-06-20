@@ -1,4 +1,4 @@
-package com.alan19.astral.entity;
+package com.alan19.astral.entity.crystalspider;
 
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
@@ -78,7 +78,7 @@ public class WebAttackGoal extends Goal {
         double d0 = this.entityHost.getDistanceSq(this.attackTarget.getPosX(), this.attackTarget.getPosY(), this.attackTarget.getPosZ());
         boolean flag = this.entityHost.getEntitySenses().canSee(this.attackTarget);
         if (flag) {
-            ++this.seeTime;
+            this.seeTime++;
         }
         else {
             this.seeTime = 0;
