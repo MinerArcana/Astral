@@ -138,6 +138,7 @@ public class Astral {
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
         OverworldVegetation.addOverworldVegetation();
+        AstralEntities.addSpawns();
 
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);

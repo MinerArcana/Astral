@@ -3,6 +3,7 @@ package com.alan19.astral.entity.crystalspider;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
+import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -186,5 +187,10 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         else if (getPosY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.removeModifier(REDUCED_GRAVITY);
         }
+    }
+
+    @Override
+    protected boolean canBeRidden(@Nonnull Entity entityIn) {
+        return entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn);
     }
 }
