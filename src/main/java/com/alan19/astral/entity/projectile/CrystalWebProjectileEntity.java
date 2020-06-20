@@ -20,6 +20,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -221,12 +222,14 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
 
     @Override
     public void remove() {
-        setWeb(world, getPosition());
+        if (getPosY() >= 128) {
+            setWeb(world, getPosition());
+        }
         super.remove();
     }
 
     private void setWeb(World world, BlockPos pos) {
-        if (world.isAirBlock(pos)) {
+        if (world.isAirBlock(pos) && world instanceof ServerWorld) {
             world.setBlockState(pos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
         }
         else {

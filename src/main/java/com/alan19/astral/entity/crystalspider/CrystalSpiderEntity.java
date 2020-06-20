@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
     private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
-    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -.95, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
+    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
@@ -69,8 +69,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.goalSelector.addGoal(7, new WebAttackGoal(this, 1.25D, 20, 10F));
-        this.goalSelector.addGoal(1, new SwimGoal(this));
-//        this.goalSelector.addGoal(6, new CrystalSpiderGlidingGoal(this, .8));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.5));
     }
 
     public void setAttacking(boolean attacking) {
@@ -177,6 +176,9 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
     @Override
     public void livingTick() {
         super.livingTick();
+        if (getPosY() < 128) {
+            setMotion(getMotion().x, Math.max(0, getMotion().y), getMotion().z);
+        }
         final IAttributeInstance gravityAttribute = getAttribute(LivingEntity.ENTITY_GRAVITY);
         if (getPosY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.applyModifier(REDUCED_GRAVITY);
@@ -184,10 +186,5 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         else if (getPosY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.removeModifier(REDUCED_GRAVITY);
         }
-    }
-
-    @Override
-    public boolean isInWater() {
-        return super.isInWater() || getPosY() < 128;
     }
 }

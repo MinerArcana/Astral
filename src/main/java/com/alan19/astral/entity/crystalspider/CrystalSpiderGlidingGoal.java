@@ -21,7 +21,7 @@ public class CrystalSpiderGlidingGoal extends RandomWalkingGoal {
     @Override
     public void tick() {
         if (entityIn.isInWater()) {
-            entityIn.getJumpController().setJumping();
+            entityIn.setJumping(true);
         }
     }
 }
