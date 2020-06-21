@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=upper": {
+      "model": "astral:block/tall_wildweed_top"
+    },
+    "half=lower": {
+      "model": "astral:block/tall_wildweed"
+    }
+  }
+}

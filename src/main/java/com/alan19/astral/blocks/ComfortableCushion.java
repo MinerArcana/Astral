@@ -72,7 +72,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
         //Get number of water blocks, dirt blocks, leaf blocks, and wood blocks and multiply them by the number of plants
         //TODO Add config option to limit number of "valid" blocks to prevent people from making cubes of organic matter
         return BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3))
-                .map(blockPos -> this.getStates(worldIn, blockPos))
+                .map(blockPos -> getStates(worldIn, blockPos))
                 .map(this::sumStates)
                 .reduce((objectPlantPair1, objectPlantPair2) -> Pair.of(objectPlantPair1.getLeft() + objectPlantPair2.getLeft(), objectPlantPair1.getRight() + objectPlantPair2.getRight()))
                 .map(totalCountPair -> totalCountPair.getLeft() * totalCountPair.getRight())
@@ -82,7 +82,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FurnaceBlock.FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(AbstractFurnaceBlock.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     /**
@@ -115,7 +115,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     @Override
     public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
-        MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos));
+        MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos), AstralMentalConstructs.GARDEN.get());
         super.tick(state, worldIn, pos, rand);
     }
 

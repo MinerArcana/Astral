@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "astral:feverweed"
+      "item": "patchouli:guide_book",
+      "nbt": "{\"patchouli:book\":\"astral:astronomicon\"}"
     },
     "title": {
       "translate": "astral.advancement.root.name"

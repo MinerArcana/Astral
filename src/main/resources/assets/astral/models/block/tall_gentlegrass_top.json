@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "astral:block/tall_gentlegrass_top"
+  }
+}

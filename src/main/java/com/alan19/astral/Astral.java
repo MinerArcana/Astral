@@ -22,8 +22,8 @@ import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.configs.AstralConfig;
-import com.alan19.astral.entities.AstralEntityRegistry;
-import com.alan19.astral.entities.PhysicalBodyEntityRenderer;
+import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
@@ -31,7 +31,9 @@ import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
+import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
+import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.OverworldVegetation;
 import com.alan19.astral.world.biome.AstralBiomes;
@@ -85,13 +87,16 @@ public class Astral {
         AstralConfig.loadConfig(AstralConfig.getInstance().getSpec(), FMLPaths.CONFIGDIR.get().resolve("astral-common.toml"));
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
 
-        AstralEntityRegistry.register(modEventBus);
+        AstralEntities.register(modEventBus);
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
         AstralTiles.register(modEventBus);
         AstralBiomes.register(modEventBus);
+        AstralEffects.register(modEventBus);
+        AstralPotions.register(modEventBus);
+        modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
@@ -110,7 +115,7 @@ public class Astral {
     }
 
     public void registerModels(ModelRegistryEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(AstralEntityRegistry.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(AstralEntities.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntityRenderer::new);
     }
 
     public void setRenderLayers(FMLClientSetupEvent event) {
@@ -133,11 +138,12 @@ public class Astral {
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
         OverworldVegetation.addOverworldVegetation();
+        AstralEntities.addSpawns();
 
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-
+//        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD

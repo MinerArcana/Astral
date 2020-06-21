@@ -31,6 +31,6 @@ public class EthericPowder extends AbstractButtonBlock {
     @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState blockState, @Nonnull World world, @Nonnull BlockPos blockPos, PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
-        return playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL) ? super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult) : ActionResultType.FAIL;
+        return playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) ? super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult) : ActionResultType.FAIL;
     }
 }

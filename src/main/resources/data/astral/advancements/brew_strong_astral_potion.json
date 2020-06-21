@@ -2,7 +2,8 @@
   "parent": "astral:craft_traveling_medicine",
   "display": {
     "icon": {
-      "item": "minecraft:potion"
+      "item": "minecraft:potion",
+      "nbt": "{Potion:\"astral:strong_astral_travel_potion\"}"
     },
     "title": {
       "translate": "astral.advancement.brew_strong_astral_potion.name"

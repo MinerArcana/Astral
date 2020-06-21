@@ -32,20 +32,21 @@ public class EtherealTree extends Tree {
     }
 
     @Override
-    public boolean func_225545_a_(@Nonnull IWorld world, @Nonnull ChunkGenerator<?> chunkGenerator, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nonnull Random random) {
-        ConfiguredFeature<TreeFeatureConfig, ?> configuredEtherealTree = this.getTreeFeature(random, true);
+    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<?> chunkGeneratorIn, @Nonnull BlockPos blockPosIn, @Nonnull BlockState blockStateIn, @Nonnull Random randomIn) {
+        ConfiguredFeature<TreeFeatureConfig, ?> configuredEtherealTree = this.getTreeFeature(randomIn, true);
         if (configuredEtherealTree == null) {
             return false;
         }
         else {
-            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 4);
-            if (configuredEtherealTree.place(world, chunkGenerator, random, blockPos)) {
+            worldIn.setBlockState(blockPosIn, Blocks.AIR.getDefaultState(), 4);
+            if (configuredEtherealTree.place(worldIn, chunkGeneratorIn, randomIn, blockPosIn)) {
                 return true;
             }
             else {
-                world.setBlockState(blockPos, blockState, 4);
+                worldIn.setBlockState(blockPosIn, blockStateIn, 4);
                 return false;
             }
         }
     }
+
 }

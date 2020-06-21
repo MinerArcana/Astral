@@ -105,7 +105,7 @@ public class FlightHandler {
      * @return The movement vector with a XZ component
      */
     public static Vec3d generateCardinalDirectionVector(PlayerEntity player, int closestY, MovementType movementType, Vec3d nextMovement) {
-        final EffectInstance astralTravelInstance = player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL);
+        final EffectInstance astralTravelInstance = player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
         int amplifier = astralTravelInstance != null ? astralTravelInstance.getAmplifier() : 0;
         if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
             if (InputHandler.isHoldingForwards(player)) {

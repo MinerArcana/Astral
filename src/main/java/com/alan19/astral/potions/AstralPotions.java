@@ -1,76 +1,60 @@
 package com.alan19.astral.potions;
 
+import com.alan19.astral.Astral;
 import com.alan19.astral.configs.AstralConfig;
-import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.potion.Effect;
+import com.alan19.astral.items.AstralItems;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.potion.Potions;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+import static com.alan19.astral.effects.AstralEffects.ASTRAL_TRAVEL;
+import static com.alan19.astral.effects.AstralEffects.MIND_VENOM;
+
 public class AstralPotions {
+    public static final int ASTRAL_TRAVEL_DURATION = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
+    public static final int FEVERWEED_BREW_LUCK_DURATION = AstralConfig.getPotionEffectDurations().getFeverweedBrewLuckDuration();
+    public static final int FEVERWEED_BREW_HUNGER_DURATION = AstralConfig.getPotionEffectDurations().getFeverweedBrewHungerDuration();
+    public static final int SNOWBERRY_BREW_REGENERATION_DURATION = AstralConfig.getPotionEffectDurations().getSnowberryBrewRegenerationDuration();
+    public static final int SNOWBERRY_BREW_NAUSEA_DURATION = AstralConfig.getPotionEffectDurations().getSnowberryBrewNauseaDuration();
 
-    @ObjectHolder("astral:astral_travel_potion")
-    public static final Potion ASTRAL_TRAVEL_POTION = null;
-    @ObjectHolder("astral:long_astral_travel_potion")
-    public static final Potion LONG_ASTRAL_TRAVEL_POTION = null;
-    @ObjectHolder("astral:strong_astral_travel_potion")
-    public static final Potion STRONG_ASTRAL_TRAVEL_POTION = null;
-    @ObjectHolder("astral:feverweed_brew")
-    public static final Potion FEVERWEED_BREW = null;
-    @ObjectHolder("astral:long_feverweed_brew")
-    public static final Potion LONG_FEVERWEED_BREW = null;
-    @ObjectHolder("astral:strong_feverweed_brew")
-    public static final Potion STRONG_FEVERWEED_BREW = null;
-    @ObjectHolder("astral:snowberry_brew")
-    public static final Potion SNOWBERRY_BREW = null;
-    @ObjectHolder("astral:long_snowberry_brew")
-    public static final Potion LONG_SNOWBERRY_BREW = null;
-    @ObjectHolder("astral:strong_snowberry_brew")
-    public static final Potion STRONG_SNOWBERRY_BREW = null;
+    private static final DeferredRegister<Potion> POTIONS = new DeferredRegister<>(ForgeRegistries.POTION_TYPES, Astral.MOD_ID);
+
+    public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion", () -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION)), () -> Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()))
+            .addLongBrew(() -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION * 2)))
+            .addStrongBrew(() -> new Potion(new EffectInstance(ASTRAL_TRAVEL.get(), ASTRAL_TRAVEL_DURATION / 2, 1)))
+            .register(POTIONS);
+
+    public static final PotionRegistryGroup FEVERWEED_BREW = new PotionRegistryGroup("feverweed_brew", () -> new Potion(new EffectInstance(Effects.LUCK, FEVERWEED_BREW_LUCK_DURATION, 1), new EffectInstance(Effects.HUNGER, FEVERWEED_BREW_HUNGER_DURATION, 1)), () -> Ingredient.fromItems(AstralItems.FEVERWEED.get()))
+            .setBase(() -> Potions.THICK)
+            .addLongBrew(() -> new Potion(new EffectInstance(Effects.LUCK, FEVERWEED_BREW_LUCK_DURATION * 2, 1), new EffectInstance(Effects.HUNGER, FEVERWEED_BREW_HUNGER_DURATION * 2, 1)))
+            .addStrongBrew(() -> new Potion(new EffectInstance(Effects.LUCK, FEVERWEED_BREW_LUCK_DURATION * 2 / 3, 2), new EffectInstance(Effects.HUNGER, FEVERWEED_BREW_HUNGER_DURATION * 2 / 2, 2))).register(POTIONS);
+    public static final PotionRegistryGroup SNOWBERRY_BREW = new PotionRegistryGroup("snowberry_brew", () -> new Potion(new EffectInstance(Effects.REGENERATION, SNOWBERRY_BREW_REGENERATION_DURATION, 1), new EffectInstance(Effects.NAUSEA, SNOWBERRY_BREW_NAUSEA_DURATION, 1)), () -> Ingredient.fromItems(AstralItems.SNOWBERRY.get()))
+            .setBase(() -> Potions.THICK)
+            .addLongBrew(() -> new Potion(new EffectInstance(Effects.REGENERATION, SNOWBERRY_BREW_REGENERATION_DURATION * 2, 1), new EffectInstance(Effects.NAUSEA, SNOWBERRY_BREW_NAUSEA_DURATION * 2, 1)))
+            .addStrongBrew(() -> new Potion(new EffectInstance(Effects.REGENERATION, SNOWBERRY_BREW_REGENERATION_DURATION * 2 / 3, 2), new EffectInstance(Effects.NAUSEA, SNOWBERRY_BREW_NAUSEA_DURATION * 2 / 3, 2)))
+            .register(POTIONS);
+
+    public static final PotionRegistryGroup MIND_VENOM_POTION = new PotionRegistryGroup("mind_venom_potion", () -> new Potion(new EffectInstance(MIND_VENOM.get(), 900)), () -> Ingredient.fromItems(AstralItems.CRYSTAL_WEB_ITEM.get()))
+            .addLongBrew(() -> new Potion(new EffectInstance(MIND_VENOM.get(), 1800)))
+            .addStrongBrew(() -> new Potion(new EffectInstance(MIND_VENOM.get(), 450, 1)))
+            .register(POTIONS);
 
     @SubscribeEvent
-    public static void onPotionRegistry(final RegistryEvent.Register<Potion> event) {
-        int baseAstralTravelDuration = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "astral_travel_potion", baseAstralTravelDuration, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "long_astral_travel_potion", baseAstralTravelDuration * 2, 0);
-        registerPotion(event.getRegistry(), AstralEffects.ASTRAL_TRAVEL, "strong_astral_travel_potion", baseAstralTravelDuration / 2, 1);
-
-        //Register more complex potions
-        AstralConfig.PotionEffectDurations baseBrewDurations = AstralConfig.getPotionEffectDurations();
-
-        //Feverweed Brew
-        int feverweedBrewLuckDuration = baseBrewDurations.getFeverweedBrewLuckDuration();
-        int feverweedBrewHungerDuration = baseBrewDurations.getFeverweedBrewHungerDuration();
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.LUCK, feverweedBrewLuckDuration, 1), new EffectInstance(Effects.HUNGER, feverweedBrewHungerDuration, 1)).setRegistryName("feverweed_brew"));
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.LUCK, feverweedBrewLuckDuration * 2, 0), new EffectInstance(Effects.HUNGER, feverweedBrewHungerDuration * 2, 0)).setRegistryName("long_feverweed_brew"));
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.LUCK, feverweedBrewLuckDuration * 2 / 3, 2), new EffectInstance(Effects.HUNGER, feverweedBrewHungerDuration * 2 / 3, 2)).setRegistryName("strong_feverweed_brew"));
-
-        //Snowberry Brew
-        int snowberryBrewRegenerationDuration = baseBrewDurations.getSnowberryBrewRegenerationDuration();
-        int snowberryBrewNauseaDuration = baseBrewDurations.getSnowberryBrewNauseaDuration();
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.REGENERATION, snowberryBrewRegenerationDuration, 1), new EffectInstance(Effects.NAUSEA, snowberryBrewNauseaDuration, 1)).setRegistryName("snowberry_brew"));
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.REGENERATION, snowberryBrewRegenerationDuration * 2, 0), new EffectInstance(Effects.NAUSEA, snowberryBrewNauseaDuration * 2, 0)).setRegistryName("long_snowberry_brew"));
-        event.getRegistry().register(new Potion(new EffectInstance(Effects.REGENERATION, snowberryBrewRegenerationDuration * 2 / 3, 2), new EffectInstance(Effects.NAUSEA, snowberryBrewNauseaDuration * 2 / 3, 2)).setRegistryName("strong_snowberry_brew"));
+    public static void registerRecipes(FMLCommonSetupEvent event) {
+        ASTRAL_TRAVEL_POTION.registerBrewingRecipes();
+        FEVERWEED_BREW.registerBrewingRecipes();
+        SNOWBERRY_BREW.registerBrewingRecipes();
+        MIND_VENOM_POTION.registerBrewingRecipes();
     }
 
-    /**
-     * Function to create and register a potion with only one effect
-     *
-     * @param eventRegistry The registry to register the potion to
-     * @param effect        What effect should the potion apply
-     * @param name          The registry name of the potion
-     * @param duration      The duration of the potion, in ticks
-     * @param amplifier     The level of the effect
-     */
-    private static void registerPotion(IForgeRegistry<Potion> eventRegistry, Effect effect, String name, int duration, int amplifier) {
-        Potion potion = new Potion(new EffectInstance(effect, duration, amplifier)).setRegistryName(name);
-        eventRegistry.register(potion);
+    public static void register(IEventBus modBus) {
+        POTIONS.register(modBus);
     }
-
 }

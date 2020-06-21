@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " CC",
+    " CC"
+  ],
+  "key": {
+    "C": {
+      "item": "astral:crystal_chitin"
+    }
+  },
+  "result": {
+    "item": "minecraft:glass"
+  }
+}

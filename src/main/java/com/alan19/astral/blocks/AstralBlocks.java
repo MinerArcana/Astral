@@ -26,15 +26,16 @@ public class AstralBlocks {
     public static final RegistryObject<EthericPowder> ETHERIC_POWDER = BLOCKS.register("etheric_powder", EthericPowder::new);
 
     //Etheric Growths
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_SWARD = BLOCKS.register("ethereal_grass", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_CYST = BLOCKS.register("ethereal_fern", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealDoublePlantBlock> TALL_CYAN_SWARD = BLOCKS.register("tall_ethereal_grass", EtherealDoublePlantBlock::new);
-    public static final RegistryObject<EtherealDoublePlantBlock> LARGE_CYAN_CYST = BLOCKS.register("large_ethereal_fern", EtherealDoublePlantBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_BELLEVINE = BLOCKS.register("cyan_bellevine", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_BLISTERWART = BLOCKS.register("cyan_blisterwart", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_KLORID = BLOCKS.register("cyan_klorid", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_MORKEL = BLOCKS.register("cyan_morkel", EtherealTallGrassBlock::new);
-    public static final RegistryObject<EtherealTallGrassBlock> CYAN_PODS = BLOCKS.register("cyan_pods", EtherealTallGrassBlock::new);
+    public static final RegistryObject<EthericGrowth> REDBULB = BLOCKS.register("redbulb", EthericGrowth::new);
+    public static final RegistryObject<EthericGrowth> CYANGRASS = BLOCKS.register("cyangrass", EthericGrowth::new);
+    public static final RegistryObject<EthericGrowth> GENTLEGRASS = BLOCKS.register("gentlegrass", EthericGrowth::new);
+    public static final RegistryObject<EthericGrowth> WILDWEED = BLOCKS.register("wildweed", EthericGrowth::new);
+    public static final RegistryObject<TallEthericGrowth> TALL_REDBULB = BLOCKS.register("tall_redbulb", TallEthericGrowth::new);
+    public static final RegistryObject<TallEthericGrowth> TALL_CYANGRASS = BLOCKS.register("tall_cyangrass", TallEthericGrowth::new);
+    public static final RegistryObject<TallEthericGrowth> TALL_GENTLEGRASS = BLOCKS.register("tall_gentlegrass", TallEthericGrowth::new);
+    public static final RegistryObject<TallEthericGrowth> TALL_WILDWEED = BLOCKS.register("tall_wildweed", TallEthericGrowth::new);
+    public static final RegistryObject<EthericGrowth> BLUECAP_MUSHROOM = BLOCKS.register("bluecap_mushroom", EthericGrowth::new);
+    public static final RegistryObject<EthericGrowth> RUSTCAP_MUSHROOM = BLOCKS.register("rustcap_mushroom", EthericGrowth::new);
 
     //Ethereal Trees
     public static final RegistryObject<EtherealLog> ETHEREAL_WOOD = BLOCKS.register("ethereal_wood", StrippableEtherealLog::new);
@@ -49,6 +50,12 @@ public class AstralBlocks {
     //Mental Constructs
     public static final RegistryObject<ComfortableCushion> COMFORTABLE_CUSHION = BLOCKS.register("comfortable_cushion", ComfortableCushion::new);
     public static final RegistryObject<IndexOfKnowledge> INDEX_OF_KNOWLEDGE = BLOCKS.register("index_of_knowledge", IndexOfKnowledge::new);
+
+    //Other Ethereal Blocks
+    public static final RegistryObject<MetaphoricStone> METAPHORIC_STONE = BLOCKS.register("metaphoric_stone", MetaphoricStone::new);
+    public static final RegistryObject<BoneSheets> METAPHORIC_BONE_BLOCK = BLOCKS.register("bone_sheets", BoneSheets::new);
+    public static final RegistryObject<MetaphoricFleshBlock> METAPHORIC_FLESH_BLOCK = BLOCKS.register("metaphoric_flesh_block", MetaphoricFleshBlock::new);
+    public static final RegistryObject<CrystalWeb> CRYSTAL_WEB = BLOCKS.register("crystal_web", CrystalWeb::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

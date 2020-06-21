@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "   ",
-    " CC",
-    " CC"
+    " DD",
+    " DD"
   ],
   "key": {
-    "C": {
+    "D": {
       "item": "astral:dreamcord"
     }
   },
