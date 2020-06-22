@@ -25,6 +25,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Adapted from https://github.com/Rongmario/AntimatterAPI/blob/master/src/main/java/muramasa/antimatter/datagen/builder/AntimatterShapelessRecipeBuilder.java with permission from Rongmario
+ */
 public class ShapelessNBTRecipeBuilder {
     private static final Logger LOGGER = LogManager.getLogger();
     private final ItemStack result;

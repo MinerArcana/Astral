@@ -109,8 +109,8 @@ public class BodyLinkCapability implements IBodyLinkCapability {
 
     @Override
     public void handleMergeWithBody(UUID playerID, ServerWorld world) {
-        PlayerEntity player = world.getPlayerByUuid(playerID);
-        if (player != null) {
+        if (world.getPlayerByUuid(playerID) instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) world.getPlayerByUuid(playerID);
             player.setMotion(0, 0, 0);
             player.isAirBorne = false;
             player.fallDistance = 0;
@@ -132,9 +132,7 @@ public class BodyLinkCapability implements IBodyLinkCapability {
             }
             //If body is not found, teleport player to their spawn location (bed or world spawn)
             else {
-                if (player instanceof ServerPlayerEntity) {
-                    teleportPlayerToSpawn((ServerPlayerEntity) player);
-                }
+                teleportPlayerToSpawn(player);
             }
             bodyInfoMap.remove(playerID);
         }
@@ -145,13 +143,13 @@ public class BodyLinkCapability implements IBodyLinkCapability {
         //Teleport to bed
         if (serverPlayerEntity.getBedPosition().isPresent()) {
             BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
-            TeleportationTools.changeDim(serverPlayerEntity, bedPos, playerSpawnDimension);
+            TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, bedPos, null);
             serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED));
         }
         //Teleport to spawn
         else {
             BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
-            TeleportationTools.changeDim(serverPlayerEntity, serverSpawn, playerSpawnDimension);
+            TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, serverSpawn, null);
             serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN));
         }
         resetPlayerStats(serverPlayerEntity);

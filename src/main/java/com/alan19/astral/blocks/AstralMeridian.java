@@ -5,16 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class AstralMeridian extends Block {
 
@@ -43,8 +40,16 @@ public class AstralMeridian extends Block {
     }
 
     @Override
-    public void harvestBlock(World worldIn, PlayerEntity player, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nullable TileEntity te, @Nonnull ItemStack stack) {
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState(), 2);
-        player.removePotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get()).getPotion());
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (player.isSneaking() && player.getHeldItem(handIn).isEmpty()) {
+            player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+            return ActionResultType.SUCCESS;
+        }
+        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
 }

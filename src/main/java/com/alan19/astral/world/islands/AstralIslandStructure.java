@@ -19,6 +19,9 @@ import javax.annotation.Nonnull;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * Adapted from https://github.com/SlimeKnights/TinkersConstruct
+ */
 public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
     public AstralIslandStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function) {
         super(function);

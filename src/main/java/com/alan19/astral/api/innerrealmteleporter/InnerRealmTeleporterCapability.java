@@ -58,8 +58,8 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
      */
     @Override
     public void teleport(PlayerEntity player) {
-        if (!player.getEntityWorld().isRemote()) {
-            DimensionType innerRealm = DimensionManager.registerOrGetDimension(INNER_REALM, AstralDimensions.innerRealm, null, true);
+        if (player.getEntityWorld() instanceof ServerWorld) {
+            DimensionType innerRealm = DimensionManager.registerOrGetDimension(INNER_REALM, AstralDimensions.INNER_REALM_DIMENSION, null, true);
             Dimension dimension = innerRealm.create(player.world);
             World innerRealmWorld = dimension.getWorld();
             boolean firstTime = false;
@@ -72,7 +72,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
                 prepareSpawnChunk(player);
             }
             if (!innerRealmWorld.isRemote()) {
-                TeleportationTools.changeDim((ServerPlayerEntity) player, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), DimensionType.byName(INNER_REALM));
+                TeleportationTools.performTeleport((ServerPlayerEntity) player, innerRealm, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), player.getTeleportDirection());
             }
         }
     }

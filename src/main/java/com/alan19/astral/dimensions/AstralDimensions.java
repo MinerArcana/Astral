@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralDimensions {
     public static final ResourceLocation INNER_REALM = new ResourceLocation(Astral.MOD_ID, "inner_realm");
-    public static final ModDimension innerRealm = new ModDimension() {
+    public static final ModDimension INNER_REALM_DIMENSION = new ModDimension() {
         @Override
         public BiFunction<World, DimensionType, ? extends Dimension> getFactory() {
             return InnerRealmDimension::new;
@@ -32,8 +32,8 @@ public class AstralDimensions {
 
     @SubscribeEvent
     public static void onDimensionModRegistry(final RegistryEvent.Register<ModDimension> event) {
-        event.getRegistry().register(AstralDimensions.innerRealm.setRegistryName(INNER_REALM));
-        DimensionManager.registerDimension(INNER_REALM, AstralDimensions.innerRealm, null, true);
+        event.getRegistry().register(AstralDimensions.INNER_REALM_DIMENSION.setRegistryName(INNER_REALM));
+        DimensionManager.registerDimension(INNER_REALM, AstralDimensions.INNER_REALM_DIMENSION, null, true);
     }
 
     public static boolean isEntityNotInInnerRealm(Entity entity) {
