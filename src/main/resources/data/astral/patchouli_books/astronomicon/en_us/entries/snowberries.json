@@ -1,11 +1,11 @@
 {
-  "name": "Snowberry Bush / Snowberries",
-  "category": "plants",
+  "name": "Snowberries",
+  "category": "natural_resources",
   "icon": "astral:snowberry",
   "pages": [
     {
       "type": "text",
-      "text": "These berry bushes generate in Snowy Biomes in small clumps, shedding snow under them.  Like many other bushes they can slow or hurt you while walking through them. They can be placed on or adjacent to sufficiently cold blocks.",
+      "text": "These berry bushes generate in snowy biomes in small clumps, shedding snow under them.  Like many other bushes, they can slow or hurt you while walking through them. They can be placed on or adjacent to sufficiently cold blocks.",
       "title": "Snowberry Bushes"
     },
     {
@@ -18,6 +18,12 @@
       "type": "text",
       "text": "You can grow Snowberries by planting them on dirt and snow. When there's berries on the bush, you can right click the bush to harvest them, or wait a little longer to harvest a few more berries. Harvesting a bush will cause the berries to grow back faster, as opposed to breaking it and planting a new bush.",
       "title": "Growing Snowberries"
+    },
+    {
+      "type": "image",
+      "images": [
+        "astral:textures/book_images/snowberry_generation.png"
+      ]
     }
   ]
 }

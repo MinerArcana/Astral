@@ -1,11 +1,11 @@
 {
   "name": "Traveling Medicine",
-  "category": "plants",
+  "category": "medicines_and_potions",
   "icon": "astral:traveling_medicine",
   "pages": [
     {
       "type": "text",
-      "text": "Made from Snowberries, Sugar, and Feverweed this is the starting source of Astral Travel. The Brewing Stand will allow more advanced forms."
+      "text": "Made from $(l:snowberries)Snowberries$(/l), Sugar, and $(l:feverweed)Feverweed$(/l) this is the starting source of $(l:astral_travel)Astral Travel$(/l). The Brewing Stand will allow more advanced forms of this medicine."
     },
     {
       "type": "crafting",

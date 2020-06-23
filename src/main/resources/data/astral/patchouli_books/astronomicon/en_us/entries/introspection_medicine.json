@@ -1,11 +1,11 @@
 {
   "name": "Introspection Medicine",
-  "category": "introspective_arts",
+  "category": "medicines_and_potions",
   "icon": "astral:introspection_medicine",
   "pages": [
     {
       "type": "text",
-      "text": "Made from Mushrooms, Poisonous Potatoes, and Feverweed this allows you to shut off your senses and perceive your inner realm, the Mindscape."
+      "text": "Made from Mushrooms, Poisonous Potatoes, and $(l:feverweed)Feverweed$(/l) this allows you to shut off your senses and perceive your $(l:inner_realm)Inner Realm$(/l), the Mindscape."
     },
     {
       "type": "crafting",

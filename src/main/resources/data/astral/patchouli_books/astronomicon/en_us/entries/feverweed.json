@@ -1,6 +1,6 @@
 {
   "name": "Feverweed",
-  "category": "plants",
+  "category": "natural_resources",
   "icon": "astral:feverweed",
   "pages": [
     {
@@ -18,6 +18,12 @@
       "type": "text",
       "text": "You can grow Feverweed by planting it on Grass or Dirt blocks and wait for it to spread slowly. It spreads similarly to a mushroom, but will spread regardless of light level",
       "title": "Cultivating Feverweed"
+    },
+    {
+      "type": "image",
+      "images": [
+        "astral:textures/book_images/feverweed_generation.png"
+      ]
     }
   ]
 }

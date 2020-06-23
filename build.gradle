@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        mavenLocal()
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
@@ -13,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.4.6'
+version = '1.4.7'
 group = 'com.alan19.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
@@ -77,10 +78,11 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.9'
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
     compile fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-34.184")
-    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.5")
+    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.1")
 }
 
 repositories {
+    mavenLocal()
     maven {
         // for AutoRegLib
         name "blamejared"
