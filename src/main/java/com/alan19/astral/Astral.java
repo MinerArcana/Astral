@@ -63,6 +63,8 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_GAME_PROFILE;
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER;
@@ -72,6 +74,7 @@ import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK
 public class Astral {
     public static final String MOD_ID = "astral";
     public static final SimpleChannel INSTANCE = AstralNetwork.getNetworkChannel();
+    public static final Logger LOGGER = LogManager.getLogger(Astral.MOD_ID);
 
     public Astral() {
         // Register the setup method for modloading

@@ -6,6 +6,7 @@ import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.Garden;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
+import com.alan19.astral.util.VoxelShapeUtils;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +31,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class ComfortableCushion extends Block implements MentalConstructController {
@@ -38,12 +40,13 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     public ComfortableCushion() {
         super(Properties.create(Material.WOOL, DyeColor.LIGHT_BLUE).tickRandomly().hardnessAndResistance(0.8f).sound(SoundType.CLOTH).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(FurnaceBlock.FACING, Direction.NORTH));
+        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(HorizontalBlock.HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return CUSHION_SHAPE;
+        return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.get(HorizontalBlock.HORIZONTAL_FACING));
     }
 
     @Override
