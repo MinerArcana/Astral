@@ -2,7 +2,9 @@ package com.alan19.astral.entity;
 
 import com.alan19.astral.blocks.etherealblocks.EtherealBlock;
 import com.alan19.astral.events.astraldamage.AstralEntityDamage;
+import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -81,7 +83,12 @@ public interface IAstralBeing {
         BlockPos groundPos = blockPos.down();
         if (world.getDifficulty() != Difficulty.PEACEFUL && MonsterEntity.isValidLightLevel(world, groundPos, random)) {
             if (spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION)) {
-                return world.getBlockState(groundPos).getBlock() instanceof EtherealBlock;
+                if (world.getBlockState(groundPos).getBlock() instanceof EtherealBlock) {
+                    return world.getBlockState(blockPos).getBlock() == Blocks.AIR || AstralTags.ETHERIC_GROWTHS.contains(world.getBlockState(blockPos).getBlock());
+                }
+                else {
+                    return false;
+                }
             }
             return spawnReason == SpawnReason.SPAWNER || world.getBlockState(groundPos).canEntitySpawn(world, groundPos, entityType);
         }
