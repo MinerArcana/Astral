@@ -1,16 +1,21 @@
 package com.alan19.astral.entity;
 
+import com.alan19.astral.blocks.etherealblocks.EtherealBlock;
 import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import com.alan19.astral.util.Constants;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.common.ForgeHooks;
+
+import java.util.Random;
 
 public interface IAstralBeing {
 
@@ -70,5 +75,16 @@ public interface IAstralBeing {
             ((LivingEntity) target).knockBack(self, knockback * 0.5F, MathHelper.sin(self.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(self.rotationYaw * ((float) Math.PI / 180F)));
             self.setMotion(self.getMotion().mul(0.6D, 1.0D, 0.6D));
         }
+    }
+
+    static <T extends MobEntity> boolean canEtherealEntitySpawn(EntityType<T> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+        BlockPos groundPos = blockPos.down();
+        if (world.getDifficulty() != Difficulty.PEACEFUL && MonsterEntity.isValidLightLevel(world, groundPos, random)) {
+            if (spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION)) {
+                return world.getBlockState(groundPos).getBlock() instanceof EtherealBlock;
+            }
+            return spawnReason == SpawnReason.SPAWNER || world.getBlockState(groundPos).canEntitySpawn(world, groundPos, entityType);
+        }
+        return false;
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class OverworldVegetation {
     private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature(SnowberryFeatureConfig::deserialize);
@@ -15,7 +15,7 @@ public class OverworldVegetation {
             generateSnowberries(biome);
             generateFeverweed(biome);
         }
-        for (Biome biome : BiomeManager.oceanBiomes) {
+        for (Biome biome : BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN)) {
             biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
             biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
         }

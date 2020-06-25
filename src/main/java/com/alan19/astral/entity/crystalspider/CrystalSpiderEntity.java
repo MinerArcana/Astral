@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -21,6 +22,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -192,5 +195,14 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
     @Override
     protected boolean canBeRidden(@Nonnull Entity entityIn) {
         return entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn);
+    }
+
+    @Nullable
+    @Override
+    @ParametersAreNonnullByDefault
+    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        final ILivingEntityData spawnData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        getPassengers().stream().filter(entity -> entity instanceof LivingEntity).forEach(entity -> ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE)));
+        return spawnData;
     }
 }

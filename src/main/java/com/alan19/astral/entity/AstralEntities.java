@@ -5,8 +5,10 @@ import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -45,6 +47,7 @@ public class AstralEntities {
     }
 
     public static void addSpawns() {
+        EntitySpawnPlacementRegistry.register(AstralEntities.CRYSTAL_SPIDER.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IAstralBeing::canEtherealEntitySpawn);
         BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).forEach(biome -> biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(AstralEntities.CRYSTAL_SPIDER.get(), 100, 4, 4)));
     }
 }
