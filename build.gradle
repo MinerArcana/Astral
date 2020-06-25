@@ -78,7 +78,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.9'
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
     compile fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-34.184")
-    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.1")
+    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
 }
 
 repositories {
