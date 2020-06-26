@@ -15,8 +15,7 @@ public class GuiEventHandler {
         Screen screen = event.getGui();
         if (screen instanceof InventoryScreen || screen instanceof CreativeScreen) {
             ContainerScreen<?> gui = (ContainerScreen<?>) screen;
-            int textSize = screen instanceof CreativeScreen ? 10 : 14;
-            event.addWidget(new AstralInventoryButton(gui.getGuiLeft() + 150, gui.height / 2 - 22, 20, 18, 0, 0, 19, new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_inventory_button.png")));
+            event.addWidget(new AstralInventoryButton(gui, gui.getGuiLeft() + 150, gui.height / 2 - 22, 20, 18, 0, 0, 19, new ResourceLocation(Astral.MOD_ID, "textures/gui/astral_inventory_button.png")));
         }
     }
 }
