@@ -8,12 +8,11 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeItemHelper;
 
 public class AstralInventoryContainer extends RecipeBookContainer<CraftingInventory> {
-    public AstralInventoryContainer(int i, PlayerInventory playerInventory) {
-        super();
-    }
+    private final PlayerInventory playerInventory;
 
-    public AstralInventoryContainer() {
-        super();
+    public AstralInventoryContainer(int i, PlayerInventory playerInventory) {
+        super(null, i);
+        this.playerInventory = playerInventory;
     }
 
     @Override
