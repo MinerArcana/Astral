@@ -20,6 +20,7 @@ import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
+import com.alan19.astral.client.gui.AstralContainers;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
@@ -99,10 +100,11 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
+        AstralContainers.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 
     private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {

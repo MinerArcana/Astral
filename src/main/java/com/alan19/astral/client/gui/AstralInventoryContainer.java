@@ -7,21 +7,23 @@ import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeItemHelper;
 
+import javax.annotation.Nonnull;
+
 public class AstralInventoryContainer extends RecipeBookContainer<CraftingInventory> {
     private final PlayerInventory playerInventory;
 
     public AstralInventoryContainer(int i, PlayerInventory playerInventory) {
-        super(null, i);
+        super(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), i);
         this.playerInventory = playerInventory;
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
         return false;
     }
 
     @Override
-    public void fillStackedContents(RecipeItemHelper itemHelperIn) {
+    public void fillStackedContents(@Nonnull RecipeItemHelper itemHelperIn) {
 
     }
 
