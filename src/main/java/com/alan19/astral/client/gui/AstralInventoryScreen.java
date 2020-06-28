@@ -12,6 +12,6 @@ public class AstralInventoryScreen extends ContainerScreen<AstralInventoryContai
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-
+        AstralDrawable.ASTRAL_INVENTORY_DRAWABLE.draw(guiLeft, guiTop, 175, 165);
     }
 }

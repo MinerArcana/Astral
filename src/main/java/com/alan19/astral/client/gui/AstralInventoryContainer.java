@@ -19,7 +19,7 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
 
     @Override
     public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-        return false;
+        return true;
     }
 
     @Override
@@ -44,16 +44,16 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
 
     @Override
     public int getWidth() {
-        return 0;
+        return 175;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return 165;
     }
 
     @Override
     public int getSize() {
-        return 0;
+        return 10;
     }
 }
