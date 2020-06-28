@@ -1,20 +1,31 @@
 package com.alan19.astral.client.gui;
 
+import com.alan19.astral.api.AstralAPI;
+import com.alan19.astral.api.psychicinventory.PsychicInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
 public class AstralInventoryContainer extends RecipeBookContainer<CraftingInventory> {
     private final PlayerInventory playerInventory;
+    private ItemStackHandler mainInventory = new ItemStackHandler(42);
 
     public AstralInventoryContainer(int i, PlayerInventory playerInventory) {
         super(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), i);
         this.playerInventory = playerInventory;
+        final PlayerEntity player = playerInventory.player;
+        if (player instanceof ServerPlayerEntity) {
+            if (AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).isPresent()) {
+                mainInventory = AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).orElseGet(PsychicInventory::new).getInventoryOfPlayer(player.getUniqueID()).getPhysicalInventory();
+            }
+        }
     }
 
     @Override
