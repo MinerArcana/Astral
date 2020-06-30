@@ -13,12 +13,12 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class EquipmentSlotHandler extends SlotItemHandler {
-    public final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = new ResourceLocation("item/empty_armor_slot_helmet");
-    public final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE = new ResourceLocation("item/empty_armor_slot_chestplate");
-    public final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS = new ResourceLocation("item/empty_armor_slot_leggings");
-    public final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
-    public final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = new ResourceLocation("item/empty_armor_slot_shield");
-    private final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[]{EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET};
+    public final ResourceLocation emptyArmorSlotHelmet = new ResourceLocation("item/empty_armor_slot_helmet");
+    public final ResourceLocation emptyArmorSlotChestplate = new ResourceLocation("item/empty_armor_slot_chestplate");
+    public final ResourceLocation emptyArmorSlotLeggings = new ResourceLocation("item/empty_armor_slot_leggings");
+    public final ResourceLocation emptyArmorSlotBoots = new ResourceLocation("item/empty_armor_slot_boots");
+    public final ResourceLocation emptyArmorSlotShield = new ResourceLocation("item/empty_armor_slot_shield");
+    private final ResourceLocation[] armorSlotTextures = new ResourceLocation[]{emptyArmorSlotBoots, emptyArmorSlotLeggings, emptyArmorSlotChestplate, emptyArmorSlotHelmet};
     private final EquipmentSlotType type;
     private final PlayerEntity playerEntity;
 
@@ -57,6 +57,6 @@ public class EquipmentSlotHandler extends SlotItemHandler {
     @Override
     @OnlyIn(Dist.CLIENT)
     public Pair<ResourceLocation, ResourceLocation> getBackground() {
-        return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, ARMOR_SLOT_TEXTURES[type.getIndex()]);
+        return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, armorSlotTextures[type.getIndex()]);
     }
 }
