@@ -12,6 +12,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
+
 public class EquipmentSlotHandler extends SlotItemHandler {
     public final ResourceLocation emptyArmorSlotHelmet = new ResourceLocation("item/empty_armor_slot_helmet");
     public final ResourceLocation emptyArmorSlotChestplate = new ResourceLocation("item/empty_armor_slot_chestplate");
@@ -34,15 +36,15 @@ public class EquipmentSlotHandler extends SlotItemHandler {
      */
     @Override
     public int getSlotStackLimit() {
-        return 1;
+        return type == EquipmentSlotType.OFFHAND ? 64 : 1;
     }
 
     /**
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     @Override
-    public boolean isItemValid(ItemStack stack) {
-        return stack.canEquip(type, playerEntity);
+    public boolean isItemValid(@Nonnull ItemStack stack) {
+        return type == EquipmentSlotType.OFFHAND || stack.canEquip(type, playerEntity);
     }
 
     /**
@@ -57,6 +59,6 @@ public class EquipmentSlotHandler extends SlotItemHandler {
     @Override
     @OnlyIn(Dist.CLIENT)
     public Pair<ResourceLocation, ResourceLocation> getBackground() {
-        return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, armorSlotTextures[type.getIndex()]);
+        return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, type == EquipmentSlotType.OFFHAND ? emptyArmorSlotShield : armorSlotTextures[type.getIndex()]);
     }
 }
