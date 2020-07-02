@@ -10,10 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class AstralInventoryButton extends ImageButton {
     public AstralInventoryButton(ContainerScreen<?> gui, int xIn, int yIn, int widthIn, int heightIn, int xTexStartIn, int yTexStartIn, int yDiffTextIn, ResourceLocation resourceLocationIn) {
         super(xIn, yIn, widthIn, heightIn, xTexStartIn, yTexStartIn, yDiffTextIn, resourceLocationIn, onPress -> {
-            if (gui instanceof AstralInventoryScreen) {
-
-            }
-            else {
+            if (!(gui instanceof AstralInventoryScreen)) {
                 if (gui instanceof InventoryScreen) {
                     InventoryScreen inventoryScreen = (InventoryScreen) gui;
                     RecipeBookGui recipeBookGui = inventoryScreen.getRecipeGui();
