@@ -6,11 +6,13 @@ import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.tags.AstralTags;
+import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,6 +26,9 @@ public class InnerRealmEvents {
     public static void cancelInnerRealmEntry(EntityTravelToDimensionEvent event) {
         if (event.getDimension().getRegistryName() != null && event.getDimension().getRegistryName().equals(AstralDimensions.INNER_REALM) && (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) || !(event.getEntity() instanceof LivingEntity)) {
             event.setCanceled(true);
+            if (event.getEntity() instanceof PlayerEntity) {
+                event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL));
+            }
         }
     }
 

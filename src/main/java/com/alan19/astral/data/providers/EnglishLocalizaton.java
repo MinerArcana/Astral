@@ -1,6 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.client.gui.AstralContainerProvider;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.potions.PotionRegistryGroup;
@@ -59,6 +60,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(Constants.COMMANDS_BURN_SUCCESS_SINGLE, "Offered %s %s to %s's Inner Realm");
         add(Constants.SLEEPWALKING_BED, "You find yourself in your bed as you wake up...");
         add(Constants.SLEEPWALKING_SPAWN, "You find yourself in a familiar place as you wake up...");
+        add(Constants.INVALID_WITHDRAWAL, "Crude physical substances cannot be brought to this state of existence so easily!");
+        add(AstralContainerProvider.ASTRAL_CONTAINER_NAME, "Psychic Inventory");
     }
 
     private void addBlocks() {

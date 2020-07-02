@@ -75,8 +75,6 @@ public class AstralBlockLootTables extends BlockLootTables {
                 .acceptFunction(ExplosionDecay.builder())
         );
         registerLootTable(FEVERWEED_BLOCK.get(), dropping(FEVERWEED_BLOCK.get()));
-        registerLootTable(EGO_MEMBRANE.get(), new LootTable.Builder());
-        registerLootTable(ASTRAL_MERIDIAN.get(), new LootTable.Builder());
         registerLootTable(OFFERING_BRAZIER.get(), dropping(OFFERING_BRAZIER.get()));
         registerLootTable(ETHER_DIRT.get(), dropping(ETHER_DIRT.get()));
         registerLootTable(ETHER_GRASS.get(), droppingWithSilkTouch(ETHER_GRASS.get(), ETHER_DIRT.get()));

@@ -21,7 +21,13 @@ public class AstralEntityLootTables extends EntityLootTables {
                         .rolls(ConstantRange.of(1))
                         .addEntry(ItemLootEntry.builder(AstralItems.DREAMCORD.get())
                                 .acceptFunction(SetCount.builder(RandomValueRange.of(0, 2)))
+                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1)))))
+                .addLootPool(LootPool.builder()
+                        .rolls(ConstantRange.of(1))
+                        .addEntry(ItemLootEntry.builder(AstralItems.CRYSTAL_CHITIN.get())
+                                .acceptFunction(SetCount.builder(RandomValueRange.of(0, 2)))
                                 .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0, 1))))));
+
         registerLootTable(new ResourceLocation(Astral.MOD_ID, "inject/phantom"), new LootTable.Builder()
                 .addLootPool(LootPool.builder()
                         .rolls(ConstantRange.of(1))
