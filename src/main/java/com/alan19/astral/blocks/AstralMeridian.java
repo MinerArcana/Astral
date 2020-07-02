@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 public class AstralMeridian extends Block {
 
     /**
@@ -29,7 +31,9 @@ public class AstralMeridian extends Block {
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
-                .hardnessAndResistance(99F));
+                .hardnessAndResistance(-1.0F, 3600000.0F)
+                .noDrops()
+                .lightValue(14));
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
     }
@@ -40,11 +44,13 @@ public class AstralMeridian extends Block {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState(), 2);
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (player.isSneaking() && player.getHeldItem(handIn).isEmpty()) {
             player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());

@@ -4,7 +4,6 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.InventoryType;
-import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.effects.AstralTravelEffect;
 import com.alan19.astral.entity.AstralEntities;
@@ -138,9 +137,8 @@ public class StartAndEndHandling {
             if (!playerEntity.getEntityWorld().isRemote()) {
 
                 final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
-                final Boolean goingToInnerRealm = playerEntity.getCapability(AstralAPI.sleepManagerCapability).map(ISleepManager::isGoingToInnerRealm).orElseGet(() -> false);
 
-                psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(Boolean.TRUE.equals(goingToInnerRealm) ? InventoryType.INNER_REALM : InventoryType.ASTRAL, playerEntity.inventory));
+                psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
             }
             physicalBodyEntity.setHealth(playerEntity.getHealth());
             physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
