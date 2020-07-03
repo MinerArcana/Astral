@@ -30,7 +30,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         getBuilder(AstralTags.SMALL_ETHERIC_GROWTHS).add(getAllBlocksOfType(EthericGrowth.class));
         getBuilder(AstralTags.LARGE_ETHERIC_GROWTHS).add(getAllBlocksOfType(TallEthericGrowth.class));
         getBuilder(AstralTags.ETHERIC_GROWTHS).add(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
-        getBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.add(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
+        getBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get(), EGO_MEMBRANE.get(), ASTRAL_MERIDIAN.get()));
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {
