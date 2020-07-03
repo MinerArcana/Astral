@@ -58,7 +58,7 @@ public class InnerRealmEvents {
 
     @SubscribeEvent
     public static void dontPushEtherealBlocks(PistonEvent.Pre event) {
-        if (AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock())) {
+        if (AstralTags.ASTRAL_INTERACT.contains(event.getWorld().getBlockState(event.getPos().offset(event.getDirection())).getBlock())) {
             event.setCanceled(true);
         }
     }
