@@ -41,6 +41,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     private final ArrayList<BlockPos> treeLocations;
     private int numberOfTreesPlaced;
     private ChunkGenerator<?> chunkGenerator;
+    private int numberOfWebsPlaced;
 
     public AstralIslandPiece(TemplateManager templateManager, AstralIslandVariant variant, String templateName, BlockPos templatePosition, Rotation rotation) {
         this(templateManager, variant, templateName, templatePosition, rotation, Mirror.NONE);
@@ -54,6 +55,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.rotation = rotation;
         this.mirror = mirror;
         this.numberOfTreesPlaced = 0;
+        this.numberOfWebsPlaced = 0;
         this.treeLocations = new ArrayList<>();
         this.loadTemplate(templateManager);
     }
@@ -66,6 +68,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.mirror = Mirror.valueOf(nbt.getString("Mi"));
         this.numberOfTreesPlaced = nbt.getInt("NumberOfTreesPlaced");
         this.treeLocations = new ArrayList<>();
+        this.numberOfWebsPlaced = nbt.getInt("numberOfWebsPlaced");
         nbt.getList("treeLocations", Constants.NBT.TAG_COMPOUND).forEach(inbt -> treeLocations.add(NBTUtil.readBlockPos((CompoundNBT) inbt)));
 
         this.loadTemplate(templateManager);
@@ -95,6 +98,11 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                     }
                     break;
                 case 3:
+                    if (numberOfWebsPlaced < 2) {
+                        world.setBlockState(blockPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 2);
+                        numberOfWebsPlaced++;
+                    }
+                    break;
                 case 4:
                 case 5:
                 case 6:
@@ -132,6 +140,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         tagCompound.putString("Rot", this.placeSettings.getRotation().name());
         tagCompound.putString("Mi", this.placeSettings.getMirror().name());
         tagCompound.putInt("NumberOfTreesPlaced", this.numberOfTreesPlaced);
+        tagCompound.putInt("numberOfWebsPlaced", this.numberOfWebsPlaced);
         ListNBT posList = new ListNBT();
         treeLocations.forEach(pos -> posList.add(NBTUtil.writeBlockPos(pos)));
         tagCompound.put("treeLocations", posList);

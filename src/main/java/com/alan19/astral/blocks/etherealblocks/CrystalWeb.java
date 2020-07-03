@@ -2,12 +2,14 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
@@ -47,14 +49,19 @@ public class CrystalWeb extends EtherealBlock {
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        if (rand.nextInt(30) == 0 && pos.getY() >= 128) {
-            final int moonPhase = worldIn.getMoonPhase();
-            if (BlockPos.getAllInBox(pos.add(-2, -1, -2), pos.add(2, 1, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 5) {
-                final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
-                final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
-                worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
-            }
+        final int moonPhase = worldIn.getMoonPhase();
+        if (rand.nextInt(30) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -1, -2), pos.add(2, 1, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 5) {
+            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
+            final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
+            worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
         }
+        if (rand.nextInt(Math.abs(5 - moonPhase) + 1) == 0 && worldIn.getBlockState(pos.down()).getBlock() instanceof Ethereal && canSpiderSpawn(worldIn, pos) && pos.getY() >= 128) {
+            AstralEntities.CRYSTAL_SPIDER.get().spawn(worldIn, null, null, pos, SpawnReason.SPAWNER, false, false);
+        }
+    }
+
+    private boolean canSpiderSpawn(ServerWorld worldIn, BlockPos pos) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && worldIn.getLight(pos) <= 7;
     }
 
     public Stream<BlockPos> getBoxForMoonPhase(int moonPhase, BlockPos center) {
