@@ -3,6 +3,7 @@ package com.alan19.astral.blocks.etherealblocks;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -51,4 +52,10 @@ public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
     protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
+
+    @Override
+    public PushReaction getPushReaction(@Nonnull BlockState state) {
+        return Ethereal.getPushReaction();
+    }
+
 }

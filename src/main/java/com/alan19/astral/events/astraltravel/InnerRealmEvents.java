@@ -15,7 +15,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
-import net.minecraftforge.event.world.PistonEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -54,12 +53,5 @@ public class InnerRealmEvents {
         IntStream.range(0, inventoryOfPlayer.getAstralHandsInventory().getSlots())
                 .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralHandsInventory().getStackInSlot(i).getItem()))
                 .forEach(i -> Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getAstralHandsInventory().extractItem(i, 64, false)));
-    }
-
-    @SubscribeEvent
-    public static void dontPushEtherealBlocks(PistonEvent.Pre event) {
-        if (AstralTags.ASTRAL_INTERACT.contains(event.getWorld().getBlockState(event.getPos().offset(event.getDirection())).getBlock())) {
-            event.setCanceled(true);
-        }
     }
 }

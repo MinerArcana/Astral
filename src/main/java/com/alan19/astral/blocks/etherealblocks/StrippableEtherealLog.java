@@ -3,6 +3,7 @@ package com.alan19.astral.blocks.etherealblocks;
 import com.alan19.astral.blocks.AstralBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
 import net.minecraft.util.ActionResultType;
@@ -25,6 +26,11 @@ public class StrippableEtherealLog extends EtherealLog {
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
+    }
+
+    @Override
+    public PushReaction getPushReaction(@Nonnull BlockState state) {
+        return Ethereal.getPushReaction();
     }
 
 }
