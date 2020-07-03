@@ -1,5 +1,6 @@
 package com.alan19.astral.blocks;
 
+import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.block.*;
@@ -96,25 +97,27 @@ public class SnowberryBush extends SweetBerryBushBlock {
         int i = state.get(AGE);
         if (i < 3 && worldIn.getLightSubtracted(pos.up(), 0) >= 9 && ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt(5) == 0)) {
             worldIn.setBlockState(pos, state.with(AGE, i + 1), 2);
-            spreadSnow(worldIn, pos);
+            spreadSnow(worldIn, pos, rand);
             ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
     }
 
-    public void spreadSnow(ServerWorld worldIn, BlockPos pos) {
-        BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 0, 1))
-                .filter(blockPos -> isBlockAirOrSnow(blockPos, worldIn))
-                .map(blockPos -> getPosSnowLevelPair(blockPos.toImmutable(), worldIn))
-                .min(Comparator.comparing(Pair::getRight))
-                .ifPresent(blockPosIntegerPair -> {
-                    final BlockState blockState = worldIn.getBlockState(blockPosIntegerPair.getLeft());
-                    if (blockState.getBlock() == Blocks.AIR) {
-                        worldIn.setBlockState(blockPosIntegerPair.getLeft(), Blocks.SNOW.getDefaultState(), 2);
-                    }
-                    else if (blockState.getBlock() == Blocks.SNOW) {
-                        worldIn.setBlockState(blockPosIntegerPair.getLeft(), blockState.with(SnowBlock.LAYERS, blockState.get(SnowBlock.LAYERS) + 1), 2);
-                    }
-                });
+    public void spreadSnow(ServerWorld worldIn, BlockPos pos, Random rand) {
+        if (rand.nextInt(AstralConfig.getWorldgenSettings().getSnowberrySpreadSnowChance()) == 0) {
+            BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 0, 1))
+                    .filter(blockPos -> isBlockAirOrSnow(blockPos, worldIn))
+                    .map(blockPos -> getPosSnowLevelPair(blockPos.toImmutable(), worldIn))
+                    .min(Comparator.comparing(Pair::getRight))
+                    .ifPresent(blockPosIntegerPair -> {
+                        final BlockState blockState = worldIn.getBlockState(blockPosIntegerPair.getLeft());
+                        if (blockState.getBlock() == Blocks.AIR) {
+                            worldIn.setBlockState(blockPosIntegerPair.getLeft(), Blocks.SNOW.getDefaultState(), 2);
+                        }
+                        else if (blockState.getBlock() == Blocks.SNOW) {
+                            worldIn.setBlockState(blockPosIntegerPair.getLeft(), blockState.with(SnowBlock.LAYERS, blockState.get(SnowBlock.LAYERS) + 1), 2);
+                        }
+                    });
+        }
     }
 
     private boolean isBlockAirOrSnow(BlockPos blockPos, ServerWorld worldIn) {
@@ -136,6 +139,6 @@ public class SnowberryBush extends SweetBerryBushBlock {
     @ParametersAreNonnullByDefault
     public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
         super.grow(worldIn, rand, pos, state);
-        spreadSnow(worldIn, pos);
+        spreadSnow(worldIn, pos, rand);
     }
 }
