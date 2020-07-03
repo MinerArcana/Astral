@@ -122,7 +122,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
 
     private boolean isBlockAirOrSnow(BlockPos blockPos, ServerWorld worldIn) {
         BlockState state = worldIn.getBlockState(blockPos);
-        return state.getBlock() == Blocks.SNOW ? state.get(SnowBlock.LAYERS) < 8 : state.getBlock() == Blocks.AIR;
+        return Blocks.SNOW.getDefaultState().isValidPosition(worldIn, blockPos) && (state.getBlock() == Blocks.SNOW ? state.get(SnowBlock.LAYERS) < 8 : state.getBlock() == Blocks.AIR);
     }
 
     private Pair<BlockPos, Integer> getPosSnowLevelPair(BlockPos pos, ServerWorld worldIn) {
