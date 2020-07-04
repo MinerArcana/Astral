@@ -37,14 +37,13 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
         //Chunks are created as players spawn and unlock rooms
     }
 
-
     @Override
-    public int func_222529_a(int p_222529_1_, int p_222529_2_, Heightmap.Type p_222529_3_) {
+    public int getHeight(int x, int z, @Nonnull Heightmap.Type heightmapType) {
         return 0;
     }
 
     @Override
-    public boolean hasStructure(Biome biomeIn, @Nonnull Structure<? extends IFeatureConfig> structureIn) {
+    public boolean hasStructure(@Nonnull Biome biomeIn, @Nonnull Structure<? extends IFeatureConfig> structureIn) {
         return false;
     }
 }

@@ -21,6 +21,7 @@ import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.commands.AstralCommands;
+import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
@@ -99,6 +100,7 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
+        AstralBotaniaBrews.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
