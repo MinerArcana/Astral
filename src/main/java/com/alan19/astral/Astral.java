@@ -93,6 +93,7 @@ public class Astral {
 
         AstralEntities.register(modEventBus);
         AstralBlocks.register(modEventBus);
+        AstralBotaniaBrews.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
@@ -100,7 +101,6 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
-        AstralBotaniaBrews.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
