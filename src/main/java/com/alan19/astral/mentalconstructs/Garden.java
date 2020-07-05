@@ -24,6 +24,12 @@ public class Garden extends MentalConstruct {
         return 14 / (.002f * level + 1) + 1;
     }
 
+    /**
+     * Gets all of the curios in a player's inventory as a List
+     *
+     * @param iCurioItemHandler The ICurioItemHandler capability on a player
+     * @return A list of Curios as ItemStacks in an ArrayList
+     */
     private static List<ItemStack> getCuriosAsList(ICurioItemHandler iCurioItemHandler) {
         final Collection<CurioStackHandler> curioStackHandlers = iCurioItemHandler.getCurioMap().values();
         List<ItemStack> curios = new ArrayList<>();
@@ -50,15 +56,20 @@ public class Garden extends MentalConstruct {
         saturationSnapshot = newSaturation;
     }
 
+    /**
+     * Adds the specified amount of mana to the first item that accepts mana in a player's inventory
+     *
+     * @param playerEntity The player to send the mana to
+     * @param manaToSend   The amount of mana to send
+     */
     private void addMana(PlayerEntity playerEntity, int manaToSend) {
         List<ItemStack> items = getManaItems(playerEntity);
-        items.stream()
-                .filter(stack -> {
-                    final IManaItem manaItem = (IManaItem) stack.getItem();
-                    return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
-                })
-                .findFirst()
-                .ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
+        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
+    }
+
+    private boolean canItemstackReceiveMana(int manaToSend, ItemStack stack) {
+        final IManaItem manaItem = (IManaItem) stack.getItem();
+        return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
     }
 
 
