@@ -5,7 +5,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.PotionUtils;
 import vazkii.botania.api.brew.Brew;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,8 +26,7 @@ public class SupplierBrew extends Brew {
 
     @Override
     public List<EffectInstance> getPotionEffects(ItemStack stack) {
-        return new ArrayList<>(effectSuppliers.get());
+        return effectSuppliers.get();
     }
-
 
 }
