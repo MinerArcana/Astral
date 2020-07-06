@@ -24,10 +24,12 @@ import java.util.stream.IntStream;
 public class InnerRealmEvents {
     @SubscribeEvent
     public static void cancelInnerRealmEntry(EntityTravelToDimensionEvent event) {
-        if (event.getDimension().getRegistryName() != null && event.getDimension().getRegistryName().equals(AstralDimensions.INNER_REALM) && (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) || !(event.getEntity() instanceof LivingEntity)) {
-            event.setCanceled(true);
-            if (event.getEntity() instanceof PlayerEntity) {
-                event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL));
+        if (event.getDimension().getRegistryName() != null && event.getDimension().getRegistryName().equals(AstralDimensions.INNER_REALM)) {
+            if (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || !(event.getEntity() instanceof LivingEntity)) {
+                event.setCanceled(true);
+                if (event.getEntity() instanceof PlayerEntity) {
+                    event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL));
+                }
             }
         }
     }

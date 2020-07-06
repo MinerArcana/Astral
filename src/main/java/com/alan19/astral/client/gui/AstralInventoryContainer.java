@@ -1,7 +1,6 @@
 package com.alan19.astral.client.gui;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.psychicinventory.PsychicInventory;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -41,7 +40,7 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
         this.playerInventory = playerInventory;
         final PlayerEntity player = playerInventory.player;
         if (player instanceof ServerPlayerEntity && AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).isPresent()) {
-            inventory = AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).orElseGet(PsychicInventory::new).getInventoryOfPlayer(player.getUniqueID());
+            AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(player.getUniqueID())).ifPresent(psychicInventoryInstance -> inventory = psychicInventoryInstance);
         }
 
         //Add crafting result
