@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.data.providers.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
@@ -24,5 +25,8 @@ public class DataGenerators {
         generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
         generator.addProvider(new PatchouliBooks(generator, Astral.MOD_ID, "en_us"));
         generator.addProvider(new EntityTagProvider(generator));
+        if (ModList.get().isLoaded("botania")) {
+            generator.addProvider(new AstralBrewProvider(generator));
+        }
     }
 }

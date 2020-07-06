@@ -43,12 +43,13 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void addBrews() {
-        add(AstralBotaniaBrews.STRONG_ASTRAL_TRAVEL.get(), "the Agile Spectre");
-        add(AstralBotaniaBrews.LONG_ASTRAL_TRAVEL.get(), "Extrospection");
+        add(AstralBotaniaBrews.STRONG_ASTRAL_TRAVEL.get(), "Extrospection");
+        add(AstralBotaniaBrews.FEVERWEED_BREW.get(), "Ravenous Hunting");
+        add(AstralBotaniaBrews.SNOWBERRY_BREW.get(), "Reconstruction");
     }
 
     private void add(Brew brew, String name) {
-        add(brew, String.format("%s.brew.%s", Astral.MOD_ID, name));
+        add(brew.getTranslationKey(), name);
     }
 
     private void add(IAttribute attribute, String name) {

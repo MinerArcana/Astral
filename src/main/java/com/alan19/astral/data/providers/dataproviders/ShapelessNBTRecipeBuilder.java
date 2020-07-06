@@ -1,4 +1,4 @@
-package com.alan19.astral.data;
+package com.alan19.astral.data.providers.dataproviders;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
