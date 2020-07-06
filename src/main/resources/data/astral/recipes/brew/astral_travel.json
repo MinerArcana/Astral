@@ -1,9 +1,9 @@
 {
   "type": "botania:brew",
-  "brew": "astral:strong_astral_travel",
+  "brew": "astral:astral_travel",
   "ingredients": [
     {
-      "item": "minecraft:redstone"
+      "item": "minecraft:nether_wart"
     },
     {
       "item": "astral:traveling_medicine"

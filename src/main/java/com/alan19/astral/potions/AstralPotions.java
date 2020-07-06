@@ -12,8 +12,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import static com.alan19.astral.effects.AstralEffects.MIND_VENOM;
-
 public class AstralPotions {
 
     private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, Astral.MOD_ID);
@@ -33,9 +31,9 @@ public class AstralPotions {
             .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_SNOWBERRY_INSTANCE.toArray(new EffectInstance[]{})))
             .register(POTIONS);
 
-    public static final PotionRegistryGroup MIND_VENOM_POTION = new PotionRegistryGroup("mind_venom_potion", () -> new Potion(new EffectInstance(MIND_VENOM.get(), 900)), () -> Ingredient.fromItems(AstralItems.CRYSTAL_WEB_ITEM.get()))
-            .addLongBrew(() -> new Potion(new EffectInstance(MIND_VENOM.get(), 1800)))
-            .addStrongBrew(() -> new Potion(new EffectInstance(MIND_VENOM.get(), 450, 1)))
+    public static final PotionRegistryGroup MIND_VENOM_POTION = new PotionRegistryGroup("mind_venom_potion", () -> new Potion(PotionEffectInstances.BASE_MIND_VENOM_INSTANCE.toArray(new EffectInstance[]{})), () -> Ingredient.fromItems(AstralItems.CRYSTAL_WEB_ITEM.get()))
+            .addLongBrew(() -> new Potion(PotionEffectInstances.LONG_MIND_VENOM_INSTANCE.toArray(new EffectInstance[]{})))
+            .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_MIND_VENOM_INSTANCE.toArray(new EffectInstance[]{})))
             .register(POTIONS);
 
     @SubscribeEvent
