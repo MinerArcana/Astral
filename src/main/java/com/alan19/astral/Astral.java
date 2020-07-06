@@ -35,6 +35,7 @@ import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
+import com.alan19.astral.util.ModCompat;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.OverworldVegetation;
 import com.alan19.astral.world.biome.AstralBiomes;
@@ -93,7 +94,6 @@ public class Astral {
 
         AstralEntities.register(modEventBus);
         AstralBlocks.register(modEventBus);
-        AstralBotaniaBrews.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
         AstralParticles.register(modEventBus);
@@ -101,6 +101,10 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
+
+        if (ModCompat.IS_BOTANIA_LOADED) {
+            AstralBotaniaBrews.register(modEventBus);
+        }
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);

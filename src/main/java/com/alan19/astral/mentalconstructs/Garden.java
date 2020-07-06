@@ -1,6 +1,7 @@
 package com.alan19.astral.mentalconstructs;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.util.ModCompat;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -50,7 +51,7 @@ public class Garden extends MentalConstruct {
             player.getFoodStats().addStats(1, 0);
         }
 
-        if (player.ticksExisted % Math.round(getConversionRatio(level) * 10) == 0) {
+        if (ModCompat.IS_BOTANIA_LOADED && player.ticksExisted % Math.round(getConversionRatio(level) * 10) == 0) {
             addMana(player, 1);
         }
         saturationSnapshot = newSaturation;
