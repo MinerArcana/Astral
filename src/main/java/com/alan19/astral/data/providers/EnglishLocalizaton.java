@@ -43,9 +43,9 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void addBrews() {
-        add(AstralBotaniaBrews.STRONG_ASTRAL_TRAVEL.get(), "Extrospection");
-        add(AstralBotaniaBrews.FEVERWEED_BREW.get(), "Ravenous Hunting");
-        add(AstralBotaniaBrews.SNOWBERRY_BREW.get(), "Reconstruction");
+        add(AstralBotaniaBrews.ASTRAL_TRAVEL, "Extrospection");
+        add(AstralBotaniaBrews.FEVERWEED_BREW, "Ravenous Hunting");
+        add(AstralBotaniaBrews.SNOWBERRY_BREW, "Reconstruction");
     }
 
     private void add(Brew brew, String name) {

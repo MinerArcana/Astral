@@ -67,6 +67,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import vazkii.botania.api.brew.Brew;
 
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_GAME_PROFILE;
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER;
@@ -103,7 +104,7 @@ public class Astral {
         AstralPotions.register(modEventBus);
 
         if (ModCompat.IS_BOTANIA_LOADED) {
-            AstralBotaniaBrews.register(modEventBus);
+            modEventBus.addGenericListener(Brew.class, AstralBotaniaBrews::registerBrews);
         }
         modEventBus.addListener(AstralPotions::registerRecipes);
 

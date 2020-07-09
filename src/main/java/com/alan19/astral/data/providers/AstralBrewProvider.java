@@ -27,9 +27,9 @@ public class AstralBrewProvider extends BrewProvider {
 
     @Override
     protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.STRONG_ASTRAL_TRAVEL.get(), Ingredient.fromItems(Items.NETHER_WART), Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW.get(), Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.SNOWBERRY.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW.get(), Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.FEVERWEED.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL, Ingredient.fromItems(Items.NETHER_WART), Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW, Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.SNOWBERRY.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW, Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.FEVERWEED.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
     }
 
     private void createBotanicalBreweryRecipe(Consumer<IFinishedRecipe> consumer, Brew brew, Ingredient... ingredients) {
