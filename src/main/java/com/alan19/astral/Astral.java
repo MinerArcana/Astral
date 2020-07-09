@@ -104,7 +104,7 @@ public class Astral {
         AstralPotions.register(modEventBus);
 
         if (ModCompat.IS_BOTANIA_LOADED) {
-            modEventBus.addGenericListener(Brew.class, AstralBotaniaBrews::registerBrews);
+            modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
         }
         modEventBus.addListener(AstralPotions::registerRecipes);
 
