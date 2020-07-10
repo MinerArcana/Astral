@@ -27,7 +27,7 @@ public class AstralBrewProvider extends BrewProvider {
 
     @Override
     protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL, Ingredient.fromItems(Items.NETHER_WART), Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL, Ingredient.fromItems(Items.NETHER_WART), Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW, Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.SNOWBERRY.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW, Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.FEVERWEED.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
     }
