@@ -5,9 +5,14 @@
     {
       "item": "minecraft:nether_wart"
     },
-    {
-      "item": "astral:traveling_medicine"
-    },
+    [
+      {
+        "item": "astral:traveling_medicine"
+      },
+      {
+        "item": "astral:etheric_powder"
+      }
+    ],
     {
       "item": "minecraft:glowstone_dust"
     }

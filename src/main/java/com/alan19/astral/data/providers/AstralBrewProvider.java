@@ -81,4 +81,9 @@ public class AstralBrewProvider extends BrewProvider {
         }
     }
 
+    @Override
+    @Nonnull
+    public String getName() {
+        return "Astral Botania Brew Recipes";
+    }
 }
