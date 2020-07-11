@@ -2,6 +2,7 @@ package com.alan19.astral.blocks.tileentities;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.network.AstralNetwork;
+import com.alan19.astral.recipe.AbstractBrazierRecipe;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -70,7 +71,6 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                     burnItems(inventory, uuid);
                 }
                 else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
-                    this.world.setBlockState(pos, getBlockState().with(AbstractFurnaceBlock.LIT, true));
                     final ItemStack fuelInSlot = inventory.getStackInSlot(0);
                     burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
                     fuelInSlot.shrink(1);
@@ -81,6 +81,13 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         }
     }
 
+    private AbstractBrazierRecipe matchRecipe(ItemStack stackInSlot) {
+        if (world != null) {
+            return world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe instanceof AbstractBrazierRecipe).map(recipe -> (AbstractBrazierRecipe) recipe).filter(recipe -> recipe.matches(stackInSlot)).findFirst().orElse(null);
+        }
+        return null;
+    }
+
     public void burnItems(IItemHandler inventory, UUID uuid) {
         if (lastStack != inventory.getStackInSlot(1)) {
             progress = 0;
@@ -89,10 +96,14 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         else {
             progress++;
         }
-        if (progress >= 200 && boundPlayer.isPresent()) {
+        if (progress >= 200 && boundPlayer.isPresent() && world != null) {
+            AbstractBrazierRecipe recipe = matchRecipe(inventory.getStackInSlot(1));
+            ItemStack output = recipe != null ? recipe.getRecipeOutput() : new ItemStack(lastStack.getItem());
+            this.world.setBlockState(pos, getBlockState().with(AbstractFurnaceBlock.LIT, true));
+
             AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
                 final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
-                ItemHandlerHelper.insertItemStacked(innerRealmMain, new ItemStack(lastStack.getItem()), false);
+                ItemHandlerHelper.insertItemStacked(innerRealmMain, output, false);
                 lastStack.shrink(1);
             });
             AstralNetwork.sendOfferingBrazierFinishParticles(pos, world.getChunkAt(pos));

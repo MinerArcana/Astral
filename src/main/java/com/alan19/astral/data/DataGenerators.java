@@ -28,5 +28,6 @@ public class DataGenerators {
         if (ModCompat.IS_BOTANIA_LOADED) {
             generator.addProvider(new AstralBrewProvider(generator));
         }
+        generator.addProvider(new BrazierRecipeProvider(generator));
     }
 }
