@@ -1,6 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.potions.PotionRegistryGroup;
@@ -12,6 +13,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
+import vazkii.botania.api.brew.Brew;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 import static com.alan19.astral.items.AstralItems.*;
@@ -34,9 +36,20 @@ public class EnglishLocalizaton extends LanguageProvider {
         addConstants();
         addEntities();
         addEffects();
+        addBrews();
         add(Constants.ASTRAL_ATTACK_DAMAGE, "Astral Attack Damage");
         add(AstralBiomes.PSYSCAPE_BIOME.get(), "Psyscape");
         add("itemGroup.astral", "Astral");
+    }
+
+    private void addBrews() {
+        add(AstralBotaniaBrews.ASTRAL_TRAVEL, "Extrospection");
+        add(AstralBotaniaBrews.FEVERWEED_BREW, "Ravenous Hunting");
+        add(AstralBotaniaBrews.SNOWBERRY_BREW, "Reconstruction");
+    }
+
+    private void add(Brew brew, String name) {
+        add(brew.getTranslationKey(), name);
     }
 
     private void add(IAttribute attribute, String name) {

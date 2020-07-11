@@ -1,7 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.data.ShapelessNBTRecipeBuilder;
+import com.alan19.astral.data.providers.dataproviders.ShapelessNBTRecipeBuilder;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import net.minecraft.data.*;

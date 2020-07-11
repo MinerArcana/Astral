@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import xyz.brassgoggledcoders.patchouliprovider.*;
 
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PatchouliBooks extends PatchouliBookProvider {
     public PatchouliBooks(DataGenerator gen, String modid, String locale) {
@@ -71,8 +73,7 @@ public class PatchouliBooks extends PatchouliBookProvider {
         introspectionMedicineEntry.addCraftingPage(new ResourceLocation(Astral.MOD_ID, "introspection_medicine"));
 
         final ItemStack feverweedAndSnowberryBrew = new ItemStack(Items.POTION);
-        PotionUtils.addPotionToItemStack(feverweedAndSnowberryBrew, AstralPotions.FEVERWEED_BREW.getBasePotion().get());
-        PotionUtils.addPotionToItemStack(feverweedAndSnowberryBrew, AstralPotions.SNOWBERRY_BREW.getBasePotion().get());
+        PotionUtils.appendEffects(feverweedAndSnowberryBrew, Stream.concat(AstralPotions.FEVERWEED_BREW.getBasePotion().get().getEffects().stream(), AstralPotions.SNOWBERRY_BREW.getBasePotion().get().getEffects().stream()).collect(Collectors.toList()));
         final EntryBuilder brewPage = medicinesAndPotions.addEntry("feverweed_and_snowberry_brews", "Snowberry & Feverweed Brews", feverweedAndSnowberryBrew);
         brewPage.setAdvancement("minecraft:nether/brew_potion");
         brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, Potions.THICK)).setText("Have you ever wanted the effects of Feverweed or Snowberries but for a longer or stronger effect? Now you can! These brews use Thick Potions as their base, and have the two effects at level II for 30 seconds as the starting potion.");

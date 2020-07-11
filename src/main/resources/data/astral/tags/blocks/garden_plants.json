@@ -3,6 +3,7 @@
   "values": [
     "#minecraft:bee_growables",
     "#minecraft:flower_pots",
-    "#minecraft:flowers"
+    "#minecraft:flowers",
+    "#astral:etheric_growths"
   ]
 }

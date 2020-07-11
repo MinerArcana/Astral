@@ -1,9 +1,20 @@
 package com.alan19.astral.mentalconstructs;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.util.ModCompat;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.Mod;
+import top.theillusivec4.curios.api.capability.CuriosCapability;
+import top.theillusivec4.curios.api.capability.ICurioItemHandler;
+import top.theillusivec4.curios.api.inventory.CurioStackHandler;
+import vazkii.botania.api.mana.IManaItem;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Garden extends MentalConstruct {
@@ -14,6 +25,23 @@ public class Garden extends MentalConstruct {
         return 14 / (.002f * level + 1) + 1;
     }
 
+    /**
+     * Gets all of the curios in a player's inventory as a List
+     *
+     * @param iCurioItemHandler The ICurioItemHandler capability on a player
+     * @return A list of Curios as ItemStacks in an ArrayList
+     */
+    private static List<ItemStack> getCuriosAsList(ICurioItemHandler iCurioItemHandler) {
+        final Collection<CurioStackHandler> curioStackHandlers = iCurioItemHandler.getCurioMap().values();
+        List<ItemStack> curios = new ArrayList<>();
+        for (CurioStackHandler curioStackHandler : curioStackHandlers) {
+            for (int i = 0; i < curioStackHandler.getSlots(); i++) {
+                curios.add(curioStackHandler.getStackInSlot(i));
+            }
+        }
+        return curios;
+    }
+
     @Override
     public void performEffect(PlayerEntity player, int level) {
         final float newSaturation = player.getFoodStats().getSaturationLevel();
@@ -22,7 +50,34 @@ public class Garden extends MentalConstruct {
             saturationCounter = saturationCounter - getConversionRatio(level);
             player.getFoodStats().addStats(1, 0);
         }
+
+        if (ModCompat.IS_BOTANIA_LOADED && player.ticksExisted % Math.round(getConversionRatio(level) * 10) == 0) {
+            addMana(player, 1);
+        }
         saturationSnapshot = newSaturation;
+    }
+
+    /**
+     * Adds the specified amount of mana to the first item that accepts mana in a player's inventory
+     *
+     * @param playerEntity The player to send the mana to
+     * @param manaToSend   The amount of mana to send
+     */
+    private void addMana(PlayerEntity playerEntity, int manaToSend) {
+        List<ItemStack> items = getManaItems(playerEntity);
+        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
+    }
+
+    private boolean canItemstackReceiveMana(int manaToSend, ItemStack stack) {
+        final IManaItem manaItem = (IManaItem) stack.getItem();
+        return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
+    }
+
+
+    private List<ItemStack> getManaItems(PlayerEntity player) {
+        final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
+        curiosItems.addAll(player.inventory.mainInventory);
+        return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
     }
 
     @Override
