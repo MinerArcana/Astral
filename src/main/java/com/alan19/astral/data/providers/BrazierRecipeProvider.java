@@ -1,21 +1,22 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
-import vazkii.botania.common.crafting.ModRecipeTypes;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
+
+import static net.minecraft.item.Items.*;
 
 public class BrazierRecipeProvider extends RecipeProvider {
     public BrazierRecipeProvider(DataGenerator generatorIn) {
@@ -23,9 +24,9 @@ public class BrazierRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-        createRecipe("potion", new ItemStack(Items.GLASS_BOTTLE), Ingredient.fromItems(Items.POTION), consumer);
-        createRecipe("milk", new ItemStack(Items.BUCKET), Ingredient.fromItems(Items.WATER_BUCKET, Items.WATER_BUCKET, Items.MILK_BUCKET), consumer);
+    protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+        createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.fromItems(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
+        createRecipe("bucket", new ItemStack(BUCKET), Ingredient.fromItems(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
     }
 
     private void createRecipe(String name, ItemStack output, Ingredient input, Consumer<IFinishedRecipe> consumer) {
@@ -58,17 +59,21 @@ public class BrazierRecipeProvider extends RecipeProvider {
             json.addProperty("cookTime", cookTime);
             json.add("input", input.serialize());
 
+            JsonObject resultObject = serializeItemStack(output);
+            json.add("result", resultObject);
+        }
+
+        public static JsonObject serializeItemStack(ItemStack output) {
             JsonObject resultObject = new JsonObject();
             resultObject.addProperty("item", ForgeRegistries.ITEMS.getKey(output.getItem()).toString());
-            if (this.output.getCount() > 1) {
-                resultObject.addProperty("count", this.output.getCount());
+            if (output.getCount() > 1) {
+                resultObject.addProperty("count", output.getCount());
             }
 
-            json.add("result", resultObject);
             if (output.hasTag() && output.getTag() != null) {
                 resultObject.addProperty("nbt", output.getTag().toString());
             }
-
+            return resultObject;
         }
 
         @Override
@@ -80,7 +85,7 @@ public class BrazierRecipeProvider extends RecipeProvider {
         @Override
         @Nonnull
         public IRecipeSerializer<?> getSerializer() {
-            return ModRecipeTypes.BREW_SERIALIZER;
+            return AstralRecipeSerializer.BRAZIER_DESTROY_SERIALIZER.get();
         }
 
         @Nullable

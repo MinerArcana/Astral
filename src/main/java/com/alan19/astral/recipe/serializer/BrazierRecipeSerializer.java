@@ -20,17 +20,17 @@ public class BrazierRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
     public BrazierRecipe read(@Nonnull ResourceLocation recipeId, JsonObject json) {
         final int cookTime = json.get("cookTime").getAsInt();
         final Ingredient input = Ingredient.deserialize(json.get("input"));
-        final ItemStack output = ShapedRecipe.deserializeItem(json.getAsJsonObject("output"));
-        return new BrazierRecipe(AstralRecipeTypes.BRAZIER_SACRIFICE_RECIPE, recipeId, cookTime, output, input);
+        final ItemStack result = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+        return new BrazierRecipe(AstralRecipeTypes.BRAZIER_RECIPE, recipeId, cookTime, result, input);
     }
 
     @Nullable
     @Override
     public BrazierRecipe read(@Nonnull ResourceLocation recipeId, PacketBuffer buffer) {
         int cookTime = buffer.readInt();
-        ItemStack output = buffer.readItemStack();
+        ItemStack result = buffer.readItemStack();
         Ingredient input = Ingredient.read(buffer);
-        return new BrazierRecipe(AstralRecipeTypes.BRAZIER_SACRIFICE_RECIPE, recipeId, cookTime, output, input);
+        return new BrazierRecipe(AstralRecipeTypes.BRAZIER_RECIPE, recipeId, cookTime, result, input);
     }
 
     @Override

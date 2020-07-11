@@ -33,6 +33,7 @@ import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.potions.AstralPotions;
+import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.util.ModCompat;
@@ -102,7 +103,7 @@ public class Astral {
         AstralBiomes.register(modEventBus);
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
-
+        AstralRecipeSerializer.register(modEventBus);
         if (ModCompat.IS_BOTANIA_LOADED) {
             modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
         }

@@ -1,0 +1,33 @@
+{
+  "type": "astral:brazier",
+  "cookTime": 100,
+  "input": [
+    {
+      "item": "minecraft:lava_bucket"
+    },
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "minecraft:milk_bucket"
+    },
+    {
+      "item": "minecraft:cod_bucket"
+    },
+    {
+      "item": "minecraft:pufferfish_bucket"
+    },
+    {
+      "item": "minecraft:salmon_bucket"
+    },
+    {
+      "item": "minecraft:tropical_fish_bucket"
+    },
+    {
+      "item": "minecraft:bucket"
+    }
+  ],
+  "result": {
+    "item": "minecraft:bucket"
+  }
+}

@@ -25,7 +25,7 @@ public class BrazierRecipe extends AbstractBrazierRecipe {
 
     @Override
     public boolean matches(ItemStack items) {
-        return false;
+        return getIngredient().test(items);
     }
 
     @Override

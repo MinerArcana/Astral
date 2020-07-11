@@ -1,0 +1,18 @@
+{
+  "type": "astral:brazier",
+  "cookTime": 100,
+  "input": [
+    {
+      "item": "minecraft:potion"
+    },
+    {
+      "item": "minecraft:experience_bottle"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "result": {
+    "item": "minecraft:glass_bottle"
+  }
+}
