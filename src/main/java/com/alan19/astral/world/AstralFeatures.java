@@ -21,7 +21,8 @@ public class AstralFeatures {
     private static final DeferredRegister<Feature<?>> FEATURES = new DeferredRegister<>(ForgeRegistries.FEATURES, Astral.MOD_ID);
 
     public static final RegistryObject<Feature<TreeFeatureConfig>> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new EtherealTreeFeature(TreeFeatureConfig::deserializeFoliage));
-    public static final RegistryObject<Structure<NoFeatureConfig>> ASTRAL_ISLAND = FEATURES.register("astral_island_structure", () -> new AstralIslandStructure(NoFeatureConfig::deserialize));
+    public static final RegistryObject<Structure<NoFeatureConfig>> ASTRAL_ISLAND = FEATURES.register("astral_island_structure", () -> new AstralIslandStructure(NoFeatureConfig::deserialize, 5, 6));
+    public static final RegistryObject<Structure<NoFeatureConfig>> ASTRAL_ISLAND_LAND = FEATURES.register("astral_island_land", () -> new AstralIslandStructure(NoFeatureConfig::deserialize, 25, 30));
     public static final IStructurePieceType ASTRAL_ISLAND_PIECE = Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Astral.MOD_ID, "astral_island_piece"), AstralIslandPiece::new);
 
     public static void register(IEventBus modBus) {

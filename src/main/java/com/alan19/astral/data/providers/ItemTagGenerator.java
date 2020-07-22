@@ -32,8 +32,8 @@ public class ItemTagGenerator extends ItemTagsProvider {
         getBuilder(ItemTags.SMALL_FLOWERS).add(getAllItemsWithBlockClass(EthericGrowth.class));
         getBuilder(ItemTags.TALL_FLOWERS).add(getAllItemsWithBlockClass(TallEthericGrowth.class));
         getBuilder(ItemTags.FLOWERS).add(ArrayUtils.addAll(getAllItemsWithBlockClass(EthericGrowth.class), getAllItemsWithBlockClass(TallEthericGrowth.class)));
-        getBuilder(ItemTags.LOGS).add(ETHEREAL_WOOD_ITEM.get(), STRIPPED_ETHEREAL_LOG_ITEM.get());
-        getBuilder(ItemTags.PLANKS).add(ETHEREAL_PLANKS_ITEM.get(), STRIPPED_ETHEREAL_WOOD_ITEM.get());
+        getBuilder(ItemTags.LOGS).add(ETHEREAL_LOG_ITEM.get(), STRIPPED_ETHEREAL_LOG_ITEM.get(), STRIPPED_ETHEREAL_WOOD_ITEM.get());
+        getBuilder(ItemTags.PLANKS).add(ETHEREAL_PLANKS_ITEM.get());
         getBuilder(ItemTags.LEAVES).add(ETHEREAL_LEAVES_ITEM.get());
         getBuilder(ItemTags.BUTTONS).add(ETHERIC_POWDER_ITEM.get());
     }

@@ -23,8 +23,13 @@ import java.util.function.Function;
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
 public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
-    public AstralIslandStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function) {
+    private final int separation;
+    private final int distance;
+
+    public AstralIslandStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function, int separation, int distance) {
         super(function);
+        this.separation = separation;
+        this.distance = distance;
     }
 
     @Override
@@ -66,11 +71,11 @@ public class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
     }
 
     private int getSeparation() {
-        return 5;
+        return separation;
     }
 
     private int getDistance() {
-        return 6;
+        return distance;
     }
 
     @Override

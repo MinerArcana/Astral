@@ -93,7 +93,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                 case 2:
                     if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                         world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                        final TreeFeatureConfig etherealTreeConfig = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_WOOD.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build();
+                        final TreeFeatureConfig etherealTreeConfig = new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build();
                         ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(etherealTreeConfig);
                         treeFeature.place(world, chunkGenerator, random, blockPos.up());
                         this.numberOfTreesPlaced++;
