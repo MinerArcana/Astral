@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -27,6 +28,10 @@ public class BrazierRecipeProvider extends RecipeProvider {
     protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
         createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.fromItems(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
         createRecipe("bucket", new ItemStack(BUCKET), Ingredient.fromItems(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
+    }
+
+    private void allowThroughBrazier(@Nonnull Consumer<IFinishedRecipe> consumer, Item item, String path, Ingredient ingredient) {
+        createRecipe(path, new ItemStack(item), ingredient, consumer);
     }
 
     private void createRecipe(String name, ItemStack output, Ingredient input, Consumer<IFinishedRecipe> consumer) {

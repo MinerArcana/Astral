@@ -22,13 +22,7 @@ public class EtherealTree extends Tree {
     @Nullable
     @Override
     protected ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(@Nonnull Random randomIn, boolean p_225546_2_) {
-        return Feature.NORMAL_TREE.withConfiguration(new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_WOOD.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0))
-                .baseHeight(5)
-                .heightRandA(1)
-                .foliageHeight(3)
-                .foliageHeightRandom(1)
-                .ignoreVines()
-                .setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build());
+        return Feature.NORMAL_TREE.withConfiguration(new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_WOOD.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build());
     }
 
     @Override

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "astral:tall_redbulb",
+    "astral:tall_cyangrass",
+    "astral:tall_gentlegrass",
+    "astral:tall_wildweed"
+  ]
+}
