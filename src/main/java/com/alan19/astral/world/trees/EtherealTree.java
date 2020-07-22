@@ -16,13 +16,16 @@ import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class EtherealTree extends Tree {
+
+    public static final Supplier<TreeFeatureConfig> ETHEREAL_TREE_CONFIG = () -> new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).foliageHeightRandom(1).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build();
 
     @Nullable
     @Override
     protected ConfiguredFeature<TreeFeatureConfig, ?> getTreeFeature(@Nonnull Random randomIn, boolean p_225546_2_) {
-        return Feature.NORMAL_TREE.withConfiguration(new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build());
+        return Feature.NORMAL_TREE.withConfiguration(ETHEREAL_TREE_CONFIG.get());
     }
 
     @Override
