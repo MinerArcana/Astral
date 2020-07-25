@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
@@ -66,6 +67,18 @@ public class AstralNetwork {
                 .consumer(SendOfferingBrazierFinished::handle)
                 .add();
 
+        channel.messageBuilder(SendOpenAstralInventory.class, 8)
+                .decoder(SendOpenAstralInventory::decode)
+                .encoder(SendOpenAstralInventory::encode)
+                .consumer(SendOpenAstralInventory::handle)
+                .add();
+
+        channel.messageBuilder(SyncPacketGrabbedItem.class, 9)
+                .decoder(SyncPacketGrabbedItem::decode)
+                .encoder(SyncPacketGrabbedItem::encode)
+                .consumer(SyncPacketGrabbedItem::handle)
+                .add();
+
         return channel;
     }
 
@@ -95,5 +108,13 @@ public class AstralNetwork {
 
     public static void sendOfferingBrazierFinishParticles(BlockPos blockPos, Chunk chunk) {
         Astral.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SendOfferingBrazierFinished(blockPos));
+    }
+
+    public static void sendOpenAstralInventory() {
+        Astral.INSTANCE.send(PacketDistributor.SERVER.noArg(), new SendOpenAstralInventory());
+    }
+
+    public static void syncPacketGrabbedItem(ServerPlayerEntity player, ItemStack stack) {
+        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacketGrabbedItem(stack));
     }
 }

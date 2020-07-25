@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "astral:ego_membrane",
+    "astral:astral_meridian",
     "astral:ether_dirt",
     "astral:ether_grass",
     "astral:redbulb",
@@ -13,10 +15,11 @@
     "astral:tall_wildweed",
     "astral:bluecap_mushroom",
     "astral:rustcap_mushroom",
-    "astral:ethereal_wood",
     "astral:ethereal_leaves",
     "astral:stripped_ethereal_log",
+    "astral:ethereal_log",
     "astral:stripped_ethereal_wood",
+    "astral:ethereal_wood",
     "astral:ethereal_planks",
     "astral:ethereal_door",
     "astral:ethereal_trapdoor",

@@ -1,7 +1,7 @@
 package com.alan19.astral.dimensions.innerrealm;
 
 import com.alan19.astral.blocks.AstralBlocks;
-import com.alan19.astral.blocks.AstralMeridian;
+import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
