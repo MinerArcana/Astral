@@ -86,7 +86,6 @@ public class AstralIslandStructure extends ScatteredStructure<EthericIslesConfig
 
         @Override
         public void init(@Nonnull ChunkGenerator<?> generator, @Nonnull TemplateManager templateManagerIn, int chunkX, int chunkZ, @Nonnull Biome biomeIn) {
-            EthericIslesConfig ethericIslesConfig = generator.getStructureConfig(biomeIn, AstralFeatures.ASTRAL_ISLAND.get());
             int x = chunkX * 16 + 4 + this.rand.nextInt(8);
             int z = chunkZ * 16 + 4 + this.rand.nextInt(8);
 
