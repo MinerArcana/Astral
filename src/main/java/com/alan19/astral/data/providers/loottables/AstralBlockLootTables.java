@@ -83,7 +83,7 @@ public class AstralBlockLootTables extends BlockLootTables {
         registerLootTable(ETHEREAL_SAPLING.get(), dropping(ETHEREAL_SAPLING.get()));
         registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
         registerLootTable(ETHEREAL_TRAPDOOR.get(), dropping(ETHEREAL_TRAPDOOR.get()));
-        registerLootTable(ETHEREAL_WOOD.get(), dropping(ETHEREAL_WOOD.get()));
+        registerLootTable(ETHEREAL_LOG.get(), dropping(ETHEREAL_LOG.get()));
         registerLootTable(ETHEREAL_LEAVES.get(), new LootTable.Builder()
                 .addLootPool(new LootPool.Builder()
                         .rolls(ConstantRange.of(1))

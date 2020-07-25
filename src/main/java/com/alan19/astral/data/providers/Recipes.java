@@ -63,9 +63,9 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("cauldron", hasItem(Items.CAULDRON))
                 .build(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ETHEREAL_PLANKS_ITEM.get(), 4)
-                .addIngredient(ETHEREAL_WOOD_ITEM.get())
-                .addCriterion("ethereal_wood", hasItem(ETHEREAL_WOOD_ITEM.get()))
+        ShapelessRecipeBuilder.shapelessRecipe(ETHEREAL_PLANKS_ITEM.get(), 3)
+                .addIngredient(ETHEREAL_LOG_ITEM.get())
+                .addCriterion("ethereal_wood", hasItem(ETHEREAL_LOG_ITEM.get()))
                 .build(consumer);
 
         ShapedRecipeBuilder.shapedRecipe(ETHEREAL_DOOR_ITEM.get(), 3)
@@ -92,8 +92,11 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("ethereal_planks", hasItem(ETHEREAL_PLANKS_ITEM.get()))
                 .build(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(STRIPPED_ETHEREAL_WOOD_ITEM.get(), 4)
-                .addIngredient(STRIPPED_ETHEREAL_LOG_ITEM.get())
+        ShapedRecipeBuilder.shapedRecipe(STRIPPED_ETHEREAL_WOOD_ITEM.get(), 4)
+                .key('W', STRIPPED_ETHEREAL_LOG_ITEM.get())
+                .patternLine("WW ")
+                .patternLine("WW ")
+                .patternLine("   ")
                 .addCriterion("stripped_ethereal_log", hasItem(STRIPPED_ETHEREAL_LOG_ITEM.get()))
                 .build(consumer);
 

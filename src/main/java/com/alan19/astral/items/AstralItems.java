@@ -37,7 +37,7 @@ public class AstralItems {
     public static final RegistryObject<FeverweedItem> FEVERWEED = ITEMS.register("feverweed", FeverweedItem::new);
     public static final RegistryObject<BlockNamedItem> ETHERIC_POWDER_ITEM = ITEMS.register("etheric_powder", () -> convertToBlockItem(ETHERIC_POWDER.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_LEAVES_ITEM = ITEMS.register("ethereal_leaves", () -> convertToBlockItem(ETHEREAL_LEAVES.get()));
-    public static final RegistryObject<BlockNamedItem> ETHEREAL_WOOD_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(ETHEREAL_WOOD.get()));
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_LOG_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(ETHEREAL_LOG.get()));
     public static final RegistryObject<BlockNamedItem> REDBULB_ITEM = ITEMS.register("redbulb", () -> convertToBlockItem(REDBULB.get()));
     public static final RegistryObject<BlockNamedItem> CYANGRASS_ITEM = ITEMS.register("cyangrass", () -> convertToBlockItem(CYANGRASS.get()));
     public static final RegistryObject<BlockNamedItem> GENTLEGRASS_ITEM = ITEMS.register("gentlegrass", () -> convertToBlockItem(GENTLEGRASS.get()));

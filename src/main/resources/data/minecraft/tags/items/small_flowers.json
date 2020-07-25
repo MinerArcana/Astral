@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "astral:redbulb",
+    "astral:cyangrass",
+    "astral:gentlegrass",
+    "astral:wildweed",
+    "astral:bluecap_mushroom",
+    "astral:rustcap_mushroom"
+  ]
+}

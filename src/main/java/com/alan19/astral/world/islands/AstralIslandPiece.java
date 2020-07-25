@@ -4,7 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.AstralFeatures;
-import com.alan19.astral.world.trees.EtherealTreeConfig;
+import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
@@ -21,6 +21,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -91,7 +92,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                 case 2:
                     if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                         world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                        ConfiguredFeature<EtherealTreeConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
+                        ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
                         treeFeature.place(world, chunkGenerator, random, blockPos.up());
                         this.numberOfTreesPlaced++;
                         treeLocations.add(blockPos);

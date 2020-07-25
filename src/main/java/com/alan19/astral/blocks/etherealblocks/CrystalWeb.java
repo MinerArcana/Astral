@@ -52,8 +52,10 @@ public class CrystalWeb extends EtherealBlock {
         final int moonPhase = worldIn.dimension.getMoonPhase(worldIn.getDayTime());
         if (rand.nextInt(30) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -1, -2), pos.add(2, 1, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 5) {
             final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
-            final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
-            worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
+            if (!collect.isEmpty()) {
+                final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
+                worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
+            }
         }
         if (rand.nextInt(Math.abs(5 - moonPhase) + 1) == 0 && worldIn.getBlockState(pos.down()).getBlock() instanceof Ethereal && canSpiderSpawn(worldIn, pos) && pos.getY() >= 128) {
             AstralEntities.CRYSTAL_SPIDER.get().spawn(worldIn, null, null, pos, SpawnReason.SPAWNER, false, false);
