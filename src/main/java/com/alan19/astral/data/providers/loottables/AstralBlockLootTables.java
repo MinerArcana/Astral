@@ -104,6 +104,7 @@ public class AstralBlockLootTables extends BlockLootTables {
         registerLootTable(ETHERIC_POWDER.get(), dropping(ETHERIC_POWDER.get()));
         registerLootTable(STRIPPED_ETHEREAL_LOG.get(), dropping(STRIPPED_ETHEREAL_LOG.get()));
         registerLootTable(STRIPPED_ETHEREAL_WOOD.get(), dropping(STRIPPED_ETHEREAL_WOOD.get()));
+        registerLootTable(ETHEREAL_WOOD.get(), dropping(ETHEREAL_WOOD.get()));
         registerLootTable(INDEX_OF_KNOWLEDGE.get(), dropping(INDEX_OF_KNOWLEDGE.get()));
         registerLootTable(METAPHORIC_STONE.get(), droppingWithSilkTouch(METAPHORIC_STONE.get(), METAPHORIC_BONE_BLOCK.get()));
         registerLootTable(METAPHORIC_BONE_BLOCK.get(), dropping(METAPHORIC_BONE_BLOCK.get()));

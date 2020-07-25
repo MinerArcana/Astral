@@ -100,6 +100,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHEREAL_PLANKS.get(), "Ethereal Planks");
         add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
         add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");
+        add(ETHEREAL_WOOD.get(), "Ethereal Wood");
         add(ETHEREAL_DOOR.get(), "Ethereal Door");
         add(STRIPPED_ETHEREAL_WOOD.get(), "Stripped Ethereal Wood");
         add(COMFORTABLE_CUSHION.get(), "Comfortable Cushion");
@@ -122,6 +123,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHER_GRASS_ITEM.get(), "Ether Grass");
         add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
         add(ETHEREAL_LOG_ITEM.get(), "Ethereal Log");
+        add(ETHEREAL_WOOD_ITEM.get(), "Ethereal Wood");
         add(ETHEREAL_LEAVES_ITEM.get(), "Ethereal Leaves");
         add(REDBULB_ITEM.get(), "Redbulb");
         add(CYANGRASS_ITEM.get(), "Cyangrass");
