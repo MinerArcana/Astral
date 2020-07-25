@@ -1,10 +1,13 @@
 package com.alan19.astral.world;
 
+import com.alan19.astral.world.islands.EthericIslesConfig;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Map;
 
 public class OverworldVegetation {
     private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature(SnowberryFeatureConfig::deserialize);
@@ -15,11 +18,20 @@ public class OverworldVegetation {
             generateSnowberries(biome);
             generateFeverweed(biome);
         }
-        for (Biome biome : BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN)) {
-            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG));
-        }
+        ForgeRegistries.BIOMES.getEntries().stream().map(Map.Entry::getValue).forEach(OverworldVegetation::addEthericIsles);
 
+    }
+
+    public static void addEthericIsles(Biome biome) {
+        if (BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).contains(biome)) {
+            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(true)));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(true)));
+        }
+        else {
+            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(false)));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(false)));
+
+        }
     }
 
     private static void generateFeverweed(Biome biome) {

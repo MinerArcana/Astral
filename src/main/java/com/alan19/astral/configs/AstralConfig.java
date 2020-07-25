@@ -297,6 +297,7 @@ public class AstralConfig {
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryMinPatchSize;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryMaxPatchSize;
         private final ForgeConfigSpec.ConfigValue<Integer> snowberryPatchSpawnRate;
+        private final ForgeConfigSpec.ConfigValue<Integer> snowberrySpreadSnowChance;
 
         public WorldgenSettings(ForgeConfigSpec.Builder builder) {
             builder.comment("Astral worldgen settings").push("worldgenSettings");
@@ -333,6 +334,9 @@ public class AstralConfig {
                     .translation("astral.config.common.snowberryPatchSpawnRate")
                     .define("snowberryPatchSpawnRate", 25);
 
+            snowberrySpreadSnowChance = builder.comment("Controls how often Snowberries add snow nearby, in terms of 1 in x times it grows")
+                    .translation("astral.config.common.snowberrySpreadSnowChance")
+                    .define("snowberrySpreadSnowChance", 5);
         }
 
         public int getFeverweedPatchSpawnRate() {
@@ -365,6 +369,10 @@ public class AstralConfig {
 
         public int getFeverweedMinPatchSize() {
             return feverweedMinPatchSize.get();
+        }
+
+        public int getSnowberrySpreadSnowChance() {
+            return snowberrySpreadSnowChance.get();
         }
     }
 }

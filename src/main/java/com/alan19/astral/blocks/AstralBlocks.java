@@ -38,7 +38,7 @@ public class AstralBlocks {
     public static final RegistryObject<EthericGrowth> RUSTCAP_MUSHROOM = BLOCKS.register("rustcap_mushroom", EthericGrowth::new);
 
     //Ethereal Trees
-    public static final RegistryObject<EtherealLog> ETHEREAL_WOOD = BLOCKS.register("ethereal_wood", StrippableEtherealLog::new);
+    public static final RegistryObject<EtherealLog> ETHEREAL_LOG = BLOCKS.register("ethereal_wood", StrippableEtherealLog::new);
     public static final RegistryObject<EtherealLeaves> ETHEREAL_LEAVES = BLOCKS.register("ethereal_leaves", EtherealLeaves::new);
     public static final RegistryObject<EtherealLog> STRIPPED_ETHEREAL_LOG = BLOCKS.register("stripped_ethereal_log", EtherealLog::new);
     public static final RegistryObject<StrippedEtherealWood> STRIPPED_ETHEREAL_WOOD = BLOCKS.register("stripped_ethereal_wood", StrippedEtherealWood::new);

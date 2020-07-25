@@ -1,7 +1,7 @@
 {
   "name": "Snowberry & Feverweed Brews",
   "category": "medicines_and_potions",
-  "icon": "minecraft:potion{\"Potion\":\"astral:snowberry_brew\"}",
+  "icon": "minecraft:potion{\"CustomPotionEffects\":[{\"Ambient\":0,\"CurativeItems\":[{\"id\":\"minecraft:milk_bucket\",\"Count\":1}],\"ShowIcon\":1,\"ShowParticles\":1,\"Duration\":600,\"Id\":26,\"Amplifier\":1},{\"Ambient\":0,\"CurativeItems\":[{\"id\":\"minecraft:milk_bucket\",\"Count\":1}],\"ShowIcon\":1,\"ShowParticles\":1,\"Duration\":600,\"Id\":17,\"Amplifier\":1},{\"Ambient\":0,\"CurativeItems\":[{\"id\":\"minecraft:milk_bucket\",\"Count\":1}],\"ShowIcon\":1,\"ShowParticles\":1,\"Duration\":600,\"Id\":10,\"Amplifier\":1},{\"Ambient\":0,\"CurativeItems\":[{\"id\":\"minecraft:milk_bucket\",\"Count\":1}],\"ShowIcon\":1,\"ShowParticles\":1,\"Duration\":600,\"Id\":9,\"Amplifier\":1}]}",
   "pages": [
     {
       "type": "spotlight",

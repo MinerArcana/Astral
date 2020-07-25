@@ -2,6 +2,7 @@ package com.alan19.astral.data;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.data.providers.*;
+import com.alan19.astral.util.ModCompat;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,5 +25,9 @@ public class DataGenerators {
         generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
         generator.addProvider(new PatchouliBooks(generator, Astral.MOD_ID, "en_us"));
         generator.addProvider(new EntityTagProvider(generator));
+        if (ModCompat.IS_BOTANIA_LOADED) {
+            generator.addProvider(new AstralBrewProvider(generator));
+        }
+        generator.addProvider(new BrazierRecipeProvider(generator));
     }
 }

@@ -4,7 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.AstralFeatures;
-import com.alan19.astral.world.trees.EtherealTreeConfig;
+import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
@@ -21,6 +21,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.TreeFeatureConfig;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -41,6 +42,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     private final ArrayList<BlockPos> treeLocations;
     private int numberOfTreesPlaced;
     private ChunkGenerator<?> chunkGenerator;
+    private int numberOfWebsPlaced;
 
     public AstralIslandPiece(TemplateManager templateManager, AstralIslandVariant variant, String templateName, BlockPos templatePosition, Rotation rotation) {
         this(templateManager, variant, templateName, templatePosition, rotation, Mirror.NONE);
@@ -54,6 +56,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.rotation = rotation;
         this.mirror = mirror;
         this.numberOfTreesPlaced = 0;
+        this.numberOfWebsPlaced = 0;
         this.treeLocations = new ArrayList<>();
         this.loadTemplate(templateManager);
     }
@@ -66,6 +69,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.mirror = Mirror.valueOf(nbt.getString("Mi"));
         this.numberOfTreesPlaced = nbt.getInt("NumberOfTreesPlaced");
         this.treeLocations = new ArrayList<>();
+        this.numberOfWebsPlaced = nbt.getInt("numberOfWebsPlaced");
         nbt.getList("treeLocations", Constants.NBT.TAG_COMPOUND).forEach(inbt -> treeLocations.add(NBTUtil.readBlockPos((CompoundNBT) inbt)));
 
         this.loadTemplate(templateManager);
@@ -88,13 +92,18 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                 case 2:
                     if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                         world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                        ConfiguredFeature<EtherealTreeConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(new EtherealTreeConfig());
+                        ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
                         treeFeature.place(world, chunkGenerator, random, blockPos.up());
                         this.numberOfTreesPlaced++;
                         treeLocations.add(blockPos);
                     }
                     break;
                 case 3:
+                    if (numberOfWebsPlaced < 2) {
+                        world.setBlockState(blockPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 2);
+                        numberOfWebsPlaced++;
+                    }
+                    break;
                 case 4:
                 case 5:
                 case 6:
@@ -132,6 +141,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         tagCompound.putString("Rot", this.placeSettings.getRotation().name());
         tagCompound.putString("Mi", this.placeSettings.getMirror().name());
         tagCompound.putInt("NumberOfTreesPlaced", this.numberOfTreesPlaced);
+        tagCompound.putInt("numberOfWebsPlaced", this.numberOfWebsPlaced);
         ListNBT posList = new ListNBT();
         treeLocations.forEach(pos -> posList.add(NBTUtil.writeBlockPos(pos)));
         tagCompound.put("treeLocations", posList);
