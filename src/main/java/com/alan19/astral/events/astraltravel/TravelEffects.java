@@ -69,15 +69,42 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
+        final LivingEntity entityLiving = event.getEntityLiving();
+        if (handleAstralDrowning(event, entityLiving)) {
+            return;
+        }
+
         //Replace Astral entity's Physical Damage with Astral damage
         if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
         //Cancel Magic Damage against non Astral entities and Physical Damage against Astral Entities
-        if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && IAstralDamage.isDamageAstral(event.getSource())) {
+        if (isEntityAstral(entityLiving) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(entityLiving) && IAstralDamage.isDamageAstral(event.getSource())) {
             event.setCanceled(true);
         }
+    }
+
+    public static boolean handleAstralDrowning(LivingAttackEvent event, LivingEntity entityLiving) {
+        if (event.getSource().getDamageType().equals("drown")) {
+            if (entityLiving instanceof PhysicalBodyEntity) {
+                PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) entityLiving;
+                if (physicalBodyEntity.getEntityWorld() instanceof ServerWorld && physicalBodyEntity.getGameProfile().isPresent() && physicalBodyEntity.getEntityWorld().getPlayerByUuid(physicalBodyEntity.getGameProfile().get().getId()) != null) {
+                    final PlayerEntity playerByUuid = physicalBodyEntity.getEntityWorld().getPlayerByUuid(physicalBodyEntity.getGameProfile().get().getId());
+                    if (playerByUuid != null) {
+                        playerByUuid.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                        StartAndEndHandling.astralTravelEnd(playerByUuid);
+                    }
+                    AstralAPI.getBodyLinkCapability((ServerWorld) physicalBodyEntity.getEntityWorld()).ifPresent(bodyLink -> bodyLink.handleMergeWithBody(physicalBodyEntity.getGameProfile().get().getId(), (ServerWorld) physicalBodyEntity.getEntityWorld()));
+                }
+            }
+            if (entityLiving instanceof PlayerEntity && entityLiving.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+//                entityLiving.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                StartAndEndHandling.astralTravelEnd(entityLiving);
+            }
+            return true;
+        }
+        return false;
     }
 
     //Function for detecting if an Astral entity is interacting with a non astral entity

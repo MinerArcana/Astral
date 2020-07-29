@@ -70,7 +70,7 @@ public class StartAndEndHandling {
      *
      * @param entityLiving The entity that with the potion effect
      */
-    private static void astralTravelEnd(LivingEntity entityLiving) {
+    public static void astralTravelEnd(LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
             if (playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
