@@ -3,6 +3,7 @@ package com.alan19.astral.blocks.etherealblocks;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -45,5 +46,10 @@ public class StrippedEtherealWood extends RotatedPillarBlock implements Ethereal
     @Override
     public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
+    }
+
+    @Override
+    public PushReaction getPushReaction(@Nonnull BlockState state) {
+        return Ethereal.getPushReaction();
     }
 }

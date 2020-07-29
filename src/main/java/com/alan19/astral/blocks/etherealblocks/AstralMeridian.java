@@ -1,9 +1,11 @@
-package com.alan19.astral.blocks;
+package com.alan19.astral.blocks.etherealblocks;
 
+import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.effects.AstralEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -15,7 +17,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class AstralMeridian extends Block {
+public class AstralMeridian extends Block implements Ethereal {
 
     /**
      * Direction IntegerProperty:
@@ -31,7 +33,9 @@ public class AstralMeridian extends Block {
 
     public AstralMeridian() {
         super(Properties.create(Material.PORTAL)
-                .hardnessAndResistance(99F));
+                .hardnessAndResistance(-1.0F, 3600000.0F)
+                .noDrops()
+                .lightValue(14));
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
     }
@@ -42,6 +46,7 @@ public class AstralMeridian extends Block {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState(), 2);
     }
@@ -54,5 +59,10 @@ public class AstralMeridian extends Block {
             return ActionResultType.SUCCESS;
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+    }
+
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return PushReaction.IGNORE;
     }
 }

@@ -20,6 +20,7 @@ import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
+import com.alan19.astral.client.gui.AstralContainers;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
@@ -107,10 +108,11 @@ public class Astral {
         if (ModCompat.IS_BOTANIA_LOADED) {
             modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
         }
+        AstralContainers.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
-        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientEventHandler::clientSetup));
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 
     private static <T extends IForgeRegistryEntry<T>> void makeRegistry(String name, Class<T> type) {

@@ -25,6 +25,7 @@ public class Constants {
     public static final String SLEEPWALKING_SPAWN = "astral.chat_message.sleepwalking.spawn";
     public static final String COMMANDS_BURN_SUCCESS_SINGLE = "commands.burn.success.single";
     public static final String COMMANDS_BURN_SUCCESS_MULTIPLE = "commands.burn.success.multiple";
+    public static final String INVALID_WITHDRAWAL = "astral.chat_message.invalid_withdrawal";
     public static final AttributeModifier DISABLES_GRAVITY = new AttributeModifier(ASTRAL_GRAVITY, "disables gravity", -1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
     public static final int ETHEREAL_BLOCK_OPACITY = 0;
     public static final BooleanProperty TRACKED_CONSTRUCT = BooleanProperty.create("tracked_construct");

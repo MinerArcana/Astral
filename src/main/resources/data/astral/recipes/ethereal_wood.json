@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WW ",
+    "WW ",
+    "   "
+  ],
+  "key": {
+    "W": {
+      "item": "astral:ethereal_log"
+    }
+  },
+  "result": {
+    "item": "astral:ethereal_wood",
+    "count": 3
+  }
+}

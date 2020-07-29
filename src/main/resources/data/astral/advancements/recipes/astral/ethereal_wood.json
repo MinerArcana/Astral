@@ -2,11 +2,11 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "astral:ethereal_planks"
+      "astral:ethereal_wood"
     ]
   },
   "criteria": {
-    "ethereal_wood": {
+    "ethereal_log": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "astral:ethereal_planks"
+        "recipe": "astral:ethereal_wood"
       }
     }
   },
   "requirements": [
     [
-      "ethereal_wood",
+      "ethereal_log",
       "has_the_recipe"
     ]
   ]

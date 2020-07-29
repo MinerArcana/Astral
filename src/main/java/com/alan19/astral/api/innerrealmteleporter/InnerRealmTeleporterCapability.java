@@ -1,9 +1,12 @@
 package com.alan19.astral.api.innerrealmteleporter;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.dimensions.TeleportationTools;
 import com.alan19.astral.dimensions.innerrealm.InnerRealmUtils;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -73,7 +76,32 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
             }
             if (!innerRealmWorld.isRemote()) {
                 TeleportationTools.performTeleport((ServerPlayerEntity) player, innerRealm, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), player.getTeleportDirection());
+                AstralAPI.getOverworldPsychicInventory((ServerWorld) innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUniqueID())));
             }
+        }
+    }
+
+    /**
+     * Drops all items being sent to the Inner Realm
+     *
+     * @param playerEntity      The player who was teleproted to the Inner Realm
+     * @param inventoryOfPlayer The PsychicInventoryInstance of the player
+     */
+    private void dropInnerRealmItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer) {
+        World entityWorld = playerEntity.world;
+        int inventorySlots = inventoryOfPlayer.getInnerRealmMain().getSlots();
+        for (int i = 0; i < inventorySlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmMain().extractItem(i, 64, false));
+        }
+
+        int armorSlots = inventoryOfPlayer.getInnerRealmArmor().getSlots();
+        for (int i = 0; i < armorSlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmArmor().extractItem(i, 64, false));
+        }
+
+        int handSlots = inventoryOfPlayer.getInnerRealmHands().getSlots();
+        for (int i = 0; i < handSlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmHands().extractItem(i, 64, false));
         }
     }
 

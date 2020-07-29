@@ -4,6 +4,7 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -80,5 +81,14 @@ public interface Ethereal {
      */
     static int getOpacity() {
         return Constants.ETHEREAL_BLOCK_OPACITY;
+    }
+
+    /**
+     * Ethereal blocks ignore Pistons
+     *
+     * @return IGNORE
+     */
+    static PushReaction getPushReaction() {
+        return PushReaction.IGNORE;
     }
 }

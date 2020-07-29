@@ -1,6 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.client.gui.AstralContainerProvider;
 import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
@@ -72,6 +73,8 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(Constants.COMMANDS_BURN_SUCCESS_SINGLE, "Offered %s %s to %s's Inner Realm");
         add(Constants.SLEEPWALKING_BED, "You find yourself in your bed as you wake up...");
         add(Constants.SLEEPWALKING_SPAWN, "You find yourself in a familiar place as you wake up...");
+        add(Constants.INVALID_WITHDRAWAL, "Crude physical substances cannot be brought to this state of existence so easily!");
+        add(AstralContainerProvider.ASTRAL_CONTAINER_NAME, "Psychic Inventory");
     }
 
     private void addBlocks() {
@@ -97,6 +100,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHEREAL_PLANKS.get(), "Ethereal Planks");
         add(ETHEREAL_TRAPDOOR.get(), "Ethereal Trapdoor");
         add(STRIPPED_ETHEREAL_LOG.get(), "Stripped Ethereal Log");
+        add(ETHEREAL_WOOD.get(), "Ethereal Wood");
         add(ETHEREAL_DOOR.get(), "Ethereal Door");
         add(STRIPPED_ETHEREAL_WOOD.get(), "Stripped Ethereal Wood");
         add(COMFORTABLE_CUSHION.get(), "Comfortable Cushion");
@@ -119,6 +123,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(ETHER_GRASS_ITEM.get(), "Ether Grass");
         add(ETHERIC_POWDER_ITEM.get(), "Etheric Powder");
         add(ETHEREAL_LOG_ITEM.get(), "Ethereal Log");
+        add(ETHEREAL_WOOD_ITEM.get(), "Ethereal Wood");
         add(ETHEREAL_LEAVES_ITEM.get(), "Ethereal Leaves");
         add(REDBULB_ITEM.get(), "Redbulb");
         add(CYANGRASS_ITEM.get(), "Cyangrass");

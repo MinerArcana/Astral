@@ -4,6 +4,7 @@ import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -51,5 +52,10 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
     @Override
     protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
+    }
+
+    @Override
+    public PushReaction getPushReaction(BlockState state) {
+        return Ethereal.getPushReaction();
     }
 }

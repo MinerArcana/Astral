@@ -2,7 +2,7 @@ package com.alan19.astral.items;
 
 import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan19.astral.blocks.AstralBlocks;
-import com.alan19.astral.blocks.AstralMeridian;
+import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.dimensions.innerrealm.InnerRealmUtils;
 import net.minecraft.block.BlockState;
