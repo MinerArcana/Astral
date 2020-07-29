@@ -1,7 +1,7 @@
 {
   "parent": "block/cube_column",
   "textures": {
-    "side": "astral:block/ethereal_wood",
-    "end": "astral:block/ethereal_wood"
+    "side": "astral:block/ethereal_log",
+    "end": "astral:block/ethereal_log"
   }
 }

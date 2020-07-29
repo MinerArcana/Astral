@@ -35,29 +35,28 @@ public class Feverweed extends BushBlock {
     public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
             //If there are more than 5 blocks of Feverweed in a 9 * 2 * 9 cube centered on the block, do nothing
-            int i = 5;
-
+            int maxFeverweedInRange = 5;
             for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-4, -1, -4), pos.add(4, 1, 4))) {
                 if (worldIn.getBlockState(blockpos).getBlock() == this) {
-                    i--;
-                    if (i <= 0) {
+                    maxFeverweedInRange--;
+                    if (maxFeverweedInRange <= 0) {
                         return;
                     }
                 }
             }
 
-            BlockPos blockpos1 = pos.add(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
+            BlockPos spreadPos = pos.add(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
 
-            for (int k = 0; k < 4; ++k) {
-                if (worldIn.isAirBlock(blockpos1) && state.isValidPosition(worldIn, blockpos1)) {
-                    pos = blockpos1;
+            for (int spawnTry = 0; spawnTry < 4; ++spawnTry) {
+                if (worldIn.isAirBlock(spreadPos) && state.isValidPosition(worldIn, spreadPos)) {
+                    pos = spreadPos;
                 }
 
-                blockpos1 = pos.add(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
+                spreadPos = pos.add(random.nextInt(3) - 1, random.nextInt(2) - random.nextInt(2), random.nextInt(3) - 1);
             }
 
-            if (worldIn.isAirBlock(blockpos1) && state.isValidPosition(worldIn, blockpos1)) {
-                worldIn.setBlockState(blockpos1, state, 2);
+            if (worldIn.isAirBlock(spreadPos) && state.isValidPosition(worldIn, spreadPos)) {
+                worldIn.setBlockState(spreadPos, state, 2);
             }
         }
     }

@@ -42,7 +42,7 @@ public class Blockstates extends BlockStateProvider {
         trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ethereal_trapdoor"), true);
         logBlock(STRIPPED_ETHEREAL_LOG.get());
         axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ethereal_log"), modLoc("block/stripped_ethereal_log"));
-        axisBlock(ETHEREAL_WOOD.get(), modLoc("block/ethereal_wood"), modLoc("block/ethereal_wood"));
+        axisBlock(ETHEREAL_WOOD.get(), modLoc("block/ethereal_log"), modLoc("block/ethereal_log"));
         horizontalBlock(COMFORTABLE_CUSHION.get(), new ModelFile.ExistingModelFile(modLoc("block/comfortable_cushion"), exFileHelper));
         simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ethereal_sapling", modLoc("block/ethereal_sapling"))));
         simpleBlock(METAPHORIC_FLESH_BLOCK.get());
