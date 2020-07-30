@@ -33,7 +33,6 @@ public class CapabilitiesEventHandler {
             e.addCapability(INNER_REALM_TELEPORTER, new InnerRealmTeleporterProvider());
             e.addCapability(INNER_REALM_CHUNK_CLAIM, new InnerRealmChunkClaimProvider());
             e.addCapability(PSYCHIC_INVENTORY, new PsychicInventoryProvider());
-            e.addCapability(BODY_LINK, new BodyLinkProvider());
             e.addCapability(CONSTRUCT_TRACKER, new ConstructTrackerProvider());
         }
     }
@@ -44,6 +43,7 @@ public class CapabilitiesEventHandler {
         if (e.getObject() instanceof PlayerEntity) {
             e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
             e.addCapability(SLEEP_MANAGER, new SleepManagerProvider());
+            e.addCapability(BODY_LINK, new BodyLinkProvider());
         }
     }
 

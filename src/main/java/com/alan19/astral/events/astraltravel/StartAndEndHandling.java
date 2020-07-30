@@ -81,7 +81,7 @@ public class StartAndEndHandling {
                 //Get server versions of world and player
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(iBodyLinkCapability -> iBodyLinkCapability.handleMergeWithBody(playerEntity.getUniqueID(), serverWorld));
+                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.mergeBodies(playerEntity, serverWorld));
                 serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL.get()));
                 AstralNetwork.sendClientAstralTravelEnd(serverPlayerEntity);
             }
@@ -117,11 +117,7 @@ public class StartAndEndHandling {
             final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
             if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
-                AstralAPI.getBodyLinkCapability(serverWorld).ifPresent(bodyLink -> {
-                    if (bodyLink.getInfo(player.getUniqueID()) != null) {
-                        bodyLink.updatePlayer(player.getUniqueID(), serverWorld);
-                    }
-                });
+                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.updatePlayer(player, serverWorld));
             }
         }
     }

@@ -2,7 +2,6 @@ package com.alan19.astral.entity.physicalbody;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.bodylink.BodyInfo;
-import com.alan19.astral.api.bodylink.IBodyLinkCapability;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
@@ -32,7 +31,6 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
-    private LazyOptional<IBodyLinkCapability> bodyLink = LazyOptional.empty();
     private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
@@ -77,11 +75,10 @@ public class PhysicalBodyEntity extends LivingEntity {
     public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
 
-        dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.of(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
+        dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.ofNullable(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
         dataManager.set(faceDown, compound.getBoolean("facedown"));
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
-            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -188,7 +185,10 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public void setBodyLinkInfo(ServerWorld serverWorld) {
         if (getGameProfile().isPresent()) {
-            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(getGameProfile().get().getId(), new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), serverWorld));
+            final PlayerEntity player = serverWorld.getPlayerByUuid(getGameProfile().get().getId());
+            if (player != null){
+                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+            }
         }
     }
 
@@ -202,10 +202,12 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public void setGameProfile(GameProfile playerProfile) {
         dataManager.set(gameProfile, Optional.of(playerProfile));
-        if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
-            final UUID playerId = getGameProfile().get().getId();
-            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
-            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(playerId, new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), (ServerWorld) world));
+        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+            final UUID playerId = playerProfile.getId();
+            PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
+            if (playerEntity != null) {
+                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+            }
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
