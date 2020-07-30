@@ -176,11 +176,8 @@ public class TravelEffects {
             ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
             if (isEntityAstral(playerEntity)) {
                 AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
-                    final Boolean isPhysicalBodyAlive = playerEntity.getCapability(AstralAPI.bodyLinkCapability).map(bodyLink -> bodyLink.getBodyInfo().isAlive()).orElseGet(() -> false);  
                     event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
-                    if (isPhysicalBodyAlive) {
-                        event.setCanceled(true);
-                    }
+                    event.setCanceled(true);
                 });
             }
         }

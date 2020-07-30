@@ -63,8 +63,8 @@ public class BodyLink implements IBodyLink {
     }
 
     @Override
-    public BodyInfo getBodyInfo() {
-        return bodyInfo;
+    public Optional<BodyInfo> getBodyInfo() {
+        return Optional.ofNullable(bodyInfo);
     }
 
     @Override

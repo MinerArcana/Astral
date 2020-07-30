@@ -98,7 +98,6 @@ public class PhysicalBodyEntity extends LivingEntity {
             compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), dataManager.get(gameProfile).get()));
         }
         compound.putBoolean("faceDown", dataManager.get(faceDown));
-
         super.writeAdditional(compound);
     }
 
@@ -184,13 +183,12 @@ public class PhysicalBodyEntity extends LivingEntity {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
             if (!getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
-                //TODO update the world capability
                 this.attackEntityFrom(new DamageSource("despawn"), Float.MAX_VALUE);
-                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), isAlive()));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
             }
             if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
-                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), isAlive()));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
             }
         }
         super.tick();
