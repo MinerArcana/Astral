@@ -122,11 +122,18 @@ public class BodyLink implements IBodyLink {
 
     @Override
     public CompoundNBT serializeNBT() {
-        return bodyInfo.serializeNBT();
+        CompoundNBT compoundNBT = new CompoundNBT();
+        compoundNBT.putBoolean("bodyInfoIsPresent", bodyInfo != null);
+        if (bodyInfo != null){
+            compoundNBT.put("bodyInfo", bodyInfo.serializeNBT());
+        }
+        return compoundNBT;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        bodyInfo = new BodyInfo(nbt);
+        if (nbt.getBoolean("bodyInfoIsPresent")){
+            bodyInfo = new BodyInfo(nbt.getCompound("bodyInfo"));
+        }
     }
 }

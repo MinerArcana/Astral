@@ -2,6 +2,7 @@ package com.alan19.astral.entity.physicalbody;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.bodylink.BodyInfo;
+import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
@@ -182,12 +183,14 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
+            if (!getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
                 //TODO update the world capability
                 this.attackEntityFrom(new DamageSource("despawn"), Float.MAX_VALUE);
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), isAlive()));
             }
             if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), isAlive()));
             }
         }
         super.tick();
@@ -222,7 +225,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         }
     }
 
-    private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, com.alan19.astral.api.bodylink.IBodyLink bodyLink) {
+    private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, IBodyLink bodyLink) {
         bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()));
         bodyLink.updatePlayer(player, serverWorld);
     }

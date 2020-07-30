@@ -4,14 +4,15 @@ import com.alan19.astral.api.constructtracker.PlayerMentalConstructTracker;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.server.ServerWorld;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class BodyTracker implements IBodyTracker {
-    private Map<UUID, Boolean> bodyTrackerMap;
+    private final Map<UUID, Boolean> bodyTrackerMap = new HashMap<>();
 
     @Override
-    public Map<UUID, Boolean> getBodyTrackerMap(ServerWorld world) {
+    public Map<UUID, Boolean> getBodyTrackerMap() {
         return bodyTrackerMap;
     }
 

@@ -125,6 +125,9 @@ public class StartAndEndHandling {
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
         if (physicalBodyEntity != null) {
+            physicalBodyEntity.setHealth(playerEntity.getHealth());
+            physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
+
             //Store player UUID to body entity and give it a name
             physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
             physicalBodyEntity.setName(playerEntity.getScoreboardName());
@@ -136,8 +139,6 @@ public class StartAndEndHandling {
 
                 psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
             }
-            physicalBodyEntity.setHealth(playerEntity.getHealth());
-            physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
         }
     }
 

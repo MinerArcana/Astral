@@ -8,5 +8,5 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface IBodyTracker extends INBTSerializable<CompoundNBT> {
-    Map<UUID, Boolean> getBodyTrackerMap(ServerWorld world);
+    Map<UUID, Boolean> getBodyTrackerMap();
 }

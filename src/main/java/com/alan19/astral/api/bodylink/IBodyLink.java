@@ -10,6 +10,5 @@ public interface IBodyLink extends INBTSerializable<CompoundNBT> {
     void setBodyInfo(BodyInfo bodyInfo);
     BodyInfo getBodyInfo();
     void mergeBodies(PlayerEntity playerEntity, ServerWorld world);
-
     void updatePlayer(ServerPlayerEntity playerEntity, ServerWorld world);
 }
