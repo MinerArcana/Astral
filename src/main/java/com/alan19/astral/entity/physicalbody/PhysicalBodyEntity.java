@@ -3,12 +3,18 @@ package com.alan19.astral.entity.physicalbody;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.bodylink.BodyInfo;
 import com.alan19.astral.configs.AstralConfig;
+import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.events.astraltravel.StartAndEndHandling;
+import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -169,13 +175,17 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     /**
-     * The entity will update the body link capability every 20 ticks (if it exists), which will then update the player's information
+     * Updates the player's max health and alive status every second. If player is not found, delete the body
      */
     @Override
     public void tick() {
-        if (!world.isRemote() && world instanceof ServerWorld) {
+        if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
+            if (getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
+                //TODO update the world capability
+                this.attackEntityFrom(new DamageSource("despawn"), Float.MAX_VALUE);
+            }
             if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
             }
@@ -183,13 +193,38 @@ public class PhysicalBodyEntity extends LivingEntity {
         super.tick();
     }
 
+    /**
+     * Remove Astral Travel from target if body takes drowning damage
+     * @param damageSrc The damage source
+     * @param damageAmount The damage amount
+     */
+    @Override
+    protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
+        super.damageEntity(damageSrc, damageAmount);
+        if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld){
+            getGameProfile().ifPresent(gp -> {
+                final Entity entity = ((ServerWorld) world).getEntityByUuid(gp.getId());
+                if (entity instanceof LivingEntity){
+                    final LivingEntity livingEntity = (LivingEntity) entity;
+                    livingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                    StartAndEndHandling.astralTravelEnd(livingEntity);
+                }
+            });
+        }
+    }
+
     public void setBodyLinkInfo(ServerWorld serverWorld) {
         if (getGameProfile().isPresent()) {
             final PlayerEntity player = serverWorld.getPlayerByUuid(getGameProfile().get().getId());
             if (player != null){
-                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> syncPlayerInformation(serverWorld, (ServerPlayerEntity) player, bodyLink));
             }
         }
+    }
+
+    private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, com.alan19.astral.api.bodylink.IBodyLink bodyLink) {
+        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()));
+        bodyLink.updatePlayer(player, serverWorld);
     }
 
     public boolean isFaceDown() {
@@ -234,6 +269,9 @@ public class PhysicalBodyEntity extends LivingEntity {
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
                 super.onDeath(cause);
                 setBodyLinkInfo((ServerWorld) world);
+            }
+            else if (cause.getDamageType().equals("despawn")){
+                super.onDeath(cause);
             }
             //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player
             else {
