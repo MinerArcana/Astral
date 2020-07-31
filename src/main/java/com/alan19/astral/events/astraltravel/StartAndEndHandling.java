@@ -11,10 +11,8 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -30,6 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.alan19.astral.api.bodylink.BodyLink.HEALTH_ID;
 import static net.minecraftforge.common.util.Constants.*;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
@@ -138,6 +137,12 @@ public class StartAndEndHandling {
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {
         PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
         if (physicalBodyEntity != null) {
+            if (playerEntity.getMaxHealth() > physicalBodyEntity.getMaxHealth()){
+                physicalBodyEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(HEALTH_ID);
+                float healthModifier = playerEntity.getMaxHealth() - physicalBodyEntity.getMaxHealth();
+                physicalBodyEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+            }
+
             physicalBodyEntity.setHealth(playerEntity.getHealth());
             physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
 

@@ -195,12 +195,15 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     /**
-     * Remove Astral Travel from target if body takes drowning damage
+     * Remove Astral Travel from target if body takes drowning damage. If player is in creative mode, nullify the damage.
      * @param damageSrc The damage source
      * @param damageAmount The damage amount
      */
     @Override
     protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
+        if (getGameProfile().map(GameProfile::getId).map(uuid -> world.getPlayerByUuid(uuid)).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()){
+            return;
+        }
         super.damageEntity(damageSrc, damageAmount);
         if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld){
             getGameProfile().ifPresent(gp -> {

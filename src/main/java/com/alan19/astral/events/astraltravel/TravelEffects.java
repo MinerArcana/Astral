@@ -88,7 +88,7 @@ public class TravelEffects {
     public static boolean handleAstralDrowning(LivingAttackEvent event, LivingEntity entityLiving) {
         if (event.getSource().getDamageType().equals("drown")) {
             if (entityLiving instanceof PlayerEntity && entityLiving.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
-//                entityLiving.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                entityLiving.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
                 StartAndEndHandling.astralTravelEnd(entityLiving);
             }
             return true;
