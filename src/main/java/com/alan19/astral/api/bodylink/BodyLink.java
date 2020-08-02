@@ -5,7 +5,6 @@ import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.dimensions.TeleportationTools;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,8 +51,6 @@ public class BodyLink implements IBodyLink {
 
     public Optional<PhysicalBodyEntity> getBody(ServerWorld world) {
         final ServerWorld bodyWorld = world.getServer().getWorld(bodyInfo.getDimensionType());
-        final Chunk chunk = bodyWorld.getChunkAt(bodyInfo.getPos());
-        chunk.setLoaded(true);
         return Optional.ofNullable((PhysicalBodyEntity) bodyWorld.getEntityByUuid(bodyInfo.getBodyId()));
     }
 
@@ -81,7 +78,9 @@ public class BodyLink implements IBodyLink {
                 //Get the inventory and transfer items
                 AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
                 if (getBody(world).isPresent()){
-                    resetPlayerStats(playerEntity, getBody(world).get());
+                    final PhysicalBodyEntity physicalBodyEntity = getBody(world).get();
+                    resetPlayerStats(playerEntity, physicalBodyEntity);
+                    physicalBodyEntity.onKillCommand();
                 }
                 else {
                     resetPlayerStats(playerEntity);
