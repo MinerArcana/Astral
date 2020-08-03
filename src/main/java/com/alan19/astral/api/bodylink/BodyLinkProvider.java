@@ -11,14 +11,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BodyLinkProvider implements ICapabilitySerializable<CompoundNBT> {
-    private final BodyLinkCapability bodyLinkCapability;
-    private final LazyOptional<IBodyLinkCapability> bodyLinkOptional;
+    private final BodyLink bodyLinkCapability;
+    private final LazyOptional<IBodyLink> bodyLinkOptional;
 
     public BodyLinkProvider() {
-        this(new BodyLinkCapability());
+        this(new BodyLink());
     }
 
-    public BodyLinkProvider(BodyLinkCapability bodyLinkCapability) {
+    public BodyLinkProvider(BodyLink bodyLinkCapability) {
         this.bodyLinkCapability = bodyLinkCapability;
         this.bodyLinkOptional = LazyOptional.of(() -> bodyLinkCapability);
     }

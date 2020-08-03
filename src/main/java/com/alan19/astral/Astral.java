@@ -1,8 +1,10 @@
 package com.alan19.astral;
 
 import com.alan19.astral.api.NBTCapStorage;
-import com.alan19.astral.api.bodylink.BodyLinkCapability;
-import com.alan19.astral.api.bodylink.IBodyLinkCapability;
+import com.alan19.astral.api.bodylink.BodyLink;
+import com.alan19.astral.api.bodylink.IBodyLink;
+import com.alan19.astral.api.bodytracker.BodyTracker;
+import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.ConstructTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentCapability;
@@ -169,11 +171,12 @@ public class Astral {
             //TODO Refactor Teleporter and Chunk Claim
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
-            CapabilityManager.INSTANCE.register(IBodyLinkCapability.class, new NBTCapStorage<>(), BodyLinkCapability::new);
+            CapabilityManager.INSTANCE.register(IBodyLink.class, new NBTCapStorage<>(), BodyLink::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
             CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
+            CapabilityManager.INSTANCE.register(IBodyTracker.class, new NBTCapStorage<>(), BodyTracker::new);
         }
 
     }

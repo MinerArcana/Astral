@@ -69,15 +69,31 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void replacePhysicalWithAstralDamage(LivingAttackEvent event) {
+        final LivingEntity entityLiving = event.getEntityLiving();
+        if (handleAstralDrowning(event, entityLiving)) {
+            return;
+        }
+
         //Replace Astral entity's Physical Damage with Astral damage
         if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
         //Cancel Magic Damage against non Astral entities and Physical Damage against Astral Entities
-        if (isEntityAstral(event.getEntityLiving()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(event.getEntityLiving()) && IAstralDamage.isDamageAstral(event.getSource())) {
+        if (isEntityAstral(entityLiving) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(entityLiving) && IAstralDamage.isDamageAstral(event.getSource())) {
             event.setCanceled(true);
         }
+    }
+
+    public static boolean handleAstralDrowning(LivingAttackEvent event, LivingEntity entityLiving) {
+        if (event.getSource().getDamageType().equals("drown")) {
+            if (entityLiving instanceof PlayerEntity && entityLiving.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+                entityLiving.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                StartAndEndHandling.astralTravelEnd(entityLiving);
+            }
+            return true;
+        }
+        return false;
     }
 
     //Function for detecting if an Astral entity is interacting with a non astral entity
@@ -160,11 +176,8 @@ public class TravelEffects {
             ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getEntityWorld();
             if (isEntityAstral(playerEntity)) {
                 AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID())).ifPresent(psychicInventoryInstance -> {
-                    final Boolean isPhysicalBodyAlive = AstralAPI.getBodyLinkCapability(serverWorld).map(iBodyLinkCapability -> iBodyLinkCapability.getInfo(playerEntity.getUniqueID()).isAlive()).orElseGet(() -> false);
                     event.getEntityLiving().removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
-                    if (isPhysicalBodyAlive) {
-                        event.setCanceled(true);
-                    }
+                    event.setCanceled(true);
                 });
             }
         }

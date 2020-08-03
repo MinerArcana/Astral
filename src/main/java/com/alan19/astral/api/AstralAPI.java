@@ -1,6 +1,7 @@
 package com.alan19.astral.api;
 
-import com.alan19.astral.api.bodylink.IBodyLinkCapability;
+import com.alan19.astral.api.bodylink.IBodyLink;
+import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
@@ -24,14 +25,17 @@ public class AstralAPI {
     @CapabilityInject(IPsychicInventory.class)
     public static Capability<IPsychicInventory> psychicInventoryCapability;
 
-    @CapabilityInject(IBodyLinkCapability.class)
-    public static Capability<IBodyLinkCapability> bodyLinkCapability;
+    @CapabilityInject(IBodyLink.class)
+    public static Capability<IBodyLink> bodyLinkCapability;
 
     @CapabilityInject(IConstructTracker.class)
     public static Capability<IConstructTracker> constructTrackerCapability;
 
-    public static LazyOptional<IBodyLinkCapability> getBodyLinkCapability(ServerWorld world) {
-        return getOverworld(world).getCapability(bodyLinkCapability);
+    @CapabilityInject(IBodyTracker.class)
+    public static Capability<IBodyTracker> bodyTrackerCapability;
+
+    public static LazyOptional<IBodyTracker> getBodyTracker(ServerWorld world){
+        return getOverworld(world).getCapability(bodyTrackerCapability);
     }
 
     public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerWorld world) {

@@ -2,14 +2,20 @@ package com.alan19.astral.entity.physicalbody;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.bodylink.BodyInfo;
-import com.alan19.astral.api.bodylink.IBodyLinkCapability;
+import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.configs.AstralConfig;
+import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.events.astraltravel.StartAndEndHandling;
+import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,7 +38,6 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
-    private LazyOptional<IBodyLinkCapability> bodyLink = LazyOptional.empty();
     private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
@@ -77,11 +82,10 @@ public class PhysicalBodyEntity extends LivingEntity {
     public void read(@Nonnull CompoundNBT compound) {
         super.read(compound);
 
-        dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.of(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
+        dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.ofNullable(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
         dataManager.set(faceDown, compound.getBoolean("facedown"));
         if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
-            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -94,7 +98,6 @@ public class PhysicalBodyEntity extends LivingEntity {
             compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), dataManager.get(gameProfile).get()));
         }
         compound.putBoolean("faceDown", dataManager.get(faceDown));
-
         super.writeAdditional(compound);
     }
 
@@ -172,24 +175,60 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     /**
-     * The entity will update the body link capability every 20 ticks (if it exists), which will then update the player's information
+     * Updates the player's max health and alive status every second. If player is not found, delete the body
      */
     @Override
     public void tick() {
-        if (!world.isRemote() && world instanceof ServerWorld) {
+        if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
+            if (!getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
+                this.attackEntityFrom(new DamageSource("despawn"), Float.MAX_VALUE);
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
+            }
             if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
             }
         }
         super.tick();
     }
 
+    /**
+     * Remove Astral Travel from target if body takes drowning damage. If player is in creative mode, nullify the damage.
+     * @param damageSrc The damage source
+     * @param damageAmount The damage amount
+     */
+    @Override
+    protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
+        if (getGameProfile().map(GameProfile::getId).map(uuid -> world.getPlayerByUuid(uuid)).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()){
+            return;
+        }
+        super.damageEntity(damageSrc, damageAmount);
+        if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld){
+            getGameProfile().ifPresent(gp -> {
+                final Entity entity = ((ServerWorld) world).getEntityByUuid(gp.getId());
+                if (entity instanceof LivingEntity){
+                    final LivingEntity livingEntity = (LivingEntity) entity;
+                    livingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                    StartAndEndHandling.astralTravelEnd(livingEntity);
+                }
+            });
+        }
+    }
+
     public void setBodyLinkInfo(ServerWorld serverWorld) {
         if (getGameProfile().isPresent()) {
-            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(getGameProfile().get().getId(), new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), serverWorld));
+            final PlayerEntity player = serverWorld.getPlayerByUuid(getGameProfile().get().getId());
+            if (player != null){
+                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> syncPlayerInformation(serverWorld, (ServerPlayerEntity) player, bodyLink));
+            }
         }
+    }
+
+    private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, IBodyLink bodyLink) {
+        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()));
+        bodyLink.updatePlayer(player, serverWorld);
     }
 
     public boolean isFaceDown() {
@@ -202,10 +241,12 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public void setGameProfile(GameProfile playerProfile) {
         dataManager.set(gameProfile, Optional.of(playerProfile));
-        if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
-            final UUID playerId = getGameProfile().get().getId();
-            bodyLink = AstralAPI.getBodyLinkCapability((ServerWorld) world);
-            bodyLink.ifPresent(iBodyLinkCapability -> iBodyLinkCapability.setInfo(playerId, new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), (ServerWorld) world));
+        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+            final UUID playerId = playerProfile.getId();
+            PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
+            if (playerEntity != null) {
+                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+            }
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
@@ -232,6 +273,9 @@ public class PhysicalBodyEntity extends LivingEntity {
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
                 super.onDeath(cause);
                 setBodyLinkInfo((ServerWorld) world);
+            }
+            else if (cause.getDamageType().equals("despawn")){
+                super.onDeath(cause);
             }
             //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player
             else {
