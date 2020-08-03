@@ -12,10 +12,13 @@ import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.monster.PhantomEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -33,6 +36,9 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class TravelEffects {
     @SubscribeEvent
@@ -40,6 +46,15 @@ public class TravelEffects {
         if (!event.getWorld().isRemote() && event.getEntity() instanceof IMob && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
             MobEntity mobEntity = (MobEntity) event.getEntity();
             mobEntity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(mobEntity, PhysicalBodyEntity.class, true));
+        }
+        if (!event.getWorld().isRemote() && event.getEntity().getType().equals(EntityType.PHANTOM)) {
+            PhantomEntity phantomEntity = (PhantomEntity) event.getEntity();
+            phantomEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(phantomEntity, PlayerEntity.class, true) {
+                @Override
+                protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, @Nonnull EntityPredicate targetPredicate) {
+                    return potentialTarget != null && isEntityAstral(potentialTarget);
+                }
+            });
         }
     }
 
@@ -63,9 +78,14 @@ public class TravelEffects {
         }
     }
 
+    /**
+     * Cancel the targeting event if an Astral entity targets an non-Astral entity or vice versa, as long as neither of them have the spiritual entity tag
+     *
+     * @param event The LivingSetAttackTargetEvent
+     */
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
-        if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
+        if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving()) && !(AstralTags.SPIRITUAL_BEINGS.contains(event.getTarget().getType()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType()))) {
             MobEntity mobEntity = (MobEntity) event.getEntityLiving();
             mobEntity.setAttackTarget(null);
         }
@@ -86,7 +106,7 @@ public class TravelEffects {
         }
 
         //Replace Astral entity's Physical Damage with Astral damage
-        if (event.getSource().getTrueSource() instanceof LivingEntity && (isEntityAstral((LivingEntity) event.getSource().getTrueSource()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getSource().getTrueSource().getType())) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
+        if (event.getSource().getTrueSource() instanceof LivingEntity && (isEntityAstral((LivingEntity) event.getSource().getTrueSource()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getSource().getTrueSource().getType()) && isEntityAstral(event.getEntityLiving())) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
@@ -113,7 +133,7 @@ public class TravelEffects {
         if (mobA == null || mobB == null) {
             return false;
         }
-        return isEntityAstral(mobA) && !isEntityAstral(mobB) || !isEntityAstral(mobA) && isEntityAstral(mobB) || AstralTags.SPIRITUAL_BEINGS.contains(mobA.getType()) || AstralTags.SPIRITUAL_BEINGS.contains(mobB.getType());
+        return isEntityAstral(mobA) && !isEntityAstral(mobB) || !isEntityAstral(mobA) && isEntityAstral(mobB);
     }
 
     @SubscribeEvent
