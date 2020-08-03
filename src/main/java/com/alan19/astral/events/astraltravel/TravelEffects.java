@@ -54,6 +54,16 @@ public class TravelEffects {
     }
 
     @SubscribeEvent
+    public static void spiritualMobAttributes(EntityJoinWorldEvent event) {
+        if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
+            LivingEntity livingEntity = (LivingEntity) event.getEntity();
+            if (!livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
+                livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).applyModifier(Constants.SPIRITUAL_MOB_MODIFER);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
         if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving())) {
             MobEntity mobEntity = (MobEntity) event.getEntityLiving();
@@ -64,6 +74,7 @@ public class TravelEffects {
     /**
      * Non Astral entities do not take damage from Astral damage
      * Astral entities have their physical damage replaced with Astral damage
+     * Drowning Astral entities lose Astral Travel
      *
      * @param event The LivingAttackEvent supplying the target, source, and damage
      */
@@ -75,14 +86,15 @@ public class TravelEffects {
         }
 
         //Replace Astral entity's Physical Damage with Astral damage
-        if (event.getSource().getTrueSource() instanceof LivingEntity && isEntityAstral((LivingEntity) event.getSource().getTrueSource()) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
+        if (event.getSource().getTrueSource() instanceof LivingEntity && (isEntityAstral((LivingEntity) event.getSource().getTrueSource()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getSource().getTrueSource().getType())) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getTrueSource(), event.getEntity());
         }
-        //Cancel Magic Damage against non Astral entities and Physical Damage against Astral Entities
-        if (isEntityAstral(entityLiving) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(entityLiving) && IAstralDamage.isDamageAstral(event.getSource())) {
+        //Cancel Astral Damage against non Astral entities and Physical Damage against Astral Entities
+        if (!(event.getEntityLiving() != null && AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType())) && (isEntityAstral(entityLiving) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isEntityAstral(entityLiving) && IAstralDamage.isDamageAstral(event.getSource()))) {
             event.setCanceled(true);
         }
+
     }
 
     public static boolean handleAstralDrowning(LivingAttackEvent event, LivingEntity entityLiving) {
@@ -101,7 +113,7 @@ public class TravelEffects {
         if (mobA == null || mobB == null) {
             return false;
         }
-        return isEntityAstral(mobA) && !isEntityAstral(mobB) || !isEntityAstral(mobA) && isEntityAstral(mobB);
+        return isEntityAstral(mobA) && !isEntityAstral(mobB) || !isEntityAstral(mobA) && isEntityAstral(mobB) || AstralTags.SPIRITUAL_BEINGS.contains(mobA.getType()) || AstralTags.SPIRITUAL_BEINGS.contains(mobB.getType());
     }
 
     @SubscribeEvent

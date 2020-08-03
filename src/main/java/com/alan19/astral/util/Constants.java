@@ -32,6 +32,8 @@ public class Constants {
     public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
     public static final IAttribute ASTRAL_ATTACK_DAMAGE = new RangedAttribute(null, "astral.astralAttackDamage", 0.0D, 0.0D, 2048.0D);
+    public static final AttributeModifier SPIRITUAL_MOB_MODIFER = new AttributeModifier(UUID.fromString("0acc71d8-4489-4df5-880f-6bc95fa988ff"), "adds some astral damage for spiritul entities", 4, AttributeModifier.Operation.ADDITION).setSaved(true);
+
     public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().item(Items.SHEARS)));
 
     public static ItemStack getAstronomicon() {
