@@ -195,6 +195,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(advancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
         add(advancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
         add(advancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
+        add(advancements.getEtherealHunter(), "Ethereal Hunter", "Kill any entity while Astral");
     }
 
     private void add(Potion potion, String potionName, String splashPotionName, String lingeringPotionName, String arrowName) {
