@@ -18,14 +18,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
     public EtherGrass() {
@@ -109,11 +108,36 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
     @Override
     @ParametersAreNonnullByDefault
     public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        final Stream<BlockPos> allInBox = BlockPos.getAllInBox(pos.toImmutable().add(-3, -3, -3), pos.toImmutable().add(3, 3, 3));
+        final int numberOfPlants = rand.nextInt(8) + 8;
         final Collection<Block> ethericGrowths = AstralTags.ETHERIC_GROWTHS.getAllElements();
-        allInBox.filter(blockPos -> worldIn.isAirBlock(blockPos.up()))
-                .map(blockPos -> Pair.of(blockPos, ethericGrowths.stream().skip(rand.nextInt(ethericGrowths.size())).findFirst()))
-                .filter(posOptionalPair -> posOptionalPair.getRight().isPresent() && posOptionalPair.getRight().get().getDefaultState().isValidPosition(worldIn, posOptionalPair.getLeft()))
-                .forEach(posOptionalPair -> worldIn.setBlockState(posOptionalPair.getLeft(), posOptionalPair.getRight().get().getDefaultState()));
+        //Attempt to spawn 8-16 Etheric Growths
+        for (int i = 0; i < numberOfPlants; i++) {
+            //Keep track of current and previous blockpos
+            BlockPos grassPos = pos;
+            BlockPos prevPos = grassPos;
+            for (int j = 0; j < 128; j++) {
+                //If the new pos is Ether Grass, keep going, else, revert to previous position
+                if (worldIn.getBlockState(grassPos).getBlock() != AstralBlocks.ETHER_GRASS.get()) {
+                    grassPos = prevPos;
+                }
+                else {
+                    prevPos = grassPos;
+                    final Optional<Block> blockOptional = ethericGrowths.stream().skip(rand.nextInt(ethericGrowths.size())).findFirst();
+                    BlockPos upPos = grassPos.toImmutable().up();
+                    if (blockOptional.isPresent() && shouldPlant(worldIn, rand, grassPos, blockOptional.get(), upPos)) {
+                        Block block = blockOptional.get();
+                        worldIn.setBlockState(upPos, block.getDefaultState());
+                        break;
+                    }
+                    else {
+                        grassPos = grassPos.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean shouldPlant(ServerWorld worldIn, Random rand, BlockPos grassPos, Block blockOptional, BlockPos upPos) {
+        return rand.nextInt(8) == 0 && worldIn.isAirBlock(upPos) && worldIn.getBlockState(grassPos).getBlock() == AstralBlocks.ETHER_GRASS.get() && blockOptional.getDefaultState().isValidPosition(worldIn, upPos);
     }
 }

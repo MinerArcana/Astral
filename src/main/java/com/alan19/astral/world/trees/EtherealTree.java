@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 public class EtherealTree extends Tree {
 
-    public static final Supplier<TreeFeatureConfig> ETHEREAL_TREE_CONFIG = () -> new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).foliageHeightRandom(1).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build();
+    public static final Supplier<TreeFeatureConfig> ETHEREAL_TREE_CONFIG = () -> new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).foliageHeight(3).ignoreVines().setSapling(AstralBlocks.ETHEREAL_SAPLING.get()).build();
 
     @Nullable
     @Override
