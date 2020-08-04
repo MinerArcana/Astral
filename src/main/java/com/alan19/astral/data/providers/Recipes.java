@@ -184,7 +184,9 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
                 .build(consumer);
 
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(BONE_SHEETS_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200);
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(BONE_SHEETS_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200)
+                .addCriterion("metaphoric_bone_block", hasItem(BONE_SHEETS_ITEM.get()))
+                .build(consumer);
     }
 
     private ShapedRecipeBuilder generateTwoByTwoRecipeBuilder(Item output, Item input, int count) {
