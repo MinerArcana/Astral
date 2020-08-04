@@ -2,11 +2,13 @@ package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.data.providers.dataproviders.ShapelessNBTRecipeBuilder;
+import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -182,6 +184,7 @@ public class Recipes extends RecipeProvider {
                 .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
                 .build(consumer);
 
+        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(BONE_SHEETS_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200);
     }
 
     private ShapedRecipeBuilder generateTwoByTwoRecipeBuilder(Item output, Item input, int count) {
