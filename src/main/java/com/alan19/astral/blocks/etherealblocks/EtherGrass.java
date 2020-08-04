@@ -32,6 +32,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
                 .hardnessAndResistance(.5f)
                 .harvestTool(ToolType.SHOVEL)
                 .sound(SoundType.PLANT)
+                .tickRandomly()
                 .notSolid());
     }
 
@@ -81,7 +82,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
         }
     }
 
-    private static boolean canGrassSpread(BlockState state, IWorldReader worldReader, BlockPos pos) {
+    public static boolean canGrassSpread(BlockState state, IWorldReader worldReader, BlockPos pos) {
         BlockPos blockpos = pos.up();
         return isTopBlockSnowOrBrightEnough(state, worldReader, pos) && !worldReader.getFluidState(blockpos).isTagged(FluidTags.WATER);
     }
