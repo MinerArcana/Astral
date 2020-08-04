@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -25,19 +26,25 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         final ResourceLocation registryName = worldIn.getDimension().getType().getRegistryName();
         if (registryName != null && registryName.equals(AstralDimensions.INNER_REALM)){
+            boolean didModify = false;
             final ImmutableList<BlockPos> adjacentBlockPos = getAdjacentBlockPos(pos);
             for (BlockPos blockPos : adjacentBlockPos) {
                 final BlockState blockState = worldIn.getBlockState(blockPos);
                 final Block block = blockState.getBlock();
                 if (block == AstralBlocks.ETHER_DIRT.get() && EtherGrass.canGrassSpread(blockState, worldIn, blockPos)) {
                     worldIn.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState());
+                    didModify = true;
                 }
                 else if (block == AstralBlocks.ETHER_GRASS.get()){
                     IGrowable etherGrass = (IGrowable) block;
                     if (etherGrass.canUseBonemeal(worldIn, rand, pos, blockState)){
-                        etherGrass.grow(worldIn, rand, pos, state);
+                        etherGrass.grow(worldIn, rand, blockPos, blockState);
+                        didModify = true;
                     }
                 }
+            }
+            if (didModify){
+                worldIn.setBlockState(pos, Fluids.WATER.getDefaultState().getBlockState());
             }
         }
     }
