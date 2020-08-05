@@ -9,9 +9,13 @@ import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
@@ -25,7 +29,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         final ResourceLocation registryName = worldIn.getDimension().getType().getRegistryName();
-        if (registryName != null && registryName.equals(AstralDimensions.INNER_REALM)){
+        if (registryName != null && registryName.equals(AstralDimensions.INNER_REALM)) {
             boolean didModify = false;
             final ImmutableList<BlockPos> adjacentBlockPos = getAdjacentBlockPos(pos);
             for (BlockPos blockPos : adjacentBlockPos) {
@@ -35,27 +39,53 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
                     worldIn.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState());
                     didModify = true;
                 }
-                else if (block == AstralBlocks.ETHER_GRASS.get()){
+                else if (block == AstralBlocks.ETHER_GRASS.get()) {
                     IGrowable etherGrass = (IGrowable) block;
-                    if (etherGrass.canUseBonemeal(worldIn, rand, pos, blockState)){
+                    if (etherGrass.canUseBonemeal(worldIn, rand, pos, blockState)) {
                         etherGrass.grow(worldIn, rand, blockPos, blockState);
                         didModify = true;
                     }
                 }
             }
-            if (didModify){
+            if (didModify) {
                 worldIn.setBlockState(pos, Fluids.WATER.getDefaultState().getBlockState());
             }
         }
     }
 
-    @Override
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-        super.randomTick(state, worldIn, pos, random);
-    }
-
     private ImmutableList<BlockPos> getAdjacentBlockPos(BlockPos pos) {
         final BlockPos immutablePos = pos.toImmutable();
         return ImmutableList.of(immutablePos.up(), immutablePos.down(), immutablePos.east(), immutablePos.west(), immutablePos.north(), immutablePos.south());
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    @ParametersAreNonnullByDefault
+    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+        super.animateTick(stateIn, worldIn, pos, rand);
+        if (worldIn.getDimension().getType().getRegistryName() != null && worldIn.getDimension().getType().getRegistryName().equals(AstralDimensions.INNER_REALM) && canWork(pos, worldIn, rand)) {
+            for (int i = 0; i < 2; i++){
+                final double x = pos.getX() + rand.nextDouble();
+                final double y = pos.getY() + rand.nextDouble();
+                final double z = pos.getZ() + rand.nextDouble();
+                worldIn.addParticle(ParticleTypes.DRIPPING_WATER, x, y, z, 0.0D, 0.0D, 0.0D);
+            }
+        }
+    }
+
+    private boolean canWork(BlockPos pos, World worldIn, Random random) {
+        return getAdjacentBlockPos(pos).stream().anyMatch(blockPos -> {
+            final BlockState blockState = worldIn.getBlockState(blockPos);
+            Block block = blockState.getBlock();
+            if (block == AstralBlocks.ETHER_DIRT.get()){
+                return true;
+            }
+            else if (block == AstralBlocks.ETHER_GRASS.get()){
+                return ((EtherGrass)block).canUseBonemeal(worldIn, random, blockPos, blockState);
+            }
+            else {
+                return false;
+            }
+        });
     }
 }
