@@ -9,7 +9,9 @@ import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ForgeItemTagsProvider;
 import net.minecraftforge.fml.RegistryObject;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 import static com.alan19.astral.items.AstralItems.*;
 
 public class ItemTagGenerator extends ItemTagsProvider {
+
     public ItemTagGenerator(DataGenerator generatorIn) {
         super(generatorIn);
     }
@@ -35,6 +38,7 @@ public class ItemTagGenerator extends ItemTagsProvider {
         getBuilder(ItemTags.PLANKS).add(ETHEREAL_PLANKS_ITEM.get());
         getBuilder(ItemTags.LEAVES).add(ETHEREAL_LEAVES_ITEM.get());
         getBuilder(ItemTags.BUTTONS).add(ETHERIC_POWDER_ITEM.get());
+        getBuilder(AstralTags.SHEARS).add(PHANTASMAL_SHEARS.get());
     }
 
     private Item[] getAllItemsWithBlockClass(Class<?> aClass) {

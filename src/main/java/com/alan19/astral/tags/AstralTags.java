@@ -26,4 +26,5 @@ public class AstralTags {
     public static final Tag<EntityType<?>> SPIRITUAL_BEINGS = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "spiritual_beings"));
     public static final Tag<Item> BASIC_ASTRAL_PLANTS = ItemTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "basic_astral_plants"));
     public static final Tag<EntityType<?>> ATTUNED_ENTITIES = EntityTypeTags.getCollection().getOrCreate(new ResourceLocation(Astral.MOD_ID, "attuned_entities"));
+    public static final Tag<Item> SHEARS = ItemTags.getCollection().getOrCreate(new ResourceLocation("forge", "shears"));
 }
