@@ -13,6 +13,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.play.server.SPlaySoundEventPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.LecternTileEntity;
 import net.minecraft.util.ActionResultType;
@@ -32,6 +33,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class IndexOfKnowledge extends Block implements MentalConstructController {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
@@ -62,6 +64,8 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
                 }
                 worldIn.playSound(null, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
                 state.with(Constants.CAPPED_LEVEL, libraryLevel >= calculateLevel(worldIn, pos));
+                final int newLevel = state.get(Constants.LIBRARY_LEVEL);
+                IntStream.range(0, newLevel).forEach(i -> ((ServerWorld) worldIn).spawnParticle(ParticleTypes.ENCHANT, pos.getX() + (double) i / newLevel, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01));
                 return ActionResultType.SUCCESS;
             }
         }
