@@ -3,6 +3,7 @@ package com.alan19.astral.data.providers;
 import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.blocks.etherealblocks.EthericGrowth;
 import com.alan19.astral.blocks.etherealblocks.TallEthericGrowth;
+import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ItemTagsProvider;
@@ -38,7 +39,7 @@ public class ItemTagGenerator extends ItemTagsProvider {
         getBuilder(ItemTags.PLANKS).add(ETHEREAL_PLANKS_ITEM.get());
         getBuilder(ItemTags.LEAVES).add(ETHEREAL_LEAVES_ITEM.get());
         getBuilder(ItemTags.BUTTONS).add(ETHERIC_POWDER_ITEM.get());
-        getBuilder(AstralTags.SHEARS).add(PHANTASMAL_SHEARS.get());
+        getBuilder(Tags.Items.SHEARS).add(PHANTASMAL_SHEARS.get());
     }
 
     private Item[] getAllItemsWithBlockClass(Class<?> aClass) {

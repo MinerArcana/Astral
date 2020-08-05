@@ -15,6 +15,7 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.world.storage.loot.conditions.Alternative;
 import net.minecraft.world.storage.loot.conditions.MatchTool;
 import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.Tags;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class Constants {
     public static final IAttribute ASTRAL_ATTACK_DAMAGE = new RangedAttribute(null, "astral.astralAttackDamage", 0.0D, 0.0D, 2048.0D);
     public static final AttributeModifier SPIRITUAL_MOB_MODIFER = new AttributeModifier(UUID.fromString("0acc71d8-4489-4df5-880f-6bc95fa988ff"), "adds some astral damage for spiritul entities", 4, AttributeModifier.Operation.ADDITION).setSaved(true);
 
-    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().tag(AstralTags.SHEARS)));
+    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS)));
 
     public static ItemStack getAstronomicon() {
         final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
