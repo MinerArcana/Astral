@@ -126,8 +126,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
                     final Optional<Block> blockOptional = ethericGrowths.stream().skip(rand.nextInt(ethericGrowths.size())).findFirst();
                     BlockPos upPos = grassPos.toImmutable().up();
                     if (blockOptional.isPresent() && shouldPlant(worldIn, rand, grassPos, blockOptional.get(), upPos)) {
-                        Block block = blockOptional.get();
-                        worldIn.setBlockState(upPos, block.getDefaultState());
+                        setPlant(worldIn, blockOptional.get(), upPos);
                         break;
                     }
                     else {
@@ -135,6 +134,15 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
                     }
                 }
             }
+        }
+    }
+
+    private void setPlant(ServerWorld worldIn, Block block, BlockPos upPos) {
+        if (block instanceof TallEthericGrowth){
+            ((TallEthericGrowth) block).placeAt(worldIn, upPos, 2);
+        }
+        else {
+            worldIn.setBlockState(upPos, block.getDefaultState());
         }
     }
 

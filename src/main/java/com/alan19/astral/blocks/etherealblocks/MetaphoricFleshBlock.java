@@ -41,7 +41,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
                 }
                 else if (block == AstralBlocks.ETHER_GRASS.get()) {
                     IGrowable etherGrass = (IGrowable) block;
-                    if (etherGrass.canUseBonemeal(worldIn, rand, pos, blockState)) {
+                    if (etherGrass.canGrow(worldIn, blockPos, blockState, false)) {
                         etherGrass.grow(worldIn, rand, blockPos, blockState);
                         didModify = true;
                     }
@@ -63,7 +63,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     @ParametersAreNonnullByDefault
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         super.animateTick(stateIn, worldIn, pos, rand);
-        if (worldIn.getDimension().getType().getRegistryName() != null && worldIn.getDimension().getType().getRegistryName().equals(AstralDimensions.INNER_REALM) && canWork(pos, worldIn, rand)) {
+        if (worldIn.getDimension().getType().getRegistryName() != null && worldIn.getDimension().getType().getRegistryName().equals(AstralDimensions.INNER_REALM) && canWork(pos, worldIn)) {
             for (int i = 0; i < 2; i++){
                 final double x = pos.getX() + rand.nextDouble();
                 final double y = pos.getY() + rand.nextDouble();
@@ -73,7 +73,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
         }
     }
 
-    private boolean canWork(BlockPos pos, World worldIn, Random random) {
+    private boolean canWork(BlockPos pos, World worldIn) {
         return getAdjacentBlockPos(pos).stream().anyMatch(blockPos -> {
             final BlockState blockState = worldIn.getBlockState(blockPos);
             Block block = blockState.getBlock();
@@ -81,7 +81,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
                 return true;
             }
             else if (block == AstralBlocks.ETHER_GRASS.get()){
-                return ((EtherGrass)block).canUseBonemeal(worldIn, random, blockPos, blockState);
+                return ((EtherGrass)block).canGrow(worldIn, blockPos, blockState, true);
             }
             else {
                 return false;
