@@ -14,8 +14,12 @@ import net.minecraftforge.fml.common.Mod;
 public class LootHandler {
     @SubscribeEvent
     public static void lootLoad(LootTableLoadEvent event) {
+
         if (event.getName().equals(EntityType.PHANTOM.getLootTable())) {
             event.getTable().addPool(getInjectPool("phantom"));
+        }
+        if (event.getName().equals(new ResourceLocation("chests/shipwreck_supply"))){
+            event.getTable().addPool(getInjectPool("chests/shipwreck_supply"));
         }
     }
 

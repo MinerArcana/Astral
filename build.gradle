@@ -81,6 +81,8 @@ dependencies {
     compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
     compile fg.deobf("vazkii.botania:Botania:r1.15-388.457")
     compile fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0.2.4")
+    compile fg.deobf("curse.maven:terraforged:3021604")
+    compile fg.deobf("curse.maven:natures-compass:2893530")
 }
 
 repositories {
@@ -102,6 +104,9 @@ repositories {
     //Gradle
     maven {
         url = "https://maven.theillusivec4.top/"
+    }
+    maven {
+        url = "https://www.cursemaven.com"
     }
 }
 

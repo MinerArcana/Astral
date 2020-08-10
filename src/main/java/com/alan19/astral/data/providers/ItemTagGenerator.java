@@ -40,6 +40,7 @@ public class ItemTagGenerator extends ItemTagsProvider {
         getBuilder(ItemTags.LEAVES).add(ETHEREAL_LEAVES_ITEM.get());
         getBuilder(ItemTags.BUTTONS).add(ETHERIC_POWDER_ITEM.get());
         getBuilder(Tags.Items.SHEARS).add(PHANTASMAL_SHEARS.get());
+        getBuilder(Tags.Items.STRING).add(DREAMCORD.get());
     }
 
     private Item[] getAllItemsWithBlockClass(Class<?> aClass) {

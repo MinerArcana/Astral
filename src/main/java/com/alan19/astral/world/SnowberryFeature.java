@@ -50,31 +50,28 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
                 if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimension().isNether() || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
-                    worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
-                    spawned++;
-                    for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
-                        int layerLevel = rand.nextInt(4);
-                        if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
-                            worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
-                        }
-                    }
+                    spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
                 else if ((!worldIn.getDimension().isNether() || (generatingPos.getY() < worldIn.getWorld().getDimension().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
-                    worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-                    worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
-                    spawned++;
-                    for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
-                        int layerLevel = rand.nextInt(4);
-                        if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
-                            worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
-                        }
-                    }
+                    spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
             }
         }
         return generated;
+    }
+
+    private int spawnSnowberries(@Nonnull IWorld worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
+        worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
+        worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
+        spawned++;
+        for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
+            int layerLevel = rand.nextInt(4);
+            if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
+                worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
+            }
+        }
+        return spawned;
     }
 }

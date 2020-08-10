@@ -30,7 +30,7 @@ public class PotionRegistryGroup {
     private final Supplier<Ingredient> baseReagent;
     private Supplier<Potion> potionBase = () -> Potions.AWKWARD;
     private Supplier<Ingredient> longReagent = () -> Ingredient.fromItems(Items.REDSTONE);
-    private Supplier<Ingredient> strongReagent = () -> Ingredient.fromItems(Items.GLOWSTONE);
+    private Supplier<Ingredient> strongReagent = () -> Ingredient.fromItems(Items.GLOWSTONE_DUST);
 
     public Optional<Potion> convertSupplierToOptional(RegistryObject<Potion> potion) {
         return Optional.ofNullable(potion)

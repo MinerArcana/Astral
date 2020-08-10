@@ -1,6 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.data.providers.loottables.AstralBlockLootTables;
+import com.alan19.astral.data.providers.loottables.AstralChestLootTables;
 import com.alan19.astral.data.providers.loottables.AstralEntityLootTables;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
@@ -24,7 +25,7 @@ public class LootTables extends LootTableProvider {
     @Override
     @Nonnull
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootParameterSet>> getTables() {
-        return ImmutableList.of(Pair.of(AstralBlockLootTables::new, LootParameterSets.BLOCK), Pair.of(AstralEntityLootTables::new, LootParameterSets.ENTITY));
+        return ImmutableList.of(Pair.of(AstralBlockLootTables::new, LootParameterSets.BLOCK), Pair.of(AstralEntityLootTables::new, LootParameterSets.ENTITY), Pair.of(AstralChestLootTables::new, LootParameterSets.CHEST));
     }
 
     @Override
