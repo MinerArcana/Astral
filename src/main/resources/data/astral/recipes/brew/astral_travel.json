@@ -16,5 +16,11 @@
     {
       "item": "minecraft:glowstone_dust"
     }
+  ],
+  "conditions": [
+    {
+      "modid": "botania",
+      "type": "forge:mod_loaded"
+    }
   ]
 }

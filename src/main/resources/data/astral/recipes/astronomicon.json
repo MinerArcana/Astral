@@ -17,5 +17,11 @@
   "result": {
     "item": "patchouli:guide_book",
     "nbt": "{\"patchouli:book\":\"astral:astronomicon\"}"
-  }
+  },
+  "conditions": [
+    {
+      "modid": "patchouli",
+      "type": "forge:mod_loaded"
+    }
+  ]
 }
