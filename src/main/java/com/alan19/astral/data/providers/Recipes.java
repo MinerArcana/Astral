@@ -12,6 +12,9 @@ import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.ConditionalRecipe;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -138,6 +141,7 @@ public class Recipes extends RecipeProvider {
                 .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
                 .addIngredient(Ingredient.fromItems(Items.PAPER), 3)
                 .addCriterion("basic_astral_plants", hasItem(AstralTags.BASIC_ASTRAL_PLANTS))
+                .addCondition(new ModLoadedCondition("patchouli"))
                 .build(consumer, new ResourceLocation(Astral.MOD_ID, "astronomicon"));
 
         ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SWORD.get())

@@ -16,12 +16,16 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -35,6 +39,7 @@ public class ShapelessNBTRecipeBuilder {
     private final List<Ingredient> ingredients = Lists.newArrayList();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
     private String group;
+    private List<ICondition> conditions = new ArrayList<>();
 
     public ShapelessNBTRecipeBuilder(ItemStack resultIn, int countIn) {
         this.result = resultIn;
@@ -138,7 +143,7 @@ public class ShapelessNBTRecipeBuilder {
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
         this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumerIn.accept(new ShapelessNBTRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath())));
+        consumerIn.accept(new ShapelessNBTRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath()), conditions));
     }
 
     /**
@@ -150,6 +155,16 @@ public class ShapelessNBTRecipeBuilder {
         }
     }
 
+    /**
+     * Adds a condition to the recipe
+     * @param condition A condition that has to be fulfulled for the recipe to load
+     * @return A ShapelessNBTRecipeBuilder that contains the new condition
+     */
+    public ShapelessNBTRecipeBuilder addCondition(ICondition condition) {
+        conditions.add(condition);
+        return this;
+    }
+
     public static class Result implements IFinishedRecipe {
         private final ResourceLocation id;
         private final ItemStack resultItemStack;
@@ -158,8 +173,9 @@ public class ShapelessNBTRecipeBuilder {
         private final List<Ingredient> ingredients;
         private final Advancement.Builder advancementBuilder;
         private final ResourceLocation advancementId;
+        private final List<ICondition> conditions;
 
-        public Result(ResourceLocation idIn, ItemStack resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
+        public Result(ResourceLocation idIn, ItemStack resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn, List<ICondition> conditions) {
             this.id = idIn;
             this.resultItemStack = resultIn;
             this.count = countIn;
@@ -167,6 +183,7 @@ public class ShapelessNBTRecipeBuilder {
             this.ingredients = ingredientsIn;
             this.advancementBuilder = advancementBuilderIn;
             this.advancementId = advancementIdIn;
+            this.conditions = conditions;
         }
 
         @ParametersAreNonnullByDefault
@@ -191,6 +208,13 @@ public class ShapelessNBTRecipeBuilder {
             if (resultItemStack.hasTag()) {
                 resultObject.addProperty("nbt", resultItemStack.getTag().toString());
             }
+
+            for (ICondition condition : conditions) {
+                JsonArray conds = new JsonArray();
+                conds.add(CraftingHelper.serialize(condition));
+                json.add("conditions", conds);
+            }
+
         }
 
         public IRecipeSerializer<?> getSerializer() {

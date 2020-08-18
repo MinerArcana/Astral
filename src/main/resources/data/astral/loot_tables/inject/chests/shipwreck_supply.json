@@ -6,12 +6,13 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "min": 0.0,
-                "max": 2.0,
+                "max": 4.0,
                 "type": "minecraft:uniform"
               }
             }
@@ -25,12 +26,13 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_count",
               "count": {
                 "min": 0.0,
-                "max": 2.0,
+                "max": 4.0,
                 "type": "minecraft:uniform"
               }
             }

@@ -11,6 +11,8 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import vazkii.botania.api.brew.Brew;
 import vazkii.botania.common.crafting.ModRecipeTypes;
 import vazkii.botania.data.recipes.BrewProvider;
@@ -54,6 +56,10 @@ public class AstralBrewProvider extends BrewProvider {
             JsonArray ingredients = new JsonArray();
             Arrays.stream(inputs).map(Ingredient::serialize).forEach(ingredients::add);
             json.add("ingredients", ingredients);
+            final JsonObject isBotaniaLoaded = CraftingHelper.serialize(new ModLoadedCondition("botania"));
+            JsonArray conditionArray = new JsonArray();
+            conditionArray.add(isBotaniaLoaded);
+            json.add("conditions", conditionArray);
         }
 
         @Override
