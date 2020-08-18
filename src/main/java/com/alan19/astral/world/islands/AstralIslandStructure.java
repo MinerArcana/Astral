@@ -59,8 +59,16 @@ public class AstralIslandStructure extends ScatteredStructure<EthericIslesConfig
         final Optional<Biome> biomeOptional = chunkGenerator.getBiomeProvider().getBiomes(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0).stream().findFirst();
         if (biomeOptional.isPresent()) {
             EthericIslesConfig ethericIslesConfig = chunkGenerator.getStructureConfig(biomeOptional.get(), AstralFeatures.ASTRAL_ISLAND.get());
-            int i = ethericIslesConfig.getDistance();
-            int j = ethericIslesConfig.getSeparation();
+            int i, j;
+            if (ethericIslesConfig != null){
+                i = ethericIslesConfig.getDistance();
+                j = ethericIslesConfig.getSeparation();
+            }
+            else {
+                final EthericIslesConfig fallbackConfig = new EthericIslesConfig(false);
+                i = fallbackConfig.getDistance();
+                j = fallbackConfig.getSeparation();
+            }
             int k = x + i * spacingOffsetsX;
             int l = z + i * spacingOffsetsZ;
             int i1 = k < 0 ? k - i + 1 : k;
