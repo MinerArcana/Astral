@@ -18,11 +18,11 @@ public class MindVenomEffect extends Effect {
     public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof PlayerEntity && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
             final PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
-            if (playerEntity.experienceLevel <= 5) {
+            if (playerEntity.experienceLevel <= 30) {
                 playerEntity.giveExperiencePoints(-5);
             }
             else {
-                playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .05, 1) * -1);
+                playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .01, 1) * -1);
             }
         }
         else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) <= 0) {
