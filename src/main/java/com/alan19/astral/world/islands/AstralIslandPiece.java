@@ -84,42 +84,37 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     @Override
     protected void handleDataMarker(@Nonnull String s, @Nonnull BlockPos blockPos, @Nonnull IWorld world, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox) {
         if ("astral:island_feature".equals(s)) {
-            int i = random.nextInt(15);
-            switch (i) {
-                case 1:
-                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
-                    break;
-                case 2:
-                    if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
-                        world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                        ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
-                        treeFeature.place(world, chunkGenerator, random, blockPos.up());
-                        this.numberOfTreesPlaced++;
-                        treeLocations.add(blockPos);
-                    }
-                    break;
-                case 3:
-                    if (numberOfWebsPlaced < 2) {
-                        world.setBlockState(blockPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 2);
-                        numberOfWebsPlaced++;
-                    }
-                    break;
-                case 4:
-                case 5:
-                case 6:
+            int i = random.nextInt(60);
+            if (i < 10) {
+                world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
+            }
+            else if (i < 20) {
+                if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                     world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    world.setBlockState(blockPos.up(), AstralTags.SMALL_ETHERIC_GROWTHS.getRandomElement(random).getDefaultState(), 2);
-                    break;
-                case 7:
-                case 8:
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    Block randomLargeEthericGrowth = AstralTags.LARGE_ETHERIC_GROWTHS.getRandomElement(random);
-                    world.setBlockState(blockPos.up(), randomLargeEthericGrowth.getDefaultState(), 2);
-                    world.setBlockState(blockPos.up().up(), randomLargeEthericGrowth.getDefaultState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
-                    break;
-                default:
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    break;
+                    ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
+                    treeFeature.place(world, chunkGenerator, random, blockPos.up());
+                    this.numberOfTreesPlaced++;
+                    treeLocations.add(blockPos);
+                }
+            }
+            else if (i == 20) {
+                if (numberOfWebsPlaced < 2) {
+                    world.setBlockState(blockPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 2);
+                    numberOfWebsPlaced++;
+                }
+            }
+            else if (i < 30) {
+                world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                world.setBlockState(blockPos.up(), AstralTags.SMALL_ETHERIC_GROWTHS.getRandomElement(random).getDefaultState(), 2);
+            }
+            else if (i < 40) {
+                world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+                Block randomLargeEthericGrowth = AstralTags.LARGE_ETHERIC_GROWTHS.getRandomElement(random);
+                world.setBlockState(blockPos.up(), randomLargeEthericGrowth.getDefaultState(), 2);
+                world.setBlockState(blockPos.up().up(), randomLargeEthericGrowth.getDefaultState().with(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 2);
+            }
+            else {
+                world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
             }
 
         }
