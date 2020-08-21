@@ -1,6 +1,8 @@
 package com.alan19.astral.renderer.entity;
 
 import com.alan19.astral.entity.projectile.IntentionBeam;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;

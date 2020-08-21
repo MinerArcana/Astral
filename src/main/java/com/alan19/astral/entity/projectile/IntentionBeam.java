@@ -1,23 +1,18 @@
 package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.blocks.IntentionBlock;
-import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.network.AstralNetwork;
+import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SSpawnMobPacket;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -43,10 +38,11 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     protected void onHit(RayTraceResult result) {
-        if (result.getType() == RayTraceResult.Type.BLOCK){
+        AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+        if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
             final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
-            if (blockState.getBlock() instanceof IntentionBlock){
+            if (blockState.getBlock() instanceof IntentionBlock) {
                 ((IntentionBlock) blockState.getBlock()).onIntentionTrackerHit(world.getPlayerByUuid(playerUUID), beamLevel, blockRayTraceResult, blockState);
                 remove();
             }
@@ -56,15 +52,15 @@ public class IntentionBeam extends Entity implements IProjectile {
         }
     }
 
-    public void setPlayer(PlayerEntity player){
+    public void setPlayer(PlayerEntity player) {
         playerUUID = player.getUniqueID();
     }
 
-    public void setLevel(int level){
+    public void setLevel(int level) {
         beamLevel = level;
     }
 
-    public void setMaxDistance(int distance){
+    public void setMaxDistance(int distance) {
         maxDistance = distance;
     }
 
@@ -112,8 +108,8 @@ public class IntentionBeam extends Entity implements IProjectile {
         this.setMotion(x, y, z);
         if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
             float f = MathHelper.sqrt(x * x + z * z);
-            this.rotationPitch = (float)(MathHelper.atan2(y, f) * (double)(180F / (float)Math.PI));
-            this.rotationYaw = (float)(MathHelper.atan2(x, z) * (double)(180F / (float)Math.PI));
+            this.rotationPitch = (float) (MathHelper.atan2(y, f) * (double) (180F / (float) Math.PI));
+            this.rotationYaw = (float) (MathHelper.atan2(x, z) * (double) (180F / (float) Math.PI));
             this.prevRotationPitch = this.rotationPitch;
             this.prevRotationYaw = this.rotationYaw;
             this.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
@@ -126,21 +122,25 @@ public class IntentionBeam extends Entity implements IProjectile {
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale(velocity);
+        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setMotion(vec3d);
         float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, z) * (double)(180F / (float)Math.PI));
-        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, f) * (double)(180F / (float)Math.PI));
+        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
+        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
     }
 
     /**
-     * Called to update the entity's position/logic.
+     * Called to update the entity's position/logic. Adapted from LLamaSpitEntity.java
      */
+    @Override
     public void tick() {
         super.tick();
-        if (ticksExisted >= maxDistance * 4){
+        if (world instanceof ServerWorld && ticksExisted % 5 == 0){
+            AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+        }
+        if (ticksExisted >= maxDistance * 4) {
             this.remove();
             return;
         }
@@ -154,22 +154,22 @@ public class IntentionBeam extends Entity implements IProjectile {
         double d1 = this.getPosY() + vec3d.y;
         double d2 = this.getPosZ() + vec3d.z;
         float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
 
-        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, f) * (double)(180F / (float)Math.PI));
+        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
         while (this.rotationPitch - this.prevRotationPitch < -180.0F) {
             this.prevRotationPitch -= 360.0F;
         }
 
-        while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
+        while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
             this.prevRotationPitch += 360.0F;
         }
 
-        while(this.rotationYaw - this.prevRotationYaw < -180.0F) {
+        while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
             this.prevRotationYaw -= 360.0F;
         }
 
-        while(this.rotationYaw - this.prevRotationYaw >= 180.0F) {
+        while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
             this.prevRotationYaw += 360.0F;
         }
 
@@ -179,7 +179,6 @@ public class IntentionBeam extends Entity implements IProjectile {
             this.remove();
         }
         else {
-            this.setMotion(vec3d.scale(0.99F));
             if (!this.hasNoGravity()) {
                 this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
             }
