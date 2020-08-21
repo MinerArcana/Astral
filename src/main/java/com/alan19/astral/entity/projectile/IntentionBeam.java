@@ -2,6 +2,7 @@ package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.blocks.IntentionBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
@@ -28,6 +29,10 @@ public class IntentionBeam extends ThrowableEntity {
 
     protected IntentionBeam(PlayerEntity playerEntity, EntityType<? extends ThrowableEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    public IntentionBeam(EntityType<? extends ThrowableEntity> entityType, World world){
+        super(entityType, world);
     }
 
 

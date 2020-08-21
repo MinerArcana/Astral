@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
+import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
@@ -22,6 +23,13 @@ public class AstralEntities {
     public static final RegistryObject<EntityType<PhysicalBodyEntity>> PHYSICAL_BODY_ENTITY = ENTITIES.register(PHYSICAL_BODY, AstralEntities::getPhysicalBody);
     public static final RegistryObject<EntityType<CrystalSpiderEntity>> CRYSTAL_SPIDER = ENTITIES.register("crystal_spider", AstralEntities::getCrystalSpider);
     public static final RegistryObject<EntityType<CrystalWebProjectileEntity>> CRYSTAL_WEB_PROJECTILE_ENTITY = ENTITIES.register("crystal_web_projectile", AstralEntities::getCrystalWeb);
+    public static final RegistryObject<EntityType<IntentionBeam>> INTENTION_BEAM_ENTITY = ENTITIES.register("intention_beam", AstralEntities::getIntentionBeam);
+
+    private static EntityType<IntentionBeam> getIntentionBeam() {
+        return EntityType.Builder.create(IntentionBeam::new, EntityClassification.MISC)
+                .size(0.5F, 0.5F)
+                .build("intention_beam");
+    }
 
     public static void register(IEventBus modBus) {
         ENTITIES.register(modBus);
