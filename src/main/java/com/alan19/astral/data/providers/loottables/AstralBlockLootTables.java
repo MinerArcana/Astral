@@ -42,7 +42,7 @@ public class AstralBlockLootTables extends BlockLootTables {
         registerLootTable(ETHEREAL_DOOR.get(), dropping(ETHEREAL_DOOR.get()));
         registerLootTable(COMFORTABLE_CUSHION.get(), dropping(COMFORTABLE_CUSHION.get()));
         registerLootTable(ETHEREAL_SAPLING.get(), dropping(ETHEREAL_SAPLING.get()));
-        registerLootTable(CRYSTAL_WEB.get(), droppingWithSilkTouchOrShears(CRYSTAL_WEB.get(), ItemLootEntry.builder(AstralItems.DREAMCORD.get())));
+        registerLootTable(CRYSTAL_WEB.get(), droppingWithSilkTouchOrShearsTag(CRYSTAL_WEB.get(), ItemLootEntry.builder(AstralItems.DREAMCORD.get())));
         this.registerLootTable(SNOWBERRY_BUSH.get(), new LootTable.Builder()
                 .addLootPool(new LootPool.Builder()
                         .name("ripe")
@@ -123,5 +123,9 @@ public class AstralBlockLootTables extends BlockLootTables {
                         .rolls(ConstantRange.of(1))
                         .acceptCondition(Constants.SILK_TOUCH_OR_SHEARS)
                         .addEntry(ItemLootEntry.builder(block)));
+    }
+
+    private LootTable.Builder droppingWithSilkTouchOrShearsTag(Block block, LootEntry.Builder<?> drops){
+        return dropping(block, Constants.SILK_TOUCH_OR_SHEARS, drops);
     }
 }

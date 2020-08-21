@@ -16,12 +16,6 @@
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "item": "minecraft:shears"
-                      }
-                    },
-                    {
-                      "condition": "minecraft:match_tool",
-                      "predicate": {
                         "enchantments": [
                           {
                             "enchantment": "minecraft:silk_touch",
@@ -30,6 +24,12 @@
                             }
                           }
                         ]
+                      }
+                    },
+                    {
+                      "condition": "minecraft:match_tool",
+                      "predicate": {
+                        "tag": "forge:shears"
                       }
                     }
                   ]
