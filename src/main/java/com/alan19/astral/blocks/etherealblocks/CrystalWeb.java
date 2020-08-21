@@ -18,6 +18,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class CrystalWeb extends EtherealBlock {
     @Override
     @ParametersAreNonnullByDefault
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !(entityIn instanceof SpiderEntity)) {
+        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && ((LivingEntity) entityIn).isPotionActive(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof SpiderEntity)) {
             entityIn.setMotionMultiplier(state, new Vec3d(0.25D, 0.05F, 0.25D));
             if (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) {
                 ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
@@ -41,7 +42,7 @@ public class CrystalWeb extends EtherealBlock {
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
+    public boolean ticksRandomly(@Nonnull BlockState state) {
         return true;
     }
 
