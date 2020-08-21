@@ -2,6 +2,7 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.IntentionBlock;
 import com.alan19.astral.tags.AstralTags;
+import com.alan19.astral.util.ExperienceHelper;
 import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -65,7 +66,7 @@ public class EtherealSapling extends SaplingBlock implements Ethereal, Intention
 
     @Override
     public boolean onIntentionTrackerHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
-        if (playerEntity instanceof ServerPlayerEntity && playerEntity.experienceTotal >= 10) {
+        if (playerEntity instanceof ServerPlayerEntity && ExperienceHelper.getPlayerXP(playerEntity) >= 10) {
             playerEntity.experienceTotal -= 10;
             final ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
             grow(serverPlayerEntity.getServerWorld(), serverPlayerEntity.getServerWorld().getRandom(), result.getPos(), blockState);

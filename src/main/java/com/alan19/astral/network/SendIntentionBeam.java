@@ -27,8 +27,10 @@ public class SendIntentionBeam {
             final ServerPlayerEntity sender = contextSupplier.get().getSender();
             if (sender != null) {
                 final IntentionBeam beam = new IntentionBeam(AstralEntities.INTENTION_BEAM_ENTITY.get(), sender.getServerWorld());
-                beam.shoot(sender, sender.rotationPitch, sender.rotationYaw, 0.0F, 1.5F, 1.0F);
+                beam.setPosition(sender.getPosX(), sender.getPosYEye(), sender.getPosZ());
+                beam.shoot(sender.getLookVec().x, sender.getLookVec().y, sender.getLookVec().z, .25f, 1);
                 beam.setPlayer(sender);
+                beam.setMaxDistance(32);
                 sender.getServerWorld().addEntity(beam);
             }
         });
