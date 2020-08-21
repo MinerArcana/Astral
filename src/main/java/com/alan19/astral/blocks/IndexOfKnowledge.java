@@ -16,10 +16,7 @@ import net.minecraft.network.play.server.SPlaySoundEventPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.LecternTileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -35,7 +32,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class IndexOfKnowledge extends Block implements MentalConstructController {
+public class IndexOfKnowledge extends Block implements MentalConstructController, IntentionBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     public IndexOfKnowledge() {
@@ -121,5 +118,15 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
     @Override
     public int getComparatorInputOverride(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
         return Math.min(calculateLevel(worldIn, pos), blockState.get(Constants.LIBRARY_LEVEL));
+    }
+
+    @Override
+    public boolean onIntentionTrackerHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
+        if (playerEntity.experienceLevel < Math.min(calculateLevel(playerEntity.getEntityWorld(), result.getPos()), blockState.get(Constants.LIBRARY_LEVEL))) {
+            playerEntity.addExperienceLevel(1);
+            playerEntity.experience = 0;
+            return true;
+        }
+        return false;
     }
 }
