@@ -15,6 +15,6 @@ public class IntentionBeamRenderer extends EntityRenderer<IntentionBeam> {
     @Override
     @Nonnull
     public ResourceLocation getEntityTexture(@Nonnull IntentionBeam entity) {
-        return new ResourceLocation("astral", "intention_beam");
+        return new ResourceLocation("astral", "textures/entity/intention_beam.png");
     }
 }

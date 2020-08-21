@@ -2,6 +2,7 @@ package com.alan19.astral.intentiontracker;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.ClientSetup;
+import com.alan19.astral.network.AstralNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,6 +20,7 @@ public class IntentionTracker {
         }
         else if (ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()){
             //TODO Summon intention beam from player head going in player direction
+            AstralNetwork.sendIntentionBeam();
         }
     }
 }

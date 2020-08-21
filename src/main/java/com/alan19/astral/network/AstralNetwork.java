@@ -2,6 +2,7 @@ package com.alan19.astral.network;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import vazkii.botania.common.network.PacketHandler;
 
 
 public class AstralNetwork {
@@ -79,6 +81,11 @@ public class AstralNetwork {
                 .consumer(SyncPacketGrabbedItem::handle)
                 .add();
 
+        channel.messageBuilder(SendIntentionBeam.class, 10)
+                .decoder(SendIntentionBeam::decode)
+                .encoder(SendIntentionBeam::encode)
+                .consumer(SendIntentionBeam::handle)
+                .add();
         return channel;
     }
 
@@ -116,5 +123,9 @@ public class AstralNetwork {
 
     public static void syncPacketGrabbedItem(ServerPlayerEntity player, ItemStack stack) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacketGrabbedItem(stack));
+    }
+
+    public static void sendIntentionBeam() {
+        Astral.INSTANCE.sendToServer(new SendIntentionBeam());
     }
 }

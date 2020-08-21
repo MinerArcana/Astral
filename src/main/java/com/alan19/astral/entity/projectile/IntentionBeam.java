@@ -1,21 +1,28 @@
 package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.blocks.IntentionBlock;
+import com.alan19.astral.entity.AstralEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnMobPacket;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -27,14 +34,9 @@ public class IntentionBeam extends ThrowableEntity {
     private int beamLevel;
     private int maxDistance;
 
-    protected IntentionBeam(PlayerEntity playerEntity, EntityType<? extends ThrowableEntity> type, World worldIn) {
-        super(type, worldIn);
-    }
-
     public IntentionBeam(EntityType<? extends ThrowableEntity> entityType, World world){
         super(entityType, world);
     }
-
 
     @Override
     protected void onImpact(RayTraceResult result) {
@@ -78,10 +80,29 @@ public class IntentionBeam extends ThrowableEntity {
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(@Nonnull CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putUniqueId("playerID", playerUUID);
         compound.putInt("beamLevel", beamLevel);
         compound.putInt("maxDistance", maxDistance);
+    }
+
+    @Override
+    public void readAdditional(@Nonnull CompoundNBT compound) {
+        super.readAdditional(compound);
+        playerUUID = compound.getUniqueId("playerID");
+        beamLevel = compound.getInt("beamLevel");
+        maxDistance = compound.getInt("maxDistance");
+    }
+
+    @Override
+    @Nonnull
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
     }
 }
