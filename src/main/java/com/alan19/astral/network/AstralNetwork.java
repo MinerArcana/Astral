@@ -86,6 +86,12 @@ public class AstralNetwork {
                 .encoder(SendIntentionBeam::encode)
                 .consumer(SendIntentionBeam::handle)
                 .add();
+
+        channel.messageBuilder(DeleteIntentionBeam.class, 11)
+                .decoder(DeleteIntentionBeam::decode)
+                .encoder(DeleteIntentionBeam::encode)
+                .consumer(DeleteIntentionBeam::handle)
+                .add();
         return channel;
     }
 
@@ -127,5 +133,9 @@ public class AstralNetwork {
 
     public static void sendIntentionBeam() {
         Astral.INSTANCE.sendToServer(new SendIntentionBeam());
+    }
+
+    public static void deleteIntentionBeam() {
+        Astral.INSTANCE.sendToServer(new DeleteIntentionBeam());
     }
 }

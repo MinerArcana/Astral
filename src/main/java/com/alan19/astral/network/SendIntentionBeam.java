@@ -1,5 +1,6 @@
 package com.alan19.astral.network;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -26,12 +27,14 @@ public class SendIntentionBeam {
         contextSupplier.get().enqueueWork(() -> {
             final ServerPlayerEntity sender = contextSupplier.get().getSender();
             if (sender != null) {
-                final IntentionBeam beam = new IntentionBeam(AstralEntities.INTENTION_BEAM_ENTITY.get(), sender.getServerWorld());
-                beam.setPosition(sender.getPosX(), sender.getPosYEye(), sender.getPosZ());
-                beam.shoot(sender.getLookVec().x, sender.getLookVec().y, sender.getLookVec().z, .25f, 1);
-                beam.setPlayer(sender);
-                beam.setMaxDistance(32);
-                sender.getServerWorld().addEntity(beam);
+                final Boolean isBeamActive = sender.getCapability(AstralAPI.beamTrackerCapability).map(tracker -> tracker.getIntentionBeam(sender.getServerWorld()).isPresent()).orElse(false);
+                if (!isBeamActive){
+                    final IntentionBeam beam = new IntentionBeam(0, 32, sender, sender.getServerWorld());
+                    beam.setPosition(sender.getPosX(), sender.getPosYEye(), sender.getPosZ());
+                    beam.shoot(sender.getLookVec().x, sender.getLookVec().y, sender.getLookVec().z, .25f, 1);
+                    sender.getServerWorld().addEntity(beam);
+                    sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.setIntentionBeam(beam));
+                }
             }
         });
     }

@@ -7,6 +7,8 @@ import com.alan19.astral.api.constructtracker.ConstructTrackerProvider;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
+import com.alan19.astral.api.intentiontracker.BeamTracker;
+import com.alan19.astral.api.intentiontracker.BeamTrackerProvider;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryProvider;
 import com.alan19.astral.api.sleepmanager.SleepManagerProvider;
 import net.minecraft.entity.Entity;
@@ -27,6 +29,7 @@ public class CapabilitiesEventHandler {
     private static final ResourceLocation SLEEP_MANAGER = new ResourceLocation(Astral.MOD_ID, "sleep_manager");
     private static final ResourceLocation CONSTRUCT_TRACKER = new ResourceLocation(Astral.MOD_ID, "construct_tracker");
     private static final ResourceLocation BODY_TRACKER = new ResourceLocation(Astral.MOD_ID, "body_tracker");
+    private static final ResourceLocation BEAM_TRACKER = new ResourceLocation(Astral.MOD_ID, "beam_tracker");
 
     @SubscribeEvent
     public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e) {
@@ -47,6 +50,7 @@ public class CapabilitiesEventHandler {
             e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
             e.addCapability(SLEEP_MANAGER, new SleepManagerProvider());
             e.addCapability(BODY_LINK, new BodyLinkProvider());
+            e.addCapability(BEAM_TRACKER, new BeamTrackerProvider());
         }
     }
 

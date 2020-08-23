@@ -15,6 +15,8 @@ import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimStorage;
 import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
+import com.alan19.astral.api.intentiontracker.BeamTracker;
+import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.PsychicInventory;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
@@ -177,6 +179,7 @@ public class Astral {
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
             CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
             CapabilityManager.INSTANCE.register(IBodyTracker.class, new NBTCapStorage<>(), BodyTracker::new);
+            CapabilityManager.INSTANCE.register(IBeamTracker.class, new NBTCapStorage<>(), BeamTracker::new);
         }
 
     }
