@@ -16,16 +16,14 @@ public class IntentionTracker {
     @SubscribeEvent
     public static void onInput(InputEvent event){
         ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null && ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
-            AstralNetwork.sendIntentionBeam();
+        if (player != null) {
+            if (ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
+                AstralNetwork.sendIntentionBeam();
+            }
+            else if (!ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
+                AstralNetwork.deleteIntentionBeam();
+            }
         }
-    }
 
-    @SubscribeEvent
-    public static void onKeyReleased(GuiScreenEvent.KeyboardKeyReleasedEvent event){
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null && !ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
-            AstralNetwork.deleteIntentionBeam();
-        }
     }
 }

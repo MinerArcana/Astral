@@ -5,7 +5,6 @@ import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.blocks.IntentionBlock;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.network.AstralNetwork;
-import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -16,6 +15,9 @@ import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -25,17 +27,17 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Entity for the Intention Tracker. Based off the Mana Burst from Botania.
  * https://github.com/Vazkii/Botania/blob/eed14c95cccea7c496fe674327d0ec8b0e999cc9/src/main/java/vazkii/botania/common/entity/EntityManaBurst.java#L49
  */
-//TODO Use data manager
 public class IntentionBeam extends Entity implements IProjectile {
-    private UUID playerUUID;
-    private int beamLevel;
-    private int maxDistance;
+    private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Integer> beamLevel = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
+    private static final DataParameter<Integer> maxDistance = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
 
     public IntentionBeam(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -43,9 +45,9 @@ public class IntentionBeam extends Entity implements IProjectile {
 
     public IntentionBeam(int beamLevel, int maxDistance, PlayerEntity playerEntity, World worldIn){
         super(AstralEntities.INTENTION_BEAM_ENTITY.get(), worldIn);
-        this.beamLevel = beamLevel;
-        this.maxDistance = maxDistance;
-        this.playerUUID = playerEntity.getUniqueID();
+        dataManager.set(IntentionBeam.beamLevel, beamLevel);
+        dataManager.set(IntentionBeam.maxDistance, maxDistance);
+        dataManager.set(IntentionBeam.playerUUID, Optional.of(playerEntity.getUniqueID()));
     }
 
     protected void onHit(RayTraceResult result) {
@@ -53,8 +55,8 @@ public class IntentionBeam extends Entity implements IProjectile {
         if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
             final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
-            if (blockState.getBlock() instanceof IntentionBlock) {
-                ((IntentionBlock) blockState.getBlock()).onIntentionTrackerHit(world.getPlayerByUuid(playerUUID), beamLevel, blockRayTraceResult, blockState);
+            if (blockState.getBlock() instanceof IntentionBlock && dataManager.get(playerUUID).isPresent()) {
+                ((IntentionBlock) blockState.getBlock()).onIntentionTrackerHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
                 remove();
             }
             else {
@@ -64,25 +66,27 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     public void setPlayer(PlayerEntity player) {
-        playerUUID = player.getUniqueID();
+        dataManager.set(this.playerUUID, Optional.of(player.getUniqueID()));
     }
 
     public void setLevel(int level) {
-        beamLevel = level;
+        dataManager.set(this.beamLevel, level);
     }
 
     public void setMaxDistance(int distance) {
-        maxDistance = distance;
+        dataManager.set(this.maxDistance, distance);
     }
 
     @Override
-    public boolean handleFluidAcceleration(Tag<Fluid> fluidTag) {
+    public boolean handleFluidAcceleration(@Nonnull Tag<Fluid> fluidTag) {
         return false;
     }
 
     @Override
     protected void registerData() {
-
+        dataManager.register(playerUUID, Optional.empty());
+        dataManager.register(beamLevel, 0);
+        dataManager.register(maxDistance, 32);
     }
 
     @Override
@@ -92,16 +96,20 @@ public class IntentionBeam extends Entity implements IProjectile {
 
     @Override
     public void writeAdditional(@Nonnull CompoundNBT compound) {
-        compound.putUniqueId("playerID", playerUUID);
-        compound.putInt("beamLevel", beamLevel);
-        compound.putInt("maxDistance", maxDistance);
+        if(dataManager.get(playerUUID).isPresent()){
+            compound.putUniqueId("playerID", dataManager.get(playerUUID).get());
+        }
+        compound.putInt("beamLevel", dataManager.get(beamLevel));
+        compound.putInt("maxDistance", dataManager.get(maxDistance));
     }
 
     @Override
     public void readAdditional(@Nonnull CompoundNBT compound) {
-        playerUUID = compound.getUniqueId("playerID");
-        beamLevel = compound.getInt("beamLevel");
-        maxDistance = compound.getInt("maxDistance");
+        if(compound.contains("playerID")){
+            dataManager.set(playerUUID, Optional.of(compound.getUniqueId("playerID")));
+        }
+        dataManager.set(beamLevel, compound.getInt("beamLevel"));
+        dataManager.set(maxDistance, compound.getInt("maxDistance"));
     }
 
     @Override
@@ -148,60 +156,62 @@ public class IntentionBeam extends Entity implements IProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (isAlive() && world instanceof ServerWorld && ticksExisted % 5 == 0){
-            AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
-        }
-        if (ticksExisted >= maxDistance * 4) {
-            this.remove();
-            return;
-        }
-        Vec3d vec3d = this.getMotion();
-        RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), (entity) -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
-        if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-            this.onHit(raytraceresult);
-        }
-
-        double d0 = this.getPosX() + vec3d.x;
-        double d1 = this.getPosY() + vec3d.y;
-        double d2 = this.getPosZ() + vec3d.z;
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
-
-        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-        while (this.rotationPitch - this.prevRotationPitch < -180.0F) {
-            this.prevRotationPitch -= 360.0F;
-        }
-
-        while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-            this.prevRotationPitch += 360.0F;
-        }
-
-        while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
-            this.prevRotationYaw -= 360.0F;
-        }
-
-        while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-            this.prevRotationYaw += 360.0F;
-        }
-
-        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
-        if (!this.world.isMaterialInBB(this.getBoundingBox(), Material.AIR) || this.isInWaterOrBubbleColumn()) {
-            this.remove();
-        }
-        else {
-            if (!this.hasNoGravity()) {
-                this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
+        if (isAlive()){
+            if (world instanceof ServerWorld && ticksExisted % 5 == 0){
+                AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+            }
+            if (ticksExisted >= dataManager.get(maxDistance) * 4) {
+                this.remove();
+                return;
+            }
+            Vec3d vec3d = this.getMotion();
+            RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
+            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+                this.onHit(raytraceresult);
             }
 
-            this.setPosition(d0, d1, d2);
+            double d0 = this.getPosX() + vec3d.x;
+            double d1 = this.getPosY() + vec3d.y;
+            double d2 = this.getPosZ() + vec3d.z;
+            float f = MathHelper.sqrt(horizontalMag(vec3d));
+            this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
+
+            this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+            while (this.rotationPitch - this.prevRotationPitch < -180.0F) {
+                this.prevRotationPitch -= 360.0F;
+            }
+
+            while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
+                this.prevRotationPitch += 360.0F;
+            }
+
+            while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
+                this.prevRotationYaw -= 360.0F;
+            }
+
+            while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
+                this.prevRotationYaw += 360.0F;
+            }
+
+            this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
+            this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
+            if (!this.world.isMaterialInBB(this.getBoundingBox(), Material.AIR) || this.isInWaterOrBubbleColumn()) {
+                this.remove();
+            }
+            else {
+                if (!this.hasNoGravity()) {
+                    this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
+                }
+
+                this.setPosition(d0, d1, d2);
+            }
         }
     }
 
     @Override
     public void remove() {
-        if (playerUUID != null){
-            final PlayerEntity player = world.getPlayerByUuid(playerUUID);
+        if (dataManager.get(playerUUID).isPresent()){
+            final PlayerEntity player = world.getPlayerByUuid(dataManager.get(playerUUID).get());
             if (player != null) {
                 player.getCapability(AstralAPI.beamTrackerCapability).ifPresent(IBeamTracker::clearIntentionBeam);
             }
