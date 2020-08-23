@@ -93,7 +93,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
                     mindVenomDuration = 15;
                 }
 
-                if (mindVenomDuration > 0) {
+                if (mindVenomDuration > 0 && !((LivingEntity) entityIn).isPotionActive(AstralEffects.MIND_VENOM.get())) {
                     ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
                 }
             }
