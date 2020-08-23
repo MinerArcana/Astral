@@ -51,7 +51,9 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     protected void onHit(RayTraceResult result) {
-        AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+        if (world instanceof ServerWorld){
+            AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+        }
         if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
             final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());

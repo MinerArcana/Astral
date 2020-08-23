@@ -1,6 +1,7 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.api.AstralAPI;
+import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -26,7 +27,7 @@ public class SendIntentionBeam {
     public static void handle(SendIntentionBeam sendIntentionBeam, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
             final ServerPlayerEntity sender = contextSupplier.get().getSender();
-            if (sender != null) {
+            if (sender != null && sender.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
                 final Boolean isBeamActive = sender.getCapability(AstralAPI.beamTrackerCapability).map(tracker -> tracker.getIntentionBeam(sender.getServerWorld()).isPresent()).orElse(false);
                 if (!isBeamActive){
                     final IntentionBeam beam = new IntentionBeam(0, 32, sender, sender.getServerWorld());

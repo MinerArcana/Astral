@@ -22,7 +22,10 @@ public class DeleteIntentionBeam {
         contextSupplier.get().enqueueWork(() -> {
             final ServerPlayerEntity sender = contextSupplier.get().getSender();
             if (sender != null) {
-                sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getServerWorld()).ifPresent(Entity::remove));
+                sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getServerWorld()).ifPresent(intentionBeam -> {
+                    sender.teleportKeepLoaded(intentionBeam.getPosX(), intentionBeam.getPosY(), intentionBeam.getPosZ());
+                    intentionBeam.remove();
+                }));
             }
         });
     }
