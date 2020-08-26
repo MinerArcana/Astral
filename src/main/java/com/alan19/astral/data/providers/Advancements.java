@@ -56,7 +56,7 @@ public class Advancements extends AdvancementProvider {
     private Advancement reaperCreeper;
     private Advancement etherealHunter;
 
-    public Advancements(DataGenerator dataGenerator) {
+    public Advancements(@Nonnull DataGenerator dataGenerator) {
         super(dataGenerator);
         this.dataGenerator = dataGenerator;
     }

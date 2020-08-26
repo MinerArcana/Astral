@@ -5,8 +5,10 @@ import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.blocks.IntentionBlock;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.network.AstralNetwork;
+import com.alan19.astral.particle.AstralParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
@@ -31,7 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Entity for the Intention Tracker. Based off the Mana Burst from Botania.
+ * Entity for the Intention Tracker. Loosely based off the Mana Burst from Botania.
  * https://github.com/Vazkii/Botania/blob/eed14c95cccea7c496fe674327d0ec8b0e999cc9/src/main/java/vazkii/botania/common/entity/EntityManaBurst.java#L49
  */
 public class IntentionBeam extends Entity implements IProjectile {
@@ -43,7 +45,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         super(entityTypeIn, worldIn);
     }
 
-    public IntentionBeam(int beamLevel, int maxDistance, PlayerEntity playerEntity, World worldIn){
+    public IntentionBeam(int beamLevel, int maxDistance, PlayerEntity playerEntity, World worldIn) {
         super(AstralEntities.INTENTION_BEAM_ENTITY.get(), worldIn);
         dataManager.set(IntentionBeam.beamLevel, beamLevel);
         dataManager.set(IntentionBeam.maxDistance, maxDistance);
@@ -51,7 +53,7 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     protected void onHit(RayTraceResult result) {
-        if (world instanceof ServerWorld){
+        if (world instanceof ServerWorld) {
             AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
         }
         if (result.getType() == RayTraceResult.Type.BLOCK) {
@@ -98,7 +100,7 @@ public class IntentionBeam extends Entity implements IProjectile {
 
     @Override
     public void writeAdditional(@Nonnull CompoundNBT compound) {
-        if(dataManager.get(playerUUID).isPresent()){
+        if (dataManager.get(playerUUID).isPresent()) {
             compound.putUniqueId("playerID", dataManager.get(playerUUID).get());
         }
         compound.putInt("beamLevel", dataManager.get(beamLevel));
@@ -107,7 +109,7 @@ public class IntentionBeam extends Entity implements IProjectile {
 
     @Override
     public void readAdditional(@Nonnull CompoundNBT compound) {
-        if(compound.contains("playerID")){
+        if (compound.contains("playerID")) {
             dataManager.set(playerUUID, Optional.of(compound.getUniqueId("playerID")));
         }
         dataManager.set(beamLevel, compound.getInt("beamLevel"));
@@ -158,9 +160,11 @@ public class IntentionBeam extends Entity implements IProjectile {
     @Override
     public void tick() {
         super.tick();
-        if (isAlive()){
-            if (world instanceof ServerWorld && ticksExisted % 5 == 0){
-                AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
+        if (isAlive()) {
+            if (world instanceof ClientWorld && ticksExisted % 5 == 0) {
+                for (int i = 0; i < 2; i++){
+                    world.addParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosY() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosZ() + (rand.nextDouble() - rand.nextDouble()) * .5, 0, 0, 0);
+                }
             }
             if (ticksExisted >= dataManager.get(maxDistance) * 4) {
                 this.remove();
@@ -212,7 +216,7 @@ public class IntentionBeam extends Entity implements IProjectile {
 
     @Override
     public void remove() {
-        if (dataManager.get(playerUUID).isPresent()){
+        if (dataManager.get(playerUUID).isPresent()) {
             final PlayerEntity player = world.getPlayerByUuid(dataManager.get(playerUUID).get());
             if (player != null) {
                 player.getCapability(AstralAPI.beamTrackerCapability).ifPresent(IBeamTracker::clearIntentionBeam);

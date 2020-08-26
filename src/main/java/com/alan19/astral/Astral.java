@@ -30,6 +30,7 @@ import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.entity.projectile.IntentionBeam;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
@@ -37,6 +38,7 @@ import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
+import com.alan19.astral.particle.IntentionBeamParticle;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
@@ -144,6 +146,7 @@ public class Astral {
     public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(AstralParticles.INTENTION_BEAM_PARTICLE.get(), IntentionBeamParticle.Factory::new);
     }
 
     public void newRegistry(RegistryEvent.NewRegistry newRegistry) {

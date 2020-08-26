@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public class ClientSetup {
     private static final String ASTRAL_KEY_CATEGORY = "key.categories.astral";
 
-    public static final KeyBinding INTENTION_TRACKER_BUTTON = new KeyBinding("keys.astral.intention_tracker", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_MOUSE_BUTTON_4, ASTRAL_KEY_CATEGORY);
+    public static final KeyBinding INTENTION_TRACKER_BUTTON = new KeyBinding("keys.astral.intention_tracker", KeyConflictContext.IN_GAME, InputMappings.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_4, ASTRAL_KEY_CATEGORY);
 
     public static void registerKeybinds(){
         Stream.of(INTENTION_TRACKER_BUTTON).forEach(ClientRegistry::registerKeyBinding);
