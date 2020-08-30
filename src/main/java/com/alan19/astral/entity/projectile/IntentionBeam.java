@@ -3,11 +3,11 @@ package com.alan19.astral.entity.projectile;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.blocks.IntentionBlock;
+import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.entity.AstralEntities;
-import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
+import com.alan19.astral.util.IntentionBeamMaterials;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -40,6 +41,7 @@ public class IntentionBeam extends Entity implements IProjectile {
     private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> beamLevel = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> maxDistance = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
+    private static final DataParameter<Boolean> touchedBlock = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.BOOLEAN);
 
     public IntentionBeam(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -50,12 +52,10 @@ public class IntentionBeam extends Entity implements IProjectile {
         dataManager.set(IntentionBeam.beamLevel, beamLevel);
         dataManager.set(IntentionBeam.maxDistance, maxDistance);
         dataManager.set(IntentionBeam.playerUUID, Optional.of(playerEntity.getUniqueID()));
+        dataManager.set(IntentionBeam.touchedBlock, false);
     }
 
     protected void onHit(RayTraceResult result) {
-        if (world instanceof ServerWorld) {
-            AstralNetwork.sendOfferingBrazierFinishParticles(new BlockPos(getPosX(), getPosY(), getPosZ()), world.getChunkAt(getPosition()));
-        }
         if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
             final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
@@ -63,22 +63,23 @@ public class IntentionBeam extends Entity implements IProjectile {
                 ((IntentionBlock) blockState.getBlock()).onIntentionTrackerHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
                 remove();
             }
-            else {
-                //TODO Teleportation effect
+            else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(dataManager.get(beamLevel)).contains(blockState.getMaterial())){
+                dataManager.set(touchedBlock, true);
+                remove();
             }
         }
     }
 
     public void setPlayer(PlayerEntity player) {
-        dataManager.set(this.playerUUID, Optional.of(player.getUniqueID()));
+        dataManager.set(playerUUID, Optional.of(player.getUniqueID()));
     }
 
     public void setLevel(int level) {
-        dataManager.set(this.beamLevel, level);
+        dataManager.set(beamLevel, level);
     }
 
     public void setMaxDistance(int distance) {
-        dataManager.set(this.maxDistance, distance);
+        dataManager.set(maxDistance, distance);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         dataManager.register(playerUUID, Optional.empty());
         dataManager.register(beamLevel, 0);
         dataManager.register(maxDistance, 32);
+        dataManager.register(touchedBlock, false);
     }
 
     @Override
@@ -105,6 +107,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         }
         compound.putInt("beamLevel", dataManager.get(beamLevel));
         compound.putInt("maxDistance", dataManager.get(maxDistance));
+        compound.putBoolean("touchedBlock", dataManager.get(touchedBlock));
     }
 
     @Override
@@ -114,6 +117,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         }
         dataManager.set(beamLevel, compound.getInt("beamLevel"));
         dataManager.set(maxDistance, compound.getInt("maxDistance"));
+        dataManager.set(touchedBlock, compound.getBoolean("touchedBlock"));
     }
 
     @Override
@@ -162,7 +166,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         super.tick();
         if (isAlive()) {
             if (world instanceof ClientWorld && ticksExisted % 5 == 0) {
-                for (int i = 0; i < 2; i++){
+                for (int i = 0; i < 2; i++) {
                     world.addParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosY() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosZ() + (rand.nextDouble() - rand.nextDouble()) * .5, 0, 0, 0);
                 }
             }
@@ -172,7 +176,7 @@ public class IntentionBeam extends Entity implements IProjectile {
             }
             Vec3d vec3d = this.getMotion();
             RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
-            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
 
@@ -201,21 +205,19 @@ public class IntentionBeam extends Entity implements IProjectile {
 
             this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
             this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
-            if (!this.world.isMaterialInBB(this.getBoundingBox(), Material.AIR) || this.isInWaterOrBubbleColumn()) {
-                this.remove();
+            if (!this.hasNoGravity()) {
+                this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
             }
-            else {
-                if (!this.hasNoGravity()) {
-                    this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
-                }
 
-                this.setPosition(d0, d1, d2);
-            }
+            this.setPosition(d0, d1, d2);
         }
     }
 
     @Override
     public void remove() {
+        if (world instanceof ServerWorld) {
+            ((ServerWorld)world).spawnParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX(), getPosY(), getPosZ(), 5, rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), rand.nextDouble() / 4);
+        }
         if (dataManager.get(playerUUID).isPresent()) {
             final PlayerEntity player = world.getPlayerByUuid(dataManager.get(playerUUID).get());
             if (player != null) {
