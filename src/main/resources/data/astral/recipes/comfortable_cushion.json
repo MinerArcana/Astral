@@ -1,13 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "   ",
+    "LLL",
     "WWW",
     "WWW"
   ],
   "key": {
     "W": {
       "item": "astral:dreamweave"
+    },
+    "L": {
+      "tag": "minecraft:leaves"
     }
   },
   "result": {

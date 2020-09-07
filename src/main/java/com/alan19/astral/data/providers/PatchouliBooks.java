@@ -42,7 +42,7 @@ public class PatchouliBooks extends PatchouliBookProvider {
         innerRealmEntry.addSimpleTextPage("These resources are needed to create Mental Constructs.");
 
         final Snowberry snowberryItemStack = AstralItems.SNOWBERRY.get();
-        final CategoryBuilder naturalResources = bookBuilder.addCategory("natural_resources", "Natural Resources", "There’s a few Resources added to the Material Overworld you’ll need - Feverweed and Snowberries.", new ItemStack(snowberryItemStack));
+        final CategoryBuilder naturalResources = bookBuilder.addCategory("natural_resources", "Natural Resources", "There's a few Resources added to the Material Overworld you'll need - Feverweed and Snowberries.", new ItemStack(snowberryItemStack));
 
         final EntryBuilder snowberryPage = naturalResources.addEntry("snowberries", "Snowberries", new ItemStack(snowberryItemStack));
         snowberryPage.addSimpleTextPage("These berry bushes generate in snowy biomes in small clumps, shedding snow under them.  Like many other bushes, they can slow or hurt you while walking through them. They can be placed on or adjacent to sufficiently cold blocks.", "Snowberry Bushes");
@@ -82,13 +82,13 @@ public class PatchouliBooks extends PatchouliBookProvider {
         final CategoryBuilder erratas = bookBuilder.addCategory("errata_and_sundries", "Errata and Sundries", "There are many miscellaneous blocks and items that can help with Astral Travel and building in the Inner Realm. These are the rare physical tools which help with physical workings.", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));
         final EntryBuilder offeringBrazier = erratas.addEntry("offering_brazier", "Offering Brazier", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));
         offeringBrazier.addTextPage("The Offering Brazier allows you to make many items astral when there is no other way to acquire equivalents while astral.");
-        offeringBrazier.addTextPage("The Offering Brazier cannot be used to transfer anything which burns, inventories or tile entities. Similarly anything which boils away doesn’t transfer, resulting in buckets of liquids arriving empty, and potions being reduced to glass bottles etc.");
+        offeringBrazier.addTextPage("The Offering Brazier cannot be used to transfer anything which burns, inventories or tile entities. Similarly anything which boils away doesn't transfer, resulting in buckets of liquids arriving empty, and potions being reduced to glass bottles etc.");
         offeringBrazier.addCraftingPage(new ResourceLocation(Astral.MOD_ID, AstralItems.OFFERING_BRAZIER_ITEM.getId().getPath()));
 
-        final CategoryBuilder mentalConstructs = bookBuilder.addCategory("mental_constructs", "Mental Constructs", "Mental constructs are arrays of astral blocks which take on special meaning and thus special powers when assembled within your mind. Each Mental Construct’s benefits are unique to the person who hosts them in their Inner Realm, and more than one of the same type have no additional positive effects.", new ItemStack(AstralItems.COMFORTABLE_CUSHION_ITEM.get()));
+        final CategoryBuilder mentalConstructs = bookBuilder.addCategory("mental_constructs", "Mental Constructs", "Mental constructs are arrays of astral blocks which take on special meaning and thus special powers when assembled within your mind. Each Mental Construct's benefits are unique to the person who hosts them in their Inner Realm, and more than one of the same type have no additional positive effects.", new ItemStack(AstralItems.COMFORTABLE_CUSHION_ITEM.get()));
         final EntryBuilder garden = mentalConstructs.addEntry("garden", "The Garden", new ItemStack(AstralItems.COMFORTABLE_CUSHION_ITEM.get()));
         garden.addTextPage(FormatHelper.formatCode('o', "\"There is Contentment to be Found in Contemplating Nature, and Endurance born of the memory of Contentment\""));
-        garden.addTextPage(String.format("Centered on the %s, the Garden counts the amount of natural passive life and water around you and generates a level of Contentment based on it. Collect Astral plants of various sorts to maximize it’s efficiency.", FormatHelper.internalLink("astral:garden", "cushion", "Comfortable Cushion")));
+        garden.addTextPage(String.format("Centered on the %s, the Garden counts the amount of natural passive life and water around you and generates a level of Contentment based on it. Collect Astral plants of various sorts to maximize it's efficiency.", FormatHelper.internalLink("astral:garden", "cushion", "Comfortable Cushion")));
         garden.addTextPage("Benefits: When naturally healing you last longer the greater your contentment level. It may also prove to lend power to your inner energies, and assist with botanical magics.");
         garden.addCraftingPage(AstralItems.COMFORTABLE_CUSHION_ITEM.getId()).setAnchor("cushion");
 
