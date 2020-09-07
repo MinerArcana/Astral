@@ -1,5 +1,6 @@
 package com.alan19.astral;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.NBTCapStorage;
 import com.alan19.astral.api.bodylink.BodyLink;
 import com.alan19.astral.api.bodylink.IBodyLink;
@@ -15,6 +16,11 @@ import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimStorage;
 import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
+import com.alan19.astral.api.intentiontracker.BeamTracker;
+import com.alan19.astral.api.intentiontracker.IBeamTracker;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EtherealSaplingIntentionTrackerBehavior;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EthericPowderIntentionTrackerBehavior;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IndexOfKnowledgeIntentionTrackerBehavior;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.PsychicInventory;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
@@ -35,6 +41,7 @@ import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.particle.EtherealFlame;
 import com.alan19.astral.particle.EtherealReplaceParticle;
+import com.alan19.astral.particle.IntentionBeamParticle;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
@@ -142,6 +149,7 @@ public class Astral {
     public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
         Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(AstralParticles.INTENTION_BEAM_PARTICLE.get(), IntentionBeamParticle.Factory::new);
     }
 
     public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
@@ -159,10 +167,13 @@ public class Astral {
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
 //        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
+
+        //Add Intention Beam behavior
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHEREAL_SAPLING.get(), new EtherealSaplingIntentionTrackerBehavior());
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.INDEX_OF_KNOWLEDGE.get(), new IndexOfKnowledgeIntentionTrackerBehavior());
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHERIC_POWDER.get(), new EthericPowderIntentionTrackerBehavior());
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
 
@@ -177,6 +188,7 @@ public class Astral {
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
             CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
             CapabilityManager.INSTANCE.register(IBodyTracker.class, new NBTCapStorage<>(), BodyTracker::new);
+            CapabilityManager.INSTANCE.register(IBeamTracker.class, new NBTCapStorage<>(), BeamTracker::new);
         }
 
     }

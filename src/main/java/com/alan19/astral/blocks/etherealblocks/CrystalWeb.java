@@ -51,6 +51,7 @@ public class CrystalWeb extends EtherealBlock {
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
         final int moonPhase = worldIn.dimension.getMoonPhase(worldIn.getDayTime());
+        //Spread in a direction based on moon phasae
         if (rand.nextInt(30) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
             final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
             if (!collect.isEmpty()) {
@@ -58,8 +59,13 @@ public class CrystalWeb extends EtherealBlock {
                 worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
             }
         }
+        //Spawn Crystal Spiders with intervals based on moon phase
         if (rand.nextInt(Math.abs(5 - moonPhase) + 1) == 0 && worldIn.getBlockState(pos.down()).getBlock() instanceof Ethereal && canSpiderSpawn(worldIn, pos) && pos.getY() >= 128) {
             AstralEntities.CRYSTAL_SPIDER.get().spawn(worldIn, null, null, pos, SpawnReason.SPAWNER, false, false);
+        }
+        //Remove block if exposed to rain or any liquid
+        if (worldIn.isRainingAt(pos) || !worldIn.getFluidState(pos).isEmpty()){
+            worldIn.removeBlock(pos, false);
         }
     }
 

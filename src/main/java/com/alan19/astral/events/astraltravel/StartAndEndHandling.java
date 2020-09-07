@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.alan19.astral.api.bodylink.BodyLink.HEALTH_ID;
-import static net.minecraftforge.common.util.Constants.*;
+import static net.minecraftforge.common.util.Constants.NBT;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class StartAndEndHandling {
@@ -160,7 +160,7 @@ public class StartAndEndHandling {
         }
     }
 
-    public static void spawnPhysicalBody(PlayerEntity playerEntity, BodyInfo bodyInfo, CompoundNBT nbt) {
+    public static void  spawnPhysicalBody(PlayerEntity playerEntity, BodyInfo bodyInfo, CompoundNBT nbt) {
         nbt.putFloat("Health", bodyInfo.getHealth());
         final ListNBT pos = nbt.getList("Pos", NBT.TAG_DOUBLE);
         final PhysicalBodyEntity spawn = AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getServer().getWorld(bodyInfo.getDimensionType()), nbt, null, playerEntity, new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)), SpawnReason.TRIGGERED, false, false);

@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.6.8'
+version = '1.7.2'
 group = 'com.alan19.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
@@ -81,9 +81,9 @@ dependencies {
     compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
     compile fg.deobf("vazkii.botania:Botania:r1.15-388.457")
     compile fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0.2.4")
-    compile fg.deobf("curse.maven:terraforged:3021604")
-    compile fg.deobf("curse.maven:natures-compass:2893530")
-    compile fg.deobf("curse.maven:the-one-proble:3037741")
+//    compile fg.deobf("curse.maven:terraforged:3021604")
+//    compile fg.deobf("curse.maven:natures-compass:2893530")
+//    compile fg.deobf("curse.maven:the-one-proble:3037741")
 }
 
 repositories {

@@ -1,8 +1,6 @@
 package com.alan19.astral.api.bodytracker;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.bodylink.BodyLink;
-import com.alan19.astral.api.bodylink.IBodyLink;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;

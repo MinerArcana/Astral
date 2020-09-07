@@ -15,6 +15,7 @@ public class AstralParticles {
     public static final RegistryObject<ParticleType<BlockParticleData>> ETHEREAL_REPLACE_PARTICLE = PARTICLES.register("ethereal_replace_particle", () -> new ParticleType<>(false, BlockParticleData.DESERIALIZER));
 
     public static final RegistryObject<BasicParticleType> ETHEREAL_FLAME = PARTICLES.register("ethereal_flame", () -> new BasicParticleType(false));
+    public static final RegistryObject<BasicParticleType> INTENTION_BEAM_PARTICLE = PARTICLES.register("intention_beam", () -> new BasicParticleType(false));
 
     public static void register(IEventBus modBus) {
         PARTICLES.register(modBus);

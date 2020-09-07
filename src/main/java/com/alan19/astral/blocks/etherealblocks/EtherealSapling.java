@@ -55,7 +55,7 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

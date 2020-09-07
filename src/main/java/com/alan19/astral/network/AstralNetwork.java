@@ -79,6 +79,17 @@ public class AstralNetwork {
                 .consumer(SyncPacketGrabbedItem::handle)
                 .add();
 
+        channel.messageBuilder(SendIntentionBeam.class, 10)
+                .decoder(SendIntentionBeam::decode)
+                .encoder(SendIntentionBeam::encode)
+                .consumer(SendIntentionBeam::handle)
+                .add();
+
+        channel.messageBuilder(DeleteIntentionBeam.class, 11)
+                .decoder(DeleteIntentionBeam::decode)
+                .encoder(DeleteIntentionBeam::encode)
+                .consumer(DeleteIntentionBeam::handle)
+                .add();
         return channel;
     }
 
@@ -116,5 +127,13 @@ public class AstralNetwork {
 
     public static void syncPacketGrabbedItem(ServerPlayerEntity player, ItemStack stack) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacketGrabbedItem(stack));
+    }
+
+    public static void sendIntentionBeam() {
+        Astral.INSTANCE.sendToServer(new SendIntentionBeam());
+    }
+
+    public static void deleteIntentionBeam() {
+        Astral.INSTANCE.sendToServer(new DeleteIntentionBeam());
     }
 }
