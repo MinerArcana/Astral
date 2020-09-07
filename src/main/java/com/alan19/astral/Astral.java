@@ -1,5 +1,6 @@
 package com.alan19.astral;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.NBTCapStorage;
 import com.alan19.astral.api.bodylink.BodyLink;
 import com.alan19.astral.api.bodylink.IBodyLink;
@@ -17,6 +18,9 @@ import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterCapability
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
 import com.alan19.astral.api.intentiontracker.BeamTracker;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EtherealSaplingIntentionTrackerBehavior;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EthericPowderIntentionTrackerBehavior;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IndexOfKnowledgeIntentionTrackerBehavior;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.PsychicInventory;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
@@ -30,7 +34,6 @@ import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
-import com.alan19.astral.entity.projectile.IntentionBeam;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
@@ -164,10 +167,13 @@ public class Astral {
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
 //        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
+
+        //Add Intention Beam behavior
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHEREAL_SAPLING.get(), new EtherealSaplingIntentionTrackerBehavior());
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.INDEX_OF_KNOWLEDGE.get(), new IndexOfKnowledgeIntentionTrackerBehavior());
+        AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHERIC_POWDER.get(), new EthericPowderIntentionTrackerBehavior());
     }
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
 

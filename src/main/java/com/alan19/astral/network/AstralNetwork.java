@@ -2,7 +2,6 @@ package com.alan19.astral.network;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import vazkii.botania.common.network.PacketHandler;
 
 
 public class AstralNetwork {

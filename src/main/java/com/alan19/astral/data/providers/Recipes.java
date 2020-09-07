@@ -2,18 +2,15 @@ package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.data.providers.dataproviders.ShapelessNBTRecipeBuilder;
-import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.ConditionalRecipe;
-import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nonnull;
@@ -117,7 +114,8 @@ public class Recipes extends RecipeProvider {
 
         ShapedRecipeBuilder.shapedRecipe(COMFORTABLE_CUSHION_ITEM.get(), 1)
                 .key('W', DREAMWEAVE.get())
-                .patternLine("   ")
+                .key('L', ItemTags.LEAVES)
+                .patternLine("LLL")
                 .patternLine("WWW")
                 .patternLine("WWW")
                 .addCriterion("dreamweave", hasItem(DREAMWEAVE.get()))

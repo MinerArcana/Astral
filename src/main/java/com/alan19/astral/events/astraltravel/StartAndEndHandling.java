@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.alan19.astral.api.bodylink.BodyLink.HEALTH_ID;
-import static net.minecraftforge.common.util.Constants.*;
+import static net.minecraftforge.common.util.Constants.NBT;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class StartAndEndHandling {

@@ -7,7 +7,6 @@ import com.alan19.astral.api.constructtracker.ConstructTrackerProvider;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
-import com.alan19.astral.api.intentiontracker.BeamTracker;
 import com.alan19.astral.api.intentiontracker.BeamTrackerProvider;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryProvider;
 import com.alan19.astral.api.sleepmanager.SleepManagerProvider;

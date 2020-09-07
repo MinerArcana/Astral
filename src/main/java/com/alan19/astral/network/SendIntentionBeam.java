@@ -1,7 +1,6 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.data.providers.Advancements;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.entity.player.ServerPlayerEntity;

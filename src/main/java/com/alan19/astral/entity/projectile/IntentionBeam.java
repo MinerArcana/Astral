@@ -2,7 +2,7 @@ package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
-import com.alan19.astral.blocks.IntentionBlock;
+import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IIntentionTrackerBehavior;
 import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.particle.AstralParticles;
@@ -59,8 +59,9 @@ public class IntentionBeam extends Entity implements IProjectile {
         if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
             final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
-            if (blockState.getBlock() instanceof IntentionBlock && dataManager.get(playerUUID).isPresent()) {
-                ((IntentionBlock) blockState.getBlock()).onIntentionTrackerHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
+            final IIntentionTrackerBehavior intentionTrackerBehavior = AstralAPI.getIntentionTrackerBehavior(blockState.getBlock());
+            if (intentionTrackerBehavior != null && dataManager.get(playerUUID).isPresent()) {
+                intentionTrackerBehavior.onIntentionBeamHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
                 remove();
             }
             else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(dataManager.get(beamLevel)).contains(blockState.getMaterial())){

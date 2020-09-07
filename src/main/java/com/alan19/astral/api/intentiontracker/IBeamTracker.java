@@ -2,7 +2,6 @@ package com.alan19.astral.api.intentiontracker;
 
 import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.INBTSerializable;
 

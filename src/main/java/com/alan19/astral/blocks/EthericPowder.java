@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class EthericPowder extends AbstractButtonBlock implements IntentionBlock {
+public class EthericPowder extends AbstractButtonBlock {
     protected EthericPowder() {
         super(false, Properties.create(Material.MISCELLANEOUS)
                 .doesNotBlockMovement()
@@ -32,11 +32,5 @@ public class EthericPowder extends AbstractButtonBlock implements IntentionBlock
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState blockState, @Nonnull World world, @Nonnull BlockPos blockPos, PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
         return playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) ? super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult) : ActionResultType.FAIL;
-    }
-
-    @Override
-    public boolean onIntentionTrackerHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
-        final ActionResultType actionResultType = super.onBlockActivated(blockState, playerEntity.getEntityWorld(), result.getPos(), playerEntity, Hand.MAIN_HAND, result);
-        return actionResultType == ActionResultType.SUCCESS;
     }
 }

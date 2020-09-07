@@ -79,6 +79,25 @@ public class PatchouliBooks extends PatchouliBookProvider {
         brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, Potions.THICK)).setText("Have you ever wanted the effects of Feverweed or Snowberries but for a longer or stronger effect? Now you can! These brews use Thick Potions as their base, and have the two effects at level II for 30 seconds as the starting potion.");
         brewPage.addSimpleTextPage("Adding Redstone lowers the effects to level I but increases the duration to 60 seconds." + FormatHelper.newParagraph() + "Adding Glowstone increases the effects to level III but decreases the duration to 20 seconds.");
 
+        final CategoryBuilder erratas = bookBuilder.addCategory("errata_and_sundries", "Errata and Sundries", "There are many miscellaneous blocks and items that can help with Astral Travel and building in the Inner Realm. These are the rare physical tools which help with physical workings.", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));
+        final EntryBuilder offeringBrazier = erratas.addEntry("offering_brazier", "Offering Brazier", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));
+        offeringBrazier.addTextPage("The Offering Brazier allows you to make many items astral when there is no other way to acquire equivalents while astral.");
+        offeringBrazier.addTextPage("The Offering Brazier cannot be used to transfer anything which burns, inventories or tile entities. Similarly anything which boils away doesn’t transfer, resulting in buckets of liquids arriving empty, and potions being reduced to glass bottles etc.");
+        offeringBrazier.addCraftingPage(new ResourceLocation(Astral.MOD_ID, AstralItems.OFFERING_BRAZIER_ITEM.getId().getPath()));
+
+        final CategoryBuilder mentalConstructs = bookBuilder.addCategory("mental_constructs", "Mental Constructs", "Mental constructs are arrays of astral blocks which take on special meaning and thus special powers when assembled within your mind. Each Mental Construct’s benefits are unique to the person who hosts them in their Inner Realm, and more than one of the same type have no additional positive effects.", new ItemStack(AstralItems.COMFORTABLE_CUSHION_ITEM.get()));
+        final EntryBuilder garden = mentalConstructs.addEntry("garden", "The Garden", new ItemStack(AstralItems.COMFORTABLE_CUSHION_ITEM.get()));
+        garden.addTextPage(FormatHelper.formatCode('o', "\"There is Contentment to be Found in Contemplating Nature, and Endurance born of the memory of Contentment\""));
+        garden.addTextPage(String.format("Centered on the %s, the Garden counts the amount of natural passive life and water around you and generates a level of Contentment based on it. Collect Astral plants of various sorts to maximize it’s efficiency.", FormatHelper.internalLink("astral:garden", "cushion", "Comfortable Cushion")));
+        garden.addTextPage("Benefits: When naturally healing you last longer the greater your contentment level. It may also prove to lend power to your inner energies, and assist with botanical magics.");
+        garden.addCraftingPage(AstralItems.COMFORTABLE_CUSHION_ITEM.getId()).setAnchor("cushion");
+
+        final EntryBuilder library = mentalConstructs.addEntry("library", "The Library", new ItemStack(AstralItems.INDEX_OF_KNOWLEDGE_ITEM.get()));
+        library.addTextPage(FormatHelper.formatCode('o', "\"Writing is the quite fantastic power to ensure your thoughts are known to others, even beyond death.\""));
+        library.addTextPage(String.format("Centered on the %s, the Library measures your internal knowledge as detected by bookshelves and lecterns with appropriate books on them.", FormatHelper.internalLink("astral:library", "index", "Index of Knowledge")));
+        library.addTextPage("Benefits: You can channel your experience and intentions into it, or regain health, and regain a tenth of your invested levels and learning thereafter. Each tier of knowledge requires ten times the new sought level in levels from you.");
+        library.addCraftingPage(AstralItems.INDEX_OF_KNOWLEDGE_ITEM.getId()).setAnchor("index");
+
         bookBuilder.build(consumer);
     }
 }
