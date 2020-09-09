@@ -48,7 +48,7 @@ import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.util.ModCompat;
 import com.alan19.astral.world.AstralFeatures;
-import com.alan19.astral.world.OverworldVegetation;
+import com.alan19.astral.world.AstralWorld;
 import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
@@ -160,7 +160,7 @@ public class Astral {
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
-        OverworldVegetation.addOverworldVegetation();
+        AstralWorld.addOverworldVegetation();
         AstralEntities.addSpawns();
 
         //Register Serializers
@@ -190,7 +190,5 @@ public class Astral {
             CapabilityManager.INSTANCE.register(IBodyTracker.class, new NBTCapStorage<>(), BodyTracker::new);
             CapabilityManager.INSTANCE.register(IBeamTracker.class, new NBTCapStorage<>(), BeamTracker::new);
         }
-
     }
-
 }

@@ -1,15 +1,15 @@
 package com.alan19.astral.world;
 
-import com.alan19.astral.world.islands.EthericIslesConfig;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
-public class OverworldVegetation {
+public class AstralWorld {
     private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature(SnowberryFeatureConfig::deserialize);
     private static final Feature<FeverweedFeatureConfig> FEVERWEED = new FeverweedFeature(FeverweedFeatureConfig::deserialize);
 
@@ -18,18 +18,18 @@ public class OverworldVegetation {
             generateSnowberries(biome);
             generateFeverweed(biome);
         }
-        ForgeRegistries.BIOMES.getEntries().stream().map(Map.Entry::getValue).forEach(OverworldVegetation::addEthericIsles);
+        ForgeRegistries.BIOMES.getEntries().stream().map(Map.Entry::getValue).forEach(AstralWorld::addEthericIsles);
 
     }
 
     public static void addEthericIsles(Biome biome) {
         if (BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).contains(biome)) {
-            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(true)));
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(true)));
+            biome.addStructure(AstralFeatures.ETHERIC_ISLE_OCEAN.get().withConfiguration(new NoFeatureConfig()));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ETHERIC_ISLE_OCEAN.get().withConfiguration(new NoFeatureConfig()));
         }
         else {
-            biome.addStructure(AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(false)));
-            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ASTRAL_ISLAND.get().withConfiguration(new EthericIslesConfig(false)));
+            biome.addStructure(AstralFeatures.ETHERIC_ISLE_LAND.get().withConfiguration(new NoFeatureConfig()));
+            biome.addFeature(GenerationStage.Decoration.SURFACE_STRUCTURES, AstralFeatures.ETHERIC_ISLE_LAND.get().withConfiguration(new NoFeatureConfig()));
 
         }
     }

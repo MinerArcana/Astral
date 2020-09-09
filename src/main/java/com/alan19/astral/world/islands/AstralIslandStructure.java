@@ -1,6 +1,5 @@
 package com.alan19.astral.world.islands;
 
-import com.alan19.astral.world.AstralFeatures;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SharedSeedRandom;
@@ -10,6 +9,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.ScatteredStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
@@ -17,17 +17,23 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
 /**
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
-public class AstralIslandStructure extends ScatteredStructure<EthericIslesConfig> {
-    public AstralIslandStructure(Function<Dynamic<?>, ? extends EthericIslesConfig> function) {
+public abstract class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
+
+    public AstralIslandStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function) {
         super(function);
     }
+
+    @Override
+    protected abstract int getBiomeFeatureDistance(@Nonnull ChunkGenerator<?> chunkGenerator);
+
+    @Override
+    protected abstract int getBiomeFeatureSeparation(@Nonnull ChunkGenerator<?> chunkGenerator);
 
     @Override
     protected int getSeedModifier() {
@@ -42,9 +48,7 @@ public class AstralIslandStructure extends ScatteredStructure<EthericIslesConfig
 
     @Nonnull
     @Override
-    public String getStructureName() {
-        return "astral:etheric_isle";
-    }
+    public abstract String getStructureName();
 
     @Override
     public int getSize() {
@@ -55,36 +59,20 @@ public class AstralIslandStructure extends ScatteredStructure<EthericIslesConfig
     @Nonnull
     @ParametersAreNonnullByDefault
     protected ChunkPos getStartPositionForPosition(ChunkGenerator<?> chunkGenerator, Random random, int x, int z, int spacingOffsetsX, int spacingOffsetsZ) {
-        final BlockPos blockPos = new ChunkPos(x, z).asBlockPos();
-        final Optional<Biome> biomeOptional = chunkGenerator.getBiomeProvider().getBiomes(blockPos.getX(), blockPos.getY(), blockPos.getZ(), 0).stream().findFirst();
-        if (biomeOptional.isPresent()) {
-            EthericIslesConfig ethericIslesConfig = chunkGenerator.getStructureConfig(biomeOptional.get(), AstralFeatures.ASTRAL_ISLAND.get());
-            int i, j;
-            if (ethericIslesConfig != null){
-                i = ethericIslesConfig.getDistance();
-                j = ethericIslesConfig.getSeparation();
-            }
-            else {
-                final EthericIslesConfig fallbackConfig = new EthericIslesConfig(false);
-                i = fallbackConfig.getDistance();
-                j = fallbackConfig.getSeparation();
-            }
-            int k = x + i * spacingOffsetsX;
-            int l = z + i * spacingOffsetsZ;
-            int i1 = k < 0 ? k - i + 1 : k;
-            int j1 = l < 0 ? l - i + 1 : l;
-            int k1 = i1 / i;
-            int l1 = j1 / i;
-            ((SharedSeedRandom) random).setLargeFeatureSeedWithSalt(chunkGenerator.getSeed(), k1, l1, this.getSeedModifier());
-            k1 = k1 * i;
-            l1 = l1 * i;
-            k1 = k1 + random.nextInt(i - j);
-            l1 = l1 + random.nextInt(i - j);
-            return new ChunkPos(k1, l1);
-        }
-        else {
-            return super.getStartPositionForPosition(chunkGenerator, random, x, z, spacingOffsetsX, spacingOffsetsZ);
-        }
+        int distance = getBiomeFeatureDistance(chunkGenerator);
+        int separation = getBiomeFeatureSeparation(chunkGenerator);
+        int k = x + distance * spacingOffsetsX;
+        int l = z + distance * spacingOffsetsZ;
+        int i1 = k < 0 ? k - distance + 1 : k;
+        int j1 = l < 0 ? l - distance + 1 : l;
+        int k1 = i1 / distance;
+        int l1 = j1 / distance;
+        ((SharedSeedRandom) random).setLargeFeatureSeedWithSalt(chunkGenerator.getSeed(), k1, l1, this.getSeedModifier());
+        k1 = k1 * distance;
+        l1 = l1 * distance;
+        k1 = k1 + random.nextInt(distance - separation);
+        l1 = l1 + random.nextInt(distance - separation);
+        return new ChunkPos(k1, l1);
     }
 
     public static class AstralIslandStart extends StructureStart {
