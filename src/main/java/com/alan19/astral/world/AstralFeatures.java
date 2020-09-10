@@ -23,7 +23,7 @@ public class AstralFeatures {
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Astral.MOD_ID);
 
     public static final RegistryObject<Feature<TreeFeatureConfig>> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new TreeFeature(TreeFeatureConfig::deserializeFoliage));
-    public static final RegistryObject<AstralIslandStructure> ETHERIC_ISLE_OCEAN = FEATURES.register("astral_island_structure", EthericIsleOcean::new);
+    public static final RegistryObject<AstralIslandStructure> ETHERIC_ISLE_OCEAN = FEATURES.register("etheric_isle_ocean", EthericIsleOcean::new);
     public static final RegistryObject<AstralIslandStructure> ETHERIC_ISLE_LAND = FEATURES.register("etheric_isle_land", EthericIsleLand::new);
 
     public static final IStructurePieceType ASTRAL_ISLAND_PIECE = Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(Astral.MOD_ID, "astral_island_piece"), AstralIslandPiece::new);
@@ -50,7 +50,7 @@ public class AstralFeatures {
         @Override
         @Nonnull
         public String getStructureName() {
-            return "astral:etheric_isles_ocean";
+            return "astral:etheric_isle";
         }
     }
 
@@ -72,7 +72,7 @@ public class AstralFeatures {
         @Override
         @Nonnull
         public String getStructureName() {
-            return "astral:etheric_isles_land";
+            return "astral:astral_island_structure";
         }
     }
 }
