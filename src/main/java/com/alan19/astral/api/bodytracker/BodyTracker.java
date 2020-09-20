@@ -89,7 +89,7 @@ public class BodyTracker implements IBodyTracker {
 
     @Override
     public Optional<BodyInfo> getBodyInfo(PlayerEntity playerEntity) {
-        return Optional.ofNullable(bodyTrackerMap.get(playerEntity));
+        return Optional.ofNullable(bodyTrackerMap.get(playerEntity.getUniqueID()));
     }
 
     @Override

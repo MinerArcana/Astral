@@ -164,7 +164,6 @@ public class Astral {
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-//        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
 
         //Add Intention Beam behavior
         AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHEREAL_SAPLING.get(), new EtherealSaplingIntentionTrackerBehavior());
