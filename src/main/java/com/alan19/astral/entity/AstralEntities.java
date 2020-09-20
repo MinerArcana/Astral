@@ -42,7 +42,7 @@ public class AstralEntities {
     }
 
     private static EntityType<PhysicalBodyEntity> getPhysicalBody() {
-        return EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.<PhysicalBodyEntity>create(PhysicalBodyEntity::new, EntityClassification.MISC)
                 .size(1.8F, .6F)
                 .build(PHYSICAL_BODY);
     }

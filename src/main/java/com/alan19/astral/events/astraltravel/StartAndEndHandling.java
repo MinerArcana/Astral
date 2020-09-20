@@ -2,7 +2,7 @@ package com.alan19.astral.events.astraltravel;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.bodylink.BodyInfo;
+import com.alan19.astral.api.bodytracker.BodyInfo;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.effects.AstralEffects;
@@ -28,7 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.alan19.astral.api.bodylink.BodyLink.HEALTH_ID;
+import static com.alan19.astral.api.bodytracker.BodyTracker.HEALTH_ID;
 import static net.minecraftforge.common.util.Constants.NBT;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
@@ -86,7 +86,7 @@ public class StartAndEndHandling {
                 //Get server versions of world and player
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.mergeBodies(playerEntity, serverWorld));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(bodyLink -> bodyLink.mergeBodies(playerEntity, serverWorld));
                 serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL.get()));
                 AstralNetwork.sendClientAstralTravelEnd(serverPlayerEntity);
             }
@@ -122,16 +122,22 @@ public class StartAndEndHandling {
             final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
             if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
-                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> {
-                    bodyLink.updatePlayer(player, serverWorld);
-                    bodyLink.getBodyInfo().ifPresent(bodyInfo -> AstralAPI.getBodyTracker(serverWorld).map(iBodyTracker -> iBodyTracker.getBodyTrackerMap().get(bodyInfo.getBodyId())).ifPresent(compoundNBT -> {
-                        if (compoundNBT.getFloat("Health") <= 0){
-                            spawnPhysicalBody(player, bodyInfo, compoundNBT);
-                        }
-                    }));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> {
+                    tracker.updatePlayer(player, serverWorld);
+                    final BodyInfo info = tracker.getBodyTrackerMap().get(player.getUniqueID());
+                    if (!info.getBodyId().isPresent()){
+                        spawnPhysicalBody(player, info);
+                    }
                 });
             }
         }
+    }
+
+    private static void spawnPhysicalBody(ServerPlayerEntity player, BodyInfo info) {
+        PhysicalBodyEntity body = new PhysicalBodyEntity(player.getServer().getWorld(info.getDimensionType()), player.getGameProfile());
+        body.setPosition(info.getPos().getX(), info.getPos().getY(), info.getPos().getZ());
+        body.setHealth(info.getHealth());
+        player.getServerWorld().addFromAnotherDimension(body);
     }
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {

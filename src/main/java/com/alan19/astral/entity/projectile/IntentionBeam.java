@@ -8,11 +8,11 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.util.IntentionBeamMaterials;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
@@ -20,6 +20,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnParticlePacket;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
@@ -166,10 +167,13 @@ public class IntentionBeam extends Entity implements IProjectile {
     public void tick() {
         super.tick();
         if (isAlive()) {
-            if (world instanceof ClientWorld && ticksExisted % 5 == 0) {
-                for (int i = 0; i < 2; i++) {
-                    world.addParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosY() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosZ() + (rand.nextDouble() - rand.nextDouble()) * .5, 0, 0, 0);
-                }
+            if (world instanceof ServerWorld && ticksExisted % 5 == 0) {
+                SSpawnParticlePacket intentionBeamParticlePacket = new SSpawnParticlePacket(AstralParticles.INTENTION_BEAM_PARTICLE.get(), false,  getPosX(), getPosY(), getPosZ(), (rand.nextFloat() - rand.nextFloat()) * .5f, (rand.nextFloat() - rand.nextFloat()) * .5f, (rand.nextFloat() - rand.nextFloat()) * .5f, 0f, 2);
+                dataManager.get(playerUUID)
+                        .map(uuid -> ((ServerPlayerEntity)world.getPlayerByUuid(uuid)))
+                        .ifPresent(serverPlayerEntity -> serverPlayerEntity.connection.sendPacket(intentionBeamParticlePacket));
+
+
             }
             if (ticksExisted >= dataManager.get(maxDistance) * 4) {
                 this.remove();
