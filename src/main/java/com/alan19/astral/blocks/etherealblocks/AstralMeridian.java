@@ -54,7 +54,7 @@ public class AstralMeridian extends Block implements Ethereal {
     @Override
     @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (player.getHeldItem(handIn).isEmpty()) {
+        if (player.getHeldItem(Hand.MAIN_HAND).isEmpty() && player.getHeldItem(Hand.OFF_HAND).isEmpty()) {
             player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
             return ActionResultType.SUCCESS;
         }

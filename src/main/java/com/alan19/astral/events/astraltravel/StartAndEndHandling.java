@@ -125,7 +125,8 @@ public class StartAndEndHandling {
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> {
                     tracker.updatePlayer(player, serverWorld);
                     final BodyInfo info = tracker.getBodyTrackerMap().get(player.getUniqueID());
-                    if (!info.getBodyId().isPresent()){
+                    // TODO Investigate why this doens't work in the Inner Realm
+                    if (info != null && !info.getBodyId().isPresent()){
                         spawnPhysicalBody(player, info);
                     }
                 });
@@ -137,7 +138,7 @@ public class StartAndEndHandling {
         PhysicalBodyEntity body = new PhysicalBodyEntity(player.getServer().getWorld(info.getDimensionType()), player.getGameProfile());
         body.setPosition(info.getPos().getX(), info.getPos().getY(), info.getPos().getZ());
         body.setHealth(info.getHealth());
-        player.getServerWorld().addFromAnotherDimension(body);
+        player.getServerWorld().addEntity(body);
     }
 
     public static void spawnPhysicalBody(PlayerEntity playerEntity) {

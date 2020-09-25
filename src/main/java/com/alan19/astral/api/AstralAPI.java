@@ -2,6 +2,7 @@ package com.alan19.astral.api;
 
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
+import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IIntentionTrackerBehavior;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
@@ -41,6 +42,9 @@ public class AstralAPI {
     @CapabilityInject(IBeamTracker.class)
     public static Capability<IBeamTracker> beamTrackerCapability;
 
+    @CapabilityInject(IInnerRealmChunkClaim.class)
+    public static Capability<IInnerRealmChunkClaim> innerRealmChunkClaimCapability;
+
     public static LazyOptional<IBodyTracker> getBodyTracker(ServerWorld world){
         return getOverworld(world).getCapability(bodyTrackerCapability);
     }
@@ -55,6 +59,10 @@ public class AstralAPI {
 
     public static LazyOptional<IConstructTracker> getConstructTracker(ServerWorld world) {
         return getOverworld(world).getCapability(constructTrackerCapability);
+    }
+
+    public static LazyOptional<IInnerRealmChunkClaim> getChunkClaim(ServerWorld world){
+        return getOverworld(world).getCapability(innerRealmChunkClaimCapability);
     }
 
     public static ServerWorld getOverworld(ServerWorld world) {

@@ -1,6 +1,6 @@
 package com.alan19.astral.items;
 
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import com.alan19.astral.dimensions.AstralDimensions;
@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +26,7 @@ public class EnlightenmentKey extends Item {
     @Nonnull
     public ActionResultType onItemUse(ItemUseContext context) {
         World world = context.getWorld();
-        if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM))) {
+        if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM)) && world instanceof ServerWorld) {
             IChunk meridianChunk = world.getChunk(context.getPos());
             if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
                 BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
@@ -33,9 +34,10 @@ public class EnlightenmentKey extends Item {
                 InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
                 innerRealmUtils.destroyWall(world, meridianChunk, meridianDirection);
                 Chunk chunkToGenerateBoxIn = innerRealmUtils.getAdjacentChunk(context.getPos(), meridianDirection, world);
-                world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.handleChunkClaim(context.getPlayer(), chunkToGenerateBoxIn));
+                AstralAPI.getChunkClaim((ServerWorld) world).ifPresent(chunkClaim -> chunkClaim.handleChunkClaim(context.getPlayer(), chunkToGenerateBoxIn));
                 innerRealmUtils.destroyWall(world, chunkToGenerateBoxIn, (meridianDirection + 2) % 4);
                 context.getItem().setCount(context.getItem().getCount() - 1);
+                // TODO Send block break to client
             }
         }
         return super.onItemUse(context);

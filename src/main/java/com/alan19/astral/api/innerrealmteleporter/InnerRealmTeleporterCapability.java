@@ -1,7 +1,6 @@
 package com.alan19.astral.api.innerrealmteleporter;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.dimensions.TeleportationTools;
@@ -35,11 +34,11 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
      */
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
-        if (!player.getEntityWorld().isRemote()) {
+        if (player.getEntityWorld() instanceof ServerWorld && player.getServer() != null && DimensionType.byName(INNER_REALM) != null) {
             ServerWorld innerRealmWorld = player.getServer().getWorld(DimensionType.byName(INNER_REALM));
             final BlockPos playerSpawnPos = getSpawn(player);
             Chunk spawnChunk = innerRealmWorld.getChunkAt(playerSpawnPos);
-            innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));
+            AstralAPI.getChunkClaim(innerRealmWorld).ifPresent(chunkClaim -> chunkClaim.addChunkToPlayerClaims(player, spawnChunk.getPos()));
             innerRealmUtils.generateInnerRealmChunk(innerRealmWorld, spawnChunk);
             innerRealmWorld.getChunk(playerSpawnPos);
         }

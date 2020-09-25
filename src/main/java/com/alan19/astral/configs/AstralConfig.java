@@ -136,7 +136,7 @@ public class AstralConfig {
 
             travellingMedicineDuration = builder.comment("Controls the duration of Astral Travel from Traveling Medicine, in ticks.")
                     .translation("astral.config.common.travellingMedicineAstralTravelDuration")
-                    .define("travellingMedicineAstralTravelDuration", 1200);
+                    .define("travellingMedicineAstralTravelDuration", 3000);
 
             builder.pop();
         }

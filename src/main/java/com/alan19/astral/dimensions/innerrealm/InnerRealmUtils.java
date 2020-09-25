@@ -2,6 +2,7 @@ package com.alan19.astral.dimensions.innerrealm;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -77,7 +78,7 @@ public class InnerRealmUtils {
         if (meridianDirection == 0) {
             for (int x = 1; x < 15; x++) {
                 for (int y = 1; y < 15; y++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), false);
+                    world.notifyBlockUpdate(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), world.getBlockState(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0)), Blocks.AIR.getDefaultState(), 3);
                 }
             }
         }
