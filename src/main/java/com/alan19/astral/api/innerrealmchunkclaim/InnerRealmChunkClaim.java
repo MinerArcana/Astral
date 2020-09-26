@@ -19,10 +19,6 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
 
     @Override
     public void handleChunkClaim(PlayerEntity player, Chunk chunk) {
-        //Send sync message to client
-        if (!player.getEntityWorld().isRemote()) {
-//            AstralNetwork.sendClaimedChunksToPlayers((CompoundNBT) serializeNBT());
-        }
         //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
         //break down the appropriate walls
         InnerRealmUtils innerRealmUtils = new InnerRealmUtils();

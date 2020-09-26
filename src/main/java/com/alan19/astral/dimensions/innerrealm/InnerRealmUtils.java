@@ -4,26 +4,44 @@ import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
 
+import java.util.stream.Stream;
+
 public class InnerRealmUtils {
     public Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
-        if (direction == 0) {
-            return world.getChunkAt(blockPos.add(0, 0, -16));
+        switch (direction) {
+            case 0:
+                return world.getChunkAt(blockPos.add(0, 0, -16));
+            case 1:
+                return world.getChunkAt(blockPos.add(-16, 0, 0));
+            case 2:
+                return world.getChunkAt(blockPos.add(0, 0, 16));
+            case 3:
+                return world.getChunkAt(blockPos.add(16, 0, 0));
+            default:
+                throw new IllegalStateException("Unexpected value: " + direction);
         }
-        if (direction == 1) {
-            return world.getChunkAt(blockPos.add(-16, 0, 0));
+    }
+
+    public Stream<BlockPos> getFace(IChunk chunk, int direction, World world) {
+        ChunkPos pos = chunk.getPos();
+        int seaLevel = world.getSeaLevel();
+        switch (direction) {
+            case 3:
+                return BlockPos.getAllInBox(pos.getBlock(15, world.getSeaLevel() + 1, 1), pos.getBlock(16, world.getSeaLevel() + 14, 14));
+            case 2:
+                return BlockPos.getAllInBox(pos.getBlock(1, seaLevel + 1, 15), pos.getBlock(14, seaLevel + 14, 16));
+            case 1:
+                return BlockPos.getAllInBox(pos.getBlock(0, seaLevel + 1, 1), pos.getBlock(-1, seaLevel + 14, 14));
+            case 0:
+                return BlockPos.getAllInBox(pos.getBlock(1, seaLevel + 1, 0), pos.getBlock(14, seaLevel + 14, -1));
+            default:
+                throw new IllegalStateException("Unexpected value: " + direction);
         }
-        if (direction == 2) {
-            return world.getChunkAt(blockPos.add(0, 0, 16));
-        }
-        if (direction == 3) {
-            return world.getChunkAt(blockPos.add(16, 0, 0));
-        }
-        System.out.println("Invalid direction, returning north!");
-        return world.getChunkAt(blockPos.add(0, 0, -16));
     }
 
     public void generateInnerRealmChunk(World world, Chunk chunk) {

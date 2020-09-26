@@ -1,7 +1,10 @@
 package com.alan19.astral.blocks.etherealblocks;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.dimensions.innerrealm.InnerRealmUtils;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.items.AstralItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -14,6 +17,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -54,9 +60,19 @@ public class AstralMeridian extends Block implements Ethereal {
     @Override
     @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (player.getHeldItem(Hand.MAIN_HAND).isEmpty() && player.getHeldItem(Hand.OFF_HAND).isEmpty()) {
-            player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
-            return ActionResultType.SUCCESS;
+        if (worldIn instanceof ServerWorld) {
+            if (player.getHeldItem(Hand.MAIN_HAND).isEmpty() && player.getHeldItem(Hand.OFF_HAND).isEmpty()) {
+                player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                return ActionResultType.SUCCESS;
+            }
+            else if (player.getHeldItem(handIn).getItem() == AstralItems.ENLIGHTENMENT_KEY.get()) {
+                IChunk meridianChunk = worldIn.getChunk(pos);
+                int meridianDirection = state.get(AstralMeridian.DIRECTION);
+                InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
+                Chunk chunkToGenerateBoxIn = innerRealmUtils.getAdjacentChunk(pos, meridianDirection, worldIn);
+                AstralAPI.getChunkClaim((ServerWorld) worldIn).ifPresent(chunkClaim -> chunkClaim.handleChunkClaim(player, chunkToGenerateBoxIn));
+                innerRealmUtils.getFace(meridianChunk, meridianDirection, worldIn).forEach(blockPos -> worldIn.destroyBlock(blockPos, false));
+            }
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
