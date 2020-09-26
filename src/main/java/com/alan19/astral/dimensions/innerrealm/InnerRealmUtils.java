@@ -2,7 +2,6 @@ package com.alan19.astral.dimensions.innerrealm;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -12,7 +11,7 @@ import net.minecraft.world.chunk.IChunk;
 import java.util.stream.Stream;
 
 public class InnerRealmUtils {
-    public Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
+    public static Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
         switch (direction) {
             case 0:
                 return world.getChunkAt(blockPos.add(0, 0, -16));
@@ -27,7 +26,7 @@ public class InnerRealmUtils {
         }
     }
 
-    public Stream<BlockPos> getFace(IChunk chunk, int direction, World world) {
+    public static Stream<BlockPos> getFace(IChunk chunk, int direction, World world) {
         ChunkPos pos = chunk.getPos();
         int seaLevel = world.getSeaLevel();
         switch (direction) {
@@ -44,7 +43,7 @@ public class InnerRealmUtils {
         }
     }
 
-    public void generateInnerRealmChunk(World world, Chunk chunk) {
+    public static void generateInnerRealmChunk(World world, Chunk chunk) {
         int x;
         int y;
         int z;
@@ -87,45 +86,11 @@ public class InnerRealmUtils {
         }
     }
 
-    public boolean isBetweenInclusive(int compare, int a, int b) {
+    public static boolean isBetweenInclusive(int compare, int a, int b) {
         return compare >= a && compare <= b;
     }
 
-    public void destroyWall(World world, IChunk meridianChunk, int meridianDirection) {
-        //North
-        if (meridianDirection == 0) {
-            for (int x = 1; x < 15; x++) {
-                for (int y = 1; y < 15; y++) {
-                    world.notifyBlockUpdate(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), world.getBlockState(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0)), Blocks.AIR.getDefaultState(), 3);
-                }
-            }
-        }
-
-        //South
-        if (meridianDirection == 2) {
-            for (int x = 1; x < 15; x++) {
-                for (int y = 1; y < 15; y++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), false);
-                }
-            }
-        }
-
-        //East
-        else if (meridianDirection == 1) {
-            for (int y = 1; y < 15; y++) {
-                for (int z = 1; z < 15; z++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(0, world.getSeaLevel() + y, z), false);
-                }
-            }
-        }
-
-        //West
-        else if (meridianDirection == 3) {
-            for (int y = 1; y < 15; y++) {
-                for (int z = 1; z < 15; z++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(15, world.getSeaLevel() + y, z), false);
-                }
-            }
-        }
+    public static void destroyWall(World world, IChunk meridianChunk, int meridianDirection) {
+        getFace(meridianChunk, meridianDirection, world).forEach(blockPos -> world.destroyBlock(blockPos, false));
     }
 }

@@ -21,16 +21,14 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
     public void handleChunkClaim(PlayerEntity player, Chunk chunk) {
         //If player does not have access to a chunk, create a new box and check it's adjacent chunks for boxes and
         //break down the appropriate walls
-        InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
         if (!playerHasClaimedChunk(player, chunk.getPos())) {
-            innerRealmUtils.generateInnerRealmChunk(player.getEntityWorld(), chunk);
+            InnerRealmUtils.generateInnerRealmChunk(player.getEntityWorld(), chunk);
         }
         addChunkToPlayerClaims(player, chunk.getPos());
         for (int i = 0; i < 4; i++) {
-            Chunk adjacentChunk = innerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
+            Chunk adjacentChunk = InnerRealmUtils.getAdjacentChunk(chunk.getPos().asBlockPos(), i, player.getEntityWorld());
             if (playerHasClaimedChunk(player, adjacentChunk.getPos())) {
-                innerRealmUtils.destroyWall(player.getEntityWorld(), chunk, i);
-                innerRealmUtils.destroyWall(player.getEntityWorld(), adjacentChunk, (i + 2) % 4);
+                InnerRealmUtils.destroyWall(player.getEntityWorld(), chunk, i);
             }
         }
     }
@@ -86,14 +84,15 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         HashMap<UUID, ArrayList<ChunkPos>> claimedChunkMap = new HashMap<>();
-        CompoundNBT compoundNBT = nbt;
-        CompoundNBT claimedChunks = (CompoundNBT) compoundNBT.get("claimedChunks");
-        for (String id : claimedChunks.keySet()) {
-            ArrayList<ChunkPos> chunkPosArrayList = new ArrayList<>();
-            for (INBT locationTag : claimedChunks.getList(id, Constants.NBT.TAG_COMPOUND)) {
-                chunkPosArrayList.add(new ChunkPos(NBTUtil.readBlockPos((CompoundNBT) locationTag)));
+        CompoundNBT claimedChunks = (CompoundNBT) nbt.get("claimedChunks");
+        if (claimedChunks != null) {
+            for (String id : claimedChunks.keySet()) {
+                ArrayList<ChunkPos> chunkPosArrayList = new ArrayList<>();
+                for (INBT locationTag : claimedChunks.getList(id, Constants.NBT.TAG_COMPOUND)) {
+                    chunkPosArrayList.add(new ChunkPos(NBTUtil.readBlockPos((CompoundNBT) locationTag)));
+                }
+                claimedChunkMap.put(UUID.fromString(id), chunkPosArrayList);
             }
-            claimedChunkMap.put(UUID.fromString(id), chunkPosArrayList);
         }
         setClaimedChunkMap(claimedChunkMap);
     }
