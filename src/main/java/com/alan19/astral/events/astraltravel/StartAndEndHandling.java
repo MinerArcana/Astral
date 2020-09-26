@@ -164,6 +164,10 @@ public class StartAndEndHandling {
 
                 psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
             }
+
+            if (physicalBodyEntity.getEntityWorld() instanceof ServerWorld) {
+                AstralAPI.getBodyTracker((ServerWorld) physicalBodyEntity.getEntityWorld()).ifPresent(tracker -> tracker.setBodyInfo(new BodyInfo(physicalBodyEntity.getHealth(), physicalBodyEntity.getPosition(), physicalBodyEntity.isAlive(), physicalBodyEntity.dimension, physicalBodyEntity.getUniqueID()), playerEntity));
+            }
         }
     }
 

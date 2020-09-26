@@ -187,7 +187,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (getGameProfile().isPresent() && serverWorld.getPlayers().stream().map(Entity::getUniqueID).noneMatch(uuid -> getGameProfile().get().getId().equals(uuid))) {
+            if (getGameProfile().isPresent() && serverWorld.getServer().getPlayerList().getPlayers().stream().map(Entity::getUniqueID).noneMatch(uuid -> getGameProfile().get().getId().equals(uuid))) {
                 remove();
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.removeBody(getGameProfile().get().getId()));
             }

@@ -67,7 +67,7 @@ public class BodyTracker implements IBodyTracker {
         nbt.keySet().forEach(s -> {
             final CompoundNBT compound = nbt.getCompound(s);
             // Only deserialize if nbt contains body info
-            if (compound.contains("health") && compound.contains("alive") && compound.contains("pos") && compound.contains("dimension") && compound.contains("bodyID")){
+            if (compound.contains("health") && compound.contains("alive") && compound.contains("pos") && compound.contains("dimension")) {
                 final BodyInfo bodyInfo = new BodyInfo(compound);
                 if (bodyInfo.getDimensionType() != null) {
                     bodyTrackerMap.put(UUID.fromString(s), bodyInfo);
@@ -123,6 +123,7 @@ public class BodyTracker implements IBodyTracker {
             //If body is not found, teleport player to their spawn location (bed or world spawn)
             else {
                 teleportPlayerToSpawn(serverPlayerEntity);
+                AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
             }
         }
 
