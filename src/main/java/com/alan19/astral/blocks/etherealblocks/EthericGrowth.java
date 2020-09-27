@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class EthericGrowth extends TallGrassBlock implements Ethereal {
     public EthericGrowth() {
-        super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0F).sound(SoundType.PLANT));
+        super(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().hardnessAndResistance(0F).sound(SoundType.PLANT));
     }
 
     @Override
