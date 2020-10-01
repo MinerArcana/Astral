@@ -8,10 +8,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,17 +30,17 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
     @Override
     @ParametersAreNonnullByDefault
     public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        if (worldIn.isAirBlock(pos.up())){
-            if (this == AstralBlocks.GENTLEGRASS.get()){
+        if (worldIn.isAirBlock(pos.up())) {
+            if (this == AstralBlocks.GENTLEGRASS.get()) {
                 AstralBlocks.TALL_GENTLEGRASS.get().placeAt(worldIn, pos, 2);
             }
-            else if (this == AstralBlocks.WILDWEED.get()){
+            else if (this == AstralBlocks.WILDWEED.get()) {
                 AstralBlocks.TALL_WILDWEED.get().placeAt(worldIn, pos, 2);
             }
-            else if (this == AstralBlocks.CYANGRASS.get()){
+            else if (this == AstralBlocks.CYANGRASS.get()) {
                 AstralBlocks.TALL_CYANGRASS.get().placeAt(worldIn, pos, 2);
             }
-            else if (this == AstralBlocks.REDBULB.get()){
+            else if (this == AstralBlocks.REDBULB.get()) {
                 AstralBlocks.TALL_REDBULB.get().placeAt(worldIn, pos, 2);
             }
         }
@@ -61,14 +60,13 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
     @Nonnull
     @Override
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-        return Ethereal.getCollisionShape(context, super.getCollisionShape(state, worldIn, pos, context));
+        return Ethereal.getCollisionShape(context, this.blocksMovement ? super.getShape(state, worldIn, pos, context) : VoxelShapes.empty());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Nonnull
     @Override
     public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-        return Ethereal.getShape(super.getShape(state, worldIn, pos, context));
+        return Ethereal.getShape(context, super.getShape(state, worldIn, pos, context));
     }
 
     @Override

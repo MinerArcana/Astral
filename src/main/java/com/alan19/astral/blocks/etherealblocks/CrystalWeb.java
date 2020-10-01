@@ -64,7 +64,7 @@ public class CrystalWeb extends EtherealBlock {
             AstralEntities.CRYSTAL_SPIDER.get().spawn(worldIn, null, null, pos, SpawnReason.SPAWNER, false, false);
         }
         //Remove block if exposed to rain or any liquid
-        if (worldIn.isRainingAt(pos) || !worldIn.getFluidState(pos).isEmpty()){
+        if (worldIn.isRainingAt(pos) || !worldIn.getFluidState(pos).isEmpty()) {
             worldIn.removeBlock(pos, false);
         }
     }

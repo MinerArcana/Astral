@@ -11,12 +11,11 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.lighting.LightEngine;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
@@ -50,14 +49,13 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
     @Nonnull
     @Override
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-        return Ethereal.getCollisionShape(context, super.getCollisionShape(state, worldIn, pos, context));
+        return Ethereal.getCollisionShape(context, this.blocksMovement ? super.getShape(state, worldIn, pos, context) : VoxelShapes.empty());
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Nonnull
     @Override
     public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
-        return Ethereal.getShape(super.getShape(state, worldIn, pos, context));
+        return Ethereal.getShape(context, super.getShape(state, worldIn, pos, context));
     }
 
     @Override
@@ -138,7 +136,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, IGrowable {
     }
 
     private void setPlant(ServerWorld worldIn, Block block, BlockPos upPos) {
-        if (block instanceof TallEthericGrowth){
+        if (block instanceof TallEthericGrowth) {
             ((TallEthericGrowth) block).placeAt(worldIn, upPos, 2);
         }
         else {

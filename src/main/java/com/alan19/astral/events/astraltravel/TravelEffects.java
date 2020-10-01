@@ -157,10 +157,18 @@ public class TravelEffects {
         }
     }
 
+    /**
+     * Determines harvest speed when Astral Traveling. 0 (cancelled) when attempting to break a non-ethereal block, normal speed (even when flying) otherwise
+     *
+     * @param event The BreakSpeed event
+     */
     @SubscribeEvent
     public static void astralHarvestSpeed(PlayerEvent.BreakSpeed event) {
         if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
+        }
+        else if (isEntityAstral(event.getPlayer()) && !event.getPlayer().onGround) {
+            event.setNewSpeed(event.getNewSpeed() * 5);
         }
     }
 
