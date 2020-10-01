@@ -15,6 +15,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public interface Ethereal {
 
@@ -25,9 +26,8 @@ public interface Ethereal {
      * @return Invisible if player does not have Astral Travel, super if player does
      */
     static BlockRenderType getRenderType(BlockRenderType defaultReturn) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
-        if (player != null) {
-            return player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultReturn : BlockRenderType.INVISIBLE;
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            return EtherealPlayerRenderHelper.getRenderTypeClient(defaultReturn);
         }
         return defaultReturn;
     }
@@ -90,5 +90,14 @@ public interface Ethereal {
      */
     static PushReaction getPushReaction() {
         return PushReaction.IGNORE;
+    }
+
+    /**
+     * Inner class to not load Minecraft on the server
+     */
+    class EtherealPlayerRenderHelper {
+        static BlockRenderType getRenderTypeClient(BlockRenderType defaultRenderType) {
+            return Minecraft.getInstance().player != null && Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultRenderType : BlockRenderType.INVISIBLE;
+        }
     }
 }
