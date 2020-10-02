@@ -22,6 +22,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
@@ -68,6 +69,30 @@ public class PhysicalBodyEntity extends LivingEntity {
         int bound = itemStackList.size();
         IntStream.range(0, bound).forEach(i -> itemStackList.set(i, getArmor().orElseGet(() -> new ItemStackHandler(4)).getStackInSlot(i)));
         return itemStackList;
+    }
+
+    /**
+     * When the player has no item in their main and off hand and right clicks their body, end Astral Travel
+     *
+     * @param player The player that right clicks the body
+     * @param hand   The hand that is being checked
+     * @return If the interaction is successful (if the player's not sneaking)
+     */
+    @Override
+    public boolean processInitialInteract(PlayerEntity player, @Nonnull Hand hand) {
+        final Boolean isBoundPlayer = dataManager.get(gameProfile).map(profile -> profile.getId().equals(player.getUniqueID())).orElse(false);
+        if (player.isSecondaryUseActive()) {
+            return false;
+        }
+        else if (player.getHeldItem(Hand.OFF_HAND).isEmpty() && player.getHeldItem(Hand.MAIN_HAND).isEmpty() && player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && isBoundPlayer) {
+            if (player.world instanceof ServerWorld) {
+                player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+            }
+            return true;
+        }
+        else {
+            return true;
+        }
     }
 
     @Nonnull
