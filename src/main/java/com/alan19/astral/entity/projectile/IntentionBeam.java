@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -83,19 +82,16 @@ public class IntentionBeam extends Entity implements IProjectile {
         dataManager.set(spawnLocation, getPosition());
     }
 
-    protected void onHit(RayTraceResult result) {
-        if (result.getType() == RayTraceResult.Type.BLOCK) {
-            final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
-            final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
-            final IIntentionTrackerBehavior intentionTrackerBehavior = AstralAPI.getIntentionTrackerBehavior(blockState.getBlock());
-            if (intentionTrackerBehavior != null && dataManager.get(playerUUID).isPresent()) {
-                intentionTrackerBehavior.onIntentionBeamHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
-                remove();
-            }
-            else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(dataManager.get(beamLevel)).contains(blockState.getMaterial())){
-                dataManager.set(touchedBlock, true);
-                remove();
-            }
+    protected void onHit(RayTraceResult raytraceresult) {
+        final BlockState blockState = world.getBlockState(getPosition());
+        final IIntentionTrackerBehavior intentionTrackerBehavior = AstralAPI.getIntentionTrackerBehavior(blockState.getBlock());
+        if (intentionTrackerBehavior != null && dataManager.get(playerUUID).isPresent()) {
+            intentionTrackerBehavior.onIntentionBeamHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), (BlockRayTraceResult) raytraceresult, blockState);
+            remove();
+        }
+        else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(dataManager.get(beamLevel)).contains(blockState.getMaterial())) {
+            dataManager.set(touchedBlock, true);
+            remove();
         }
     }
 
@@ -218,7 +214,7 @@ public class IntentionBeam extends Entity implements IProjectile {
             }
             Vec3d vec3d = this.getMotion();
             RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
-            if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+            if (!world.isAirBlock(getPosition())) {
                 this.onHit(raytraceresult);
             }
 
