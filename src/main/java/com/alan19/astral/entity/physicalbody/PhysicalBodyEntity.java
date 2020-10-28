@@ -1,10 +1,10 @@
 package com.alan19.astral.entity.physicalbody;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.bodylink.BodyInfo;
-import com.alan19.astral.api.bodylink.IBodyLink;
+import com.alan19.astral.api.bodytracker.BodyInfo;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.events.astraltravel.StartAndEndHandling;
 import com.alan19.astral.serializing.AstralSerializers;
 import com.mojang.authlib.GameProfile;
@@ -22,6 +22,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.StringTextComponent;
@@ -39,11 +40,18 @@ public class PhysicalBodyEntity extends LivingEntity {
     private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
     private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Float> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.FLOAT);
+
+    // TODO Switch to regular item stack handlers
     private static final DataParameter<LazyOptional<ItemStackHandler>> armorInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
     private static final DataParameter<LazyOptional<ItemStackHandler>> handsInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
 
     public PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
+    }
+
+    public PhysicalBodyEntity(World world, GameProfile gameProfile){
+        super(AstralEntities.PHYSICAL_BODY_ENTITY.get(), world);
+        dataManager.set(PhysicalBodyEntity.gameProfile, Optional.of(gameProfile));
     }
 
     private LazyOptional<ItemStackHandler> getArmor() {
@@ -61,6 +69,30 @@ public class PhysicalBodyEntity extends LivingEntity {
         int bound = itemStackList.size();
         IntStream.range(0, bound).forEach(i -> itemStackList.set(i, getArmor().orElseGet(() -> new ItemStackHandler(4)).getStackInSlot(i)));
         return itemStackList;
+    }
+
+    /**
+     * When the player has no item in their main and off hand and right clicks their body, end Astral Travel
+     *
+     * @param player The player that right clicks the body
+     * @param hand   The hand that is being checked
+     * @return If the interaction is successful (if the player's not sneaking)
+     */
+    @Override
+    public boolean processInitialInteract(PlayerEntity player, @Nonnull Hand hand) {
+        final Boolean isBoundPlayer = dataManager.get(gameProfile).map(profile -> profile.getId().equals(player.getUniqueID())).orElse(false);
+        if (player.isSecondaryUseActive()) {
+            return false;
+        }
+        else if (player.getHeldItem(Hand.OFF_HAND).isEmpty() && player.getHeldItem(Hand.MAIN_HAND).isEmpty() && player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && isBoundPlayer) {
+            if (player.world instanceof ServerWorld) {
+                player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+            }
+            return true;
+        }
+        else {
+            return true;
+        }
     }
 
     @Nonnull
@@ -180,13 +212,13 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (!getGameProfile().map(GameProfile::getId).map(serverWorld::getPlayerByUuid).isPresent()){
-                this.attackEntityFrom(new DamageSource("despawn"), Float.MAX_VALUE);
-                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
+            if (getGameProfile().isPresent() && serverWorld.getServer().getPlayerList().getPlayers().stream().map(Entity::getUniqueID).noneMatch(uuid -> getGameProfile().get().getId().equals(uuid))) {
+                remove();
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.removeBody(getGameProfile().get().getId()));
             }
-            if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
-                setBodyLinkInfo(serverWorld);
-                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getUniqueID(), serializeNBT()));
+            else if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
+                updateBodyInfo(serverWorld);
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.getBodyTrackerMap().put(getGameProfile().get().getId(), new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
             }
         }
         super.tick();
@@ -194,19 +226,20 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     /**
      * Remove Astral Travel from target if body takes drowning damage. If player is in creative mode, nullify the damage.
-     * @param damageSrc The damage source
+     *
+     * @param damageSrc    The damage source
      * @param damageAmount The damage amount
      */
     @Override
     protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
-        if (getGameProfile().map(GameProfile::getId).map(uuid -> world.getPlayerByUuid(uuid)).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()){
+        if (getGameProfile().map(GameProfile::getId).map(uuid -> world.getPlayerByUuid(uuid)).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()) {
             return;
         }
         super.damageEntity(damageSrc, damageAmount);
-        if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld){
+        if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld) {
             getGameProfile().ifPresent(gp -> {
                 final Entity entity = ((ServerWorld) world).getEntityByUuid(gp.getId());
-                if (entity instanceof LivingEntity){
+                if (entity instanceof LivingEntity) {
                     final LivingEntity livingEntity = (LivingEntity) entity;
                     livingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
                     StartAndEndHandling.astralTravelEnd(livingEntity);
@@ -215,18 +248,16 @@ public class PhysicalBodyEntity extends LivingEntity {
         }
     }
 
-    public void setBodyLinkInfo(ServerWorld serverWorld) {
+    public void updateBodyInfo(ServerWorld serverWorld) {
         if (getGameProfile().isPresent()) {
-            final PlayerEntity player = serverWorld.getPlayerByUuid(getGameProfile().get().getId());
-            if (player != null){
-                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> syncPlayerInformation(serverWorld, (ServerPlayerEntity) player, bodyLink));
+            final ServerPlayerEntity player = (ServerPlayerEntity) serverWorld.getPlayerByUuid(getGameProfile().get().getId());
+            if (player != null) {
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> {
+                    tracker.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), player);
+                    tracker.updatePlayer(player, serverWorld);
+                });
             }
         }
-    }
-
-    private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, IBodyLink bodyLink) {
-        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()));
-        bodyLink.updatePlayer(player, serverWorld);
     }
 
     public boolean isFaceDown() {
@@ -243,7 +274,7 @@ public class PhysicalBodyEntity extends LivingEntity {
             final UUID playerId = playerProfile.getId();
             PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
             if (playerEntity != null) {
-                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+                AstralAPI.getBodyTracker((ServerWorld) world).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()), playerEntity));
             }
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
@@ -270,9 +301,9 @@ public class PhysicalBodyEntity extends LivingEntity {
             //If body is killed, drop inventory and kill the player
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
                 super.onDeath(cause);
-                setBodyLinkInfo((ServerWorld) world);
+                updateBodyInfo((ServerWorld) world);
             }
-            else if (cause.getDamageType().equals("despawn")){
+            else if (cause.getDamageType().equals("despawn")) {
                 super.onDeath(cause);
             }
             //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player

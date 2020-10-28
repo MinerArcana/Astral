@@ -26,7 +26,7 @@ public class SendIntentionBeam {
                 if (!isBeamActive){
                     final IntentionBeam beam = new IntentionBeam(0, 32, sender, sender.getServerWorld());
                     beam.setPosition(sender.getPosX(), sender.getPosYEye(), sender.getPosZ());
-                    beam.shoot(sender.getLookVec().x, sender.getLookVec().y, sender.getLookVec().z, .25f, 1);
+                    beam.shoot(sender.getLookVec().x, sender.getLookVec().y, sender.getLookVec().z, .3F, 1);
                     sender.getServerWorld().addEntity(beam);
                     sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.setIntentionBeam(beam));
                 }

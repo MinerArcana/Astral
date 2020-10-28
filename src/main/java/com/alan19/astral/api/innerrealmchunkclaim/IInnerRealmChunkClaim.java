@@ -1,7 +1,7 @@
 package com.alan19.astral.api.innerrealmchunkclaim;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public interface IInnerRealmChunkClaimCapability extends INBTSerializable {
+public interface IInnerRealmChunkClaim extends INBTSerializable<CompoundNBT> {
     void handleChunkClaim(PlayerEntity player, Chunk chunk);
 
     boolean playerHasClaimedChunk(PlayerEntity player, ChunkPos chunk);
@@ -20,8 +20,4 @@ public interface IInnerRealmChunkClaimCapability extends INBTSerializable {
     void setClaimedChunkMap(HashMap<UUID, ArrayList<ChunkPos>> claimedChunkMap);
 
     void addChunkToPlayerClaims(PlayerEntity player, ChunkPos chunk);
-
-    INBT serializeNBT();
-
-    void deserializeNBT(INBT nbt);
 }

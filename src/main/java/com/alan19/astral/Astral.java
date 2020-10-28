@@ -2,17 +2,14 @@ package com.alan19.astral;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.NBTCapStorage;
-import com.alan19.astral.api.bodylink.BodyLink;
-import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.api.bodytracker.BodyTracker;
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.ConstructTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentCapability;
 import com.alan19.astral.api.heightadjustment.IHeightAdjustmentCapability;
-import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaimCapability;
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimStorage;
+import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
+import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaim;
 import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterCapability;
 import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterStorage;
@@ -166,7 +163,6 @@ public class Astral {
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
         DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
-//        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
 
         //Add Intention Beam behavior
         AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHEREAL_SAPLING.get(), new EtherealSaplingIntentionTrackerBehavior());
@@ -181,8 +177,7 @@ public class Astral {
         public static void init(final FMLCommonSetupEvent event) {
             //TODO Refactor Teleporter and Chunk Claim
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporterCapability.class, new InnerRealmTeleporterStorage(), InnerRealmTeleporterCapability::new);
-            CapabilityManager.INSTANCE.register(IInnerRealmChunkClaimCapability.class, new InnerRealmChunkClaimStorage(), InnerRealmChunkClaimCapability::new);
-            CapabilityManager.INSTANCE.register(IBodyLink.class, new NBTCapStorage<>(), BodyLink::new);
+            CapabilityManager.INSTANCE.register(IInnerRealmChunkClaim.class, new NBTCapStorage<>(), InnerRealmChunkClaim::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);

@@ -1,4 +1,4 @@
-package com.alan19.astral.api.bodylink;
+package com.alan19.astral.api.bodytracker;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -7,8 +7,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Class that stores info about the body of a player with Astral Travel and provides helper methods to get info such as
+ * health, position, alive status, dimension, and UUID
+ */
 public class BodyInfo implements INBTSerializable<CompoundNBT> {
     private float health;
     private BlockPos pos;
@@ -28,11 +34,11 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         this.bodyId = bodyId;
     }
 
-    public UUID getBodyId() {
-        return bodyId;
+    public Optional<UUID> getBodyId() {
+        return Optional.ofNullable(bodyId);
     }
 
-    public void setBodyId(UUID bodyId) {
+    public void setBodyId(@Nullable UUID bodyId) {
         this.bodyId = bodyId;
     }
 
@@ -75,7 +81,7 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         nbt.putBoolean("alive", alive);
         nbt.put("pos", NBTUtil.writeBlockPos(pos));
         nbt.putString("dimension", dimensionType.getRegistryName().toString());
-        nbt.put("bodyID", NBTUtil.writeUniqueId(bodyId));
+        getBodyId().ifPresent(uuid -> nbt.put("bodyID", NBTUtil.writeUniqueId(bodyId)));
         return nbt;
     }
 
@@ -85,6 +91,11 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         alive = nbt.getBoolean("alive");
         pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         dimensionType = DimensionType.byName(new ResourceLocation(nbt.getString("dimension")));
-        bodyId = NBTUtil.readUniqueId(nbt.getCompound("bodyID"));
+        if (nbt.contains("bodyID")){
+            bodyId = NBTUtil.readUniqueId(nbt.getCompound("bodyID"));
+        }
+        else {
+            bodyId = null;
+        }
     }
 }

@@ -4,23 +4,28 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IIntentionTrackerBehavior;
 import com.alan19.astral.blocks.etherealblocks.Ethereal;
+import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.particle.AstralParticles;
+import com.alan19.astral.util.ExperienceHelper;
 import com.alan19.astral.util.IntentionBeamMaterials;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.network.play.server.SSpawnParticlePacket;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -31,6 +36,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -42,6 +48,7 @@ public class IntentionBeam extends Entity implements IProjectile {
     private static final DataParameter<Integer> beamLevel = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> maxDistance = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> touchedBlock = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<BlockPos> spawnLocation = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.BLOCK_POS);
 
     public IntentionBeam(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -53,6 +60,27 @@ public class IntentionBeam extends Entity implements IProjectile {
         dataManager.set(IntentionBeam.maxDistance, maxDistance);
         dataManager.set(IntentionBeam.playerUUID, Optional.of(playerEntity.getUniqueID()));
         dataManager.set(IntentionBeam.touchedBlock, false);
+    }
+
+    public static void teleportPlayer(ServerPlayerEntity sender, IntentionBeam intentionBeam) {
+        final BlockPos destination = new BlockPos(intentionBeam.getPosX(), intentionBeam.getPosY() - sender.getEyeHeight(), intentionBeam.getPosZ());
+        final double teleportDistance = new BlockPos(sender.getPosX(), sender.getPosYEye(), sender.getPosZ()).distanceSq(intentionBeam.getPosX(), intentionBeam.getPosY(), intentionBeam.getPosZ(), true);
+        final int xpCost = (int) Math.floor(1 + teleportDistance / 50);
+        //Teleport if teleport distance is greater than 1, and if sender
+        if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getServerWorld().getBlockState(destination).isCollisionShapeOpaque(sender.getServerWorld(), destination) && !sender.getServerWorld().getBlockState(intentionBeam.getPosition()).isCollisionShapeOpaque(sender.getServerWorld(), intentionBeam.getPosition())) {
+            sender.teleportKeepLoaded(intentionBeam.getPosX(), intentionBeam.getPosY() - sender.getEyeHeight(), intentionBeam.getPosZ());
+            ExperienceHelper.drainPlayerXP(sender, xpCost);
+            Random rand = sender.getRNG();
+            sender.getServerWorld().spawnParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), sender.getPosX() + (rand.nextDouble() - rand.nextDouble()), sender.getPosY() + (rand.nextDouble() - rand.nextDouble()), sender.getPosZ() + (rand.nextDouble() - rand.nextDouble()), 7, 0, 0, 0, .1);
+            intentionBeam.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1F, 1F);
+        }
+        intentionBeam.remove();
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        dataManager.set(spawnLocation, getPosition());
     }
 
     protected void onHit(RayTraceResult result) {
@@ -92,8 +120,9 @@ public class IntentionBeam extends Entity implements IProjectile {
     protected void registerData() {
         dataManager.register(playerUUID, Optional.empty());
         dataManager.register(beamLevel, 0);
-        dataManager.register(maxDistance, 32);
+        dataManager.register(maxDistance, 64);
         dataManager.register(touchedBlock, false);
+        dataManager.register(spawnLocation, getPosition());
     }
 
     @Override
@@ -109,6 +138,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         compound.putInt("beamLevel", dataManager.get(beamLevel));
         compound.putInt("maxDistance", dataManager.get(maxDistance));
         compound.putBoolean("touchedBlock", dataManager.get(touchedBlock));
+        compound.put("spawnLocation", NBTUtil.writeBlockPos(dataManager.get(spawnLocation)));
     }
 
     @Override
@@ -119,6 +149,7 @@ public class IntentionBeam extends Entity implements IProjectile {
         dataManager.set(beamLevel, compound.getInt("beamLevel"));
         dataManager.set(maxDistance, compound.getInt("maxDistance"));
         dataManager.set(touchedBlock, compound.getBoolean("touchedBlock"));
+        dataManager.set(spawnLocation, NBTUtil.readBlockPos(compound.getCompound("spawnLocation")));
     }
 
     @Override
@@ -166,13 +197,23 @@ public class IntentionBeam extends Entity implements IProjectile {
     public void tick() {
         super.tick();
         if (isAlive()) {
-            if (world instanceof ClientWorld && ticksExisted % 5 == 0) {
-                for (int i = 0; i < 2; i++) {
-                    world.addParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosY() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosZ() + (rand.nextDouble() - rand.nextDouble()) * .5, 0, 0, 0);
-                }
+            if (world instanceof ServerWorld && ticksExisted % 5 == 0) {
+                SSpawnParticlePacket intentionBeamParticlePacket = new SSpawnParticlePacket(AstralParticles.INTENTION_BEAM_PARTICLE.get(), false, getPosX(), getPosY(), getPosZ(), (rand.nextFloat() - rand.nextFloat()) * .5f, (rand.nextFloat() - rand.nextFloat()) * .5f, (rand.nextFloat() - rand.nextFloat()) * .5f, 0f, 2);
+                dataManager.get(playerUUID)
+                        .map(uuid -> ((ServerPlayerEntity) world.getPlayerByUuid(uuid)))
+                        .ifPresent(serverPlayerEntity -> serverPlayerEntity.connection.sendPacket(intentionBeamParticlePacket));
+
+
             }
-            if (ticksExisted >= dataManager.get(maxDistance) * 4) {
+            final Optional<PlayerEntity> playerEntityOptional = dataManager.get(playerUUID).map(uuid -> world.getPlayerByUuid(uuid));
+            if (world instanceof ServerWorld && Math.pow(dataManager.get(maxDistance), 2) < getPosition().distanceSq(dataManager.get(spawnLocation)) || playerEntityOptional.map(playerEntity -> !playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())).orElse(true)) {
                 this.remove();
+                if (playerEntityOptional.isPresent() && world instanceof ServerWorld) {
+                    final PlayerEntity playerEntity = playerEntityOptional.get();
+                    if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+                        teleportPlayer((ServerPlayerEntity) playerEntity, this);
+                    }
+                }
                 return;
             }
             Vec3d vec3d = this.getMotion();
