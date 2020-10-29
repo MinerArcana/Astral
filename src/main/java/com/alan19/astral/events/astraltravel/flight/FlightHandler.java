@@ -11,27 +11,27 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class FlightHandler {
 
     //Copied from Entity.java
-    private static Vec3d getAbsoluteMotion(Vec3d relative, float facing) {
+    private static Vector3d getAbsoluteMotion(Vector3d relative, float facing) {
         double d0 = relative.lengthSquared();
         if (d0 < 1.0E-7D) {
-            return Vec3d.ZERO;
+            return Vector3d.ZERO;
         }
         else {
-            Vec3d vec3d = (d0 > 1.0D ? relative.normalize() : relative).scale(1);
+            Vector3d vec3d = (d0 > 1.0D ? relative.normalize() : relative).scale(1);
             float f = MathHelper.sin(facing * ((float) Math.PI / 180F));
             float f1 = MathHelper.cos(facing * ((float) Math.PI / 180F));
-            return new Vec3d(vec3d.x * (double) f1 - vec3d.z * (double) f, vec3d.y, vec3d.z * (double) f1 + vec3d.x * (double) f);
+            return new Vector3d(vec3d.x * (double) f1 - vec3d.z * (double) f, vec3d.y, vec3d.z * (double) f1 + vec3d.x * (double) f);
         }
     }
 
     //Move the player with a certain vector
-    public static void moveEntity(Entity entity, Vec3d vec3d) {
-        Vec3d adjustedVec = getAbsoluteMotion(vec3d, entity.rotationYaw);
+    public static void moveEntity(Entity entity, Vector3d vec3d) {
+        Vector3d adjustedVec = getAbsoluteMotion(vec3d, entity.rotationYaw);
         entity.setMotion(adjustedVec);
     }
 
@@ -47,9 +47,9 @@ public class FlightHandler {
         MovementType movementType = determineMovementType(player);
         final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElseGet(HeightAdjustmentCapability::new);
         activateHoverCapability(player, closestY, heightAdjustmentCapability);
-        Vec3d nextMovement = generateMovementVector(player, closestY, movementType, heightAdjustmentCapability);
+        Vector3d nextMovement = generateMovementVector(player, closestY, movementType, heightAdjustmentCapability);
         //Only set velocity when player is pressing a key
-        if (!nextMovement.equals(new Vec3d(0, 0, 0))) {
+        if (!nextMovement.equals(new Vector3d(0, 0, 0))) {
             moveEntity(player, nextMovement);
         }
     }
@@ -63,8 +63,8 @@ public class FlightHandler {
      * @param heightAdjustmentCapability The player's HeightAdjustmentCapability that stores their target height
      * @return The movement vector to move the player with
      */
-    public static Vec3d generateMovementVector(PlayerEntity player, int closestY, MovementType movementType, IHeightAdjustmentCapability heightAdjustmentCapability) {
-        Vec3d nextMovement = new Vec3d(0, 0, 0);
+    public static Vector3d generateMovementVector(PlayerEntity player, int closestY, MovementType movementType, IHeightAdjustmentCapability heightAdjustmentCapability) {
+        Vector3d nextMovement = new Vector3d(0, 0, 0);
         nextMovement = generateCardinalDirectionVector(player, closestY, movementType, nextMovement);
         nextMovement = generateVerticalVector(player, closestY, nextMovement, heightAdjustmentCapability);
         return nextMovement;
@@ -79,18 +79,18 @@ public class FlightHandler {
      * @param heightAdjustmentCapability The player's HeightAdjustmentCapability that stores their target height
      * @return The movement vector with a vertical component
      */
-    public static Vec3d generateVerticalVector(PlayerEntity player, int closestY, Vec3d nextMovement, IHeightAdjustmentCapability heightAdjustmentCapability) {
+    public static Vector3d generateVerticalVector(PlayerEntity player, int closestY, Vector3d nextMovement, IHeightAdjustmentCapability heightAdjustmentCapability) {
         if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0))
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0))
             ;
         }
         else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vec3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0));
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0));
         }
         else {
             //Smooth flying up and down
-            Vec3d motion = player.getMotion();
-            player.setMotion(new Vec3d(motion.getX(), heightAdjustmentCapability.isActive() ? motion.getY() : 0, motion.getZ()));
+            Vector3d motion = player.getMotion();
+            player.setMotion(new Vector3d(motion.getX(), heightAdjustmentCapability.isActive() ? motion.getY() : 0, motion.getZ()));
         }
         return nextMovement;
     }
@@ -104,7 +104,7 @@ public class FlightHandler {
      * @param nextMovement The vector that is being customized
      * @return The movement vector with a XZ component
      */
-    public static Vec3d generateCardinalDirectionVector(PlayerEntity player, int closestY, MovementType movementType, Vec3d nextMovement) {
+    public static Vector3d generateCardinalDirectionVector(PlayerEntity player, int closestY, MovementType movementType, Vector3d nextMovement) {
         final EffectInstance astralTravelInstance = player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
         int amplifier = astralTravelInstance != null ? astralTravelInstance.getAmplifier() : 0;
         if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
@@ -112,14 +112,14 @@ public class FlightHandler {
                 nextMovement = nextMovement.add(0, 0, calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier));
             }
             if (InputHandler.isHoldingBackwards(player)) {
-                nextMovement = nextMovement.add(new Vec3d(0, 0, -calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier) * 0.8F));
+                nextMovement = nextMovement.add(new Vector3d(0, 0, -calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier) * 0.8F));
             }
         }
         if (InputHandler.isHoldingLeft(player)) {
-            nextMovement = nextMovement.add(new Vec3d(calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
+            nextMovement = nextMovement.add(new Vector3d(calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
         }
         if (InputHandler.isHoldingRight(player)) {
-            nextMovement = nextMovement.add(new Vec3d(-calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
+            nextMovement = nextMovement.add(new Vector3d(-calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
         }
         return nextMovement;
     }

@@ -12,7 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,7 +55,7 @@ public class MovementEvents {
         }
         else {
             player.setMotion(0, 10, 0);
-            player.move(MoverType.SELF, new Vec3d(0, 1, 0));
+            player.move(MoverType.SELF, new Vector3d(0, 1, 0));
         }
         if (player.world.isRemote()) {
             RenderingUtils.reloadRenderers();

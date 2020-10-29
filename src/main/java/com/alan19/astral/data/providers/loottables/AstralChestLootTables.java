@@ -3,9 +3,9 @@ package com.alan19.astral.data.providers.loottables;
 import com.alan19.astral.Astral;
 import com.alan19.astral.items.AstralItems;
 import net.minecraft.data.loot.ChestLootTables;
+import net.minecraft.loot.*;
+import net.minecraft.loot.functions.SetCount;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.functions.SetCount;
 
 import java.util.function.BiConsumer;
 

@@ -9,7 +9,10 @@ import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.items.AstralItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.IRendersAsItem;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,6 +21,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -70,7 +74,7 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
             this.restoreOwnerFromSave();
         }
 
-        Vec3d vec3d = this.getMotion();
+        Vector3d vec3d = this.getMotion();
         RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator() && entity != this.projectileOwner, RayTraceContext.BlockMode.OUTLINE, true);
         if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
@@ -141,7 +145,7 @@ public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setMotion(vec3d);
         float f = MathHelper.sqrt(horizontalMag(vec3d));
         this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));

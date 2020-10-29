@@ -5,15 +5,15 @@ import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.dimensions.TeleportationTools;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Optional;
@@ -24,9 +24,9 @@ public class BodyLink implements IBodyLink {
     private BodyInfo bodyInfo;
 
     public static void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(HEALTH_ID);
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).removeModifier(HEALTH_ID);
         float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).applyPersistentModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
         if (playerEntity.getHealth() > newMaxHealth) {
             playerEntity.setHealth(newMaxHealth);
         }
@@ -39,13 +39,13 @@ public class BodyLink implements IBodyLink {
      * @param physicalBodyEntity The physical body storing player stats
      */
     public static void resetPlayerStats(PlayerEntity playerEntity, PhysicalBodyEntity physicalBodyEntity) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(HEALTH_ID);
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).removeModifier(HEALTH_ID);
         playerEntity.setHealth(physicalBodyEntity.getHealth());
         playerEntity.getFoodStats().setFoodLevel((int) physicalBodyEntity.getHungerLevel());
     }
 
     public static void resetPlayerStats(PlayerEntity playerEntity) {
-        playerEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(HEALTH_ID);
+        playerEntity.getAttribute(Attributes.MAX_HEALTH).removeModifier(HEALTH_ID);
     }
 
     public Optional<PhysicalBodyEntity> getBody(ServerWorld world) {

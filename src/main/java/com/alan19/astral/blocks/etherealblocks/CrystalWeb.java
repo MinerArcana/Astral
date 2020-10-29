@@ -13,7 +13,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -34,7 +34,7 @@ public class CrystalWeb extends EtherealBlock {
     @ParametersAreNonnullByDefault
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !((LivingEntity) entityIn).isPotionActive(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof SpiderEntity)) {
-            entityIn.setMotionMultiplier(state, new Vec3d(0.25D, 0.05F, 0.25D));
+            entityIn.setMotionMultiplier(state, new Vector3d(0.25D, 0.05F, 0.25D));
             if (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) {
                 ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }

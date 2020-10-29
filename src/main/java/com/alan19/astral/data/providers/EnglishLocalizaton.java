@@ -11,7 +11,7 @@ import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 import vazkii.botania.api.brew.Brew;
@@ -53,7 +53,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(brew.getTranslationKey(), name);
     }
 
-    private void add(IAttribute attribute, String name) {
+    private void add(Attribute attribute, String name) {
         add("attribute.name." + attribute.getName(), name);
     }
 

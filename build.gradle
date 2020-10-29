@@ -14,14 +14,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.7.3'
+version = '1.8.0'
 group = 'com.alan19.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200805-1.15.1'
+    mappings channel: 'snapshot', version: '20200916-1.16.2'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -75,12 +75,12 @@ sourceSets {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.36'
-    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.4")
-    compile fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-34.184")
-    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
-    compile fg.deobf("vazkii.botania:Botania:r1.15-388.457")
-    compile fg.deobf("top.theillusivec4.curios:curios:FORGE-1.15.2-2.0.2.4")
+    minecraft 'net.minecraftforge:forge:1.16.3-34.1.33'
+//    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.29")
+    compile fg.deobf("vazkii.patchouli:Patchouli:1.16.2-47")
+//    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
+    compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
+    compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
 //    compile fg.deobf("curse.maven:terraforged:3021604")
 //    compile fg.deobf("curse.maven:natures-compass:2893530")
 //    compile fg.deobf("curse.maven:the-one-proble:3037741")

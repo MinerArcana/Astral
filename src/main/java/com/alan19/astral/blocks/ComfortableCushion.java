@@ -10,7 +10,7 @@ import com.alan19.astral.util.VoxelShapeUtils;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.particles.ParticleTypes;
@@ -21,10 +21,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -99,7 +99,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
      * @param pair A pair that represents the block or fluid at one BlockPos
      * @return A pair with 1 as the key if the BlockPos contains a water, dirt, leaf, or wood block and 0 otherwise, and 1 as the value if the BlockPos contains a plant and 0 otherwise
      */
-    private Pair<Integer, Integer> sumStates(Pair<BlockState, IFluidState> pair) {
+    private Pair<Integer, Integer> sumStates(Pair<BlockState, FluidState> pair) {
         int containsObject = 0;
         int containsPlant = 0;
         if (AstralTags.GARDEN_OBJECTS.contains(pair.getLeft().getBlock()) || FluidTags.WATER.contains(pair.getRight().getFluid())) {
@@ -111,7 +111,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
         return Pair.of(containsObject, containsPlant);
     }
 
-    public Pair<BlockState, IFluidState> getStates(IWorld world, BlockPos pos) {
+    public Pair<BlockState, FluidState> getStates(IWorld world, BlockPos pos) {
         return Pair.of(world.getBlockState(pos), world.getFluidState(pos));
     }
 

@@ -5,10 +5,10 @@ import net.minecraft.block.Block;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
  * https://github.com/mekanism/Mekanism/blob/1.15x/src/main/java/mekanism/common/util/VoxelShapeUtils.java
  */
 public class VoxelShapeUtils {
-    private static final Vec3d fromOrigin = new Vec3d(-0.5, -0.5, -0.5);
+    private static final Vector3d fromOrigin = new Vector3d(-0.5, -0.5, -0.5);
 
     public static void print(double x1, double y1, double z1, double x2, double y2, double z2) {
         Astral.LOGGER.info("makeCuboidShape(" + Math.min(x1, x2) + ", " + Math.min(y1, y2) + ", " + Math.min(z1, z2) + ", " +

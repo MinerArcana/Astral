@@ -7,8 +7,8 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
+import net.minecraft.loot.*;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;

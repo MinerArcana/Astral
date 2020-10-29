@@ -20,8 +20,12 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.math.*;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -84,7 +88,7 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     @Override
-    public boolean handleFluidAcceleration(@Nonnull Tag<Fluid> fluidTag) {
+    public boolean handleFluidAcceleration(@Nonnull ITag<Fluid> fluidTag) {
         return false;
     }
 
@@ -150,7 +154,7 @@ public class IntentionBeam extends Entity implements IProjectile {
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
         this.setMotion(vec3d);
         float f = MathHelper.sqrt(horizontalMag(vec3d));
         this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
@@ -175,7 +179,7 @@ public class IntentionBeam extends Entity implements IProjectile {
                 this.remove();
                 return;
             }
-            Vec3d vec3d = this.getMotion();
+            Vector3d vec3d = this.getMotion();
             RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
             if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);

@@ -6,11 +6,11 @@ import com.alan19.astral.items.AstralItems;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.data.loot.EntityLootTables;
 import net.minecraft.entity.EntityType;
+import net.minecraft.loot.*;
+import net.minecraft.loot.conditions.KilledByPlayer;
+import net.minecraft.loot.functions.LootingEnchantBonus;
+import net.minecraft.loot.functions.SetCount;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
-import net.minecraft.world.storage.loot.conditions.KilledByPlayer;
-import net.minecraft.world.storage.loot.functions.LootingEnchantBonus;
-import net.minecraft.world.storage.loot.functions.SetCount;
 
 import javax.annotation.Nonnull;
 

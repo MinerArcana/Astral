@@ -13,7 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -62,7 +62,7 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Adds an ingredient that can be any item in the given tag.
      */
-    public ShapelessNBTRecipeBuilder addIngredient(Tag<Item> tagIn) {
+    public ShapelessNBTRecipeBuilder addIngredient(ITag<Item> tagIn) {
         return this.addIngredient(Ingredient.fromTag(tagIn));
     }
 
