@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -14,10 +15,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-public class EtherealLog extends LogBlock implements Ethereal {
+public class EtherealLog extends RotatedPillarBlock implements Ethereal {
     public EtherealLog() {
-        super(MaterialColor.SAND, Block.Properties
-                .create(Material.WOOD, MaterialColor.SAND)
+        super(AbstractBlock.Properties.create(Material.WOOD, state -> state.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.SAND)
                 .hardnessAndResistance(2.0F)
                 .sound(SoundType.WOOD)
                 .notSolid());

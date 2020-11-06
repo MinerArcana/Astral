@@ -8,7 +8,7 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
@@ -183,7 +183,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         if (getPosY() < 128) {
             setMotion(getMotion().x, Math.max(0, getMotion().y), getMotion().z);
         }
-        final IAttributeInstance gravityAttribute = getAttribute(LivingEntity.ENTITY_GRAVITY);
+        final ModifiableAttributeInstance gravityAttribute = getAttribute(LivingEntity.ENTITY_GRAVITY);
         if (getPosY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.applyModifier(REDUCED_GRAVITY);
         }

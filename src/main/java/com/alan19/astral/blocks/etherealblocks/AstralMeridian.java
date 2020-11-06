@@ -35,7 +35,7 @@ public class AstralMeridian extends Block implements Ethereal {
         super(Properties.create(Material.PORTAL)
                 .hardnessAndResistance(-1.0F, 3600000.0F)
                 .noDrops()
-                .lightValue(14));
+                .setLightLevel(value -> 14));
 
         this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
     }

@@ -1,40 +1,57 @@
 package com.alan19.astral.dimensions.innerrealm;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.block.BlockState;
+import net.minecraft.world.Blockreader;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.provider.BiomeProvider;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.structure.Structure;
+import net.minecraft.world.gen.feature.structure.StructureManager;
+import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Generates a void world, no chunks are generated naturally
  */
-public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings> {
-    public InnerRealmChunkGenerator(IWorld worldIn, BiomeProvider provider, GenerationSettings settingsIn) {
-        super(worldIn, provider, settingsIn);
+public class InnerRealmChunkGenerator extends ChunkGenerator {
+    public static final Codec<InnerRealmChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(BiomeProvider.CODEC.fieldOf("biome_source")
+            .forGetter(ChunkGenerator::getBiomeProvider)
+    ).apply(instance, instance.stable(InnerRealmChunkGenerator::new)));
+
+    public InnerRealmChunkGenerator(BiomeProvider biomeProvider) {
+        super(biomeProvider, new DimensionStructuresSettings(Optional.empty(), Collections.emptyMap()));
+    }
+
+
+    @Override
+    protected Codec<? extends ChunkGenerator> func_230347_a_() {
+        return null;
+    }
+
+    @Nonnull
+    @Override
+    public ChunkGenerator func_230349_a_(long p_230349_1_) {
+        return this;
     }
 
     @Override
-    public void generateSurface(@Nonnull WorldGenRegion region, IChunk chunk) {
-        //This is a void world!
-
+    public void generateSurface(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
+        // We don't generate anything because it's a void world
     }
 
     @Override
-    public int getGroundHeight() {
-        return this.world.getSeaLevel() + 1;
-    }
-
-    @Override
-    public void makeBase(@Nonnull IWorld iWorld, @Nonnull IChunk iChunk) {
-        //Chunks are created as players spawn and unlock rooms
+    @ParametersAreNonnullByDefault
+    public void func_230352_b_(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
+        // We don't generate any structures
     }
 
     @Override
@@ -43,7 +60,8 @@ public class InnerRealmChunkGenerator extends ChunkGenerator<GenerationSettings>
     }
 
     @Override
-    public boolean hasStructure(@Nonnull Biome biomeIn, @Nonnull Structure<? extends IFeatureConfig> structureIn) {
-        return false;
+    @Nonnull
+    public IBlockReader func_230348_a_(int p_230348_1_, int p_230348_2_) {
+        return new Blockreader(new BlockState[0]);
     }
 }

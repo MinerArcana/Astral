@@ -31,7 +31,7 @@ public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct
     }
 
     public void setDimensionName(@Nonnull World dimensionName) {
-        this.dimensionName = dimensionName.getDimension().getType().getRegistryName();
+        this.dimensionName = dimensionName.getDimensionKey().getRegistryName();
     }
 
     public BlockPos getConstructPos() {

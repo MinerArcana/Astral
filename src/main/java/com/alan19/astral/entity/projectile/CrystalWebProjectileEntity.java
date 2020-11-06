@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -34,7 +35,7 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 @OnlyIn(value = Dist.CLIENT, _interface = IRendersAsItem.class)
-public class CrystalWebProjectileEntity extends Entity implements IRendersAsItem, IAstralBeing, IProjectile {
+public class CrystalWebProjectileEntity extends ThrowableEntity implements IRendersAsItem, IAstralBeing {
 
     public static final String OWNER_UUID = "OwnerUUID";
     public static final String OWNER = "Owner";

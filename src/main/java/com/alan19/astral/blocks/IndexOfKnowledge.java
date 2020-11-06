@@ -52,7 +52,7 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         final int libraryLevel = state.get(Constants.LIBRARY_LEVEL);
-        if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM) && handIn == Hand.MAIN_HAND) {
+        if (worldIn instanceof ServerWorld && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM_RL) && handIn == Hand.MAIN_HAND) {
             int levelRequirement = (libraryLevel + 1) * 10;
             if (player.experienceLevel >= levelRequirement && calculateLevel(worldIn, pos) > libraryLevel) {
                 ExperienceHelper.drainPlayerXP(player, ExperienceHelper.getExperienceForLevel(levelRequirement));

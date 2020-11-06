@@ -7,7 +7,7 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -23,7 +23,7 @@ public interface IAstralBeing {
 
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
         float attackDamage = (float) self.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue();
-        final IAttributeInstance knockbackAttribute = self.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
+        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
         float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
         if (target instanceof LivingEntity) {
             attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());

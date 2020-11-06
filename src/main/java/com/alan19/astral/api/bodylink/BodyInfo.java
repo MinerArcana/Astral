@@ -75,7 +75,7 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         nbt.putBoolean("alive", alive);
         nbt.put("pos", NBTUtil.writeBlockPos(pos));
         nbt.putString("dimension", dimensionType.getRegistryName().toString());
-        nbt.put("bodyID", NBTUtil.writeUniqueId(bodyId));
+        nbt.put("bodyID", NBTUtil.func_240626_a_(bodyId));
         return nbt;
     }
 

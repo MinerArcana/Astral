@@ -6,9 +6,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.Mod;
-import top.theillusivec4.curios.api.capability.CuriosCapability;
-import top.theillusivec4.curios.api.capability.ICurioItemHandler;
-import top.theillusivec4.curios.api.inventory.CurioStackHandler;
+import top.theillusivec4.curios.api.CuriosCapability;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import vazkii.botania.api.mana.IManaItem;
 
 import java.util.ArrayList;
@@ -28,13 +28,13 @@ public class Garden extends MentalConstruct {
     /**
      * Gets all of the curios in a player's inventory as a List
      *
-     * @param iCurioItemHandler The ICurioItemHandler capability on a player
+     * @param curiosItemHandler The ICurioItemHandler capability on a player
      * @return A list of Curios as ItemStacks in an ArrayList
      */
-    private static List<ItemStack> getCuriosAsList(ICurioItemHandler iCurioItemHandler) {
-        final Collection<CurioStackHandler> curioStackHandlers = iCurioItemHandler.getCurioMap().values();
+    private static List<ItemStack> getCuriosAsList(ICuriosItemHandler curiosItemHandler) {
+        final Collection<ICurioStacksHandler> curioStackHandlers = curiosItemHandler.getCurios().values();
         List<ItemStack> curios = new ArrayList<>();
-        for (CurioStackHandler curioStackHandler : curioStackHandlers) {
+        for (ICurioStacksHandler curioStackHandler : curioStackHandlers) {
             for (int i = 0; i < curioStackHandler.getSlots(); i++) {
                 curios.add(curioStackHandler.getStackInSlot(i));
             }

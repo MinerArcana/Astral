@@ -1,43 +1,30 @@
 package com.alan19.astral.world.islands;
 
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.SharedSeedRandom;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.gen.feature.structure.ScatteredStructure;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Random;
-import java.util.function.Function;
 
 /**
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
-public abstract class AstralIslandStructure extends ScatteredStructure<NoFeatureConfig> {
+public class AstralIslandStructure extends Structure<NoFeatureConfig> {
+    private String name;
 
-    public AstralIslandStructure(Function<Dynamic<?>, ? extends NoFeatureConfig> function) {
-        super(function);
-    }
-
-    @Override
-    protected abstract int getBiomeFeatureDistance(@Nonnull ChunkGenerator<?> chunkGenerator);
-
-    @Override
-    protected abstract int getBiomeFeatureSeparation(@Nonnull ChunkGenerator<?> chunkGenerator);
-
-    @Override
-    protected int getSeedModifier() {
-        return 27;
+    public AstralIslandStructure(Codec<NoFeatureConfig> codec, String name) {
+        super(codec);
+        this.name = name;
     }
 
     @Nonnull
@@ -46,42 +33,19 @@ public abstract class AstralIslandStructure extends ScatteredStructure<NoFeature
         return AstralIslandStart::new;
     }
 
-    @Nonnull
     @Override
-    public abstract String getStructureName();
-
-    @Override
-    public int getSize() {
-        return 8;
+    public String getStructureName() {
+        return name;
     }
 
-    @Override
-    @Nonnull
-    @ParametersAreNonnullByDefault
-    protected ChunkPos getStartPositionForPosition(ChunkGenerator<?> chunkGenerator, Random random, int x, int z, int spacingOffsetsX, int spacingOffsetsZ) {
-        int distance = getBiomeFeatureDistance(chunkGenerator);
-        int separation = getBiomeFeatureSeparation(chunkGenerator);
-        int k = x + distance * spacingOffsetsX;
-        int l = z + distance * spacingOffsetsZ;
-        int i1 = k < 0 ? k - distance + 1 : k;
-        int j1 = l < 0 ? l - distance + 1 : l;
-        int k1 = i1 / distance;
-        int l1 = j1 / distance;
-        ((SharedSeedRandom) random).setLargeFeatureSeedWithSalt(chunkGenerator.getSeed(), k1, l1, this.getSeedModifier());
-        k1 = k1 * distance;
-        l1 = l1 * distance;
-        k1 = k1 + random.nextInt(distance - separation);
-        l1 = l1 + random.nextInt(distance - separation);
-        return new ChunkPos(k1, l1);
-    }
-
-    public static class AstralIslandStart extends StructureStart {
-        public AstralIslandStart(Structure<?> structure, int chunkPosX, int chunkPosZ, MutableBoundingBox bounds, int references, long seed) {
+    public static class AstralIslandStart extends StructureStart<NoFeatureConfig> {
+        public AstralIslandStart(Structure<NoFeatureConfig> structure, int chunkPosX, int chunkPosZ, MutableBoundingBox bounds, int references, long seed) {
             super(structure, chunkPosX, chunkPosZ, bounds, references, seed);
         }
 
         @Override
-        public void init(@Nonnull ChunkGenerator<?> generator, @Nonnull TemplateManager templateManagerIn, int chunkX, int chunkZ, @Nonnull Biome biomeIn) {
+        @ParametersAreNonnullByDefault
+        public void func_230364_a_(DynamicRegistries registries, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
             int x = chunkX * 16 + 4 + this.rand.nextInt(8);
             int z = chunkZ * 16 + 4 + this.rand.nextInt(8);
 
@@ -114,6 +78,7 @@ public abstract class AstralIslandStructure extends ScatteredStructure<NoFeature
             AstralIslandPiece astralIslandPiece = new AstralIslandPiece(templateManagerIn, variant, sizes[this.rand.nextInt(sizes.length)], new BlockPos(x, y, z), rotation);
             this.components.add(astralIslandPiece);
             this.recalculateStructureSize();
+
         }
     }
 }

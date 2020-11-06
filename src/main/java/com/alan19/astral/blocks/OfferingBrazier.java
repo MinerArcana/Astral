@@ -31,6 +31,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -52,20 +53,17 @@ public class OfferingBrazier extends Block {
         super(Block.Properties
                 .create(Material.ROCK)
                 .hardnessAndResistance(3.5f)
-                .lightValue(13)
+                .setLightLevel(value -> value.get(LIT) ? 13 : 0)
                 .notSolid()
         );
         setDefaultState(this.getStateContainer().getBaseState().with(LIT, false));
     }
 
+    @Nonnull
     @Override
+    @ParametersAreNonnullByDefault
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
-    }
-
-    @Override
-    public int getLightValue(BlockState state) {
-        return state.getBlockState().get(LIT) ? 13 : 0;
     }
 
     @Override

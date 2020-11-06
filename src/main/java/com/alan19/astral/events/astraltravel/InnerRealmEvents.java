@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 public class InnerRealmEvents {
     @SubscribeEvent
     public static void cancelInnerRealmEntry(EntityTravelToDimensionEvent event) {
-        if (event.getDimension().getRegistryName() != null && event.getDimension().getRegistryName().equals(AstralDimensions.INNER_REALM)) {
+        if (event.getDimension().getRegistryName() != null && event.getDimension().getRegistryName().equals(AstralDimensions.INNER_REALM_RL)) {
             if (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || !(event.getEntity() instanceof LivingEntity)) {
                 event.setCanceled(true);
                 if (event.getEntity() instanceof PlayerEntity) {
@@ -37,7 +37,7 @@ public class InnerRealmEvents {
     @SubscribeEvent
     public static void dropNonAstralItems(EntityTravelToDimensionEvent event) {
         final Entity entity = event.getEntity();
-        if (event.getEntity().world.dimension.getType().getRegistryName() != null && event.getEntity().world.dimension.getType().getRegistryName().equals(AstralDimensions.INNER_REALM) && entity instanceof ServerPlayerEntity) {
+        if (event.getEntity().world.dimension.getType().getRegistryName() != null && event.getEntity().world.dimension.getType().getRegistryName().equals(AstralDimensions.INNER_REALM_RL) && entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entity;
             AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()), (ServerWorld) playerEntity.getEntityWorld()));
         }

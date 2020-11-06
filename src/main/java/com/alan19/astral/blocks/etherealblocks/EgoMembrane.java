@@ -16,7 +16,7 @@ public class EgoMembrane extends Block implements Ethereal {
         super(Properties.create(Material.DRAGON_EGG)
                 .hardnessAndResistance(-1.0F, 3600000.0F)
                 .noDrops()
-                .lightValue(14));
+                .setLightLevel(value -> 14));
     }
 
     @Override

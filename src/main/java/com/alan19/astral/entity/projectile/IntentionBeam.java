@@ -9,11 +9,10 @@ import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.util.IntentionBeamMaterials;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -23,7 +22,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -41,13 +39,13 @@ import java.util.UUID;
  * Entity for the Intention Tracker. Loosely based off the Mana Burst from Botania.
  * https://github.com/Vazkii/Botania/blob/eed14c95cccea7c496fe674327d0ec8b0e999cc9/src/main/java/vazkii/botania/common/entity/EntityManaBurst.java#L49
  */
-public class IntentionBeam extends Entity implements IProjectile {
+public class IntentionBeam extends ThrowableEntity {
     private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private static final DataParameter<Integer> beamLevel = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
     private static final DataParameter<Integer> maxDistance = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
     private static final DataParameter<Boolean> touchedBlock = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.BOOLEAN);
 
-    public IntentionBeam(EntityType<?> entityTypeIn, World worldIn) {
+    public IntentionBeam(EntityType<? extends ThrowableEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -88,7 +86,7 @@ public class IntentionBeam extends Entity implements IProjectile {
     }
 
     @Override
-    public boolean handleFluidAcceleration(@Nonnull ITag<Fluid> fluidTag) {
+    public boolean handleFluidAcceleration(@Nonnull ITag<Fluid> fluidTag, double p_210500_2_) {
         return false;
     }
 
@@ -180,7 +178,7 @@ public class IntentionBeam extends Entity implements IProjectile {
                 return;
             }
             Vector3d vec3d = this.getMotion();
-            RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator(), RayTraceContext.BlockMode.OUTLINE, true);
+            RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, this::func_230298_a_);
             if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }

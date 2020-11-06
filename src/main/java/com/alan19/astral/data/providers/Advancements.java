@@ -186,7 +186,7 @@ public class Advancements extends AdvancementProvider {
 
         innerRealm = Advancement.Builder.builder()
                 .withParent(craftIntrospectionMedicine)
-                .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM)))
+                .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM_RL)))
                 .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "inner_realm").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());

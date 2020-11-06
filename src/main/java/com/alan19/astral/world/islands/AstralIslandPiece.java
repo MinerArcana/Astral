@@ -18,10 +18,12 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.TreeFeatureConfig;
+import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -30,6 +32,7 @@ import net.minecraft.world.gen.feature.template.TemplateManager;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -41,8 +44,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     private final Mirror mirror;
     private final ArrayList<BlockPos> treeLocations;
     private int numberOfTreesPlaced;
-    private ChunkGenerator<?> chunkGenerator;
     private int numberOfWebsPlaced;
+    private ChunkGenerator chunkGenerator;
 
     public AstralIslandPiece(TemplateManager templateManager, AstralIslandVariant variant, String templateName, BlockPos templatePosition, Rotation rotation) {
         this(templateManager, variant, templateName, templatePosition, rotation, Mirror.NONE);
@@ -82,7 +85,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     @Override
-    protected void handleDataMarker(@Nonnull String s, @Nonnull BlockPos blockPos, @Nonnull IWorld world, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox) {
+    protected void handleDataMarker(@Nonnull String s, @Nonnull BlockPos blockPos, @Nonnull IServerWorld world, @Nonnull Random random, @Nonnull MutableBoundingBox mutableBoundingBox) {
         if ("astral:island_feature".equals(s)) {
             int i = random.nextInt(60);
             if (i < 10) {
@@ -91,8 +94,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
             else if (i < 20) {
                 if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
                     world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    ConfiguredFeature<TreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
-                    treeFeature.place(world, chunkGenerator, random, blockPos.up());
+                    final ConfiguredFeature<BaseTreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
+                    treeFeature.func_242765_a(world.getWorld(), chunkGenerator, random, blockPos.up());
                     this.numberOfTreesPlaced++;
                     treeLocations.add(blockPos);
                 }
@@ -143,9 +146,9 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     @Override
-    public boolean create(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<?> chunkGeneratorIn, @Nonnull Random randomIn, @Nonnull MutableBoundingBox mutableBoundingBoxIn, @Nonnull ChunkPos chunkPosIn) {
-        this.chunkGenerator = chunkGeneratorIn;
-        return super.create(worldIn, chunkGeneratorIn, randomIn, mutableBoundingBoxIn, chunkPosIn);
+    @ParametersAreNonnullByDefault
+    public boolean func_230383_a_(ISeedReader seedReader, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox mutableBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+        this.chunkGenerator = chunkGenerator;
+        return super.func_230383_a_(seedReader, structureManager, chunkGenerator, random, mutableBoundingBox, chunkPos, blockPos);
     }
-
 }
