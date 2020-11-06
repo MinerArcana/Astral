@@ -1,8 +1,11 @@
 package com.alan19.astral.dimensions.innerrealm;
 
+import com.alan19.astral.Astral;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Blockreader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -29,6 +32,10 @@ public class InnerRealmChunkGenerator extends ChunkGenerator {
 
     public InnerRealmChunkGenerator(BiomeProvider biomeProvider) {
         super(biomeProvider, new DimensionStructuresSettings(Optional.empty(), Collections.emptyMap()));
+    }
+
+    public static void register() {
+        Registry.register(Registry.CHUNK_GENERATOR_CODEC, new ResourceLocation(Astral.MOD_ID, "inner_realm_chunk_generator"), CODEC);
     }
 
 

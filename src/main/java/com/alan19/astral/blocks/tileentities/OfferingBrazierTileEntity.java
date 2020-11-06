@@ -5,10 +5,10 @@ import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.recipe.AbstractBrazierRecipe;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.AbstractFurnaceTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -41,11 +41,6 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     public Optional<UUID> getBoundPlayer() {
         return boundPlayer;
-    }
-
-    @Override
-    public boolean hasFastRenderer() {
-        return false;
     }
 
     @Nonnull
@@ -201,11 +196,6 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Override
     @Nonnull
     public CompoundNBT getUpdateTag() {
         CompoundNBT updateTag = new CompoundNBT();
@@ -220,15 +210,15 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     }
 
     @Override
-    public void handleUpdateTag(CompoundNBT tag) {
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
         ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.read(tag.getCompound("fuel")));
         ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.read(tag.getCompound("item")));
     }
 
     @Override
-    public void read(@Nonnull CompoundNBT nbt) {
-        super.read(nbt);
+    public void read(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
+        super.read(state, nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
         boolean boundPlayerExists = nbt.getBoolean("boundPlayerExists");

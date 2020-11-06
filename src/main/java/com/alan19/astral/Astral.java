@@ -32,6 +32,7 @@ import com.alan19.astral.client.gui.AstralContainers;
 import com.alan19.astral.commands.AstralCommands;
 import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
+import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.items.AstralItems;
@@ -162,6 +163,7 @@ public class Astral {
         //Initializes worldgen
         AstralWorld.addOverworldVegetation();
         AstralEntities.addSpawns();
+        event.enqueueWork(AstralDimensions::setupDimension);
 
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
