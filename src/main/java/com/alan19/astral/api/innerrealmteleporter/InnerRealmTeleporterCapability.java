@@ -34,7 +34,7 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
     @Override
     public void prepareSpawnChunk(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote()) {
-            ServerWorld innerRealmWorld = player.getServer().getWorld(DimensionType.byName(INNER_REALM_RL));
+            ServerWorld innerRealmWorld = player.getServer().getWorld(AstralDimensions.INNER_REALM);
             final BlockPos playerSpawnPos = getSpawn(player);
             Chunk spawnChunk = innerRealmWorld.getChunkAt(playerSpawnPos);
             innerRealmWorld.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(cap -> cap.addChunkToPlayerClaims(player, spawnChunk.getPos()));

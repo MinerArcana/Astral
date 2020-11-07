@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
@@ -25,7 +24,7 @@ public class EnlightenmentKey extends Item {
     @Nonnull
     public ActionResultType onItemUse(ItemUseContext context) {
         World world = context.getWorld();
-        if (world.dimension.getType().equals(DimensionType.byName(AstralDimensions.INNER_REALM_RL))) {
+        if (world.getDimensionKey() == AstralDimensions.INNER_REALM) {
             IChunk meridianChunk = world.getChunk(context.getPos());
             if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
                 BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();

@@ -3,6 +3,7 @@ package com.alan19.astral.items.tools;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.util.Constants;
 import com.google.common.collect.Multimap;
+import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemGroup;
@@ -18,10 +19,10 @@ public class PhantasmalShovel extends ShovelItem {
 
     @Override
     @Nonnull
-    public Multimap<String, AttributeModifier> getAttributeModifiers(@Nonnull EquipmentSlotType equipmentSlot) {
-        final Multimap<String, AttributeModifier> defaultAttributeModifiers = super.getAttributeModifiers(equipmentSlot);
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(@Nonnull EquipmentSlotType equipmentSlot) {
+        final Multimap<Attribute, AttributeModifier> defaultAttributeModifiers = super.getAttributeModifiers(equipmentSlot);
         if (equipmentSlot == EquipmentSlotType.MAINHAND) {
-            defaultAttributeModifiers.put(Constants.ASTRAL_ATTACK_DAMAGE.getName(), new AttributeModifier(Constants.ASTRAL_EFFECT_DAMAGE_BOOST, "Astral weapon modifier", attackDamage * 2, AttributeModifier.Operation.ADDITION));
+            defaultAttributeModifiers.put(Constants.ASTRAL_ATTACK_DAMAGE, new AttributeModifier(Constants.ASTRAL_EFFECT_DAMAGE_BOOST, "Astral weapon modifier", getAttackDamage() * 2, AttributeModifier.Operation.ADDITION));
         }
         return defaultAttributeModifiers;
     }

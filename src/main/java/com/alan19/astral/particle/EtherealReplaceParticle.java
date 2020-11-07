@@ -8,9 +8,9 @@ import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,7 +21,7 @@ public class EtherealReplaceParticle extends DiggingParticle {
 
     private final BlockState sourceState;
 
-    public EtherealReplaceParticle(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, BlockState state) {
+    public EtherealReplaceParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, BlockState state) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0, 0, 0, state);
         this.sourceState = state;
         this.setSprite(Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state));
@@ -51,7 +51,7 @@ public class EtherealReplaceParticle extends DiggingParticle {
 
     @OnlyIn(Dist.CLIENT)
     public static class Factory implements IParticleFactory<BlockParticleData> {
-        public Particle makeParticle(BlockParticleData typeIn, @Nonnull World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public Particle makeParticle(BlockParticleData typeIn, @Nonnull ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             BlockState blockstate = typeIn.getBlockState();
             if (!blockstate.isAir() && blockstate.getBlock() != Blocks.MOVING_PISTON) {
                 return (new EtherealReplaceParticle(worldIn, x, y, z, blockstate)).updateSprite(typeIn.getPos());

@@ -2,9 +2,11 @@ package com.alan19.astral.api.bodylink;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.UUID;
@@ -13,14 +15,14 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
     private float health;
     private BlockPos pos;
     private boolean alive;
-    private DimensionType dimensionType;
+    private RegistryKey<World> dimensionType;
     private UUID bodyId;
 
     public BodyInfo(CompoundNBT nbt) {
         deserializeNBT(nbt);
     }
 
-    public BodyInfo(float health, BlockPos pos, boolean alive, DimensionType dimensionType, UUID bodyId) {
+    public BodyInfo(float health, BlockPos pos, boolean alive, RegistryKey<World> dimensionType, UUID bodyId) {
         this.health = health;
         this.pos = pos;
         this.alive = alive;
@@ -36,12 +38,12 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         this.bodyId = bodyId;
     }
 
-    public DimensionType getDimensionType() {
+    public RegistryKey<World> getDimensionType() {
         return dimensionType;
     }
 
-    public void setDimensionType(DimensionType dimensionType) {
-        this.dimensionType = dimensionType;
+    public void setDimensionType(RegistryKey<World> dimensionKey) {
+        this.dimensionType = dimensionKey;
     }
 
     public float getHealth() {
@@ -84,7 +86,7 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         health = nbt.getFloat("health");
         alive = nbt.getBoolean("alive");
         pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
-        dimensionType = DimensionType.byName(new ResourceLocation(nbt.getString("dimension")));
+        dimensionType = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(nbt.getString("dimension")));
         bodyId = NBTUtil.readUniqueId(nbt.getCompound("bodyID"));
     }
 }

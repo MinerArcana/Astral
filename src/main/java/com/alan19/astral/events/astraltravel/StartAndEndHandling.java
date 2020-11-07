@@ -11,8 +11,12 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -22,6 +26,7 @@ import net.minecraft.network.play.server.SPlayEntityEffectPacket;
 import net.minecraft.network.play.server.SRemoveEntityEffectPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -48,8 +53,8 @@ public class StartAndEndHandling {
             playerEntity.getDataManager().set(Entity.POSE, Pose.SLEEPING);
             if (!playerEntity.getEntityWorld().isRemote()) {
                 //Only apply modifier if it does not exist
-                if (!playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
-                    playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).applyModifier(Constants.DISABLES_GRAVITY);
+                if (!playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).hasModifier(Constants.DISABLES_GRAVITY)) {
+                    playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).applyPersistentModifier(Constants.DISABLES_GRAVITY);
                 }
                 //Reset the sleep manager
                 playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
@@ -78,8 +83,8 @@ public class StartAndEndHandling {
     public static void astralTravelEnd(LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            if (playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).hasModifier(Constants.DISABLES_GRAVITY)) {
-                playerEntity.getAttribute(LivingEntity.ENTITY_GRAVITY).removeModifier(Constants.DISABLES_GRAVITY);
+            if (playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).hasModifier(Constants.DISABLES_GRAVITY)) {
+                playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).removeModifier(Constants.DISABLES_GRAVITY);
             }
             //Only run serverside
             if (!playerEntity.getEntityWorld().isRemote()) {
@@ -125,7 +130,7 @@ public class StartAndEndHandling {
                 player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> {
                     bodyLink.updatePlayer(player, serverWorld);
                     bodyLink.getBodyInfo().ifPresent(bodyInfo -> AstralAPI.getBodyTracker(serverWorld).map(iBodyTracker -> iBodyTracker.getBodyTrackerMap().get(bodyInfo.getBodyId())).ifPresent(compoundNBT -> {
-                        if (compoundNBT.getFloat("Health") <= 0){
+                        if (compoundNBT.getFloat("Health") <= 0) {
                             spawnPhysicalBody(player, bodyInfo, compoundNBT);
                         }
                     }));
@@ -134,33 +139,35 @@ public class StartAndEndHandling {
         }
     }
 
-    public static void spawnPhysicalBody(PlayerEntity playerEntity) {
-        PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getEntityWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
-        if (physicalBodyEntity != null) {
-            if (playerEntity.getMaxHealth() > physicalBodyEntity.getMaxHealth()){
-                physicalBodyEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).removeModifier(HEALTH_ID);
-                float healthModifier = playerEntity.getMaxHealth() - physicalBodyEntity.getMaxHealth();
-                physicalBodyEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
-            }
+    public static void spawnPhysicalBody(ServerPlayerEntity playerEntity) {
+        if (playerEntity != null) {
+            PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getServerWorld(), ItemStack.EMPTY, playerEntity, playerEntity.getPosition(), SpawnReason.TRIGGERED, false, false);
+            if (physicalBodyEntity != null) {
+                if (playerEntity.getMaxHealth() > physicalBodyEntity.getMaxHealth()) {
+                    physicalBodyEntity.getAttribute(Attributes.MAX_HEALTH).removeModifier(HEALTH_ID);
+                    float healthModifier = playerEntity.getMaxHealth() - physicalBodyEntity.getMaxHealth();
+                    physicalBodyEntity.getAttribute(Attributes.MAX_HEALTH).applyPersistentModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+                }
 
-            physicalBodyEntity.setHealth(playerEntity.getHealth());
-            physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
+                physicalBodyEntity.setHealth(playerEntity.getHealth());
+                physicalBodyEntity.setHungerLevel(playerEntity.getFoodStats().getFoodLevel());
 
-            //Store player UUID to body entity and give it a name
-            physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
-            physicalBodyEntity.setName(playerEntity.getScoreboardName());
+                //Store player UUID to body entity and give it a name
+                physicalBodyEntity.setGameProfile(playerEntity.getGameProfile());
+                physicalBodyEntity.setName(playerEntity.getScoreboardName());
 
-            //Insert main inventory to body and clear
-            if (!playerEntity.getEntityWorld().isRemote()) {
+                //Insert main inventory to body and clear
+                if (!playerEntity.getEntityWorld().isRemote()) {
 
-                final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
+                    final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld());
 
-                psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
+                    psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
+                }
             }
         }
     }
 
-    public static void  spawnPhysicalBody(PlayerEntity playerEntity, BodyInfo bodyInfo, CompoundNBT nbt) {
+    public static void spawnPhysicalBody(ServerPlayerEntity playerEntity, BodyInfo bodyInfo, CompoundNBT nbt) {
         nbt.putFloat("Health", bodyInfo.getHealth());
         final ListNBT pos = nbt.getList("Pos", NBT.TAG_DOUBLE);
         final PhysicalBodyEntity spawn = AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getServer().getWorld(bodyInfo.getDimensionType()), nbt, null, playerEntity, new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)), SpawnReason.TRIGGERED, false, false);

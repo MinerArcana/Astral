@@ -225,7 +225,7 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, IBodyLink bodyLink) {
-        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), world.getDimensionType(), getUniqueID()));
+        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), world.getDimensionKey(), getUniqueID()));
         bodyLink.updatePlayer(player, serverWorld);
     }
 
@@ -243,7 +243,7 @@ public class PhysicalBodyEntity extends LivingEntity {
             final UUID playerId = playerProfile.getId();
             PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
             if (playerEntity != null) {
-                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID())));
+                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), getEntityWorld().getDimensionKey(), getUniqueID())));
             }
             dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
             dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));

@@ -73,7 +73,7 @@ public class TravelEffects {
         if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
             if (!livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
-                livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).applyModifier(Constants.SPIRITUAL_MOB_MODIFER);
+                livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
             }
         }
     }

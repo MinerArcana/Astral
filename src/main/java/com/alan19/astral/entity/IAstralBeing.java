@@ -7,6 +7,7 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +24,7 @@ public interface IAstralBeing {
 
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
         float attackDamage = (float) self.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue();
-        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK);
+        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
         float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
         if (target instanceof LivingEntity) {
             attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());
@@ -74,7 +75,7 @@ public interface IAstralBeing {
 
     static void handleKnockback(LivingEntity self, Entity target, float knockback) {
         if (knockback > 0.0F && target instanceof LivingEntity) {
-            ((LivingEntity) target).knockBack(self, knockback * 0.5F, MathHelper.sin(self.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(self.rotationYaw * ((float) Math.PI / 180F)));
+            ((LivingEntity) target).applyKnockback(knockback * 0.5F, MathHelper.sin(self.rotationYaw * ((float) Math.PI / 180F)), -MathHelper.cos(self.rotationYaw * ((float) Math.PI / 180F)));
             self.setMotion(self.getMotion().mul(0.6D, 1.0D, 0.6D));
         }
     }
