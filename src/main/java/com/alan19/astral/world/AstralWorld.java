@@ -10,8 +10,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.Map;
 
 public class AstralWorld {
-    private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature(SnowberryFeatureConfig::deserialize);
-    private static final Feature<FeverweedFeatureConfig> FEVERWEED = new FeverweedFeature(FeverweedFeatureConfig::deserialize);
+    private static final Feature<SnowberryFeatureConfig> SNOWBERRY = new SnowberryFeature();
+    private static final Feature<FeverweedFeatureConfig> FEVERWEED = new FeverweedFeature();
 
     public static void addOverworldVegetation() {
         for (Biome biome : Biome.BIOMES) {

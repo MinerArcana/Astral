@@ -225,7 +225,7 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     private void syncPlayerInformation(ServerWorld serverWorld, ServerPlayerEntity player, IBodyLink bodyLink) {
-        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), dimension, getUniqueID()));
+        bodyLink.setBodyInfo(new BodyInfo(getHealth(), getPosition(), isAlive(), world.getDimensionType(), getUniqueID()));
         bodyLink.updatePlayer(player, serverWorld);
     }
 

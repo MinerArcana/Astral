@@ -1,27 +1,25 @@
 package com.alan19.astral.world;
 
 import com.alan19.astral.blocks.AstralBlocks;
-import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
-import java.util.function.Function;
 
 public class FeverweedFeature extends Feature<FeverweedFeatureConfig> {
 
-    public FeverweedFeature(Function<Dynamic<?>, ? extends FeverweedFeatureConfig> configFactoryIn) {
-        super(configFactoryIn);
+    public FeverweedFeature() {
+        super(FeverweedFeatureConfig.CODEC);
     }
 
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, @Nonnull FeverweedFeatureConfig config) {
+    @ParametersAreNonnullByDefault
+    public boolean generate(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, FeverweedFeatureConfig config) {
         boolean generated = false;
         final int numberOfPlants = rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize();
         if (rand.nextInt(config.getPatchChance()) == 0) {

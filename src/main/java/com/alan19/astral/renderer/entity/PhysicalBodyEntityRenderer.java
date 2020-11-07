@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vector3f;
+import net.minecraft.util.math.vector.Vector3f;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

@@ -23,10 +23,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class AstralFeatures {
 
+    // Registries
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Astral.MOD_ID);
     private static final DeferredRegister<Structure<?>> STRUCTURE_FEATURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Astral.MOD_ID);
 
+    // Vegetation
     public static final RegistryObject<Feature<BaseTreeFeatureConfig>> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new TreeFeature(BaseTreeFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<FeverweedFeatureConfig>> FEVERWEED_FEATURE = FEATURES.register("feverweed", FeverweedFeature::new);
+    public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
+
+    // Structures
     public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE_OCEAN = STRUCTURE_FEATURES.register("etheric_isle_ocean", () -> new AstralIslandStructure(NoFeatureConfig.field_236558_a_, "etheric_isle_ocean"));
     public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE_LAND = STRUCTURE_FEATURES.register("etheric_isle_land", () -> new AstralIslandStructure(NoFeatureConfig.field_236558_a_, "etheric_isle_land"));
 
@@ -38,12 +44,12 @@ public class AstralFeatures {
 
     @SubscribeEvent
     void commonSetup(FMLCommonSetupEvent event) {
-        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, ETHERIC_ISLE_OCEAN.getId(), ETHERIC_ISLE_OCEAN.get().func_236391_a_(NoFeatureConfig.field_236559_b_));
-        Structure.field_236365_a_.put(ETHERIC_ISLE_OCEAN.getId().toString(), ETHERIC_ISLE_OCEAN.get());
+        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, ETHERIC_ISLE_OCEAN.getId(), ETHERIC_ISLE_OCEAN.get().withConfiguration(NoFeatureConfig.field_236559_b_));
+        Structure.NAME_STRUCTURE_BIMAP.put(ETHERIC_ISLE_OCEAN.getId().toString(), ETHERIC_ISLE_OCEAN.get());
         DimensionSettings.func_242746_i().getStructures().func_236195_a_().put(ETHERIC_ISLE_OCEAN.get(), new StructureSeparationSettings(6, 3, 27));
 
-        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, ETHERIC_ISLE_LAND.getId(), ETHERIC_ISLE_LAND.get().func_236391_a_(NoFeatureConfig.field_236559_b_));
-        Structure.field_236365_a_.put(ETHERIC_ISLE_LAND.getId().toString(), ETHERIC_ISLE_LAND.get());
+        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_STRUCTURE_FEATURE, ETHERIC_ISLE_LAND.getId(), ETHERIC_ISLE_LAND.get().withConfiguration(NoFeatureConfig.field_236559_b_));
+        Structure.NAME_STRUCTURE_BIMAP.put(ETHERIC_ISLE_LAND.getId().toString(), ETHERIC_ISLE_LAND.get());
         DimensionSettings.func_242746_i().getStructures().func_236195_a_().put(ETHERIC_ISLE_LAND.get(), new StructureSeparationSettings(12, 10, 27));
 
     }

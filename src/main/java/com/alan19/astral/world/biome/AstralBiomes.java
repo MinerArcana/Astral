@@ -8,7 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AstralBiomes {
-    public static final DeferredRegister<Biome> BIOMES = new DeferredRegister<>(ForgeRegistries.BIOMES, Astral.MOD_ID);
+    public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, Astral.MOD_ID);
 
     public static final RegistryObject<Biome> PSYSCAPE_BIOME = BIOMES.register("psyscape_biome", PsyscapeBiome::new);
 

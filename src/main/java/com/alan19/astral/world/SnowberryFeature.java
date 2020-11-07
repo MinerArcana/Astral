@@ -1,28 +1,28 @@
 package com.alan19.astral.world;
 
 import com.alan19.astral.blocks.AstralBlocks;
-import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.GenerationSettings;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Function;
 
 public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
 
-    public SnowberryFeature(Function<Dynamic<?>, ? extends SnowberryFeatureConfig> configFactoryIn) {
-        super(configFactoryIn);
+    public SnowberryFeature() {
+        super(SnowberryFeatureConfig.CODEC);
     }
 
     private List<BlockPos> getAdjacentBlocks(BlockPos blockpos) {
@@ -30,8 +30,9 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
     }
 
     @Override
-    public boolean place(@Nonnull IWorld worldIn, @Nonnull ChunkGenerator<? extends GenerationSettings> generator, @Nonnull Random rand, @Nonnull BlockPos pos, SnowberryFeatureConfig config) {
-        /*
+    @ParametersAreNonnullByDefault
+    public boolean generate(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
+/*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
         boolean generated = false;
@@ -49,7 +50,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 int z = centerZ + rand.nextInt(dist * 2) - dist;
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
-                if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimension().isNether() || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
+                if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimensionType() == DimensionType.THE_NETHER || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
