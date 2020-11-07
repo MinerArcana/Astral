@@ -7,7 +7,6 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -22,7 +21,7 @@ public interface MentalConstructController {
     int calculateLevel(World world, BlockPos pos);
 
     static void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, int level, MentalConstructType type) {
-        if (state.get(Constants.TRACKED_CONSTRUCT) && worldIn.getDimension().getType() == DimensionType.byName(AstralDimensions.INNER_REALM_RL)) {
+        if (state.get(Constants.TRACKED_CONSTRUCT) && worldIn.getDimensionKey() == AstralDimensions.INNER_REALM) {
             AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(type, worldIn, pos, level));
         }
     }

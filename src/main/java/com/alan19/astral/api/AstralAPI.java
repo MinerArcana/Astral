@@ -11,7 +11,7 @@ import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.Dimension;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -62,7 +62,7 @@ public class AstralAPI {
     }
 
     public static ServerWorld getOverworld(ServerWorld world) {
-        return world.getServer().getWorld(DimensionType.OVERWORLD);
+        return world.getServer().getWorld(Dimension.OVERWORLD);
     }
 
     @Nullable

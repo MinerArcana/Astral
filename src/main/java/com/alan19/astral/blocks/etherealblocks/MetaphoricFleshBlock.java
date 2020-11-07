@@ -10,7 +10,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -28,8 +27,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     @Override
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        final ResourceLocation registryName = worldIn.getDimension().getType().getRegistryName();
-        if (registryName != null && registryName.equals(AstralDimensions.INNER_REALM_RL)) {
+        if (worldIn.getDimensionKey() == AstralDimensions.INNER_REALM) {
             boolean didModify = false;
             final ImmutableList<BlockPos> adjacentBlockPos = getAdjacentBlockPos(pos);
             for (BlockPos blockPos : adjacentBlockPos) {
@@ -63,7 +61,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     @ParametersAreNonnullByDefault
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         super.animateTick(stateIn, worldIn, pos, rand);
-        if (worldIn.getDimension().getType().getRegistryName() != null && worldIn.getDimension().getType().getRegistryName().equals(AstralDimensions.INNER_REALM_RL) && canWork(pos, worldIn)) {
+        if (worldIn.getDimensionKey() == AstralDimensions.INNER_REALM && canWork(pos, worldIn)) {
             for (int i = 0; i < 2; i++) {
                 final double x = pos.getX() + rand.nextDouble();
                 final double y = pos.getY() + rand.nextDouble();
