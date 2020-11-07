@@ -5,9 +5,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.Feature;
@@ -50,11 +50,11 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 int z = centerZ + rand.nextInt(dist * 2) - dist;
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
-                if (worldIn.isAirBlock(generatingPos) && (!worldIn.getDimensionType() == DimensionType.THE_NETHER || generatingPos.getY() < worldIn.getWorld().getDimension().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
+                if (worldIn.isAirBlock(generatingPos) && (worldIn.getWorld().getDimensionKey() != World.THE_NETHER || generatingPos.getY() < worldIn.getWorld().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
-                else if ((!worldIn.getDimension().isNether() || (generatingPos.getY() < worldIn.getWorld().getDimension().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+                else if ((worldIn.getWorld().getDimensionKey() != World.THE_NETHER || (generatingPos.getY() < worldIn.getWorld().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }

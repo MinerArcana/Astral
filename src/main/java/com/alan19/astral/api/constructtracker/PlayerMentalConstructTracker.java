@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -31,7 +30,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
             mentalConstructs.put(type.getRegistryName(), type.create());
         }
         final MentalConstruct entry = mentalConstructs.get(type.getRegistryName());
-        RegistryKey<World> oldConstructWorld = DimensionType.byName(entry.getDimensionName());
+        RegistryKey<World> oldConstructWorld = entry.getDimensionKey();
         if (oldConstructWorld != null) {
             BlockPos oldPos = entry.getConstructPos();
             final BlockState blockState = world.getServer().getWorld(oldConstructWorld).getBlockState(oldPos);
@@ -41,7 +40,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         }
         entry.setLevel(level);
         entry.setConstructPos(pos);
-        entry.setDimensionName(world);
+        entry.setDimensionKey(world);
         world.getBlockState(pos).with(Constants.TRACKED_CONSTRUCT, true);
     }
 

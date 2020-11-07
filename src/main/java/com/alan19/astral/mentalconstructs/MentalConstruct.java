@@ -3,8 +3,10 @@ package com.alan19.astral.mentalconstructs;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.registries.ForgeRegistryEntry;
@@ -12,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nonnull;
 
 public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct> implements INBTSerializable<CompoundNBT> {
-    private ResourceLocation dimensionName;
+    private RegistryKey<World> dimensionKey;
     private BlockPos constructPos;
     private int level;
 
@@ -26,12 +28,12 @@ public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct
 
     public abstract MentalConstructType getType();
 
-    public ResourceLocation getDimensionName() {
-        return dimensionName;
+    public RegistryKey<World> getDimensionKey() {
+        return dimensionKey;
     }
 
-    public void setDimensionName(@Nonnull World dimensionName) {
-        this.dimensionName = dimensionName.getDimensionKey().getRegistryName();
+    public void setDimensionKey(@Nonnull World dimensionKey) {
+        this.dimensionKey = dimensionKey.getDimensionKey();
     }
 
     public BlockPos getConstructPos() {
@@ -55,13 +57,13 @@ public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct
         final CompoundNBT constructNBT = new CompoundNBT();
         constructNBT.putInt("level", level);
         constructNBT.put("pos", NBTUtil.writeBlockPos(constructPos));
-        constructNBT.putString("world", dimensionName.toString());
+        constructNBT.putString("world", dimensionKey.toString());
         return constructNBT;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        dimensionName = new ResourceLocation(nbt.getString("world"));
+        dimensionKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(nbt.getString("world")));
         constructPos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         level = nbt.getInt("level");
     }

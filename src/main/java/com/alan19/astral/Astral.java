@@ -49,7 +49,6 @@ import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.util.ModCompat;
 import com.alan19.astral.world.AstralFeatures;
-import com.alan19.astral.world.AstralWorld;
 import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
@@ -161,7 +160,6 @@ public class Astral {
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
-        AstralWorld.addOverworldVegetation();
         AstralEntities.addSpawns();
         event.enqueueWork(AstralDimensions::setupDimension);
 

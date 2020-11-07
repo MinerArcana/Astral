@@ -6,21 +6,26 @@ import com.alan19.astral.tags.AstralTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.EntityTypeTagsProvider;
 import net.minecraft.entity.EntityType;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
 
+import javax.annotation.Nullable;
+
+@SuppressWarnings("unchecked")
 public class EntityTagProvider extends EntityTypeTagsProvider {
-    public EntityTagProvider(DataGenerator generator) {
-        super(generator);
+
+    public EntityTagProvider(DataGenerator generator, String modId, @Nullable ExistingFileHelper existingFileHelper) {
+        super(generator, modId, existingFileHelper);
     }
 
     @Override
     protected void registerTags() {
         AstralEntities.ENTITIES.getEntries().stream().filter(entityType -> entityType.get() instanceof IAstralBeing).forEach(this::addAstralBeing);
-        getBuilder(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
-        getBuilder(AstralTags.ATTUNED_ENTITIES).add(AstralTags.SPIRITUAL_BEINGS, AstralTags.ETHEREAL_BEINGS);
+        getOrCreateBuilder(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
+        getOrCreateBuilder(AstralTags.ATTUNED_ENTITIES).addTags(AstralTags.SPIRITUAL_BEINGS, AstralTags.ETHEREAL_BEINGS);
     }
 
     private void addAstralBeing(RegistryObject<EntityType<?>> entityTypeRegistryObject) {
-        getBuilder(AstralTags.ETHEREAL_BEINGS).add(entityTypeRegistryObject.get());
+        getOrCreateBuilder(AstralTags.ETHEREAL_BEINGS).add(entityTypeRegistryObject.get());
     }
 }

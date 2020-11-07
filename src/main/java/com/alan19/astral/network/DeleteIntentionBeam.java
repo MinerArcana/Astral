@@ -40,7 +40,7 @@ public class DeleteIntentionBeam {
                     final double teleportDistance = Math.sqrt(new BlockPos(sender.getPosX(), sender.getPosYEye(), sender.getPosZ()).distanceSq(intentionBeam.getPosX(), intentionBeam.getPosY(), intentionBeam.getPosZ(), true));
                     final int xpCost = (int) Math.floor(5 + teleportDistance / 10);
                     //Teleport if teleport distance is greater than 1, and if sender
-                    if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getServerWorld().getBlockState(destinationPos).isCollisionShapeOpaque(sender.getServerWorld(), destinationPos) && !sender.getServerWorld().getBlockState(intentionBeam.getPosition()).isCollisionShapeOpaque(sender.getServerWorld(), intentionBeam.getPosition())){
+                    if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getServerWorld().getBlockState(destinationPos).hasOpaqueCollisionShape(sender.getServerWorld(), destinationPos) && !sender.getServerWorld().getBlockState(intentionBeam.getPosition()).hasOpaqueCollisionShape(sender.getServerWorld(), intentionBeam.getPosition())) {
                         sender.teleportKeepLoaded(intentionBeam.getPosX(), intentionBeam.getPosY() - sender.getEyeHeight(), intentionBeam.getPosZ());
                         ExperienceHelper.drainPlayerXP(sender, xpCost);
                         Random rand = sender.getRNG();

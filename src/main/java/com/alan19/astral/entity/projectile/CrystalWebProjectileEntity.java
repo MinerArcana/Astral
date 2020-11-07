@@ -7,8 +7,8 @@ import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import com.alan19.astral.items.AstralItems;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRendersAsItem;
@@ -21,7 +21,10 @@ import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
@@ -76,7 +79,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
         }
 
         Vector3d vec3d = this.getMotion();
-        RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, this.getBoundingBox().expand(vec3d).grow(1.0D), entity -> !entity.isSpectator() && entity != this.projectileOwner, RayTraceContext.BlockMode.OUTLINE, true);
+        RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, this::func_230298_a_);
         if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
         }
@@ -107,7 +110,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
 
         this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
         this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
-        if (!this.world.isMaterialInBB(this.getBoundingBox(), Material.AIR)) {
+        if (this.world.func_234853_a_(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
             this.remove();
         }
         else if (this.isInWaterOrBubbleColumn()) {
@@ -181,6 +184,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
+    @Override
     protected void readAdditional(CompoundNBT compound) {
         if (compound.contains(OWNER, 10)) {
             this.ownerNbt = compound.getCompound(OWNER);
@@ -188,6 +192,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
 
     }
 
+    @Override
     protected void writeAdditional(@Nonnull CompoundNBT compound) {
         if (this.projectileOwner != null) {
             CompoundNBT compoundNBT = new CompoundNBT();

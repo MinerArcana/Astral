@@ -38,4 +38,9 @@ public enum AstralIslandVariant implements IStringSerializable {
     public String getName() {
         return this.toString().toLowerCase(Locale.US);
     }
+
+    @Override
+    public String getString() {
+        return "etheric_isle";
+    }
 }

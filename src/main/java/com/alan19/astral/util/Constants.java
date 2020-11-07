@@ -12,7 +12,6 @@ import net.minecraft.loot.conditions.Alternative;
 import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import vazkii.patchouli.common.item.PatchouliItems;
@@ -45,6 +44,4 @@ public class Constants {
         patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
         return patchouliBook;
     }
-
-    public static final BiomeManager.BiomeType ASTRAL = BiomeManager.BiomeType.create("astral");
 }

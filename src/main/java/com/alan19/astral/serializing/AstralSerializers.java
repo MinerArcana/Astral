@@ -39,7 +39,7 @@ public class AstralSerializers {
 
     public static final IDataSerializer<LazyOptional<ItemStackHandler>> OPTIONAL_ITEMSTACK_HANDLER = new IDataSerializer<LazyOptional<ItemStackHandler>>() {
         @Override
-        public void write(PacketBuffer packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public void write(@Nonnull PacketBuffer packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             if (itemStackHandlerLazyOptional.isPresent()) {
                 itemStackHandlerLazyOptional.ifPresent(itemStackHandler -> {
                     packetBuffer.writeBoolean(true);
@@ -51,6 +51,7 @@ public class AstralSerializers {
             }
         }
 
+        @Nonnull
         @Override
         public LazyOptional<ItemStackHandler> read(PacketBuffer packetBuffer) {
             if (packetBuffer.readBoolean()) {
@@ -61,8 +62,9 @@ public class AstralSerializers {
             return LazyOptional.empty();
         }
 
+        @Nonnull
         @Override
-        public LazyOptional<ItemStackHandler> copyValue(LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public LazyOptional<ItemStackHandler> copyValue(@Nonnull LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             return itemStackHandlerLazyOptional;
         }
     };

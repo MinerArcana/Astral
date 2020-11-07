@@ -36,7 +36,7 @@ public class Garden extends MentalConstruct {
         List<ItemStack> curios = new ArrayList<>();
         for (ICurioStacksHandler curioStackHandler : curioStackHandlers) {
             for (int i = 0; i < curioStackHandler.getSlots(); i++) {
-                curios.add(curioStackHandler.getStackInSlot(i));
+                curios.add(curioStackHandler.getStacks().getStackInSlot(i));
             }
         }
         return curios;

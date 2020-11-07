@@ -2,10 +2,14 @@ package com.alan19.astral.dimensions.innerrealm;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Range;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
+
+import java.util.stream.Stream;
 
 public class InnerRealmUtils {
     public Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
@@ -26,87 +30,58 @@ public class InnerRealmUtils {
     }
 
     public void generateInnerRealmChunk(World world, Chunk chunk) {
-        int x;
-        int y;
-        int z;
-        //Make 14 block cubes with an Astral Meridian block in the center, except on the XZ plane
+        // Make 14 block cubes with an Astral Meridian block in the center, except on the XZ plane
 
         //XZ plane
-        for (x = 0; x < 16; x++) {
-            for (z = 0; z < 16; z++) {
-                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel(), z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-                world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + 15, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-            }
-        }
+        BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(15, world.getSeaLevel(), 15))
+                .flatMap(blockPos -> Stream.of(blockPos.toImmutable(), blockPos.up(15).toImmutable()))
+                .forEach(blockPos -> world.setBlockState(blockPos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState()));
 
         //XY Plane
-        for (x = 0; x < 16; x++) {
-            for (y = 0; y < 16; y++) {
-                if (isBetweenInclusive(x, 7, 8) && isBetweenInclusive(y, 7, 8)) {
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0));
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2));
-                }
-                else {
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-                    world.setBlockState(chunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-                }
-            }
-        }
+        BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(15, world.getSeaLevel() + 15, 0))
+                .forEach(blockPos -> {
+                    world.setBlockState(blockPos.toImmutable(), Range.open(7, 8).containsAll(ImmutableList.of(blockPos.getX(), blockPos.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    BlockPos otherSide = blockPos.add(0, 0, 15).toImmutable();
+                    world.setBlockState(otherSide, Range.open(7, 8).containsAll(ImmutableList.of(otherSide.getX(), otherSide.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                });
 
         //YZ Plane
-        for (z = 0; z < 16; z++) {
-            for (y = 0; y < 16; y++) {
-                if (isBetweenInclusive(y, 7, 8) && isBetweenInclusive(z, 7, 8)) {
-                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1));
-                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3));
-                }
-                else {
-                    world.setBlockState(chunk.getPos().getBlock(0, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-                    world.setBlockState(chunk.getPos().getBlock(15, world.getSeaLevel() + y, z), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
-                }
-            }
-        }
+        BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(0, world.getSeaLevel() + 15, 15))
+                .forEach(blockPos -> {
+                    world.setBlockState(blockPos.toImmutable(), Range.open(7, 8).containsAll(ImmutableList.of(blockPos.getX(), blockPos.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    BlockPos otherSide = blockPos.add(15, 0, 0).toImmutable();
+                    world.setBlockState(otherSide, Range.open(7, 8).containsAll(ImmutableList.of(otherSide.getX(), otherSide.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                });
     }
 
     public boolean isBetweenInclusive(int compare, int a, int b) {
         return compare >= a && compare <= b;
     }
 
-    public void destroyWall(World world, IChunk meridianChunk, int meridianDirection) {
+    public void destroyWall(World world, IChunk chunk, int meridianDirection) {
         //North
-        if (meridianDirection == 0) {
-            for (int x = 1; x < 15; x++) {
-                for (int y = 1; y < 15; y++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 0), false);
-                }
-            }
-        }
+        switch (meridianDirection) {
+            case 0:
+                BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(1, world.getSeaLevel() + 1, 0), chunk.getPos().asBlockPos().add(14, world.getSeaLevel() + 14, 0)).forEach(blockPos -> world.destroyBlock(blockPos, false));
+                break;
 
-        //South
-        if (meridianDirection == 2) {
-            for (int x = 1; x < 15; x++) {
-                for (int y = 1; y < 15; y++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(x, world.getSeaLevel() + y, 15), false);
-                }
-            }
-        }
+            //South
+            case 2:
+                BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(1, world.getSeaLevel() + 1, 15), chunk.getPos().asBlockPos().add(14, world.getSeaLevel() + 14, 15)).forEach(blockPos -> world.destroyBlock(blockPos, false));
+                break;
 
-        //East
-        else if (meridianDirection == 1) {
-            for (int y = 1; y < 15; y++) {
-                for (int z = 1; z < 15; z++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(0, world.getSeaLevel() + y, z), false);
-                }
-            }
-        }
+            //East
+            case 1:
+                BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel() + 1, 0), chunk.getPos().asBlockPos().add(0, world.getSeaLevel() + 14, 14)).forEach(blockPos -> world.destroyBlock(blockPos, false));
+                break;
 
-        //West
-        else if (meridianDirection == 3) {
-            for (int y = 1; y < 15; y++) {
-                for (int z = 1; z < 15; z++) {
-                    world.destroyBlock(meridianChunk.getPos().getBlock(15, world.getSeaLevel() + y, z), false);
-                }
-            }
+            //West
+            case 3:
+                BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(15, world.getSeaLevel() + 1, 0), chunk.getPos().asBlockPos().add(15, world.getSeaLevel() + 14, 14)).forEach(blockPos -> world.destroyBlock(blockPos, false));
+                break;
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + meridianDirection);
         }
     }
 }

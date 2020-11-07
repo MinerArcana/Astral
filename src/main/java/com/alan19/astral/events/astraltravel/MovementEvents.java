@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -47,7 +48,9 @@ public class MovementEvents {
     }
 
     public static void finishSleeping(PlayerEntity player, ISleepManager sleepManager) {
-        StartAndEndHandling.spawnPhysicalBody(player);
+        if (player instanceof ServerPlayerEntity) {
+            StartAndEndHandling.spawnPhysicalBody((ServerPlayerEntity) player);
+        }
         final Boolean goingToInnerRealm = sleepManager.isGoingToInnerRealm();
         if (Boolean.TRUE.equals(goingToInnerRealm)) {
             player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(player));

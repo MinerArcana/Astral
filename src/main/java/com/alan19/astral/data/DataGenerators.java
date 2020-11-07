@@ -24,7 +24,7 @@ public class DataGenerators {
         generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
         generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
 //        generator.addProvider(new PatchouliBooks(generator, Astral.MOD_ID, "en_us"));
-        generator.addProvider(new EntityTagProvider(generator));
+        generator.addProvider(new EntityTagProvider(generator, Astral.MOD_ID, event.getExistingFileHelper()));
         if (ModCompat.IS_BOTANIA_LOADED) {
             generator.addProvider(new AstralBrewProvider(generator));
         }

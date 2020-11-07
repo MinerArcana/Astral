@@ -15,7 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Random;
@@ -82,7 +84,7 @@ public interface IAstralBeing {
 
     static <T extends MobEntity> boolean canEtherealEntitySpawn(EntityType<T> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         BlockPos groundPos = blockPos.down();
-        if (world.getDifficulty() != Difficulty.PEACEFUL && MonsterEntity.isValidLightLevel(world, groundPos, random)) {
+        if (world.getDifficulty() != Difficulty.PEACEFUL && world instanceof ServerWorld && MonsterEntity.isValidLightLevel((IServerWorld) world, groundPos, random)) {
             if (spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION)) {
                 if (world.getBlockState(groundPos).getBlock() instanceof EtherealBlock) {
                     return world.getBlockState(blockPos).getBlock() == Blocks.AIR || AstralTags.ETHERIC_GROWTHS.contains(world.getBlockState(blockPos).getBlock());
