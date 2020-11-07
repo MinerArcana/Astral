@@ -23,8 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structure;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -153,7 +153,7 @@ public class Advancements extends AdvancementProvider {
                         .announceToChat(false)
                         .background(new ResourceLocation("astral:textures/block/ether_dirt.png"))
                         .build())
-                .withCriterion("tick", new TickTrigger.Instance())
+                .withCriterion("tick", new TickTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND))
                 .register(consumer, "astral:root");
 
         craftTravelingMedicine = Advancement.Builder.builder()
@@ -173,7 +173,7 @@ public class Advancements extends AdvancementProvider {
         final String brewStrongAstralPotionName = "brew_strong_astral_potion";
         brewStrongAstralPotion = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
-                .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()))
+                .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()))
                 .withDisplay(new DisplayBuilder(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()), brewStrongAstralPotionName).build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, brewStrongAstralPotionName).toString());
@@ -186,14 +186,14 @@ public class Advancements extends AdvancementProvider {
 
         innerRealm = Advancement.Builder.builder()
                 .withParent(craftIntrospectionMedicine)
-                .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.byName(AstralDimensions.INNER_REALM_RL)))
+                .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.toWorld(AstralDimensions.INNER_REALM))
                 .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "inner_realm").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
 
         magicalPuissance = Advancement.Builder.builder()
                 .withParent(innerRealm)
-                .withCriterion("none", new TickTrigger.Instance())
+                .withCriterion("none", new TickTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND))
                 .withDisplay(new DisplayBuilder(Items.EXPERIENCE_BOTTLE, "magical_puissance")
                         .hidden(true)
                         .showToast(false)
@@ -217,7 +217,7 @@ public class Advancements extends AdvancementProvider {
 
         autonomousInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("autonomous_insight", new SummonedEntityTrigger.Instance(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM).build()))
+                .withCriterion("autonomous_insight", SummonedEntityTrigger.Instance.summonedEntity(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM)))
                 .withDisplay(new DisplayBuilder(Items.CARVED_PUMPKIN, "autonomous_insight").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "autonomous_insight").toString());
@@ -231,7 +231,7 @@ public class Advancements extends AdvancementProvider {
 
         enterStronghold = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("enter_stronghold", PositionTrigger.Instance.forLocation(LocationPredicate.forFeature(Feature.STRONGHOLD)))
+                .withCriterion("enter_stronghold", PositionTrigger.Instance.forLocation(LocationPredicate.forFeature(Structure.STRONGHOLD)))
                 .withDisplay(new DisplayBuilder(Items.ENDER_EYE, "enter_stronghold").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "enter_stronghold").toString());
@@ -245,7 +245,7 @@ public class Advancements extends AdvancementProvider {
 
         dimensionalTravel = Advancement.Builder.builder()
                 .withParent(innerRealm)
-                .withCriterion("none", new TickTrigger.Instance())
+                .withCriterion("none", new TickTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND))
                 .withDisplay(new DisplayBuilder(Items.END_PORTAL_FRAME, "dimensional_travel")
                         .announceToChat(false)
                         .showToast(false)
@@ -255,7 +255,7 @@ public class Advancements extends AdvancementProvider {
 
         spectralWorld = Advancement.Builder.builder()
                 .withParent(dimensionalTravel)
-                .withCriterion("go_to_nether", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.THE_NETHER))
+                .withCriterion("go_to_nether", ChangeDimensionTrigger.Instance.toWorld(World.THE_NETHER))
                 .withDisplay(new DisplayBuilder(Items.FLINT_AND_STEEL, "spectral_world").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "spectral_world").toString());
@@ -269,7 +269,7 @@ public class Advancements extends AdvancementProvider {
 
         infiniteExpanse = Advancement.Builder.builder()
                 .withParent(dimensionalTravel)
-                .withCriterion("enter_the_end", ChangeDimensionTrigger.Instance.changedDimensionTo(DimensionType.THE_END))
+                .withCriterion("enter_the_end", ChangeDimensionTrigger.Instance.toWorld(World.THE_END))
                 .withDisplay(new DisplayBuilder(Items.END_STONE, "infinite_expanse").build())
                 .withRewards(enlightenmentKeyReward)
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "infinite_expanse").toString());

@@ -24,21 +24,21 @@ public class BlockTagsGenerator extends BlockTagsProvider {
     @Override
     protected void registerTags() {
         getOrCreateBuilder(AstralTags.GARDEN_OBJECTS).add(BlockTags.LOGS, BlockTags.LEAVES, BlockTags.getCollection().getOrCreate(new ResourceLocation("forge", "dirt")), AstralTags.ETHERIC_GROWTHS);
-        getBuilder(AstralTags.GARDEN_PLANTS).add(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
-        getBuilder(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
-        getBuilder(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());
-        getBuilder(AstralTags.SMALL_ETHERIC_GROWTHS).add(getAllBlocksOfType(EthericGrowth.class));
-        getBuilder(AstralTags.LARGE_ETHERIC_GROWTHS).add(getAllBlocksOfType(TallEthericGrowth.class));
-        getBuilder(AstralTags.ETHERIC_GROWTHS).add(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
-        getBuilder(BlockTags.LOGS).add(ETHEREAL_LOG.get(), ETHEREAL_WOOD.get(), STRIPPED_ETHEREAL_LOG.get(), STRIPPED_ETHEREAL_WOOD.get());
-        getBuilder(BlockTags.PLANKS).add(ETHEREAL_PLANKS.get());
-        getBuilder(BlockTags.LEAVES).add(ETHEREAL_LEAVES.get());
-        getBuilder(BlockTags.SAPLINGS).add(ETHEREAL_SAPLING.get());
-        getBuilder(BlockTags.FLOWERS).add(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
-        getBuilder(BlockTags.SMALL_FLOWERS).add(AstralTags.SMALL_ETHERIC_GROWTHS);
-        getBuilder(BlockTags.TALL_FLOWERS).add(AstralTags.LARGE_ETHERIC_GROWTHS);
-        getBuilder(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
-        getBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
+        getOrCreateBuilder(AstralTags.GARDEN_PLANTS).add(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
+        getOrCreateBuilder(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
+        getOrCreateBuilder(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());
+        getOrCreateBuilder(AstralTags.SMALL_ETHERIC_GROWTHS).add(getAllBlocksOfType(EthericGrowth.class));
+        getOrCreateBuilder(AstralTags.LARGE_ETHERIC_GROWTHS).add(getAllBlocksOfType(TallEthericGrowth.class));
+        getOrCreateBuilder(AstralTags.ETHERIC_GROWTHS).add(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
+        getOrCreateBuilder(BlockTags.LOGS).add(ETHEREAL_LOG.get(), ETHEREAL_WOOD.get(), STRIPPED_ETHEREAL_LOG.get(), STRIPPED_ETHEREAL_WOOD.get());
+        getOrCreateBuilder(BlockTags.PLANKS).add(ETHEREAL_PLANKS.get());
+        getOrCreateBuilder(BlockTags.LEAVES).add(ETHEREAL_LEAVES.get());
+        getOrCreateBuilder(BlockTags.SAPLINGS).add(ETHEREAL_SAPLING.get());
+        getOrCreateBuilder(BlockTags.FLOWERS).add(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
+        getOrCreateBuilder(BlockTags.SMALL_FLOWERS).add(AstralTags.SMALL_ETHERIC_GROWTHS);
+        getOrCreateBuilder(BlockTags.TALL_FLOWERS).add(AstralTags.LARGE_ETHERIC_GROWTHS);
+        getOrCreateBuilder(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
+        getOrCreateBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {
