@@ -63,7 +63,7 @@ public class TravelEffects {
         if (event.getEntity() instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
             if (livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE) == null) {
-                ((LivingEntity) event.getEntity()).registerAttribute(Constants.ASTRAL_ATTACK_DAMAGE);
+                ((LivingEntity) event.getEntity()).getAttributeManager().createInstanceIfAbsent(Constants.ASTRAL_ATTACK_DAMAGE);
             }
         }
     }

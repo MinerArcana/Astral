@@ -8,13 +8,18 @@ import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 public class AstralEntities {
     public static final String PHYSICAL_BODY = "physical_body";
@@ -53,8 +58,19 @@ public class AstralEntities {
                 .build("crystal_spider");
     }
 
-    public static void addSpawns() {
+    public static void setupSpawnPlacement() {
         EntitySpawnPlacementRegistry.register(AstralEntities.CRYSTAL_SPIDER.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IAstralBeing::canEtherealEntitySpawn);
-        BiomeDictionary.getBiomes(BiomeDictionary.Type.OCEAN).forEach(biome -> biome.getSpawns(EntityClassification.MONSTER).add(new Biome.SpawnListEntry(AstralEntities.CRYSTAL_SPIDER.get(), 100, 4, 4)));
+    }
+
+    public static void registerAttributes() {
+        GlobalEntityTypeAttributes.put(AstralEntities.CRYSTAL_SPIDER.get(), CrystalSpiderEntity.registerAttributes().create());
+    }
+
+    @SubscribeEvent
+    public static void addSpawnsToBiomes(BiomeLoadingEvent event) {
+        List<MobSpawnInfo.Spawners> spawners = event.getSpawns().getSpawner(EntityClassification.MONSTER);
+        if (event.getCategory() == Biome.Category.OCEAN) {
+            spawners.add(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 100, 1, 4));
+        }
     }
 }

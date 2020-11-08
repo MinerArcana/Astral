@@ -1,11 +1,14 @@
 package com.alan19.astral.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DisplayEffectsScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 import static net.minecraft.client.gui.screen.inventory.InventoryScreen.drawEntityOnScreen;
 
@@ -17,7 +20,7 @@ public class AstralInventoryScreen extends DisplayEffectsScreen<AstralInventoryC
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(@Nonnull MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
         AstralDrawable.ASTRAL_INVENTORY_DRAWABLE.draw(guiLeft, guiTop, 175, 165);
         int i = this.guiLeft;
         int j = this.guiTop;
@@ -28,16 +31,11 @@ public class AstralInventoryScreen extends DisplayEffectsScreen<AstralInventoryC
     }
 
     @Override
-    public void renderBackground() {
-        renderBackground(0);
-    }
-
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        renderBackground();
-        drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-        super.render(mouseX, mouseY, partialTicks);
-        drawGuiContainerForegroundLayer(mouseX, mouseY);
-        renderHoveredToolTip(mouseX, mouseY);
+    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(matrixStack);
+        drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
+        renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 }

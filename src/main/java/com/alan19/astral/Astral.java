@@ -30,7 +30,6 @@ import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.client.gui.AstralContainers;
 import com.alan19.astral.commands.AstralCommands;
-import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
@@ -47,7 +46,6 @@ import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
-import com.alan19.astral.util.ModCompat;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.client.Minecraft;
@@ -78,7 +76,6 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import vazkii.botania.api.brew.Brew;
 
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_GAME_PROFILE;
 import static com.alan19.astral.serializing.AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER;
@@ -114,13 +111,14 @@ public class Astral {
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
         AstralRecipeSerializer.register(modEventBus);
-        if (ModCompat.IS_BOTANIA_LOADED) {
-            modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
-        }
+//        if (ModCompat.IS_BOTANIA_LOADED) {
+//            modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
+//        }
         AstralContainers.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
+        modEventBus.addListener(AstralEntities::addSpawnsToBiomes);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 
@@ -160,8 +158,9 @@ public class Astral {
 
     private void setup(final FMLCommonSetupEvent event) {
         //Initializes worldgen
-        AstralEntities.addSpawns();
+        AstralEntities.setupSpawnPlacement();
         event.enqueueWork(AstralDimensions::setupDimension);
+        event.enqueueWork(AstralEntities::registerAttributes);
 
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);

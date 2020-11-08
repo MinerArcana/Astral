@@ -13,10 +13,7 @@ import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.RecipeBookContainer;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraft.item.crafting.*;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -118,6 +115,13 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
     @OnlyIn(Dist.CLIENT)
     public int getSize() {
         return 5;
+    }
+
+    @Nonnull
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public RecipeBookCategory func_241850_m() {
+        return RecipeBookCategory.CRAFTING;
     }
 
     @Override

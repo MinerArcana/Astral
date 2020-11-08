@@ -2,12 +2,10 @@ package com.alan19.astral.world.islands;
 
 import net.minecraft.util.IStringSerializable;
 
-import java.util.Locale;
-
 public enum AstralIslandVariant implements IStringSerializable {
-    CRESCENT(0),
-    FULL(1),
-    GIBBOUS(2),
+    COMMA(0),
+    QUESTION(1),
+    INVERTED_PYRAMID(2),
     QUARTER(3);
 
 
@@ -26,17 +24,12 @@ public enum AstralIslandVariant implements IStringSerializable {
             case 1:
                 return QUARTER;
             case 2:
-                return GIBBOUS;
+                return INVERTED_PYRAMID;
             case 3:
-                return FULL;
+                return QUESTION;
             default:
-                return CRESCENT;
+                return COMMA;
         }
-    }
-
-    @Override
-    public String getName() {
-        return this.toString().toLowerCase(Locale.US);
     }
 
     @Override

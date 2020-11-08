@@ -8,8 +8,10 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.CaveSpiderEntity;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,8 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,18 +36,16 @@ import java.util.UUID;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
     private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
-    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1.1, AttributeModifier.Operation.MULTIPLY_TOTAL).setSaved(true);
+    private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1.1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(12.0D);
-        this.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).setBaseValue(2);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return CaveSpiderEntity.registerAttributes().createMutableAttribute(Constants.ASTRAL_ATTACK_DAMAGE, 2);
     }
+
 
     @Override
     public boolean onLivingFall(float distance, float damageMultiplier) {
@@ -183,9 +184,9 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         if (getPosY() < 128) {
             setMotion(getMotion().x, Math.max(0, getMotion().y), getMotion().z);
         }
-        final ModifiableAttributeInstance gravityAttribute = getAttribute(LivingEntity.ENTITY_GRAVITY);
+        final ModifiableAttributeInstance gravityAttribute = getAttribute(ForgeMod.ENTITY_GRAVITY.get());
         if (getPosY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
-            gravityAttribute.applyModifier(REDUCED_GRAVITY);
+            gravityAttribute.applyPersistentModifier(REDUCED_GRAVITY);
         }
         else if (getPosY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.removeModifier(REDUCED_GRAVITY);
@@ -197,10 +198,9 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         return entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn);
     }
 
-    @Nullable
     @Override
     @ParametersAreNonnullByDefault
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         final ILivingEntityData spawnData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         getPassengers().stream().filter(entity -> entity instanceof LivingEntity).forEach(entity -> ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE)));
         return spawnData;

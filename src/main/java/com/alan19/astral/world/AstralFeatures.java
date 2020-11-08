@@ -1,6 +1,7 @@
 package com.alan19.astral.world;
 
 import com.alan19.astral.Astral;
+import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.world.islands.AstralIslandPiece;
 import com.alan19.astral.world.islands.AstralIslandStructure;
 import net.minecraft.util.ResourceLocation;
@@ -52,8 +53,9 @@ public class AstralFeatures {
         Structure.NAME_STRUCTURE_BIMAP.put(ETHERIC_ISLE_LAND.getId().toString(), ETHERIC_ISLE_LAND.get());
         DimensionSettings.func_242746_i().getStructures().func_236195_a_().put(ETHERIC_ISLE_LAND.get(), new StructureSeparationSettings(12, 10, 27));
 
-        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_FEATURE, FEVERWEED_FEATURE.getId(), FEVERWEED_FEATURE.get().withConfiguration(new FeverweedFeatureConfig()));
-        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_FEATURE, SNOWBERRY_FEATURE.getId(), SNOWBERRY_FEATURE.get().withConfiguration(new SnowberryFeatureConfig()));
+        final AstralConfig.WorldgenSettings worldgenSettings = AstralConfig.getWorldgenSettings();
+        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_FEATURE, FEVERWEED_FEATURE.getId(), FEVERWEED_FEATURE.get().withConfiguration(new FeverweedFeatureConfig(worldgenSettings.getFeverweedMinPatchSize(), worldgenSettings.getFeverweedMaxPatchSize(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchDistribution())));
+        WorldGenRegistries.register(WorldGenRegistries.CONFIGURED_FEATURE, SNOWBERRY_FEATURE.getId(), SNOWBERRY_FEATURE.get().withConfiguration(new SnowberryFeatureConfig(worldgenSettings.getSnowberryMinPatchSize(), worldgenSettings.getSnowberryMaxPatchSize(), worldgenSettings.getSnowberryPatchSpawnRate(), 60)));
 
     }
 }

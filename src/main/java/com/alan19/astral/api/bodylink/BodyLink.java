@@ -11,9 +11,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Optional;
@@ -94,18 +95,18 @@ public class BodyLink implements IBodyLink {
     }
 
     private void teleportPlayerToSpawn(ServerPlayerEntity serverPlayerEntity) {
-        DimensionType playerSpawnDimension = serverPlayerEntity.getSpawnDimension();
+        RegistryKey<World> playerSpawnDimension = serverPlayerEntity.func_241141_L_();
         //Teleport to bed
         if (serverPlayerEntity.getBedPosition().isPresent()) {
             BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
             TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, bedPos, null);
-            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED), serverPlayerEntity.getUniqueID());
         }
         //Teleport to spawn
         else {
             BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
             TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, serverSpawn, null);
-            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN));
+            serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN), serverPlayerEntity.getUniqueID());
         }
         resetPlayerStats(serverPlayerEntity);
     }

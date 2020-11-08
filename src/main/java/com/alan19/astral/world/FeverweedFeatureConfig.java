@@ -15,6 +15,7 @@ public class FeverweedFeatureConfig implements IFeatureConfig {
             Codec.INT.fieldOf("max_tries").forGetter(FeverweedFeatureConfig::getMaxTries),
             Codec.INT.fieldOf("distribution_range").forGetter(FeverweedFeatureConfig::getDistribution)
     ).apply(instance, FeverweedFeatureConfig::new));
+
     private final int minSize;
     private final int maxSize;
     private final int patchChance;

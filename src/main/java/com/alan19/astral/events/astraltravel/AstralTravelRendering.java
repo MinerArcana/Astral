@@ -51,12 +51,12 @@ public class AstralTravelRendering {
                 }
                 if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
                     event.setCanceled(true);
-                    AstralHealthBarRendering.renderAstralHearts(minecraft, playerEntity);
+                    AstralHealthBarRendering.renderAstralHearts(event.getMatrixStack(), minecraft, playerEntity);
                 }
             }
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
                 if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
-                    AstralHealthBarRendering.renderAstralScreenFade(iSleepManager.getSleep());
+                    AstralHealthBarRendering.renderAstralScreenFade(event.getMatrixStack(), iSleepManager.getSleep());
                 }
             });
         }

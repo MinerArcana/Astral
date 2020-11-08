@@ -11,16 +11,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.HashMap;
 import java.util.UUID;
-
-import static com.alan19.astral.dimensions.AstralDimensions.INNER_REALM_RL;
 
 public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapability {
     private final InnerRealmUtils innerRealmUtils = new InnerRealmUtils();
@@ -59,10 +57,8 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
      */
     @Override
     public void teleport(PlayerEntity player) {
-        if (player.getEntityWorld() instanceof ServerWorld) {
-            DimensionType innerRealm = DimensionManager.registerOrGetDimension(INNER_REALM_RL, AstralDimensions.INNER_REALM_DIMENSION, null, true);
-            Dimension dimension = innerRealm.create(player.world);
-            World innerRealmWorld = dimension.getWorld();
+        if (player.getServer() != null) {
+            ServerWorld innerRealmWorld = player.getServer().getWorld(AstralDimensions.INNER_REALM);
             boolean firstTime = false;
             if (!spawnLocations.containsKey(player.getUniqueID())) {
                 addPlayerToHashMap(player);
@@ -72,10 +68,8 @@ public class InnerRealmTeleporterCapability implements IInnerRealmTeleporterCapa
             if (firstTime) {
                 prepareSpawnChunk(player);
             }
-            if (!innerRealmWorld.isRemote()) {
-                TeleportationTools.performTeleport((ServerPlayerEntity) player, innerRealm, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), player.getTeleportDirection());
-                AstralAPI.getOverworldPsychicInventory((ServerWorld) innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUniqueID())));
-            }
+            TeleportationTools.performTeleport((ServerPlayerEntity) player, AstralDimensions.INNER_REALM, new BlockPos(playerSpawn.getX(), playerSpawn.getY(), playerSpawn.getZ()), Direction.UP);
+            AstralAPI.getOverworldPsychicInventory(innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUniqueID())));
         }
     }
 

@@ -79,7 +79,7 @@ dependencies {
 //    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.29")
     compile fg.deobf("vazkii.patchouli:Patchouli:1.16.2-47")
 //    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
-    compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
+//    compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
     compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
 //    compile fg.deobf("curse.maven:terraforged:3021604")
 //    compile fg.deobf("curse.maven:natures-compass:2893530")

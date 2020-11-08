@@ -4,6 +4,7 @@ package com.alan19.astral.events;
 import com.alan19.astral.Astral;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -29,11 +30,11 @@ public class AstralHealthBarRendering {
     private static int playerHealth;
     private static long lastSystemTime;
 
-    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
-        Minecraft.getInstance().ingameGUI.blit(x, y, textureX, textureY, width, height);
+    public static void drawTexturedModalRect(MatrixStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
+        Minecraft.getInstance().ingameGUI.blit(matrixStack, x, y, textureX, textureY, width, height);
     }
 
-    public static void renderAstralHearts(Minecraft mc, PlayerEntity player) {
+    public static void renderAstralHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
         int scaledWidth = mc.getMainWindow().getScaledWidth();
         int scaledHeight = mc.getMainWindow().getScaledHeight();
 
@@ -103,53 +104,53 @@ public class AstralHealthBarRendering {
             //Display injured ghost icon when taking damage or at 4 HP or less
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
-                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, playerHealth <= 4 ? 81 : 27, 0, 9, 9);
             }
             else if (heartNumber == 0 && halfHeart) {
                 //Half ghost
-                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, playerHealth <= 4 ? 81 : 27, 0, 5, 9);
             }
             else if (heartNumber == numberOfHearts && halfHeart) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 45, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 45, 0, 5, 9);
             }
             else if (heartNumber == numberOfHearts && fullHeart) {
                 //Full end of bar
-                drawTexturedModalRect(x, y, 45, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 45, 0, 9, 9);
             }
             else if (fullHeart) {
                 //Full bar
-                drawTexturedModalRect(x, y, 36, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 36, 0, 9, 9);
             }
             else if (halfHeart) {
                 //Half heart
-                drawTexturedModalRect(x, y, 36, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 36, 0, 5, 9);
             }
 
             //Outlines
             if (heartNumber == 0 && fullBar) {
                 //Full ghost
-                drawTexturedModalRect(x, y, 54, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 54, TOP, 9, 9);
             }
             else if (heartNumber == 0 && halfBar) {
                 //Half ghost
-                drawTexturedModalRect(x, y, 54, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 54, TOP, 5, 9);
             }
             else if (heartNumber == numberOfHearts && fullBar) {
                 //Full end of bar
-                drawTexturedModalRect(x, y, 72, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 72, TOP, 9, 9);
             }
             else if (heartNumber == numberOfHearts && halfBar) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 76, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 76, TOP, 5, 9);
             }
             else if (fullBar) {
                 //Full bar
-                drawTexturedModalRect(x, y, 63, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 63, TOP, 9, 9);
             }
             else if (halfBar) {
                 //Half heart
-                drawTexturedModalRect(x, y, 63, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 63, TOP, 5, 9);
             }
 
         }
@@ -159,7 +160,7 @@ public class AstralHealthBarRendering {
         mc.getProfiler().endSection();
     }
 
-    public static void renderAstralScreenFade(int sleep) {
+    public static void renderAstralScreenFade(MatrixStack matrixStack, int sleep) {
         Minecraft mc = Minecraft.getInstance();
         GlStateManager.enableBlend();
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -176,7 +177,7 @@ public class AstralHealthBarRendering {
         int scaledWidth = mc.getMainWindow().getScaledWidth();
         int scaledHeight = mc.getMainWindow().getScaledHeight();
 
-        AbstractGui.fill(0, 0, scaledWidth, scaledHeight, color);
+        AbstractGui.fill(matrixStack, 0, 0, scaledWidth, scaledHeight, color);
         GlStateManager.enableAlphaTest();
         GlStateManager.enableDepthTest();
         GlStateManager.enableBlend();
@@ -188,7 +189,7 @@ public class AstralHealthBarRendering {
 
     }
 
-    public static void renderMindVenomHearts(Minecraft mc, PlayerEntity player) {
+    public static void renderMindVenomHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
         int scaledWidth = mc.getMainWindow().getScaledWidth();
         int scaledHeight = mc.getMainWindow().getScaledHeight();
 
@@ -215,7 +216,7 @@ public class AstralHealthBarRendering {
 
         playerHealth = health;
 
-        ModifiableAttributeInstance attrMaxHealth = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
+        ModifiableAttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
         float healthMax = (float) attrMaxHealth.getValue();
         float absorb = MathHelper.ceil(player.getAbsorptionAmount());
 
@@ -258,53 +259,53 @@ public class AstralHealthBarRendering {
             //Display injured ghost icon when taking damage or at 4 HP or less
             if (heartNumber == 0 && fullHeart) {
                 //Full ghost
-                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, playerHealth <= 4 ? 81 : 27, 0, 9, 9);
             }
             else if (heartNumber == 0 && halfHeart) {
                 //Half ghost
-                drawTexturedModalRect(x, y, playerHealth <= 4 ? 81 : 27, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, playerHealth <= 4 ? 81 : 27, 0, 5, 9);
             }
             else if (heartNumber == numberOfHearts && halfHeart) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 45, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 45, 0, 5, 9);
             }
             else if (heartNumber == numberOfHearts && fullHeart) {
                 //Full end of bar
-                drawTexturedModalRect(x, y, 45, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 45, 0, 9, 9);
             }
             else if (fullHeart) {
                 //Full bar
-                drawTexturedModalRect(x, y, 36, 0, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 36, 0, 9, 9);
             }
             else if (halfHeart) {
                 //Half heart
-                drawTexturedModalRect(x, y, 36, 0, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 36, 0, 5, 9);
             }
 
             //Outlines
             if (heartNumber == 0 && fullBar) {
                 //Full ghost
-                drawTexturedModalRect(x, y, 54, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 54, TOP, 9, 9);
             }
             else if (heartNumber == 0 && halfBar) {
                 //Half ghost
-                drawTexturedModalRect(x, y, 54, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 54, TOP, 5, 9);
             }
             else if (heartNumber == numberOfHearts && fullBar) {
                 //Full end of bar
-                drawTexturedModalRect(x, y, 72, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 72, TOP, 9, 9);
             }
             else if (heartNumber == numberOfHearts && halfBar) {
                 //Half end of bar
-                drawTexturedModalRect(x, y, 76, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 76, TOP, 5, 9);
             }
             else if (fullBar) {
                 //Full bar
-                drawTexturedModalRect(x, y, 63, TOP, 9, 9);
+                drawTexturedModalRect(matrixStack, x, y, 63, TOP, 9, 9);
             }
             else if (halfBar) {
                 //Half heart
-                drawTexturedModalRect(x, y, 63, TOP, 5, 9);
+                drawTexturedModalRect(matrixStack, x, y, 63, TOP, 5, 9);
             }
 
         }

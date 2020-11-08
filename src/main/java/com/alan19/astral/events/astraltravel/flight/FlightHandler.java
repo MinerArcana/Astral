@@ -8,7 +8,6 @@ import com.alan19.astral.effects.AstralEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -200,9 +199,9 @@ public class FlightHandler {
      * @return The Y coordinate of the closest block under the player, or -1 if no blocks are found
      */
     private static int getClosestBlockUnderPlayer(PlayerEntity player) {
-        BlockPos.PooledMutable pos = BlockPos.PooledMutable.retain(player);
-        while (pos.getY() >= 0 && !player.getEntityWorld().getBlockState(pos).isCollisionShapeOpaque(player.world, pos)) {
-            pos.move(Direction.DOWN);
+        BlockPos pos = player.getPosition();
+        while (pos.getY() >= 0 && !player.getEntityWorld().getBlockState(pos).hasOpaqueCollisionShape(player.world, pos)) {
+            pos.down();
         }
         return pos.getY();
     }
