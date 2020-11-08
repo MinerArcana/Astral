@@ -22,7 +22,6 @@ import net.minecraft.entity.monster.PhantomEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -58,15 +57,15 @@ public class TravelEffects {
         }
     }
 
-    @SubscribeEvent
-    public static void registerAstralDamageAttribute(EntityEvent.EntityConstructing event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) event.getEntity();
-            if (livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE) == null) {
-                ((LivingEntity) event.getEntity()).getAttributeManager().createInstanceIfAbsent(Constants.ASTRAL_ATTACK_DAMAGE);
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void registerAstralDamageAttribute(EntityEvent.EntityConstructing event) {
+//        if (event.getEntity() instanceof LivingEntity) {
+//            LivingEntity livingEntity = (LivingEntity) event.getEntity();
+//            if (livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE) == null) {
+//                ((LivingEntity) event.getEntity()).getAttributeManager().createInstanceIfAbsent(Constants.ASTRAL_ATTACK_DAMAGE);
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public static void spiritualMobAttributes(EntityJoinWorldEvent event) {

@@ -90,6 +90,7 @@ public class Astral {
     public Astral() {
         // Register the setup method for modloading
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::registerModels);
         modEventBus.addListener(this::setRenderLayers);
@@ -118,7 +119,7 @@ public class Astral {
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
-        modEventBus.addListener(AstralEntities::addSpawnsToBiomes);
+        forgeBus.addListener(AstralEntities::addSpawnsToBiomes);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 

@@ -14,7 +14,6 @@ import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -66,7 +65,6 @@ public class AstralEntities {
         GlobalEntityTypeAttributes.put(AstralEntities.CRYSTAL_SPIDER.get(), CrystalSpiderEntity.registerAttributes().create());
     }
 
-    @SubscribeEvent
     public static void addSpawnsToBiomes(BiomeLoadingEvent event) {
         List<MobSpawnInfo.Spawners> spawners = event.getSpawns().getSpawner(EntityClassification.MONSTER);
         if (event.getCategory() == Biome.Category.OCEAN) {

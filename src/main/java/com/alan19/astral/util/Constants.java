@@ -1,5 +1,6 @@
 package com.alan19.astral.util;
 
+import com.alan19.astral.Astral;
 import net.minecraft.advancements.criterion.EnchantmentPredicate;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
@@ -14,11 +15,13 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
-import vazkii.patchouli.common.item.PatchouliItems;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.UUID;
 
 public class Constants {
+    public static DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Attribute.class, Astral.MOD_ID);
+
     public static final UUID ASTRAL_GRAVITY = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
     public static final UUID ASTRAL_EFFECT_DAMAGE_BOOST = UUID.fromString("8ca991df-c3f6-425e-b19c-5d603fdd43b6");
     public static final String SLEEPWALKING_BED = "astral.chat_message.sleepwalking.bed";
@@ -40,8 +43,9 @@ public class Constants {
     public static final ToolType SHEARS = ToolType.get("shears");
 
     public static ItemStack getAstronomicon() {
-        final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
-        patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
-        return patchouliBook;
+//        final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
+//        patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
+//        return patchouliBook;
+        return ItemStack.EMPTY;
     }
 }
