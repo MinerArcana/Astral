@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.client.gui.AstralContainerProvider;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.entity.AstralModifiers;
 import com.alan19.astral.potions.PotionRegistryGroup;
 import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
@@ -35,7 +36,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         addEntities();
         addEffects();
         addBrews();
-        add(Constants.ASTRAL_ATTACK_DAMAGE, "Astral Attack Damage");
+        add(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), "Astral Attack Damage");
         add("itemGroup.astral", "Astral");
     }
 
@@ -212,7 +213,7 @@ public class EnglishLocalizaton extends LanguageProvider {
      */
     private void add(Advancement advancement, String title, String description) {
         final DisplayInfo display = advancement.getDisplay();
-        add(display.getTitle().getUnformattedComponentText(), title);
-        add(display.getDescription().getUnformattedComponentText(), description);
+        add(display.getTitle().getString(), title);
+        add(display.getDescription().getString(), description);
     }
 }

@@ -19,8 +19,8 @@ public class DataGenerators {
         generator.addProvider(advancements);
         generator.addProvider(new EnglishLocalizaton(generator, advancements));
         generator.addProvider(new Recipes(generator));
-        generator.addProvider(new BlockTagsGenerator(generator));
-        generator.addProvider(new ItemTagGenerator(generator, new BlockTagsGenerator(generator), Astral.MOD_ID, event.getExistingFileHelper()));
+        generator.addProvider(new BlockTagsGenerator(generator, event.getExistingFileHelper()));
+        generator.addProvider(new ItemTagGenerator(generator, new BlockTagsGenerator(generator, event.getExistingFileHelper()), Astral.MOD_ID, event.getExistingFileHelper()));
         generator.addProvider(new Blockstates(generator, Astral.MOD_ID, event.getExistingFileHelper()));
         generator.addProvider(new ItemModels(generator, event.getExistingFileHelper()));
 //        generator.addProvider(new PatchouliBooks(generator, Astral.MOD_ID, "en_us"));

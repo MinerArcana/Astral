@@ -1,5 +1,5 @@
 {
-  "parent": "block/door_top_rh",
+  "parent": "minecraft:block/door_top_rh",
   "textures": {
     "bottom": "astral:block/ethereal_door_bottom",
     "top": "astral:block/ethereal_door_top"

@@ -23,6 +23,7 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
         AstralEntities.ENTITIES.getEntries().stream().filter(entityType -> entityType.get() instanceof IAstralBeing).forEach(this::addAstralBeing);
         getOrCreateBuilder(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
         getOrCreateBuilder(AstralTags.ATTUNED_ENTITIES).addTags(AstralTags.SPIRITUAL_BEINGS, AstralTags.ETHEREAL_BEINGS);
+        getOrCreateBuilder(AstralTags.NEUTRAL_MOBS).add(EntityType.SPIDER, EntityType.ENDERMAN, EntityType.PHANTOM, EntityType.ZOMBIFIED_PIGLIN, EntityType.PIGLIN);
     }
 
     private void addAstralBeing(RegistryObject<EntityType<?>> entityTypeRegistryObject) {

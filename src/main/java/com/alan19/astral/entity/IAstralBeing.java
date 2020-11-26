@@ -3,7 +3,6 @@ package com.alan19.astral.entity;
 import com.alan19.astral.blocks.etherealblocks.EtherealBlock;
 import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.util.Constants;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -25,7 +24,7 @@ import java.util.Random;
 public interface IAstralBeing {
 
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
-        float attackDamage = (float) self.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).getValue();
+        float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
         final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
         float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
         if (target instanceof LivingEntity) {

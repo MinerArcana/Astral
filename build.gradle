@@ -28,6 +28,7 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
+            properties 'mixin.env.disableRefMap': 'true'
             mods {
                 astral {
                     source sourceSets.main
@@ -75,15 +76,20 @@ sourceSets {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.0.2'
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
 //    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.29")
-//    compile fg.deobf("vazkii.patchouli:Patchouli:1.16.2-47")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 //    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
 //    compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
     compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
 //    compile fg.deobf("curse.maven:terraforged:3021604")
 //    compile fg.deobf("curse.maven:natures-compass:2893530")
 //    compile fg.deobf("curse.maven:the-one-proble:3037741")
+}
+
+project.afterEvaluate {
+    minecraft.runs.data.args('--existing', configurations.minecraft.asPath.split(":").toList().find { it.contains("forge") }.split(";")[0])
 }
 
 repositories {

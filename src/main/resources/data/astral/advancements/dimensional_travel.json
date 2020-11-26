@@ -17,7 +17,8 @@
   },
   "criteria": {
     "none": {
-      "trigger": "minecraft:tick"
+      "trigger": "minecraft:tick",
+      "conditions": {}
     }
   },
   "requirements": [

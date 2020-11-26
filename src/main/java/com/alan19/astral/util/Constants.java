@@ -5,22 +5,20 @@ import net.minecraft.advancements.criterion.EnchantmentPredicate;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.conditions.Alternative;
 import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.registries.DeferredRegister;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.UUID;
 
 public class Constants {
-    public static DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Attribute.class, Astral.MOD_ID);
 
     public static final UUID ASTRAL_GRAVITY = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
     public static final UUID ASTRAL_EFFECT_DAMAGE_BOOST = UUID.fromString("8ca991df-c3f6-425e-b19c-5d603fdd43b6");
@@ -34,7 +32,6 @@ public class Constants {
     public static final BooleanProperty TRACKED_CONSTRUCT = BooleanProperty.create("tracked_construct");
     public static final IntegerProperty LIBRARY_LEVEL = IntegerProperty.create("library_level", 0, 100);
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
-    public static final Attribute ASTRAL_ATTACK_DAMAGE = new RangedAttribute("astral.astralAttackDamage", 0.0D, 0.0D, 2048.0D);
     public static final AttributeModifier SPIRITUAL_MOB_MODIFER = new AttributeModifier(UUID.fromString("0acc71d8-4489-4df5-880f-6bc95fa988ff"), "adds some astral damage for spiritul entities", 4, AttributeModifier.Operation.ADDITION);
 
     public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS)));
@@ -43,9 +40,6 @@ public class Constants {
     public static final ToolType SHEARS = ToolType.get("shears");
 
     public static ItemStack getAstronomicon() {
-//        final ItemStack patchouliBook = new ItemStack(PatchouliItems.book);
-//        patchouliBook.getOrCreateTag().putString("patchouli:book", "astral:astronomicon");
-//        return patchouliBook;
-        return ItemStack.EMPTY;
+        return PatchouliAPI.instance.getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
     }
 }

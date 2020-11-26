@@ -1,8 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "patchouli:guide_book",
-      "nbt": "{\"patchouli:book\":\"astral:astronomicon\"}"
+      "item": "astral:traveling_medicine"
     },
     "title": {
       "translate": "astral.advancement.root.name"
@@ -18,7 +17,8 @@
   },
   "criteria": {
     "tick": {
-      "trigger": "minecraft:tick"
+      "trigger": "minecraft:tick",
+      "conditions": {}
     }
   },
   "requirements": [

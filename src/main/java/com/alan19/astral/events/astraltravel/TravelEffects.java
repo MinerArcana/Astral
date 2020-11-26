@@ -6,6 +6,7 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralModifiers;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.events.IAstralDamage;
@@ -57,22 +58,12 @@ public class TravelEffects {
         }
     }
 
-//    @SubscribeEvent
-//    public static void registerAstralDamageAttribute(EntityEvent.EntityConstructing event) {
-//        if (event.getEntity() instanceof LivingEntity) {
-//            LivingEntity livingEntity = (LivingEntity) event.getEntity();
-//            if (livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE) == null) {
-//                ((LivingEntity) event.getEntity()).getAttributeManager().createInstanceIfAbsent(Constants.ASTRAL_ATTACK_DAMAGE);
-//            }
-//        }
-//    }
-
     @SubscribeEvent
     public static void spiritualMobAttributes(EntityJoinWorldEvent event) {
         if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
-            if (!livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
-                livingEntity.getAttribute(Constants.ASTRAL_ATTACK_DAMAGE).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
+            if (!livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
+                livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
             }
         }
     }

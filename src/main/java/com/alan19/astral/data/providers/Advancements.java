@@ -6,7 +6,6 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
@@ -147,7 +146,7 @@ public class Advancements extends AdvancementProvider {
 
     private void registerAdvancements(Consumer<Advancement> consumer) {
         root = Advancement.Builder.builder()
-                .withDisplay(new DisplayBuilder(Constants.getAstronomicon(), "root")
+                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "root")
                         .hidden(true)
                         .showToast(false)
                         .announceToChat(false)
@@ -163,6 +162,7 @@ public class Advancements extends AdvancementProvider {
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_traveling_medicine").toString());
 
         final AdvancementRewards enlightenmentKeyReward = new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key")));
+
         becomeAstral = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
                 .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL.get())))

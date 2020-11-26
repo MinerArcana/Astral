@@ -1,10 +1,10 @@
 package com.alan19.astral.entity.crystalspider;
 
 import com.alan19.astral.effects.AstralEffects;
+import com.alan19.astral.entity.AstralModifiers;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.events.astraltravel.TravelEffects;
-import com.alan19.astral.util.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -43,7 +43,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return CaveSpiderEntity.registerAttributes().createMutableAttribute(Constants.ASTRAL_ATTACK_DAMAGE, 2);
+        return CaveSpiderEntity.registerAttributes().createMutableAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), 2);
     }
 
 

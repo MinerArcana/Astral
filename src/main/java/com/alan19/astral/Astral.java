@@ -34,6 +34,7 @@ import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
+import com.alan19.astral.entity.AstralModifiers;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
@@ -103,6 +104,7 @@ public class Astral {
         MinecraftForge.EVENT_BUS.addListener(Astral::serverLoad);
 
         AstralEntities.register(modEventBus);
+        AstralModifiers.register(modEventBus);
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);

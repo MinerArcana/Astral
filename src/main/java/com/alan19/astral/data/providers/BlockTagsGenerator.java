@@ -1,5 +1,6 @@
 package com.alan19.astral.data.providers;
 
+import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.blocks.etherealblocks.EthericGrowth;
 import com.alan19.astral.blocks.etherealblocks.TallEthericGrowth;
@@ -8,23 +9,26 @@ import net.minecraft.block.Block;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nullable;
 import java.util.stream.Collectors;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 
 @SuppressWarnings("unchecked")
 public class BlockTagsGenerator extends BlockTagsProvider {
-    public BlockTagsGenerator(DataGenerator generatorIn) {
-        super(generatorIn);
+
+    public BlockTagsGenerator(DataGenerator generatorIn, @Nullable ExistingFileHelper existingFileHelper) {
+        super(generatorIn, Astral.MOD_ID, existingFileHelper);
     }
 
     @Override
     protected void registerTags() {
-        getOrCreateBuilder(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, BlockTags.createOptional(new ResourceLocation("forge", "dirt")), AstralTags.ETHERIC_GROWTHS);
+        getOrCreateBuilder(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, Tags.Blocks.DIRT, AstralTags.ETHERIC_GROWTHS);
         getOrCreateBuilder(AstralTags.GARDEN_PLANTS).addTags(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
         getOrCreateBuilder(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
         getOrCreateBuilder(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());

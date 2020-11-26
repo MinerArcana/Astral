@@ -1,9 +1,6 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.data.providers.dataproviders.ShapelessNBTRecipeBuilder;
-import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.util.Constants;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -11,7 +8,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -135,12 +131,12 @@ public class Recipes extends RecipeProvider {
         createTwoByTwoRecipe(consumer, Items.GLASS, CRYSTAL_CHITIN.get(), 1, new ResourceLocation(Astral.MOD_ID, "chitin_glass"));
         createTwoByTwoRecipe(consumer, METAPHORIC_FLESH_BLOCK_ITEM.get(), METAPHORIC_FLESH.get(), 1);
 
-        ShapelessNBTRecipeBuilder.shapelessRecipe(Constants.getAstronomicon())
-                .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
-                .addIngredient(Ingredient.fromItems(Items.PAPER), 3)
-                .addCriterion("basic_astral_plants", hasItem(AstralTags.BASIC_ASTRAL_PLANTS))
-                .addCondition(new ModLoadedCondition("patchouli"))
-                .build(consumer, new ResourceLocation(Astral.MOD_ID, "astronomicon"));
+//        ShapelessNBTRecipeBuilder.shapelessRecipe(Constants.getAstronomicon())
+//                .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
+//                .addIngredient(Ingredient.fromItems(Items.PAPER), 3)
+//                .addCriterion("basic_astral_plants", hasItem(AstralTags.BASIC_ASTRAL_PLANTS))
+//                .addCondition(new ModLoadedCondition("patchouli"))
+//                .build(consumer, new ResourceLocation(Astral.MOD_ID, "astronomicon"));
 
         ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SWORD.get())
                 .key('P', PHANTOM_EDGE.get())

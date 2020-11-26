@@ -31,9 +31,15 @@
     "kill_spiritual": {
       "trigger": "minecraft:player_killed_entity",
       "conditions": {
-        "entity": {
-          "type": "#astral:attuned_entities"
-        }
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "#astral:attuned_entities"
+            },
+            "entity": "this"
+          }
+        ]
       }
     }
   },

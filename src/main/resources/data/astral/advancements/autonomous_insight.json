@@ -23,9 +23,15 @@
     "autonomous_insight": {
       "trigger": "minecraft:summoned_entity",
       "conditions": {
-        "entity": {
-          "type": "minecraft:iron_golem"
-        }
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "predicate": {
+              "type": "minecraft:iron_golem"
+            },
+            "entity": "this"
+          }
+        ]
       }
     }
   },

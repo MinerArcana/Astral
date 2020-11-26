@@ -1,7 +1,10 @@
 {
-  "replace": "false",
+  "replace": false,
   "values": [
+    "minecraft:spider",
     "minecraft:enderman",
-    "minecraft:zombie_pigman"
+    "minecraft:phantom",
+    "minecraft:zombified_piglin",
+    "minecraft:piglin"
   ]
 }
