@@ -86,6 +86,7 @@ dependencies {
 //    compile fg.deobf("curse.maven:terraforged:3021604")
 //    compile fg.deobf("curse.maven:natures-compass:2893530")
 //    compile fg.deobf("curse.maven:the-one-proble:3037741")
+//    compile fg.deobf("curse.maven:shutup-experimental-settings:3090291")
 }
 
 project.afterEvaluate {

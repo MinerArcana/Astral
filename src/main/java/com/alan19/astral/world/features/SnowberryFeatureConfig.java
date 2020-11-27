@@ -1,4 +1,4 @@
-package com.alan19.astral.world;
+package com.alan19.astral.world.features;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

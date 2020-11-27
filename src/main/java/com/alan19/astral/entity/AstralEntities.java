@@ -63,7 +63,7 @@ public class AstralEntities {
 
     public static void registerAttributes() {
         GlobalEntityTypeAttributes.put(AstralEntities.CRYSTAL_SPIDER.get(), CrystalSpiderEntity.registerAttributes().create());
-
+        GlobalEntityTypeAttributes.put(AstralEntities.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntity.registerAttributes().create());
     }
 
     public static void addSpawnsToBiomes(BiomeLoadingEvent event) {

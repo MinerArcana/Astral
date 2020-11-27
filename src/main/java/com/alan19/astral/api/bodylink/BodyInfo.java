@@ -87,6 +87,6 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         alive = nbt.getBoolean("alive");
         pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         dimensionType = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(nbt.getString("dimension")));
-        bodyId = NBTUtil.readUniqueId(nbt.getCompound("bodyID"));
+        bodyId = nbt.getUniqueId("bodyID");
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -44,6 +45,10 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     public PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
+    }
+
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return LivingEntity.registerAttributes();
     }
 
     private LazyOptional<ItemStackHandler> getArmor() {

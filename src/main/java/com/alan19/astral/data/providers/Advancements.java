@@ -6,6 +6,7 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.tags.AstralTags;
+import com.alan19.astral.util.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
@@ -146,7 +147,7 @@ public class Advancements extends AdvancementProvider {
 
     private void registerAdvancements(Consumer<Advancement> consumer) {
         root = Advancement.Builder.builder()
-                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "root")
+                .withDisplay(new DisplayBuilder(Constants.getAstronomicon(), "root")
                         .hidden(true)
                         .showToast(false)
                         .announceToChat(false)

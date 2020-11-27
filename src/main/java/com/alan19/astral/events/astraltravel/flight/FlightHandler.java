@@ -201,7 +201,7 @@ public class FlightHandler {
     private static int getClosestBlockUnderPlayer(PlayerEntity player) {
         BlockPos pos = player.getPosition();
         while (pos.getY() >= 0 && !player.getEntityWorld().getBlockState(pos).hasOpaqueCollisionShape(player.world, pos)) {
-            pos.down();
+            pos = pos.down();
         }
         return pos.getY();
     }

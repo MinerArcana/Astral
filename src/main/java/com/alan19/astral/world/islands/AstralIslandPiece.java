@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.world.AstralFeatures;
+import com.alan19.astral.world.AstralStructures;
 import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -52,7 +53,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     public AstralIslandPiece(TemplateManager templateManager, AstralIslandVariant variant, String templateName, BlockPos templatePosition, Rotation rotation, Mirror mirror) {
-        super(AstralFeatures.ASTRAL_ISLAND_PIECE, 0);
+        super(AstralStructures.ASTRAL_ISLAND_PIECE, 0);
         this.templateName = templateName;
         this.variant = variant;
         this.templatePosition = templatePosition;
@@ -65,7 +66,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     public AstralIslandPiece(TemplateManager templateManager, CompoundNBT nbt) {
-        super(AstralFeatures.ASTRAL_ISLAND_PIECE, nbt);
+        super(AstralStructures.ASTRAL_ISLAND_PIECE, nbt);
         this.templateName = nbt.getString("Template");
         this.variant = AstralIslandVariant.getVariantFromIndex(nbt.getInt("Variant"));
         this.rotation = nbt.getString("Rot").equals("") ? Rotation.NONE : Rotation.valueOf(nbt.getString("Rot"));

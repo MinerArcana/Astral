@@ -1,4 +1,4 @@
-package com.alan19.astral.world;
+package com.alan19.astral.world.features;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import net.minecraft.block.BlockState;

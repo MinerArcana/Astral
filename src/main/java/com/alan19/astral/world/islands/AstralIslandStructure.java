@@ -7,6 +7,7 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
+import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -80,5 +81,10 @@ public class AstralIslandStructure extends Structure<NoFeatureConfig> {
             this.recalculateStructureSize();
 
         }
+    }
+
+    @Override
+    public GenerationStage.Decoration getDecorationStage() {
+        return GenerationStage.Decoration.RAW_GENERATION;
     }
 }

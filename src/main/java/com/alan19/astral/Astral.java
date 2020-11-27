@@ -47,7 +47,9 @@ import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
+import com.alan19.astral.world.AstralConfiguredFeatures;
 import com.alan19.astral.world.AstralFeatures;
+import com.alan19.astral.world.AstralStructures;
 import com.alan19.astral.world.biome.AstralBiomes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
@@ -108,6 +110,7 @@ public class Astral {
         AstralBlocks.register(modEventBus);
         AstralItems.register(modEventBus);
         AstralFeatures.register(modEventBus);
+        AstralStructures.register(modEventBus);
         AstralParticles.register(modEventBus);
         AstralTiles.register(modEventBus);
         AstralBiomes.register(modEventBus);
@@ -122,6 +125,8 @@ public class Astral {
 
         modEventBus.addListener(this::newRegistry);
         forgeBus.addListener(AstralEntities::addSpawnsToBiomes);
+        forgeBus.addListener(AstralFeatures::addFeatures);
+        forgeBus.addListener(AstralFeatures::addDimensionSpacing);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 
@@ -174,6 +179,13 @@ public class Astral {
         AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHEREAL_SAPLING.get(), new EtherealSaplingIntentionTrackerBehavior());
         AstralAPI.addIntentionTrackerBehavior(AstralBlocks.INDEX_OF_KNOWLEDGE.get(), new IndexOfKnowledgeIntentionTrackerBehavior());
         AstralAPI.addIntentionTrackerBehavior(AstralBlocks.ETHERIC_POWDER.get(), new EthericPowderIntentionTrackerBehavior());
+
+        // Registers features and structures
+        event.enqueueWork(() -> {
+            AstralStructures.setupStructures();
+            AstralConfiguredFeatures.registerConfiguredFeatures();
+        });
+
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
