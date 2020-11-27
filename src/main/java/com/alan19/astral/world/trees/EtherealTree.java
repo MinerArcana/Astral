@@ -14,7 +14,11 @@ import java.util.function.Supplier;
 
 public class EtherealTree extends Tree {
 
-    public static final Supplier<BaseTreeFeatureConfig> ETHEREAL_TREE_CONFIG = () -> Feature.TREE.withConfiguration(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(5, 2, 0), new TwoLayerFeature(2, 0, 1)).setIgnoreVines().build()).getConfig();
+    public static final Supplier<BaseTreeFeatureConfig> ETHEREAL_TREE_CONFIG = () -> {
+        final BaseTreeFeatureConfig config = Feature.TREE.withConfiguration(new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LOG.get().getDefaultState()), new SimpleBlockStateProvider(AstralBlocks.ETHEREAL_LEAVES.get().getDefaultState()), new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3), new StraightTrunkPlacer(5, 2, 0), new TwoLayerFeature(2, 0, 1)).setIgnoreVines().build()).getConfig();
+        config.forcePlacement();
+        return config;
+    };
 
     @Nullable
     @Override

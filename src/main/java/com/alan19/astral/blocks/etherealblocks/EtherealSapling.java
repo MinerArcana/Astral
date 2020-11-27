@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 
 public class EtherealSapling extends SaplingBlock implements Ethereal {
     public EtherealSapling() {
-        super(new EtherealTree(), Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0f).sound(SoundType.PLANT).notSolid());
+        super(new EtherealTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0f).sound(SoundType.PLANT).notSolid());
     }
 
     @Nonnull

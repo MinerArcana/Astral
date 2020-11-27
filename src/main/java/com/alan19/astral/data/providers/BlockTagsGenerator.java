@@ -44,6 +44,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         getOrCreateBuilder(BlockTags.TALL_FLOWERS).addTags(AstralTags.LARGE_ETHERIC_GROWTHS);
         getOrCreateBuilder(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
         getOrCreateBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
+        getOrCreateBuilder(Tags.Blocks.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {

@@ -3,9 +3,7 @@ package com.alan19.astral.world.islands;
 import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.AstralStructures;
-import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
@@ -22,8 +20,6 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.structure.StructureManager;
 import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
 import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
@@ -93,13 +89,14 @@ public class AstralIslandPiece extends TemplateStructurePiece {
                 world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
             }
             else if (i < 20) {
-                if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
-                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
-                    final ConfiguredFeature<BaseTreeFeatureConfig, ?> treeFeature = AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get());
-                    treeFeature.generate(world.getWorld(), chunkGenerator, random, blockPos.up());
-                    this.numberOfTreesPlaced++;
-                    treeLocations.add(blockPos);
-                }
+//                if (this.numberOfTreesPlaced < 3 && farEnoughFromAnotherTree(blockPos)) {
+//                    world.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState(), 2);
+//                    final boolean generated = AstralFeatures.ETHEREAL_TREE.get().generate(world.getWorld(), chunkGenerator, random, blockPos.up(), EtherealTree.ETHEREAL_TREE_CONFIG.get());
+//                    if (generated) {
+//                        this.numberOfTreesPlaced++;
+//                        treeLocations.add(blockPos);
+//                    }
+//                }
             }
             else if (i == 20) {
                 if (numberOfWebsPlaced < 2) {

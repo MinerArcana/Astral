@@ -2,7 +2,7 @@ package com.alan19.astral.world;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.world.islands.AstralIslandPiece;
-import com.alan19.astral.world.islands.AstralIslandStructure;
+import com.alan19.astral.world.islands.EthericIsleStructure;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +22,7 @@ public class AstralStructures {
     static final DeferredRegister<Structure<?>> STRUCTURE_FEATURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Astral.MOD_ID);
 
     // Structures
-    public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE = STRUCTURE_FEATURES.register("etheric_isle", () -> new AstralIslandStructure(NoFeatureConfig.field_236558_a_, "etheric_isle"));
+    public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE = STRUCTURE_FEATURES.register("etheric_isle", () -> new EthericIsleStructure(NoFeatureConfig.field_236558_a_));
 
     public static void setupStructures() {
         setupStructure(ETHERIC_ISLE.get(), new StructureSeparationSettings(6, 2, 11262020), false);
