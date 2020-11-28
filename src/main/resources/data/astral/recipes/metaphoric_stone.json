@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "astral:bone_sheets"
+    "item": "astral:metaphoric_bone_block"
   },
   "result": "astral:metaphoric_stone",
   "experience": 0.1,

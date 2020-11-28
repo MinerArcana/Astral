@@ -25,6 +25,8 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
 
     @Override
     protected void registerModels() {
+        forItem(ENLIGHTENMENT_KEY);
+        forBlockItemWithParent(FEVERWEED);
         forBlockItem(ETHER_DIRT_ITEM);
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forItem(METAPHORIC_BONE);
@@ -38,8 +40,8 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItemWithParent(TALL_WILDWEED_ITEM, modLoc("block/tall_wildweed_top"));
         forBlockItemWithParent(RUSTCAP_MUSHROOM_ITEM);
         forBlockItemWithParent(BLUECAP_MUSHROOM_ITEM);
-        forBlockItemWithParent(ETHEREAL_DOOR_ITEM, modLoc("item/ethereal_door"));
-        forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ethereal_trapdoor_bottom"));
+        forBlockItemWithParent(ETHEREAL_DOOR_ITEM, modLoc("item/ether_door"));
+        forBlockItem(ETHEREAL_TRAPDOOR_ITEM, modLoc("block/ether_trapdoor_bottom"));
         forBlockItem(ETHEREAL_PLANKS_ITEM);
         forBlockItem(STRIPPED_ETHEREAL_LOG_ITEM);
         forBlockItem(STRIPPED_ETHEREAL_WOOD_ITEM);
@@ -48,7 +50,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItem(COMFORTABLE_CUSHION_ITEM, modLoc("block/comfortable_cushion"));
         forItem(DREAMCORD);
         forItem(DREAMWEAVE);
-        forBlockItemWithParent(ETHEREAL_SAPLING_ITEM, modLoc("block/ethereal_sapling"));
+        forBlockItemWithParent(ETHEREAL_SAPLING_ITEM, modLoc("block/ether_sapling"));
         forBlockItem(METAPHORIC_FLESH_BLOCK_ITEM);
         forItem(METAPHORIC_FLESH);
         forItem(CRYSTAL_CHITIN);
@@ -57,7 +59,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forItem(PHANTOM_EDGE);
         forBlockItem(INDEX_OF_KNOWLEDGE_ITEM, modLoc("block/index_of_knowledge"));
         forBlockItem(METAPHORIC_STONE_ITEM);
-        forBlockItem(BONE_SHEETS_ITEM);
+        forBlockItem(METAPHORIC_BONE_BLOCK_ITEM);
         forBlockItemWithParent(CRYSTAL_WEB_ITEM);
         forItem(PHANTASMAL_SWORD);
         forItem(PHANTASMAL_SHOVEL);

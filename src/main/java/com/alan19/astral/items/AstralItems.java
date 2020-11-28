@@ -31,7 +31,7 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> ETHER_DIRT_ITEM = ITEMS.register("ether_dirt", () -> convertToBlockItem(ETHER_DIRT.get()));
     public static final RegistryObject<BlockNamedItem> OFFERING_BRAZIER_ITEM = ITEMS.register("offering_brazier", () -> convertToBlockItem(OFFERING_BRAZIER.get()));
     public static final RegistryObject<IntrospectionMedicine> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", IntrospectionMedicine::new);
-    public static final RegistryObject<EnlightenmentKey> ENLIGHTENMENT_KEY = ITEMS.register("enlightenment_key", EnlightenmentKey::new);
+    public static final RegistryObject<EnlightenmentKey> ENLIGHTENMENT_KEY = ITEMS.register("key_of_enlightenment", EnlightenmentKey::new);
     public static final RegistryObject<TravelingMedicine> TRAVELING_MEDICINE = ITEMS.register("traveling_medicine", TravelingMedicine::new);
     public static final RegistryObject<Snowberry> SNOWBERRY = ITEMS.register("snowberry", Snowberry::new);
     public static final RegistryObject<FeverweedItem> FEVERWEED = ITEMS.register("feverweed", FeverweedItem::new);
@@ -64,7 +64,7 @@ public class AstralItems {
     public static final RegistryObject<SleeplessEye> SLEEPLESS_EYE = ITEMS.register("sleepless_eye", SleeplessEye::new);
     public static final RegistryObject<CrystalChitin> CRYSTAL_CHITIN = ITEMS.register("crystal_chitin", CrystalChitin::new);
     public static final RegistryObject<BlockNamedItem> METAPHORIC_STONE_ITEM = ITEMS.register("metaphoric_stone", () -> convertToBlockItem(METAPHORIC_STONE.get()));
-    public static final RegistryObject<BlockNamedItem> BONE_SHEETS_ITEM = ITEMS.register("bone_sheets", () -> convertToBlockItem(METAPHORIC_BONE_BLOCK.get()));
+    public static final RegistryObject<BlockNamedItem> METAPHORIC_BONE_BLOCK_ITEM = ITEMS.register("metaphoric_bone_block", () -> convertToBlockItem(METAPHORIC_BONE_BLOCK.get()));
     public static final RegistryObject<BlockNamedItem> METAPHORIC_FLESH_BLOCK_ITEM = ITEMS.register("metaphoric_flesh_block", () -> convertToBlockItem(METAPHORIC_FLESH_BLOCK.get()));
     public static final RegistryObject<BlockNamedItem> CRYSTAL_WEB_ITEM = ITEMS.register("crystal_web", () -> convertToBlockItem(CRYSTAL_WEB.get()));
     public static final RegistryObject<PhantomEdge> PHANTOM_EDGE = ITEMS.register("phantom_edge", PhantomEdge::new);

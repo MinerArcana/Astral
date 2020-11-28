@@ -1,0 +1,33 @@
+{
+  "parent": "astral:magical_puissance",
+  "display": {
+    "icon": {
+      "item": "minecraft:golden_apple"
+    },
+    "title": {
+      "translate": "astral.advancement.minds_renewed.name"
+    },
+    "description": {
+      "translate": "astral.advancement.minds_renewed.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "minds_renewed": {
+      "trigger": "minecraft:cured_zombie_villager",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "minds_renewed"
+    ]
+  ]
+}

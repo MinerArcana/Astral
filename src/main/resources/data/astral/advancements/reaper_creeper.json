@@ -1,5 +1,5 @@
 {
-  "parent": "astral:get_astral_travel",
+  "parent": "astral:steps_on_the_wind",
   "display": {
     "icon": {
       "item": "astral:etheric_powder"

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "astral:block/stripped_ether_log",
+    "end": "astral:block/stripped_ether_log"
+  }
+}

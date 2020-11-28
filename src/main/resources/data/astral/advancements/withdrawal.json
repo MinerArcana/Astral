@@ -1,0 +1,35 @@
+{
+  "parent": "astral:compartmentalization",
+  "display": {
+    "icon": {
+      "item": "astral:key_of_enlightenment"
+    },
+    "title": {
+      "translate": "astral.advancement.withdrawal.name"
+    },
+    "description": {
+      "translate": "astral.advancement.withdrawal.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "withdrawal": {
+      "trigger": "minecraft:changed_dimension",
+      "conditions": {
+        "to": "astral:inner_realm"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "withdrawal"
+    ]
+  ]
+}

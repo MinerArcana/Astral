@@ -25,6 +25,8 @@ public class Blockstates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        simpleBlock(ETHEREAL_LEAVES.get());
+
         tallPlant(TALL_REDBULB);
         tallPlant(TALL_CYANGRASS);
         tallPlant(TALL_GENTLEGRASS);
@@ -38,14 +40,14 @@ public class Blockstates extends BlockStateProvider {
         simpleCross(RUSTCAP_MUSHROOM);
 
         simpleBlock(ETHEREAL_PLANKS.get());
-        doorBlock(ETHEREAL_DOOR.get(), modLoc("block/ethereal_door_bottom"), modLoc("block/ethereal_door_top"));
-        trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ethereal_trapdoor"), true);
+        doorBlock(ETHEREAL_DOOR.get(), modLoc("block/ether_door_bottom"), modLoc("block/ether_door_top"));
+        trapdoorBlock(ETHEREAL_TRAPDOOR.get(), modLoc("block/ether_trapdoor"), true);
         logBlock(STRIPPED_ETHEREAL_LOG.get());
         logBlock(ETHEREAL_LOG.get());
-        axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ethereal_log"), modLoc("block/stripped_ethereal_log"));
-        axisBlock(ETHEREAL_WOOD.get(), modLoc("block/ethereal_log"), modLoc("block/ethereal_log"));
+        axisBlock(STRIPPED_ETHEREAL_WOOD.get(), modLoc("block/stripped_ether_log"), modLoc("block/stripped_ether_log"));
+        axisBlock(ETHEREAL_WOOD.get(), modLoc("block/ether_log"), modLoc("block/ether_log"));
         horizontalBlock(COMFORTABLE_CUSHION.get(), new ModelFile.ExistingModelFile(modLoc("block/comfortable_cushion"), exFileHelper));
-        simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ethereal_sapling", modLoc("block/ethereal_sapling"))));
+        simpleBlock(ETHEREAL_SAPLING.get(), new ConfiguredModel(models().cross("ether_sapling", modLoc("block/ether_sapling"))));
         simpleBlock(METAPHORIC_FLESH_BLOCK.get());
         simpleBlock(METAPHORIC_STONE.get());
         simpleBlock(METAPHORIC_BONE_BLOCK.get());

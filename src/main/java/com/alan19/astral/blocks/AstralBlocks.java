@@ -13,7 +13,7 @@ public class AstralBlocks {
 
     //Plants
     public static final RegistryObject<SnowberryBush> SNOWBERRY_BUSH = BLOCKS.register("snowberry_bush", SnowberryBush::new);
-    public static final RegistryObject<Feverweed> FEVERWEED_BLOCK = BLOCKS.register("feverweed_block", Feverweed::new);
+    public static final RegistryObject<Feverweed> FEVERWEED_BLOCK = BLOCKS.register("feverweed", Feverweed::new);
 
     //Inner Realm
     public static final RegistryObject<EgoMembrane> EGO_MEMBRANE = BLOCKS.register("ego_membrane", EgoMembrane::new);
@@ -38,15 +38,15 @@ public class AstralBlocks {
     public static final RegistryObject<EthericGrowth> RUSTCAP_MUSHROOM = BLOCKS.register("rustcap_mushroom", EthericGrowth::new);
 
     //Ethereal Trees
-    public static final RegistryObject<EtherealLeaves> ETHEREAL_LEAVES = BLOCKS.register("ethereal_leaves", EtherealLeaves::new);
-    public static final RegistryObject<EtherealLog> STRIPPED_ETHEREAL_LOG = BLOCKS.register("stripped_ethereal_log", EtherealLog::new);
-    public static final RegistryObject<StrippableEtherealLog> ETHEREAL_LOG = BLOCKS.register("ethereal_log", () -> new StrippableEtherealLog(STRIPPED_ETHEREAL_LOG::get));
-    public static final RegistryObject<StrippedEtherealWood> STRIPPED_ETHEREAL_WOOD = BLOCKS.register("stripped_ethereal_wood", StrippedEtherealWood::new);
-    public static final RegistryObject<StrippableEtherealLog> ETHEREAL_WOOD = BLOCKS.register("ethereal_wood", () -> new StrippableEtherealLog(STRIPPED_ETHEREAL_WOOD::get));
-    public static final RegistryObject<EtherealBlock> ETHEREAL_PLANKS = BLOCKS.register("ethereal_planks", EtherealPlanks::new);
-    public static final RegistryObject<EtherealDoor> ETHEREAL_DOOR = BLOCKS.register("ethereal_door", EtherealDoor::new);
-    public static final RegistryObject<EtherealTrapdoor> ETHEREAL_TRAPDOOR = BLOCKS.register("ethereal_trapdoor", EtherealTrapdoor::new);
-    public static final RegistryObject<EtherealSapling> ETHEREAL_SAPLING = BLOCKS.register("ethereal_sapling", EtherealSapling::new);
+    public static final RegistryObject<EtherealLeaves> ETHEREAL_LEAVES = BLOCKS.register("ether_leaves", EtherealLeaves::new);
+    public static final RegistryObject<EtherealLog> STRIPPED_ETHEREAL_LOG = BLOCKS.register("stripped_ether_log", EtherealLog::new);
+    public static final RegistryObject<StrippableEtherealLog> ETHEREAL_LOG = BLOCKS.register("ether_log", () -> new StrippableEtherealLog(STRIPPED_ETHEREAL_LOG::get));
+    public static final RegistryObject<StrippedEtherealWood> STRIPPED_ETHEREAL_WOOD = BLOCKS.register("stripped_ether_wood", StrippedEtherealWood::new);
+    public static final RegistryObject<StrippableEtherealLog> ETHEREAL_WOOD = BLOCKS.register("ether_wood", () -> new StrippableEtherealLog(STRIPPED_ETHEREAL_WOOD::get));
+    public static final RegistryObject<EtherealBlock> ETHEREAL_PLANKS = BLOCKS.register("ether_planks", EtherealPlanks::new);
+    public static final RegistryObject<EtherealDoor> ETHEREAL_DOOR = BLOCKS.register("ether_door", EtherealDoor::new);
+    public static final RegistryObject<EtherealTrapdoor> ETHEREAL_TRAPDOOR = BLOCKS.register("ether_trapdoor", EtherealTrapdoor::new);
+    public static final RegistryObject<EtherealSapling> ETHEREAL_SAPLING = BLOCKS.register("ether_sapling", EtherealSapling::new);
 
     //Mental Constructs
     public static final RegistryObject<ComfortableCushion> COMFORTABLE_CUSHION = BLOCKS.register("comfortable_cushion", ComfortableCushion::new);
@@ -54,7 +54,7 @@ public class AstralBlocks {
 
     //Other Ethereal Blocks
     public static final RegistryObject<MetaphoricStone> METAPHORIC_STONE = BLOCKS.register("metaphoric_stone", MetaphoricStone::new);
-    public static final RegistryObject<BoneSheets> METAPHORIC_BONE_BLOCK = BLOCKS.register("bone_sheets", BoneSheets::new);
+    public static final RegistryObject<BoneSheets> METAPHORIC_BONE_BLOCK = BLOCKS.register("metaphoric_bone_block", BoneSheets::new);
     public static final RegistryObject<MetaphoricFleshBlock> METAPHORIC_FLESH_BLOCK = BLOCKS.register("metaphoric_flesh_block", MetaphoricFleshBlock::new);
     public static final RegistryObject<CrystalWeb> CRYSTAL_WEB = BLOCKS.register("crystal_web", CrystalWeb::new);
 

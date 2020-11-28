@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "astral:ethereal_log",
-    "astral:ethereal_wood",
-    "astral:stripped_ethereal_log",
-    "astral:stripped_ethereal_wood"
+    "astral:ether_log",
+    "astral:ether_wood",
+    "astral:stripped_ether_log",
+    "astral:stripped_ether_wood"
   ]
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "astral:metaphoric_bone_block"
+    ]
+  },
+  "criteria": {
+    "metaphoric_bone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "astral:metaphoric_bone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "astral:metaphoric_bone_block"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "metaphoric_bone",
+      "has_the_recipe"
+    ]
+  ]
+}

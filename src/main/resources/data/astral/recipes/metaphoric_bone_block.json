@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " MM",
+    " MM"
+  ],
+  "key": {
+    "M": {
+      "item": "astral:metaphoric_bone"
+    }
+  },
+  "result": {
+    "item": "astral:metaphoric_bone_block"
+  }
+}

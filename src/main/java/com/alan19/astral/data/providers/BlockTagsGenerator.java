@@ -6,6 +6,7 @@ import com.alan19.astral.blocks.etherealblocks.EthericGrowth;
 import com.alan19.astral.blocks.etherealblocks.TallEthericGrowth;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.tags.BlockTags;
@@ -45,6 +46,8 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         getOrCreateBuilder(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
         getOrCreateBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
         getOrCreateBuilder(Tags.Blocks.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
+        getOrCreateBuilder(AstralTags.SNOWBERRY_SUSTAIN).add(Blocks.SNOW_BLOCK, Blocks.COARSE_DIRT, Blocks.GRAVEL, Blocks.PACKED_ICE, Blocks.DIRT, Blocks.GRASS_BLOCK);
+        getOrCreateBuilder(AstralTags.FEVERWEED_SUSTAIN).add(Blocks.PODZOL, Blocks.MYCELIUM);
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {

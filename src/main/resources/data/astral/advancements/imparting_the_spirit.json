@@ -1,0 +1,33 @@
+{
+  "parent": "astral:magical_puissance",
+  "display": {
+    "icon": {
+      "item": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "astral.advancement.imparting_the_spirit.name"
+    },
+    "description": {
+      "translate": "astral.advancement.imparting_the_spirit.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "imparting_the_spirit": {
+      "trigger": "minecraft:enchanted_item",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "imparting_the_spirit"
+    ]
+  ]
+}

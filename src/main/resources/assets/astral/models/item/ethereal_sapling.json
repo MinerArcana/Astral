@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "astral:block/ethereal_sapling"
+    "layer0": "astral:block/ether_sapling"
   }
 }

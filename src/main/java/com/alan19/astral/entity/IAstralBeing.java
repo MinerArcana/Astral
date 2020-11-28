@@ -1,13 +1,10 @@
 package com.alan19.astral.entity;
 
 import com.alan19.astral.blocks.etherealblocks.EtherealBlock;
-import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,38 +14,38 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Random;
 
 public interface IAstralBeing {
 
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
-        float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
-        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
-        float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
-        if (target instanceof LivingEntity) {
-            attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());
-            knockback += (float) EnchantmentHelper.getKnockbackModifier(self);
-        }
-
-        int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(self);
-        if (fireAspectModifier > 0) {
-            target.setFire(fireAspectModifier * 4);
-        }
-        if (target instanceof LivingEntity && ForgeHooks.onPlayerAttack((LivingEntity) target, new AstralEntityDamage(self), attackDamage)) {
-            boolean flag = target.attackEntityFrom(new AstralEntityDamage(self), attackDamage);
-            if (flag) {
-                handleKnockback(self, target, knockback);
-                handleShieldBreak(self, target);
-                handleThornAndBaneOfArthropods(self, target);
-                self.setLastAttackedEntity(target);
-            }
-            return flag;
-        }
-        else {
-            return false;
-        }
+//        float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
+//        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
+//        float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
+//        if (target instanceof LivingEntity) {
+//            attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());
+//            knockback += (float) EnchantmentHelper.getKnockbackModifier(self);
+//        }
+//
+//        int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(self);
+//        if (fireAspectModifier > 0) {
+//            target.setFire(fireAspectModifier * 4);
+//        }
+//        if (target instanceof LivingEntity && ForgeHooks.onPlayerAttack((LivingEntity) target, new AstralEntityDamage(self), attackDamage)) {
+//            boolean flag = target.attackEntityFrom(new AstralEntityDamage(self), attackDamage);
+//            if (flag) {
+//                handleKnockback(self, target, knockback);
+//                handleShieldBreak(self, target);
+//                handleThornAndBaneOfArthropods(self, target);
+//                self.setLastAttackedEntity(target);
+//            }
+//            return flag;
+//        }
+//        else {
+//            return false;
+//        }
+        return false;
     }
 
     static void handleThornAndBaneOfArthropods(LivingEntity self, Entity target) {

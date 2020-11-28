@@ -1,0 +1,37 @@
+{
+  "parent": "astral:are_you_experienced",
+  "display": {
+    "icon": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "title": {
+      "translate": "astral.advancement.steps_on_the_wind.name"
+    },
+    "description": {
+      "translate": "astral.advancement.steps_on_the_wind.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  },
+  "criteria": {
+    "get_astral_travel": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "astral:astral_travel": {}
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "get_astral_travel"
+    ]
+  ]
+}

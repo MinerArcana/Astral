@@ -1,6 +1,6 @@
 {
-  "parent": "item/handheld",
+  "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "astral:block/feverweed_block"
+    "layer0": "astral:block/feverweed"
   }
 }

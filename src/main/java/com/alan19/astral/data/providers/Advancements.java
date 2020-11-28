@@ -159,19 +159,19 @@ public class Advancements extends AdvancementProvider {
         craftTravelingMedicine = Advancement.Builder.builder()
                 .withParent(root)
                 .withCriterion("craft_traveling_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.TRAVELING_MEDICINE.get()))
-                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "craft_traveling_medicine").build())
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_traveling_medicine").toString());
+                .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "are_you_experienced").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "are_you_experienced").toString());
 
         final AdvancementRewards enlightenmentKeyReward = new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key")));
 
         becomeAstral = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
                 .withCriterion("get_astral_travel", EffectsChangedTrigger.Instance.forEffect(MobEffectsPredicate.any().addEffect(AstralEffects.ASTRAL_TRAVEL.get())))
-                .withDisplay(new DisplayBuilder(Items.PHANTOM_MEMBRANE, "get_astral_travel").build())
+                .withDisplay(new DisplayBuilder(Items.PHANTOM_MEMBRANE, "steps_on_the_wind").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "get_astral_travel").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "steps_on_the_wind").toString());
 
-        final String brewStrongAstralPotionName = "brew_strong_astral_potion";
+        final String brewStrongAstralPotionName = "mile_stride";
         brewStrongAstralPotion = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)
                 .withCriterion(brewStrongAstralPotionName, new BrewedPotionTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, AstralPotions.ASTRAL_TRAVEL_POTION.getStrongPotion().get()))
@@ -182,15 +182,15 @@ public class Advancements extends AdvancementProvider {
         craftIntrospectionMedicine = Advancement.Builder.builder()
                 .withParent(root)
                 .withCriterion("craft_introspection_medicine", InventoryChangeTrigger.Instance.forItems(AstralItems.INTROSPECTION_MEDICINE.get()))
-                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE.get(), "craft_introspection_medicine").build())
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "craft_introspection_medicine").toString());
+                .withDisplay(new DisplayBuilder(AstralItems.INTROSPECTION_MEDICINE.get(), "compartmentalization").build())
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "compartmentalization").toString());
 
         innerRealm = Advancement.Builder.builder()
                 .withParent(craftIntrospectionMedicine)
-                .withCriterion("inner_realm", ChangeDimensionTrigger.Instance.toWorld(AstralDimensions.INNER_REALM))
-                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "inner_realm").build())
+                .withCriterion("withdrawal", ChangeDimensionTrigger.Instance.toWorld(AstralDimensions.INNER_REALM))
+                .withDisplay(new DisplayBuilder(AstralItems.ENLIGHTENMENT_KEY.get(), "withdrawal").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "inner_realm").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "withdrawal").toString());
 
         magicalPuissance = Advancement.Builder.builder()
                 .withParent(innerRealm)
@@ -204,38 +204,38 @@ public class Advancements extends AdvancementProvider {
 
         enchantingInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("enchanting_insight", EnchantedItemTrigger.Instance.any())
-                .withDisplay(new DisplayBuilder(Items.ENCHANTED_BOOK, "enchanting_insight").build())
+                .withCriterion("imparting_the_spirit", EnchantedItemTrigger.Instance.any())
+                .withDisplay(new DisplayBuilder(Items.ENCHANTED_BOOK, "imparting_the_spirit").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "enchanting_insight").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "imparting_the_spirit").toString());
 
         brewingInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("brewing_insight", BrewedPotionTrigger.Instance.brewedPotion())
-                .withDisplay(new DisplayBuilder(Items.BREWING_STAND, "brewing_insight").build())
+                .withCriterion("improved_medicines", BrewedPotionTrigger.Instance.brewedPotion())
+                .withDisplay(new DisplayBuilder(Items.BREWING_STAND, "improved_medicines").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "brewing_insight").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "improved_medicines").toString());
 
         autonomousInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("autonomous_insight", SummonedEntityTrigger.Instance.summonedEntity(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM)))
-                .withDisplay(new DisplayBuilder(Items.CARVED_PUMPKIN, "autonomous_insight").build())
+                .withCriterion("questioning_intelligence", SummonedEntityTrigger.Instance.summonedEntity(EntityPredicate.Builder.create().type(EntityType.IRON_GOLEM)))
+                .withDisplay(new DisplayBuilder(Items.CARVED_PUMPKIN, "questioning_intelligence").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "autonomous_insight").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "questioning_intelligence").toString());
 
         medicalInsight = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("medical_insight", CuredZombieVillagerTrigger.Instance.any())
-                .withDisplay(new DisplayBuilder(Items.GOLDEN_APPLE, "medical_insight").build())
+                .withCriterion("minds_renewed", CuredZombieVillagerTrigger.Instance.any())
+                .withDisplay(new DisplayBuilder(Items.GOLDEN_APPLE, "minds_renewed").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "medical_insight").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "minds_renewed").toString());
 
         enterStronghold = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
-                .withCriterion("enter_stronghold", PositionTrigger.Instance.forLocation(LocationPredicate.forFeature(Structure.STRONGHOLD)))
-                .withDisplay(new DisplayBuilder(Items.ENDER_EYE, "enter_stronghold").build())
+                .withCriterion("seeing_through_other_eyes", PositionTrigger.Instance.forLocation(LocationPredicate.forFeature(Structure.STRONGHOLD)))
+                .withDisplay(new DisplayBuilder(Items.ENDER_EYE, "seeing_through_other_eyes").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "enter_stronghold").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "seeing_through_other_eyes").toString());
 
         radiantPower = Advancement.Builder.builder()
                 .withParent(magicalPuissance)
@@ -278,16 +278,16 @@ public class Advancements extends AdvancementProvider {
         voidSubstance = Advancement.Builder.builder()
                 .withParent(dimensionalTravel)
                 .withCriterion("end_gateway", EnterBlockTrigger.Instance.forBlock(Blocks.END_GATEWAY))
-                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "void_substance").build())
+                .withDisplay(new DisplayBuilder(Items.ENDER_PEARL, "substance_of_the_void").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "void_substance").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "substance_of_the_void").toString());
 
         yourWings = Advancement.Builder.builder()
                 .withParent(dimensionalTravel)
-                .withCriterion("yourWings", InventoryChangeTrigger.Instance.forItems(Items.ELYTRA))
-                .withDisplay(new DisplayBuilder(Items.ELYTRA, "your_wings").build())
+                .withCriterion("wings_of_your_own", InventoryChangeTrigger.Instance.forItems(Items.ELYTRA))
+                .withDisplay(new DisplayBuilder(Items.ELYTRA, "wings_of_your_own").build())
                 .withRewards(enlightenmentKeyReward)
-                .register(consumer, new ResourceLocation(Astral.MOD_ID, "your_wings").toString());
+                .register(consumer, new ResourceLocation(Astral.MOD_ID, "wings_of_your_own").toString());
 
         reaperCreeper = Advancement.Builder.builder()
                 .withParent(becomeAstral)

@@ -1,5 +1,5 @@
 {
-  "parent": "astral:inner_realm",
+  "parent": "astral:withdrawal",
   "display": {
     "icon": {
       "item": "minecraft:experience_bottle"
