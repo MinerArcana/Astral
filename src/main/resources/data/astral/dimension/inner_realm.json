@@ -1,8 +1,10 @@
 {
-  "generator": "astral:inner_realm_chunk_generator",
-  "biome_source": {
-    "type": "minecraft:fixed",
-    "biome": "astral:psyscape"
+  "generator": {
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "astral:psyscape"
+    },
+    "type": "astral:inner_realm_chunk_generator"
   },
   "type": "astral:inner_realm"
 }

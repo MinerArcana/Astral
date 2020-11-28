@@ -1,5 +1,6 @@
 package com.alan19.astral.dimensions.innerrealm;
 
+import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import com.google.common.collect.ImmutableList;
@@ -8,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunk;
+import org.apache.logging.log4j.Level;
 
 import java.util.stream.Stream;
 
@@ -25,7 +27,7 @@ public class InnerRealmUtils {
         if (direction == 3) {
             return world.getChunkAt(blockPos.add(16, 0, 0));
         }
-        System.out.println("Invalid direction, returning north!");
+        Astral.LOGGER.log(Level.ERROR, "Invalid direction, returning north!");
         return world.getChunkAt(blockPos.add(0, 0, -16));
     }
 
@@ -40,22 +42,38 @@ public class InnerRealmUtils {
         //XY Plane
         BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(15, world.getSeaLevel() + 15, 0))
                 .forEach(blockPos -> {
-                    world.setBlockState(blockPos.toImmutable(), Range.open(7, 8).containsAll(ImmutableList.of(blockPos.getX(), blockPos.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(blockPos.getX() % 16, blockPos.getY() % 16))) {
+                        world.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0));
+                    }
+                    else {
+                        world.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    }
                     BlockPos otherSide = blockPos.add(0, 0, 15).toImmutable();
-                    world.setBlockState(otherSide, Range.open(7, 8).containsAll(ImmutableList.of(otherSide.getX(), otherSide.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(otherSide.getX() % 16, otherSide.getY() % 16))) {
+                        world.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2));
+                    }
+                    else {
+                        world.setBlockState(otherSide, AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    }
                 });
 
         //YZ Plane
         BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(0, world.getSeaLevel() + 15, 15))
                 .forEach(blockPos -> {
-                    world.setBlockState(blockPos.toImmutable(), Range.open(7, 8).containsAll(ImmutableList.of(blockPos.getX(), blockPos.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(blockPos.getZ() % 16, blockPos.getY() % 16))) {
+                        world.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1));
+                    }
+                    else {
+                        world.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    }
                     BlockPos otherSide = blockPos.add(15, 0, 0).toImmutable();
-                    world.setBlockState(otherSide, Range.open(7, 8).containsAll(ImmutableList.of(otherSide.getX(), otherSide.getY())) ? AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3) : AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(otherSide.getZ() % 16, otherSide.getY() % 16))) {
+                        world.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3));
+                    }
+                    else {
+                        world.setBlockState(otherSide, AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                    }
                 });
-    }
-
-    public boolean isBetweenInclusive(int compare, int a, int b) {
-        return compare >= a && compare <= b;
     }
 
     public void destroyWall(World world, IChunk chunk, int meridianDirection) {

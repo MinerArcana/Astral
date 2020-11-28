@@ -35,7 +35,7 @@ public class EthericIsleStructure extends Structure<NoFeatureConfig> {
     @Nonnull
     @Override
     public GenerationStage.Decoration getDecorationStage() {
-        return GenerationStage.Decoration.SURFACE_STRUCTURES;
+        return GenerationStage.Decoration.TOP_LAYER_MODIFICATION;
     }
 
     @Nonnull

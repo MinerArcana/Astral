@@ -41,7 +41,7 @@ public class InnerRealmChunkGenerator extends ChunkGenerator {
 
     @Override
     protected Codec<? extends ChunkGenerator> func_230347_a_() {
-        return null;
+        return CODEC;
     }
 
     @Nonnull

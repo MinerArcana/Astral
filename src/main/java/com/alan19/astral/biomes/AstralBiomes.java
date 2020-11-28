@@ -1,4 +1,4 @@
-package com.alan19.astral.world.biome;
+package com.alan19.astral.biomes;
 
 import com.alan19.astral.Astral;
 import net.minecraft.world.biome.Biome;

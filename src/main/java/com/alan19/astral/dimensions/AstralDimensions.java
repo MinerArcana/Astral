@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralDimensions {
-    public static final ResourceLocation INNER_REALM_RL = new ResourceLocation(Astral.MOD_ID, "inner_realm");
     public static final RegistryKey<World> INNER_REALM = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(Astral.MOD_ID, "inner_realm"));
 
 
