@@ -1,10 +1,14 @@
 package com.alan19.astral.data.providers;
 
+import com.alan19.astral.Astral;
+import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.DoublePlantBlock;
+import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.state.properties.DoubleBlockHalf;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -53,6 +57,16 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(METAPHORIC_BONE_BLOCK.get());
         simpleBlock(INDEX_OF_KNOWLEDGE.get(), new ModelFile.ExistingModelFile(modLoc("block/index_of_knowledge"), exFileHelper));
         simpleBlock(CRYSTAL_WEB.get(), new ConfiguredModel(models().cross("crystal_web", modLoc("block/crystal_web"))));
+
+        getVariantBuilder(SNOWBERRY_BUSH.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/snowberry_bush_" + state.get(SweetBerryBushBlock.AGE)), exFileHelper)).build());
+
+        simpleCross(FEVERWEED_BLOCK);
+
+        getVariantBuilder(OFFERING_BRAZIER.get())
+                .partialState().with(AbstractFurnaceBlock.LIT, false).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/offering_brazier_off"), exFileHelper)).addModel()
+                .partialState().with(AbstractFurnaceBlock.LIT, true).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/offering_brazier"), exFileHelper)).addModel();
+
+        simpleBlock(ASTRAL_MERIDIAN.get());
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {
