@@ -66,7 +66,10 @@ public class Blockstates extends BlockStateProvider {
                 .partialState().with(AbstractFurnaceBlock.LIT, false).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/offering_brazier_off"), exFileHelper)).addModel()
                 .partialState().with(AbstractFurnaceBlock.LIT, true).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/offering_brazier"), exFileHelper)).addModel();
 
+
         simpleBlock(ASTRAL_MERIDIAN.get());
+        simpleBlock(ETHER_DIRT.get());
+        simpleBlock(ETHER_GRASS.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/ether_grass"), exFileHelper));
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {

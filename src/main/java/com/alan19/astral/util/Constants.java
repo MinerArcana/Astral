@@ -21,7 +21,7 @@ import java.util.UUID;
 public class Constants {
 
     public static final UUID ASTRAL_GRAVITY = UUID.fromString("c58e6f58-28e8-11ea-978f-2e728ce88125");
-    public static final UUID ASTRAL_EFFECT_DAMAGE_BOOST = UUID.fromString("8ca991df-c3f6-425e-b19c-5d603fdd43b6");
+    public static final UUID ASTRAL_DAMAGE_BOOST = UUID.fromString("8ca991df-c3f6-425e-b19c-5d603fdd43b6");
     public static final String SLEEPWALKING_BED = "astral.chat_message.sleepwalking.bed";
     public static final String SLEEPWALKING_SPAWN = "astral.chat_message.sleepwalking.spawn";
     public static final String COMMANDS_BURN_SUCCESS_SINGLE = "commands.burn.success.single";

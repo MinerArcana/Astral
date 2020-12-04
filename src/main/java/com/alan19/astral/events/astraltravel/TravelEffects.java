@@ -6,12 +6,10 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entity.AstralModifiers;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.util.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
@@ -58,15 +56,15 @@ public class TravelEffects {
         }
     }
 
-    @SubscribeEvent
-    public static void spiritualMobAttributes(EntityJoinWorldEvent event) {
-        if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
-            LivingEntity livingEntity = (LivingEntity) event.getEntity();
-            if (!livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
-                livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void spiritualMobAttributes(EntityJoinWorldEvent event) {
+//        if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
+//            LivingEntity livingEntity = (LivingEntity) event.getEntity();
+//            if (!livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
+//                livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
+//            }
+//        }
+//    }
 
     /**
      * Cancel the targeting event if an Astral entity targets an non-Astral entity or vice versa, as long as neither of them have the spiritual entity tag

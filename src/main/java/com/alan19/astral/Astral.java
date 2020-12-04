@@ -186,6 +186,8 @@ public class Astral {
             AstralConfiguredFeatures.registerConfiguredFeatures();
         });
 
+        AstralModifiers.init();
+
     }
 
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)

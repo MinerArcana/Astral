@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "astral:block/offering_brazier_off"
+    },
+    "lit=true": {
+      "model": "astral:block/offering_brazier"
+    }
+  }
+}
