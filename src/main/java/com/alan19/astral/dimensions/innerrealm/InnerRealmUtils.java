@@ -42,14 +42,14 @@ public class InnerRealmUtils {
         //XY Plane
         BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(15, world.getSeaLevel() + 15, 0))
                 .forEach(blockPos -> {
-                    if (Range.closed(7, 8).containsAll(ImmutableList.of(blockPos.getX() % 16, blockPos.getY() % 16))) {
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(Math.abs(blockPos.getX() % 16), Math.abs(blockPos.getY() % 16)))) {
                         world.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0));
                     }
                     else {
                         world.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
                     }
                     BlockPos otherSide = blockPos.add(0, 0, 15).toImmutable();
-                    if (Range.closed(7, 8).containsAll(ImmutableList.of(otherSide.getX() % 16, otherSide.getY() % 16))) {
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(Math.abs(otherSide.getX() % 16), Math.abs(otherSide.getY() % 16)))) {
                         world.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2));
                     }
                     else {
@@ -60,14 +60,14 @@ public class InnerRealmUtils {
         //YZ Plane
         BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(0, world.getSeaLevel(), 0), chunk.getPos().asBlockPos().add(0, world.getSeaLevel() + 15, 15))
                 .forEach(blockPos -> {
-                    if (Range.closed(7, 8).containsAll(ImmutableList.of(blockPos.getZ() % 16, blockPos.getY() % 16))) {
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(Math.abs(blockPos.getZ() % 16), Math.abs(blockPos.getY() % 16)))) {
                         world.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1));
                     }
                     else {
                         world.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
                     }
                     BlockPos otherSide = blockPos.add(15, 0, 0).toImmutable();
-                    if (Range.closed(7, 8).containsAll(ImmutableList.of(otherSide.getZ() % 16, otherSide.getY() % 16))) {
+                    if (Range.closed(7, 8).containsAll(ImmutableList.of(Math.abs(otherSide.getZ() % 16), Math.abs(otherSide.getY() % 16)))) {
                         world.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3));
                     }
                     else {
@@ -77,8 +77,8 @@ public class InnerRealmUtils {
     }
 
     public void destroyWall(World world, IChunk chunk, int meridianDirection) {
-        //North
         switch (meridianDirection) {
+            //North
             case 0:
                 BlockPos.getAllInBox(chunk.getPos().asBlockPos().add(1, world.getSeaLevel() + 1, 0), chunk.getPos().asBlockPos().add(14, world.getSeaLevel() + 14, 0)).forEach(blockPos -> world.destroyBlock(blockPos, false));
                 break;
