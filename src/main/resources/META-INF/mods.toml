@@ -17,9 +17,9 @@ modId = "patchouli"
 mandatory = true
 versionRange = "[1.16.2-47,)"
 side = "BOTH"
-#
-#[[dependencies.astral]]
-#modId="botania"
-#mandatory=false
-#versionRange="[r1.15-388,)"
-#side="BOTH"
+
+[[dependencies.astral]]
+modId = "botania"
+mandatory = false
+versionRange = "[r1.16.3-409,)"
+side = "BOTH"

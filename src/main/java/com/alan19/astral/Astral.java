@@ -31,6 +31,7 @@ import com.alan19.astral.blocks.BlockRenderHandler;
 import com.alan19.astral.blocks.tileentities.AstralTiles;
 import com.alan19.astral.client.gui.AstralContainers;
 import com.alan19.astral.commands.AstralCommands;
+import com.alan19.astral.compat.brews.AstralBotaniaBrews;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
@@ -48,6 +49,7 @@ import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
+import com.alan19.astral.util.ModCompat;
 import com.alan19.astral.world.AstralConfiguredFeatures;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.AstralStructures;
@@ -117,9 +119,9 @@ public class Astral {
         AstralEffects.register(modEventBus);
         AstralPotions.register(modEventBus);
         AstralRecipeSerializer.register(modEventBus);
-//        if (ModCompat.IS_BOTANIA_LOADED) {
-//            modEventBus.addGenericListener(Brew.class, event -> AstralBotaniaBrews.registerBrews());
-//        }
+        if (ModCompat.IS_BOTANIA_LOADED) {
+            AstralBotaniaBrews.registerBrews(modEventBus);
+        }
         AstralContainers.register(modEventBus);
         modEventBus.addListener(AstralPotions::registerRecipes);
 

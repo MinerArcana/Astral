@@ -6,12 +6,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.Mod;
+import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import vazkii.botania.api.mana.IManaItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Garden extends MentalConstruct {
@@ -61,20 +64,20 @@ public class Garden extends MentalConstruct {
      * @param manaToSend   The amount of mana to send
      */
     private void addMana(PlayerEntity playerEntity, int manaToSend) {
-//        List<ItemStack> items = getManaItems(playerEntity);
-//        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
-//    }
-//
-//    private boolean canItemstackReceiveMana(int manaToSend, ItemStack stack) {
-//        final IManaItem manaItem = (IManaItem) stack.getItem();
-//        return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
-//    }
-//
-//
-//    private List<ItemStack> getManaItems(PlayerEntity player) {
-//        final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
-//        curiosItems.addAll(player.inventory.mainInventory);
-//        return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
+        List<ItemStack> items = getManaItems(playerEntity);
+        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
+    }
+
+    private boolean canItemstackReceiveMana(int manaToSend, ItemStack stack) {
+        final IManaItem manaItem = (IManaItem) stack.getItem();
+        return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
+    }
+
+
+    private List<ItemStack> getManaItems(PlayerEntity player) {
+        final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
+        curiosItems.addAll(player.inventory.mainInventory);
+        return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
     }
 
     @Override

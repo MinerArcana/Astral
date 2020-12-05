@@ -1,111 +1,85 @@
 {
+  "type": "minecraft:random_patch",
   "config": {
-    "feature": {
-      "config": {
-        "feature": {
-          "config": {
-            "can_replace": false,
-            "project": true,
-            "need_water": false,
-            "xspread": 7,
-            "yspread": 3,
-            "zspread": 7,
-            "whitelist": [],
-            "blacklist": [],
-            "tries": 32,
-            "state_provider": {
-              "entries": [
-                {
-                  "weight": 3,
-                  "data": {
-                    "Name": "astral:wildweed"
-                  }
-                },
-                {
-                  "weight": 3,
-                  "data": {
-                    "Name": "astral:redbulb"
-                  }
-                },
-                {
-                  "weight": 3,
-                  "data": {
-                    "Name": "astral:gentlegrass"
-                  }
-                },
-                {
-                  "weight": 3,
-                  "data": {
-                    "Name": "astral:cyangrass"
-                  }
-                },
-                {
-                  "weight": 2,
-                  "data": {
-                    "Name": "minecraft:bluecap_mushroom"
-                  }
-                },
-                {
-                  "weight": 2,
-                  "data": {
-                    "Name": "minecraft:rustcap_mushroom"
-                  }
-                },
-                {
-                  "weight": 1,
-                  "data": {
-                    "Name": "minecraft:tall_redbulb"
-                  }
-                },
-                {
-                  "weight": 1,
-                  "data": {
-                    "Name": "minecraft:tall_wildweed"
-                  }
-                },
-                {
-                  "weight": 1,
-                  "data": {
-                    "Name": "minecraft:tall_gentlegrass"
-                  }
-                },
-                {
-                  "weight": 1,
-                  "data": {
-                    "Name": "minecraft:tall_cyangrass"
-                  }
-                }
-              ],
-              "type": "minecraft:weighted_state_provider"
-            },
-            "block_placer": {
-              "type": "minecraft:simple_block_placer"
-            }
-          },
-          "type": "minecraft:random_patch"
+    "can_replace": false,
+    "project": false,
+    "need_water": false,
+    "xspread": 7,
+    "yspread": 3,
+    "zspread": 7,
+    "whitelist": [
+    ],
+    "blacklist": [
+    ],
+    "tries": 64,
+    "state_provider": {
+      "entries": [
+        {
+          "weight": 3,
+          "data": {
+            "Name": "astral:wildweed"
+          }
         },
-        "decorator": {
-          "config": {
-            "outer": {
-              "config": {},
-              "type": "minecraft:square"
-            },
-            "inner": {
-              "config": {},
-              "type": "minecraft:heightmap_spread_double"
-            }
-          },
-          "type": "minecraft:decorated"
+        {
+          "weight": 3,
+          "data": {
+            "Name": "astral:redbulb"
+          }
+        },
+        {
+          "weight": 3,
+          "data": {
+            "Name": "astral:gentlegrass"
+          }
+        },
+        {
+          "weight": 3,
+          "data": {
+            "Name": "astral:cyangrass"
+          }
+        },
+        {
+          "weight": 2,
+          "data": {
+            "Name": "minecraft:bluecap_mushroom"
+          }
+        },
+        {
+          "weight": 2,
+          "data": {
+            "Name": "minecraft:rustcap_mushroom"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:tall_redbulb"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:tall_wildweed"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:tall_gentlegrass"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:tall_cyangrass"
+          }
         }
-      },
-      "type": "minecraft:decorated"
+      ],
+      "type": "minecraft:weighted_state_provider"
     },
-    "decorator": {
-      "config": {
-        "count": 25
-      },
-      "type": "minecraft:count"
+    "block_placer": {
+      "type": "minecraft:simple_block_placer"
     }
-  },
-  "type": "minecraft:decorated"
+  }
 }
+

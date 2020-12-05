@@ -68,6 +68,7 @@ public class Blockstates extends BlockStateProvider {
 
 
         simpleBlock(ASTRAL_MERIDIAN.get());
+        simpleBlock(EGO_MEMBRANE.get());
         simpleBlock(ETHER_DIRT.get());
         simpleBlock(ETHER_GRASS.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/ether_grass"), exFileHelper));
     }
