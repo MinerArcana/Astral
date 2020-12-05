@@ -1,6 +1,6 @@
 {
   "type": "botania:brew",
-  "brew": "astral:feverweed",
+  "brew": "astral:feverweed_brew",
   "ingredients": [
     {
       "item": "minecraft:redstone"

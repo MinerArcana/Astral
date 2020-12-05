@@ -1,6 +1,6 @@
 {
   "type": "botania:brew",
-  "brew": "astral:snowberry",
+  "brew": "astral:snowberry_brew",
   "ingredients": [
     {
       "item": "minecraft:redstone"
