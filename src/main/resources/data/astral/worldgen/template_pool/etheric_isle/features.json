@@ -55,15 +55,6 @@
         "projection": "rigid",
         "element_type": "minecraft:feature_pool_element"
       }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "feature": "astral:patch_crystal_web_or_metaphoric_stone",
-        "processors": "minecraft:empty",
-        "projection": "rigid",
-        "element_type": "minecraft:feature_pool_element"
-      }
     }
   ]
 }

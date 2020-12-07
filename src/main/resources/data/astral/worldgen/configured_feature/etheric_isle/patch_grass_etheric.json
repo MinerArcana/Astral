@@ -11,7 +11,7 @@
     ],
     "blacklist": [
     ],
-    "tries": 32,
+    "tries": 64,
     "state_provider": {
       "entries": [
         {
@@ -41,13 +41,13 @@
         {
           "weight": 2,
           "data": {
-            "Name": "minecraft:bluecap_mushroom"
+            "Name": "astral:bluecap_mushroom"
           }
         },
         {
           "weight": 2,
           "data": {
-            "Name": "minecraft:rustcap_mushroom"
+            "Name": "astral:rustcap_mushroom"
           }
         }
       ],
