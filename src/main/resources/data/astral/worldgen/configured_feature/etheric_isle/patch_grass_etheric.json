@@ -11,7 +11,7 @@
     ],
     "blacklist": [
     ],
-    "tries": 64,
+    "tries": 32,
     "state_provider": {
       "entries": [
         {
@@ -48,30 +48,6 @@
           "weight": 2,
           "data": {
             "Name": "minecraft:rustcap_mushroom"
-          }
-        },
-        {
-          "weight": 1,
-          "data": {
-            "Name": "minecraft:tall_redbulb"
-          }
-        },
-        {
-          "weight": 1,
-          "data": {
-            "Name": "minecraft:tall_wildweed"
-          }
-        },
-        {
-          "weight": 1,
-          "data": {
-            "Name": "minecraft:tall_gentlegrass"
-          }
-        },
-        {
-          "weight": 1,
-          "data": {
-            "Name": "minecraft:tall_cyangrass"
           }
         }
       ],

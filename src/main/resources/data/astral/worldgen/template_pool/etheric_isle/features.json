@@ -3,9 +3,63 @@
   "fallback": "minecraft:empty",
   "elements": [
     {
+      "weight": 12,
+      "element": {
+        "feature": "astral:etheric_isle/patch_grass_etheric",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "feature": "astral:etheric_isle/patch_tall_gentlegrass",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "feature": "astral:etheric_isle/patch_tall_cyangrass",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "feature": "astral:etheric_isle/patch_tall_redbulb",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "feature": "astral:etheric_isle/patch_tall_wildweed",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 8,
+      "element": {
+        "feature": "astral:ethereal_tree",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
       "weight": 1,
       "element": {
-        "feature": "astral:etheric_isle/patch_grass_ether",
+        "feature": "astral:patch_crystal_web_or_metaphoric_stone",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:feature_pool_element"

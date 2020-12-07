@@ -90,6 +90,7 @@ dependencies {
 //    compile fg.deobf("curse.maven:shutup-experimental-settings:3090291")
 }
 
+// I believe this is for using datagens with forge tags
 project.afterEvaluate {
     minecraft.runs.data.args('--existing', configurations.minecraft.asPath.split(":").toList().find { it.contains("forge") }.split(";")[0])
 }
