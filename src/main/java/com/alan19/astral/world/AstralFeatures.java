@@ -5,13 +5,13 @@ import com.alan19.astral.world.features.FeverweedFeature;
 import com.alan19.astral.world.features.FeverweedFeatureConfig;
 import com.alan19.astral.world.features.SnowberryFeature;
 import com.alan19.astral.world.features.SnowberryFeatureConfig;
+import com.alan19.astral.world.trees.EtherealTreeFeature;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.TreeFeature;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
@@ -34,7 +34,7 @@ public class AstralFeatures {
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Astral.MOD_ID);
 
     // Vegetation
-    public static final RegistryObject<Feature<BaseTreeFeatureConfig>> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new TreeFeature(BaseTreeFeatureConfig.CODEC));
+    public static final RegistryObject<EtherealTreeFeature> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new EtherealTreeFeature(BaseTreeFeatureConfig.CODEC));
     public static final RegistryObject<Feature<FeverweedFeatureConfig>> FEVERWEED_FEATURE = FEATURES.register("feverweed", FeverweedFeature::new);
     public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
 

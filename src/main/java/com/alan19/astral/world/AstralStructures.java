@@ -25,7 +25,7 @@ public class AstralStructures {
     public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE = STRUCTURE_FEATURES.register("etheric_isle", () -> new EthericIsleStructure(NoFeatureConfig.field_236558_a_));
 
     public static void setupStructures() {
-        setupStructure(ETHERIC_ISLE.get(), new StructureSeparationSettings(6, 2, 11262020), false);
+        setupStructure(ETHERIC_ISLE.get(), new StructureSeparationSettings(3, 1, 11262020), false);
     }
 
     public static <F extends Structure<?>> void setupStructure(F structure, StructureSeparationSettings structureSeparationSettings, boolean transformSurroundingLand) {
