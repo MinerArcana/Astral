@@ -31,6 +31,7 @@ import java.util.List;
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
 public class EthericIsleStructure extends Structure<NoFeatureConfig> {
+    // TODO Decrease spawn rate of trees, add crystal web and metaphoric rock features
     private static final List<MobSpawnInfo.Spawners> SPAWN_LIST = ImmutableList.of(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 1, 1, 1));
 
 
@@ -70,11 +71,5 @@ public class EthericIsleStructure extends Structure<NoFeatureConfig> {
             Astral.LOGGER.log(Level.DEBUG, "Etheric Isle spawned at " + blockpos.getX() + " " + blockpos.getY() + " " + blockpos.getZ());
         }
 
-    }
-
-    @Nonnull
-    @Override
-    public List<MobSpawnInfo.Spawners> getSpawnList() {
-        return SPAWN_LIST;
     }
 }

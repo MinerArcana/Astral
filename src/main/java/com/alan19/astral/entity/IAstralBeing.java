@@ -1,10 +1,10 @@
 package com.alan19.astral.entity;
 
-import com.alan19.astral.blocks.etherealblocks.EtherealBlock;
-import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.Blocks;
+import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -14,37 +14,40 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Random;
 
 public interface IAstralBeing {
 
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
-//        float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
-//        final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
-//        float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
-//        if (target instanceof LivingEntity) {
-//            attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());
-//            knockback += (float) EnchantmentHelper.getKnockbackModifier(self);
-//        }
-//
-//        int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(self);
-//        if (fireAspectModifier > 0) {
-//            target.setFire(fireAspectModifier * 4);
-//        }
-//        if (target instanceof LivingEntity && ForgeHooks.onPlayerAttack((LivingEntity) target, new AstralEntityDamage(self), attackDamage)) {
-//            boolean flag = target.attackEntityFrom(new AstralEntityDamage(self), attackDamage);
-//            if (flag) {
-//                handleKnockback(self, target, knockback);
-//                handleShieldBreak(self, target);
-//                handleThornAndBaneOfArthropods(self, target);
-//                self.setLastAttackedEntity(target);
-//            }
-//            return flag;
-//        }
-//        else {
-//            return false;
-//        }
+        if (self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()) != null) {
+            float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
+            final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
+            float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
+            if (target instanceof LivingEntity) {
+                attackDamage += EnchantmentHelper.getModifierForCreature(self.getHeldItemMainhand(), ((LivingEntity) target).getCreatureAttribute());
+                knockback += (float) EnchantmentHelper.getKnockbackModifier(self);
+            }
+
+            int fireAspectModifier = EnchantmentHelper.getFireAspectModifier(self);
+            if (fireAspectModifier > 0) {
+                target.setFire(fireAspectModifier * 4);
+            }
+            if (target instanceof LivingEntity && ForgeHooks.onPlayerAttack((LivingEntity) target, new AstralEntityDamage(self), attackDamage)) {
+                boolean flag = target.attackEntityFrom(new AstralEntityDamage(self), attackDamage);
+                if (flag) {
+                    handleKnockback(self, target, knockback);
+                    handleShieldBreak(self, target);
+                    handleThornAndBaneOfArthropods(self, target);
+                    self.setLastAttackedEntity(target);
+                }
+                return flag;
+            }
+            else {
+                return false;
+            }
+        }
         return false;
     }
 
@@ -81,15 +84,7 @@ public interface IAstralBeing {
     static <T extends MobEntity> boolean canEtherealEntitySpawn(EntityType<T> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
         BlockPos groundPos = blockPos.down();
         if (world.getDifficulty() != Difficulty.PEACEFUL && world instanceof ServerWorld && MonsterEntity.isValidLightLevel((IServerWorld) world, groundPos, random)) {
-            if (spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION)) {
-                if (world.getBlockState(groundPos).getBlock() instanceof EtherealBlock) {
-                    return world.getBlockState(blockPos).getBlock() == Blocks.AIR || AstralTags.ETHERIC_GROWTHS.contains(world.getBlockState(blockPos).getBlock());
-                }
-                else {
-                    return false;
-                }
-            }
-            return spawnReason == SpawnReason.SPAWNER || world.getBlockState(groundPos).canEntitySpawn(world, groundPos, entityType);
+            return spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION) || spawnReason == SpawnReason.SPAWNER || world.getBlockState(groundPos).canEntitySpawn(world, groundPos, entityType);
         }
         return false;
     }

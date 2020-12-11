@@ -9,13 +9,14 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class BodyInfo implements INBTSerializable<CompoundNBT> {
     private float health;
     private BlockPos pos;
     private boolean alive;
-    private RegistryKey<World> dimensionType;
+    private ResourceLocation dimensionType;
     private UUID bodyId;
 
     public BodyInfo(CompoundNBT nbt) {
@@ -26,24 +27,21 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         this.health = health;
         this.pos = pos;
         this.alive = alive;
-        this.dimensionType = dimensionType;
+        this.dimensionType = dimensionType.getLocation();
         this.bodyId = bodyId;
     }
 
+    @Nullable
     public UUID getBodyId() {
         return bodyId;
     }
 
-    public void setBodyId(UUID bodyId) {
+    public void setBodyId(@Nullable UUID bodyId) {
         this.bodyId = bodyId;
     }
 
     public RegistryKey<World> getDimensionType() {
-        return dimensionType;
-    }
-
-    public void setDimensionType(RegistryKey<World> dimensionKey) {
-        this.dimensionType = dimensionKey;
+        return RegistryKey.getOrCreateKey(Registry.WORLD_KEY, dimensionType);
     }
 
     public float getHealth() {
@@ -76,7 +74,7 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         nbt.putFloat("health", health);
         nbt.putBoolean("alive", alive);
         nbt.put("pos", NBTUtil.writeBlockPos(pos));
-        nbt.putString("dimension", dimensionType.getRegistryName().toString());
+        nbt.putString("dimension", dimensionType.toString());
         nbt.put("bodyID", NBTUtil.func_240626_a_(bodyId));
         return nbt;
     }
@@ -86,7 +84,7 @@ public class BodyInfo implements INBTSerializable<CompoundNBT> {
         health = nbt.getFloat("health");
         alive = nbt.getBoolean("alive");
         pos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
-        dimensionType = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(nbt.getString("dimension")));
+        dimensionType = new ResourceLocation(nbt.getString("dimension"));
         bodyId = nbt.getUniqueId("bodyID");
     }
 }

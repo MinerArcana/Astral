@@ -11,6 +11,7 @@ import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraftforge.common.util.NonNullLazy;
 
 import java.util.function.Supplier;
 
@@ -18,9 +19,9 @@ public class AstralConfiguredFeatures {
     static final AstralConfig.WorldgenSettings worldgenSettings = AstralConfig.getWorldgenSettings();
 
     // Configured features
-    public static final Supplier<ConfiguredFeature<?, ?>> CONFIGURED_FEVERWEED = () -> AstralFeatures.FEVERWEED_FEATURE.get().withConfiguration(new FeverweedFeatureConfig(worldgenSettings.getFeverweedMinPatchSize(), worldgenSettings.getFeverweedMaxPatchSize(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchDistribution()));
-    public static final Supplier<ConfiguredFeature<?, ?>> CONFIGURED_SNOWBERRY = () -> AstralFeatures.SNOWBERRY_FEATURE.get().withConfiguration(new SnowberryFeatureConfig(worldgenSettings.getSnowberryMinPatchSize(), worldgenSettings.getSnowberryMaxPatchSize(), worldgenSettings.getSnowberryPatchSpawnRate(), 60));
-    public static final Supplier<ConfiguredFeature<?, ?>> CONFIGURED_ETHEREAL_TREE = () -> AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get()).square();
+    public static final NonNullLazy<ConfiguredFeature<?, ?>> CONFIGURED_FEVERWEED = () -> AstralFeatures.FEVERWEED_FEATURE.get().withConfiguration(new FeverweedFeatureConfig(worldgenSettings.getFeverweedMinPatchSize(), worldgenSettings.getFeverweedMaxPatchSize(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchSpawnRate(), worldgenSettings.getFeverweedPatchDistribution()));
+    public static final NonNullLazy<ConfiguredFeature<?, ?>> CONFIGURED_SNOWBERRY = () -> AstralFeatures.SNOWBERRY_FEATURE.get().withConfiguration(new SnowberryFeatureConfig(worldgenSettings.getSnowberryMinPatchSize(), worldgenSettings.getSnowberryMaxPatchSize(), worldgenSettings.getSnowberryPatchSpawnRate(), 60));
+    public static final NonNullLazy<ConfiguredFeature<?, ?>> CONFIGURED_ETHEREAL_TREE = () -> AstralFeatures.ETHEREAL_TREE.get().withConfiguration(EtherealTree.ETHEREAL_TREE_CONFIG.get()).square();
 
     // Configured structures
     public static final Supplier<StructureFeature<?, ?>> CONFIGURED_ETHERIC_ISLE = () -> AstralStructures.ETHERIC_ISLE.get().withConfiguration(IFeatureConfig.NO_FEATURE_CONFIG);

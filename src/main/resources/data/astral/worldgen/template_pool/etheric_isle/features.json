@@ -48,7 +48,7 @@
       }
     },
     {
-      "weight": 8,
+      "weight": 5,
       "element": {
         "feature": "astral:ethereal_tree",
         "processors": "minecraft:empty",
