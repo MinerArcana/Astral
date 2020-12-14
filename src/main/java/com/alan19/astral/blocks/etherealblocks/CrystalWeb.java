@@ -2,20 +2,19 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
@@ -52,19 +51,15 @@ public class CrystalWeb extends EtherealBlock {
         super.tick(state, worldIn, pos, rand);
         final int moonPhase = worldIn.getMoonPhase();
         //Spread in a direction based on moon phasae
-        if (rand.nextInt(30) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
+        if (worldIn.getGameTime() % 1200 == 0 && worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(30) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
             final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
                 worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
             }
         }
-        //Spawn Crystal Spiders with intervals based on moon phase
-        if (rand.nextInt(Math.abs(5 - moonPhase) + 1) == 0 && worldIn.getBlockState(pos.down()).getBlock() instanceof Ethereal && canSpiderSpawn(worldIn, pos) && pos.getY() >= 128) {
-            AstralEntities.CRYSTAL_SPIDER.get().spawn(worldIn, null, null, pos, SpawnReason.SPAWNER, false, false);
-        }
         //Remove block if exposed to rain or any liquid
-        if (worldIn.isRainingAt(pos) || !worldIn.getFluidState(pos).isEmpty()){
+        if (worldIn.isRainingAt(pos) || !worldIn.getFluidState(pos).isEmpty()) {
             worldIn.removeBlock(pos, false);
         }
     }
