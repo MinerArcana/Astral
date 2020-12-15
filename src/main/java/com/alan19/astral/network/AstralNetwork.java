@@ -5,7 +5,6 @@ import com.alan19.astral.api.sleepmanager.ISleepManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -25,12 +24,6 @@ public class AstralNetwork {
                 .serverAcceptedVersions(version -> true)
                 .networkProtocolVersion(() -> NETWORK_VERSION)
                 .simpleChannel();
-
-        channel.messageBuilder(SendClaimedChunkMessage.class, 1)
-                .decoder(SendClaimedChunkMessage::decode)
-                .encoder(SendClaimedChunkMessage::encode)
-                .consumer(SendClaimedChunkMessage::handle)
-                .add();
 
         channel.messageBuilder(StartTrackingAstralPotionMessage.class, 2)
                 .decoder(StartTrackingAstralPotionMessage::decode)
@@ -91,10 +84,6 @@ public class AstralNetwork {
                 .consumer(DeleteIntentionBeam::handle)
                 .add();
         return channel;
-    }
-
-    public static void sendClaimedChunksToPlayers(CompoundNBT claimedChunksMapNBT) {
-        Astral.INSTANCE.send(PacketDistributor.ALL.noArg(), new SendClaimedChunkMessage(claimedChunksMapNBT));
     }
 
     public static void sendAstralEffectStarting(EffectInstance effectInstance, Entity astralEntity) {
