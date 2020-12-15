@@ -3,6 +3,8 @@ package com.alan19.astral.api;
 import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
+import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
+import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporter;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IIntentionTrackerBehavior;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
@@ -45,7 +47,13 @@ public class AstralAPI {
     @CapabilityInject(IBeamTracker.class)
     public static Capability<IBeamTracker> beamTrackerCapability;
 
-    public static LazyOptional<IBodyTracker> getBodyTracker(ServerWorld world){
+    @CapabilityInject(IInnerRealmChunkClaim.class)
+    public static Capability<IInnerRealmChunkClaim> chunkClaimCapability;
+
+    @CapabilityInject(IInnerRealmTeleporter.class)
+    public static Capability<IInnerRealmTeleporter> teleporterCapability;
+
+    public static LazyOptional<IBodyTracker> getBodyTracker(ServerWorld world) {
         return getOverworld(world).getCapability(bodyTrackerCapability);
     }
 
@@ -61,12 +69,20 @@ public class AstralAPI {
         return getOverworld(world).getCapability(constructTrackerCapability);
     }
 
+    public static LazyOptional<IInnerRealmChunkClaim> getChunkClaimTracker(ServerWorld world) {
+        return getOverworld(world).getCapability(chunkClaimCapability);
+    }
+
+    public static LazyOptional<IInnerRealmTeleporter> getInnerRealmTeleporter(ServerWorld world) {
+        return getOverworld(world).getCapability(teleporterCapability);
+    }
+
     public static ServerWorld getOverworld(ServerWorld world) {
         return world.getServer().getWorld(World.OVERWORLD);
     }
 
     @Nullable
-    public static IIntentionTrackerBehavior getIntentionTrackerBehavior(Block block){
+    public static IIntentionTrackerBehavior getIntentionTrackerBehavior(Block block) {
         return INTENTION_TRACKER_BEHAVIORS.get(block);
     }
 

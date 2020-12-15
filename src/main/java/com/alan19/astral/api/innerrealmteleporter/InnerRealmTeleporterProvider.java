@@ -1,9 +1,9 @@
 package com.alan19.astral.api.innerrealmteleporter;
 
+import com.alan19.astral.api.AstralAPI;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -11,30 +11,31 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class InnerRealmTeleporterProvider implements ICapabilitySerializable<CompoundNBT> {
+    private final InnerRealmTeleporter teleporterCapability;
+    private final LazyOptional<IInnerRealmTeleporter> teleporterOptional;
 
-    @CapabilityInject(IInnerRealmTeleporterCapability.class)
-    public static final Capability<IInnerRealmTeleporterCapability> TELEPORTER_CAPABILITY = null;
+    public InnerRealmTeleporterProvider() {
+        this(new InnerRealmTeleporter());
+    }
 
-    private final IInnerRealmTeleporterCapability instance = TELEPORTER_CAPABILITY.getDefaultInstance();
+    public InnerRealmTeleporterProvider(InnerRealmTeleporter teleporterCapability) {
+        this.teleporterCapability = teleporterCapability;
+        this.teleporterOptional = LazyOptional.of(() -> teleporterCapability);
+    }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == TELEPORTER_CAPABILITY) {
-            return LazyOptional.of(() -> instance).cast();
-        }
-        else {
-            return LazyOptional.empty();
-        }
+        return cap == AstralAPI.teleporterCapability ? teleporterOptional.cast() : LazyOptional.empty();
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        return instance.serializeNBT();
+        return teleporterCapability.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        instance.deserializeNBT(nbt);
+        teleporterCapability.deserializeNBT(nbt);
     }
 }

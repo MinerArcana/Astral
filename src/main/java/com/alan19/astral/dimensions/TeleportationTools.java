@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 public class TeleportationTools {
@@ -22,8 +22,9 @@ public class TeleportationTools {
      * @param dest      The BlockPos to be teleported to
      * @param direction The direction the player is facing
      */
+    @ParametersAreNonnullByDefault
     public static void performTeleport(ServerPlayerEntity player, RegistryKey<World> dimension, BlockPos dest, @Nullable Direction direction) {
-        ServerWorld destWorld = Objects.requireNonNull(player.getServer()).getWorld(dimension);
+        ServerWorld destWorld = player.getServer().getWorld(dimension);
         player.teleport(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, (Optional.ofNullable(direction).map(Direction::getHorizontalAngle).orElseGet(() -> player.rotationYaw)), player.rotationPitch);
         // Resync some things that Vanilla is missing:
         player.getActivePotionEffects().forEach(effectInstance -> player.connection.sendPacket(new SPlayEntityEffectPacket(player.getEntityId(), effectInstance)));

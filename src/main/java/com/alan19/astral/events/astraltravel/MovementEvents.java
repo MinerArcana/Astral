@@ -2,7 +2,6 @@ package com.alan19.astral.events.astraltravel;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.effects.AstralEffects;
@@ -14,6 +13,7 @@ import net.minecraft.entity.Pose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,9 +51,11 @@ public class MovementEvents {
         if (player instanceof ServerPlayerEntity) {
             StartAndEndHandling.spawnPhysicalBody((ServerPlayerEntity) player);
         }
-        final Boolean goingToInnerRealm = sleepManager.isGoingToInnerRealm();
-        if (Boolean.TRUE.equals(goingToInnerRealm)) {
-            player.getEntityWorld().getCapability(InnerRealmTeleporterProvider.TELEPORTER_CAPABILITY).ifPresent(cap -> cap.teleport(player));
+        final boolean goingToInnerRealm = sleepManager.isGoingToInnerRealm();
+        if (goingToInnerRealm) {
+            if (player instanceof ServerPlayerEntity) {
+                AstralAPI.getInnerRealmTeleporter((ServerWorld) player.getEntityWorld()).ifPresent(cap -> cap.teleport((ServerPlayerEntity) player));
+            }
             sleepManager.setGoingToInnerRealm(false);
         }
         else {

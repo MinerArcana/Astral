@@ -69,7 +69,7 @@ public class AstralEntities {
     public static void addSpawnsToBiomes(BiomeLoadingEvent event) {
         List<MobSpawnInfo.Spawners> spawners = event.getSpawns().getSpawner(EntityClassification.MONSTER);
         if (event.getCategory() == Biome.Category.OCEAN) {
-            spawners.add(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 100, 1, 4));
+            spawners.add(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 10, 1, 2));
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.alan19.astral.network;
 
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimCapability;
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
@@ -15,7 +13,7 @@ import java.util.function.Supplier;
  * Message that causes the client to recreate the HashMap every time it is updated
  */
 public class SendClaimedChunkMessage {
-    // NBT tag with the HashMap information to be used in InnerRealmChunkClaimCapability#deserializeNBT()
+    // NBT tag with the HashMap information to be used in InnerRealmChunkClaim#deserializeNBT()
     private final CompoundNBT nbt;
 
     public SendClaimedChunkMessage(CompoundNBT nbt) {
@@ -40,13 +38,13 @@ public class SendClaimedChunkMessage {
         contextSupplier.get().enqueueWork(() -> {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
-            optionalWorld.ifPresent(world ->
-                    world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(innerRealmChunkClaimCapability -> {
-                        if (!(innerRealmChunkClaimCapability instanceof InnerRealmChunkClaimCapability))
-                            return;
-                        innerRealmChunkClaimCapability.deserializeNBT(sendClaimedChunkMessage.nbt);
-                    })
-            );
+//            optionalWorld.ifPresent(world ->
+//                    world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(innerRealmChunkClaimCapability -> {
+//                        if (!(innerRealmChunkClaimCapability instanceof InnerRealmChunkClaim))
+//                            return;
+//                        innerRealmChunkClaimCapability.deserializeNBT(sendClaimedChunkMessage.nbt);
+//                    })
+//            );
         });
 
         contextSupplier.get().setPacketHandled(true);

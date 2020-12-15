@@ -1,0 +1,87 @@
+package com.alan19.astral.api.innerrealmteleporter;
+
+import com.alan19.astral.api.AstralAPI;
+import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
+import com.alan19.astral.dimensions.AstralDimensions;
+import com.alan19.astral.dimensions.TeleportationTools;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class InnerRealmTeleporter implements IInnerRealmTeleporter {
+    private Map<UUID, BlockPos> spawnLocations = new HashMap<>();
+
+    /**
+     * Teleports player into the inner realm if they are in any other dimension
+     * If they are not already registered, register them in the HashMap
+     * Then load the chunk they will spawn into and generate it if they have not registered yet
+     * Finally teleport the player
+     *
+     * @param player The player to be teleported into the inner realm
+     */
+    @Override
+    public void teleport(ServerPlayerEntity player) {
+        ServerWorld innerRealmWorld = player.getServerWorld().getServer().getWorld(AstralDimensions.INNER_REALM);
+        final BlockPos spawnLocation = spawnLocations.computeIfAbsent(player.getUniqueID(), uuid -> {
+            final BlockPos pos = new BlockPos(spawnLocations.size() * 256 + 8, player.getEntityWorld().getSeaLevel() + 4, 8);
+            AstralAPI.getChunkClaimTracker(innerRealmWorld).ifPresent(cap -> cap.claimChunk(player, new ChunkPos(pos)));
+            return pos;
+        });
+        TeleportationTools.performTeleport(player, AstralDimensions.INNER_REALM, new BlockPos(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()), Direction.UP);
+        AstralAPI.getOverworldPsychicInventory(innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUniqueID())));
+    }
+
+    /**
+     * Drops all items being sent to the Inner Realm
+     *
+     * @param playerEntity      The player who was teleproted to the Inner Realm
+     * @param inventoryOfPlayer The PsychicInventoryInstance of the player
+     */
+    private void dropInnerRealmItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer) {
+        World entityWorld = playerEntity.world;
+        int inventorySlots = inventoryOfPlayer.getInnerRealmMain().getSlots();
+        for (int i = 0; i < inventorySlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmMain().extractItem(i, 64, false));
+        }
+
+        int armorSlots = inventoryOfPlayer.getInnerRealmArmor().getSlots();
+        for (int i = 0; i < armorSlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmArmor().extractItem(i, 64, false));
+        }
+
+        int handSlots = inventoryOfPlayer.getInnerRealmHands().getSlots();
+        for (int i = 0; i < handSlots; i++) {
+            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmHands().extractItem(i, 64, false));
+        }
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT spawnLocationTag = new CompoundNBT();
+        spawnLocations.forEach((key, value) -> spawnLocationTag.put(key.toString(), NBTUtil.writeBlockPos(value)));
+        CompoundNBT spawnLocationsNBT = new CompoundNBT();
+        spawnLocationsNBT.put("spawnLocations", spawnLocationTag);
+        return spawnLocationsNBT;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        Map<UUID, BlockPos> newSpawnMap = new HashMap<>();
+        CompoundNBT spawnLocationsNbt = nbt.getCompound("spawnLocations");
+        for (String id : spawnLocationsNbt.keySet()) {
+            newSpawnMap.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocationsNbt.getCompound(id)));
+        }
+        this.spawnLocations = newSpawnMap;
+    }
+}

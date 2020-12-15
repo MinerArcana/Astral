@@ -162,7 +162,7 @@ public class Advancements extends AdvancementProvider {
                 .withDisplay(new DisplayBuilder(AstralItems.TRAVELING_MEDICINE.get(), "are_you_experienced").build())
                 .register(consumer, new ResourceLocation(Astral.MOD_ID, "are_you_experienced").toString());
 
-        final AdvancementRewards enlightenmentKeyReward = new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation("astral:give_key")));
+        final AdvancementRewards enlightenmentKeyReward = new AdvancementRewards(5, new ResourceLocation[]{}, new ResourceLocation[]{}, new FunctionObject.CacheableFunction(new ResourceLocation(Astral.MOD_ID, "give_key")));
 
         becomeAstral = Advancement.Builder.builder()
                 .withParent(craftTravelingMedicine)

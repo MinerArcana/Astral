@@ -1,42 +1,41 @@
 package com.alan19.astral.api.innerrealmchunkclaim;
 
-import net.minecraft.nbt.INBT;
+import com.alan19.astral.api.AstralAPI;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmChunkClaimProvider implements ICapabilitySerializable {
-    @CapabilityInject(IInnerRealmChunkClaimCapability.class)
-    public static final Capability<IInnerRealmChunkClaimCapability> CHUNK_CLAIM_CAPABILITY = null;
+public class InnerRealmChunkClaimProvider implements ICapabilitySerializable<CompoundNBT> {
+    private final InnerRealmChunkClaim chunkClaimCapability;
+    private final LazyOptional<IInnerRealmChunkClaim> chunkClaimOptional;
 
-    private final IInnerRealmChunkClaimCapability instance = CHUNK_CLAIM_CAPABILITY.getDefaultInstance();
+    public InnerRealmChunkClaimProvider() {
+        this(new InnerRealmChunkClaim());
+    }
 
+    public InnerRealmChunkClaimProvider(InnerRealmChunkClaim chunkClaimCapability) {
+        this.chunkClaimCapability = chunkClaimCapability;
+        this.chunkClaimOptional = LazyOptional.of(() -> chunkClaimCapability);
+    }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CHUNK_CLAIM_CAPABILITY) {
-            return LazyOptional.of(() -> instance).cast();
-        }
-        else {
-            return LazyOptional.empty();
-        }
-    }
-
-
-    @Override
-    public INBT serializeNBT() {
-        return instance.serializeNBT();
+        return cap == AstralAPI.chunkClaimCapability ? chunkClaimOptional.cast() : LazyOptional.empty();
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        instance.deserializeNBT(nbt);
+    public CompoundNBT serializeNBT() {
+        return chunkClaimCapability.serializeNBT();
     }
 
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        chunkClaimCapability.deserializeNBT(nbt);
+    }
 }
