@@ -39,14 +39,8 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
         if (claimedChunksMap.entrySet().stream().flatMap(uuidListEntry -> uuidListEntry.getValue().stream()).collect(Collectors.toList()).contains(chunk)) {
             return false;
         }
-        if (!claimedChunksMap.containsKey(playerID)) {
-            claimedChunksMap.put(playerID, new ArrayList<>());
-        }
         claimedChunksMap.compute(playerID, (uuid, chunkPos) -> {
-            List<ChunkPos> chunks = new ArrayList<>();
-            if (chunkPos != null) {
-                Collections.copy(chunks, chunkPos);
-            }
+            List<ChunkPos> chunks = chunkPos != null ? chunkPos : new ArrayList<>();
             chunks.add(chunk);
             return chunks;
         });
@@ -73,19 +67,16 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
             chunkListNBT.addAll(chunkPosList.stream().map(chunkPos -> NBTUtil.writeBlockPos(chunkPos.asBlockPos())).collect(Collectors.toList()));
             playerChunkMap.put(key.toString(), chunkListNBT);
         }
-        CompoundNBT claimedChunks = new CompoundNBT();
-        claimedChunks.put("claimedChunks", claimedChunks);
-        return claimedChunks;
+        return playerChunkMap;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         Map<UUID, List<ChunkPos>> claimedChunkMap = new HashMap<>();
-        final CompoundNBT claimedChunksTag = nbt.getCompound("claimedChunks");
         // Iterate over each key (player UUID) add the UUID and the ListNBT converted to a list of ChunkPos as entries to the HashMap
-        for (String s : claimedChunksTag.keySet()) {
+        for (String s : nbt.keySet()) {
             List<ChunkPos> list = new ArrayList<>();
-            for (INBT inbt : claimedChunksTag.getList(s, Constants.NBT.TAG_COMPOUND)) {
+            for (INBT inbt : nbt.getList(s, Constants.NBT.TAG_COMPOUND)) {
                 ChunkPos pos = new ChunkPos(NBTUtil.readBlockPos((CompoundNBT) inbt));
                 list.add(pos);
             }

@@ -70,17 +70,14 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
     public CompoundNBT serializeNBT() {
         CompoundNBT spawnLocationTag = new CompoundNBT();
         spawnLocations.forEach((key, value) -> spawnLocationTag.put(key.toString(), NBTUtil.writeBlockPos(value)));
-        CompoundNBT spawnLocationsNBT = new CompoundNBT();
-        spawnLocationsNBT.put("spawnLocations", spawnLocationTag);
-        return spawnLocationsNBT;
+        return spawnLocationTag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         Map<UUID, BlockPos> newSpawnMap = new HashMap<>();
-        CompoundNBT spawnLocationsNbt = nbt.getCompound("spawnLocations");
-        for (String id : spawnLocationsNbt.keySet()) {
-            newSpawnMap.put(UUID.fromString(id), NBTUtil.readBlockPos(spawnLocationsNbt.getCompound(id)));
+        for (String id : nbt.keySet()) {
+            newSpawnMap.put(UUID.fromString(id), NBTUtil.readBlockPos(nbt.getCompound(id)));
         }
         this.spawnLocations = newSpawnMap;
     }
