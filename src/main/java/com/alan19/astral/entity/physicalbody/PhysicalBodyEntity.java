@@ -73,9 +73,9 @@ public class PhysicalBodyEntity extends LivingEntity {
     public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
         switch (slotIn.getSlotType()) {
             case HAND:
-                return getHands().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElseGet(() -> ItemStack.EMPTY);
+                return getHands().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElse(ItemStack.EMPTY);
             case ARMOR:
-                return getArmor().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElseGet(() -> ItemStack.EMPTY);
+                return getArmor().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElse(ItemStack.EMPTY);
             default:
                 return ItemStack.EMPTY;
         }

@@ -64,10 +64,6 @@ public class CrystalWeb extends EtherealBlock {
         }
     }
 
-    private boolean canSpiderSpawn(ServerWorld worldIn, BlockPos pos) {
-        return worldIn.getDifficulty() != Difficulty.PEACEFUL && worldIn.getLight(pos) <= 7;
-    }
-
     public Stream<BlockPos> getBoxForMoonPhase(int moonPhase, BlockPos center) {
         switch (moonPhase) {
             case 0:

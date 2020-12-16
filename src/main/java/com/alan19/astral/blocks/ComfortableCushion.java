@@ -41,12 +41,14 @@ public class ComfortableCushion extends Block implements MentalConstructControll
         this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(HorizontalBlock.HORIZONTAL_FACING, Direction.NORTH));
     }
 
+    @Nonnull
     @Override
     @ParametersAreNonnullByDefault
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.get(HorizontalBlock.HORIZONTAL_FACING));
     }
 
+    @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         if (worldIn instanceof ServerWorld && worldIn.getDimensionKey() == AstralDimensions.INNER_REALM && handIn == Hand.MAIN_HAND) {
