@@ -1,6 +1,5 @@
 package com.alan19.astral.api;
 
-import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
 import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
@@ -34,9 +33,6 @@ public class AstralAPI {
 
     @CapabilityInject(IPsychicInventory.class)
     public static Capability<IPsychicInventory> psychicInventoryCapability;
-
-    @CapabilityInject(IBodyLink.class)
-    public static Capability<IBodyLink> bodyLinkCapability;
 
     @CapabilityInject(IConstructTracker.class)
     public static Capability<IConstructTracker> constructTrackerCapability;

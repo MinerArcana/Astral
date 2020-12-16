@@ -2,8 +2,6 @@ package com.alan19.astral;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.NBTCapStorage;
-import com.alan19.astral.api.bodylink.BodyLink;
-import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.api.bodytracker.BodyTracker;
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.ConstructTracker;
@@ -197,7 +195,6 @@ public class Astral {
         public static void init(final FMLCommonSetupEvent event) {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new NBTCapStorage<>(), InnerRealmTeleporter::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaim.class, new NBTCapStorage<>(), InnerRealmChunkClaim::new);
-            CapabilityManager.INSTANCE.register(IBodyLink.class, new NBTCapStorage<>(), BodyLink::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
