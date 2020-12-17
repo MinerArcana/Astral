@@ -22,6 +22,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class PhysicalBodyTracking {
 
+    // Remove the body when the player logs out
     @SubscribeEvent
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         final PlayerEntity player = event.getPlayer();
@@ -42,6 +43,7 @@ public class PhysicalBodyTracking {
         }
     }
 
+    // Spawn the body using the body's NBT when the player logs in
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         final PlayerEntity player = event.getPlayer();
