@@ -2,8 +2,6 @@ package com.alan19.astral;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.NBTCapStorage;
-import com.alan19.astral.api.bodylink.BodyLink;
-import com.alan19.astral.api.bodylink.IBodyLink;
 import com.alan19.astral.api.bodytracker.BodyTracker;
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.ConstructTracker;
@@ -60,6 +58,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -71,7 +70,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -138,8 +136,8 @@ public class Astral {
     }
 
     @SubscribeEvent
-    public static void serverLoad(FMLServerAboutToStartEvent event) {
-        AstralCommands.registerCommands(event.getServer().getCommandManager().getDispatcher());
+    public static void serverLoad(RegisterCommandsEvent event) {
+        AstralCommands.registerCommands(event.getDispatcher());
     }
 
     public void registerModels(ModelRegistryEvent event) {
@@ -197,7 +195,6 @@ public class Astral {
         public static void init(final FMLCommonSetupEvent event) {
             CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new NBTCapStorage<>(), InnerRealmTeleporter::new);
             CapabilityManager.INSTANCE.register(IInnerRealmChunkClaim.class, new NBTCapStorage<>(), InnerRealmChunkClaim::new);
-            CapabilityManager.INSTANCE.register(IBodyLink.class, new NBTCapStorage<>(), BodyLink::new);
             CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
             CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
             CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);

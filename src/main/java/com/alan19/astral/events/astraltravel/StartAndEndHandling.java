@@ -2,7 +2,6 @@ package com.alan19.astral.events.astraltravel;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.bodylink.BodyInfo;
 import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.effects.AstralEffects;
@@ -20,11 +19,8 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.play.server.SPlayEntityEffectPacket;
 import net.minecraft.network.play.server.SRemoveEntityEffectPacket;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
@@ -33,8 +29,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.alan19.astral.api.bodylink.BodyLink.HEALTH_ID;
-import static net.minecraftforge.common.util.Constants.NBT;
+import static com.alan19.astral.api.bodytracker.BodyTracker.HEALTH_ID;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID)
 public class StartAndEndHandling {
@@ -91,7 +86,7 @@ public class StartAndEndHandling {
                 //Get server versions of world and player
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                 ServerWorld serverWorld = serverPlayerEntity.getServerWorld();
-                playerEntity.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> bodyLink.mergeBodies(playerEntity, serverWorld));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(cap -> cap.mergePlayerWithBody(serverPlayerEntity, serverWorld));
                 serverPlayerEntity.connection.sendPacket(new SRemoveEntityEffectPacket(serverPlayerEntity.getEntityId(), AstralEffects.ASTRAL_TRAVEL.get()));
                 AstralNetwork.sendClientAstralTravelEnd(serverPlayerEntity);
             }
@@ -116,7 +111,7 @@ public class StartAndEndHandling {
     }
 
     /**
-     * Makes sure fade effect is not triggered when logging in and updates player with the physical body's info
+     * Makes sure fade effect is not triggered when logging in
      *
      * @param event The player logged in event
      */
@@ -124,18 +119,7 @@ public class StartAndEndHandling {
     public static void sendCapsToPlayer(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getPlayer() instanceof ServerPlayerEntity) {
             final ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-            final ServerWorld serverWorld = player.getServerWorld();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
-            if (player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
-                player.getCapability(AstralAPI.bodyLinkCapability).ifPresent(bodyLink -> {
-                    bodyLink.updatePlayer(player, serverWorld);
-                    bodyLink.getBodyInfo().ifPresent(bodyInfo -> AstralAPI.getBodyTracker(serverWorld).map(iBodyTracker -> iBodyTracker.getBodyTrackerMap().get(bodyInfo.getBodyId())).ifPresent(compoundNBT -> {
-                        if (compoundNBT.getFloat("Health") <= 0) {
-                            spawnPhysicalBody(player, bodyInfo, compoundNBT);
-                        }
-                    }));
-                });
-            }
         }
     }
 
@@ -165,13 +149,6 @@ public class StartAndEndHandling {
                 }
             }
         }
-    }
-
-    public static void spawnPhysicalBody(ServerPlayerEntity playerEntity, BodyInfo bodyInfo, CompoundNBT nbt) {
-        nbt.putFloat("Health", bodyInfo.getHealth());
-        final ListNBT pos = nbt.getList("Pos", NBT.TAG_DOUBLE);
-        final PhysicalBodyEntity spawn = AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getServer().getWorld(bodyInfo.getDimensionType()), nbt, null, playerEntity, new BlockPos(pos.getDouble(0), pos.getDouble(1), pos.getDouble(2)), SpawnReason.TRIGGERED, false, false);
-        spawn.deserializeNBT(nbt);
     }
 
     @SubscribeEvent
