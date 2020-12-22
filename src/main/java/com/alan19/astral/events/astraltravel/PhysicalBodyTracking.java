@@ -53,7 +53,8 @@ public class PhysicalBodyTracking {
                 if (cap.getBodyTrackerMap().containsKey(player.getUniqueID())) {
                     final CompoundNBT bodyNBT = cap.getBodyTrackerMap().get(player.getUniqueID());
                     final ServerWorld dimension = serverWorld.getServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(bodyNBT.getString("Dimension"))));
-                    if (dimension != null) {
+                    final INBT bodyUUID = bodyNBT.get("UUID");
+                    if (dimension != null && bodyUUID != null && dimension.getEntityByUuid(NBTUtil.readUniqueId(bodyUUID)) == null) {
                         EntityType.loadEntityUnchecked(bodyNBT, dimension).ifPresent(serverWorld::addEntity);
                     }
                 }

@@ -32,10 +32,7 @@ public class PsychicInventory implements IPsychicInventory {
 
     @Override
     public PsychicInventoryInstance getInventoryOfPlayer(UUID player) {
-        if (!playerInventoriesMap.containsKey(player)) {
-            playerInventoriesMap.put(player, new PsychicInventoryInstance());
-        }
-        return playerInventoriesMap.get(player);
+        return playerInventoriesMap.computeIfAbsent(player, uuid -> new PsychicInventoryInstance());
     }
 
     @Override

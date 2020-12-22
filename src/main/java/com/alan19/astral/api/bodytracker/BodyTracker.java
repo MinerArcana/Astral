@@ -106,15 +106,16 @@ public class BodyTracker implements IBodyTracker {
         serverPlayerEntity.setMotion(0, 0, 0);
         serverPlayerEntity.isAirBorne = false;
         serverPlayerEntity.fallDistance = 0;
+
+        // Get the inventory and transfer items
+        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
+
         // Teleport the player
         if (bodyTrackerMap.containsKey(serverPlayerEntity.getUniqueID())) {
             final CompoundNBT bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUniqueID());
             final ListNBT posNBT = bodyNBT.getList("Pos", net.minecraftforge.common.util.Constants.NBT.TAG_DOUBLE);
             final BlockPos pos = new BlockPos(posNBT.getDouble(0), posNBT.getDouble(1), posNBT.getDouble(2));
             TeleportationTools.performTeleport(serverPlayerEntity, RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
-
-            // Get the inventory and transfer items
-            AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
 
             // Kill the body, reset player stats, and remove the body from the tracker
             findBody(world, bodyNBT).ifPresent(LivingEntity::onKillCommand);
