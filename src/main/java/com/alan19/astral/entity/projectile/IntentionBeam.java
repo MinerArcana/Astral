@@ -8,9 +8,9 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.util.IntentionBeamMaterials;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.entity.projectile.ThrowableEntity;
 import net.minecraft.fluid.Fluid;
@@ -168,9 +168,11 @@ public class IntentionBeam extends ThrowableEntity {
     public void tick() {
         super.tick();
         if (isAlive()) {
-            if (world instanceof ClientWorld && ticksExisted % 5 == 0) {
-                for (int i = 0; i < 2; i++) {
-                    world.addParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosY() + (rand.nextDouble() - rand.nextDouble()) * .5, getPosZ() + (rand.nextDouble() - rand.nextDouble()) * .5, 0, 0, 0);
+            if (world instanceof ServerWorld && ticksExisted % 5 == 0 && dataManager.get(playerUUID).isPresent()) {
+                final ServerWorld world = (ServerWorld) this.world;
+                final ServerPlayerEntity player = (ServerPlayerEntity) world.getEntityByUuid(dataManager.get(playerUUID).get());
+                if (player != null) {
+                    world.getWorldServer().spawnParticle(player, AstralParticles.INTENTION_BEAM_PARTICLE.get(), true, getPosX(), getPosY(), getPosZ(), 2, (rand.nextDouble() - rand.nextDouble()) * .5, (rand.nextDouble() - rand.nextDouble()), (rand.nextDouble() - rand.nextDouble()) * .5, 0);
                 }
             }
             if (ticksExisted >= dataManager.get(maxDistance) * 4) {
