@@ -71,6 +71,7 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(EGO_MEMBRANE.get());
         simpleBlock(ETHER_DIRT.get());
         simpleBlock(ETHER_GRASS.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/ether_grass"), exFileHelper));
+        simpleBlock(ETHERIC_POWDER.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder"), exFileHelper));
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {

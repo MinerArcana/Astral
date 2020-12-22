@@ -44,18 +44,11 @@ public class Recipes extends RecipeProvider {
                 .build(consumer);
 
         ShapelessRecipeBuilder.shapelessRecipe(ETHERIC_POWDER_ITEM.get(), 3)
-                .addIngredient(Items.BLAZE_POWDER, 2)
+                .addIngredient(Items.CHARCOAL)
                 .addIngredient(ETHER_DIRT_ITEM.get())
-                .addIngredient(Items.REDSTONE, 3)
-                .addCriterion("bowl", hasItem(ETHER_DIRT_ITEM.get()))
-                .build(consumer, new ResourceLocation(Astral.MOD_ID, "etheric_powder_blaze_powder").toString());
-
-        ShapelessRecipeBuilder.shapelessRecipe(ETHERIC_POWDER_ITEM.get(), 3)
-                .addIngredient(Items.GLOWSTONE_DUST)
-                .addIngredient(ETHER_DIRT_ITEM.get())
-                .addIngredient(Items.REDSTONE, 3)
-                .addCriterion("bowl", hasItem(ETHER_DIRT_ITEM.get()))
-                .build(consumer, new ResourceLocation(Astral.MOD_ID, "etheric_powder_glowstone_dust").toString());
+                .addIngredient(CRYSTAL_CHITIN.get())
+                .addCriterion("crystal_chitin", hasItem(CRYSTAL_CHITIN.get()))
+                .build(consumer);
 
         ShapedRecipeBuilder.shapedRecipe(OFFERING_BRAZIER_ITEM.get())
                 .key('C', Items.CAULDRON)
