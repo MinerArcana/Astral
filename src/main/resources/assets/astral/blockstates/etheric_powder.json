@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "powered=false": {
       "model": "astral:block/etheric_powder"
+    },
+    "powered=true": {
+      "model": "astral:block/etheric_powder_on"
     }
   }
 }

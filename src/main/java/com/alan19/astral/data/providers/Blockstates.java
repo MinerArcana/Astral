@@ -1,10 +1,7 @@
 package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.DoublePlantBlock;
-import net.minecraft.block.SweetBerryBushBlock;
+import net.minecraft.block.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.state.properties.DoubleBlockHalf;
@@ -71,7 +68,9 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(EGO_MEMBRANE.get());
         simpleBlock(ETHER_DIRT.get());
         simpleBlock(ETHER_GRASS.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/ether_grass"), exFileHelper));
-        simpleBlock(ETHERIC_POWDER.get(), new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder"), exFileHelper));
+        getVariantBuilder(ETHERIC_POWDER.get())
+                .partialState().with(TripWireHookBlock.POWERED, false).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder"), exFileHelper)).addModel()
+                .partialState().with(TripWireHookBlock.POWERED, true).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder_on"), exFileHelper)).addModel();
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {
