@@ -22,8 +22,8 @@ public class FeverweedItem extends BlockNamedItem {
                         .saturation(-1F)
                         .hunger(1)
                         .fastToEat()
-                        .effect(() -> new EffectInstance(Effects.LUCK, AstralConfig.getHerbEffectDurations().getFeverweedLuckDuration(), 1), 1)
-                        .effect(() -> new EffectInstance(Effects.HUNGER, AstralConfig.getHerbEffectDurations().getFeverweedHungerDuration(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.LUCK, AstralConfig.getEffectDuration().feverweedLuckDuration.get(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.HUNGER, AstralConfig.getEffectDuration().feverweedHungerDuration.get(), 1), 1)
                         .build()));
     }
 }

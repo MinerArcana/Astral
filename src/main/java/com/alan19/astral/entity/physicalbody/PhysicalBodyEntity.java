@@ -182,7 +182,7 @@ public class PhysicalBodyEntity extends LivingEntity {
         if (world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
             serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (world.getGameTime() % AstralConfig.getTravelingSettings().getSyncInterval() == 0 && isAlive()) {
+            if (world.getGameTime() % AstralConfig.getTravelingSettings().syncInterval.get() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.setBodyNBT(getUniqueID(), serializeNBT(), serverWorld));
             }

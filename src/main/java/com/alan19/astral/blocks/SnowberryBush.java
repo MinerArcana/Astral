@@ -103,7 +103,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
     }
 
     public void spreadSnow(ServerWorld worldIn, BlockPos pos, Random rand) {
-        if (rand.nextInt(AstralConfig.getWorldgenSettings().getSnowberrySpreadSnowChance()) == 0) {
+        if (rand.nextInt(AstralConfig.getWorldgenSettings().snowberrySpreadSnowChance.get()) == 0) {
             BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 0, 1))
                     .filter(blockPos -> isBlockAirOrSnow(blockPos, worldIn))
                     .map(blockPos -> getPosSnowLevelPair(blockPos.toImmutable(), worldIn))

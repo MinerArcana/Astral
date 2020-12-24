@@ -21,8 +21,8 @@ public class Snowberry extends BlockNamedItem {
                         .saturation(-1F)
                         .hunger(1)
                         .fastToEat()
-                        .effect(() -> new EffectInstance(Effects.NAUSEA, AstralConfig.getHerbEffectDurations().getSnowberryNauseaDuration(), 1), 1)
-                        .effect(() -> new EffectInstance(Effects.REGENERATION, AstralConfig.getHerbEffectDurations().getSnowberryRegenerationDuration(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.NAUSEA, AstralConfig.getEffectDuration().snowberryNauseaDuration.get(), 1), 1)
+                        .effect(() -> new EffectInstance(Effects.REGENERATION, AstralConfig.getEffectDuration().snowberryRegenerationDuration.get(), 1), 1)
                         .build()));
     }
 }

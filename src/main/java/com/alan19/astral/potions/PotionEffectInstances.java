@@ -1,6 +1,7 @@
 package com.alan19.astral.potions;
 
 import com.alan19.astral.configs.AstralConfig;
+import com.alan19.astral.configs.EffectDurations;
 import com.alan19.astral.effects.AstralEffects;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.potion.EffectInstance;
@@ -11,11 +12,13 @@ import static com.alan19.astral.effects.AstralEffects.MIND_VENOM;
 import static net.minecraft.potion.Effects.*;
 
 public class PotionEffectInstances {
-    public static final int SNOWBERRY_BREW_NAUSEA_DURATION = AstralConfig.getPotionEffectDurations().getSnowberryBrewNauseaDuration();
-    public static final int SNOWBERRY_BREW_REGENERATION_DURATION = AstralConfig.getPotionEffectDurations().getSnowberryBrewRegenerationDuration();
-    public static final int FEVERWEED_BREW_LUCK_DURATION = AstralConfig.getPotionEffectDurations().getFeverweedBrewLuckDuration();
-    public static final int FEVERWEED_BREW_HUNGER_DURATION = AstralConfig.getPotionEffectDurations().getFeverweedBrewHungerDuration();
-    public static final int ASTRAL_TRAVEL_DURATION = AstralConfig.getPotionEffectDurations().getAstralTravelDuration();
+    private static final EffectDurations effectDuration = AstralConfig.getEffectDuration();
+
+    public static final int SNOWBERRY_BREW_NAUSEA_DURATION = effectDuration.snowberryBrewNauseaDuration.get();
+    public static final int SNOWBERRY_BREW_REGENERATION_DURATION = effectDuration.snowberryBrewRegenerationDuration.get();
+    public static final int FEVERWEED_BREW_LUCK_DURATION = effectDuration.feverweedBrewLuckDuration.get();
+    public static final int FEVERWEED_BREW_HUNGER_DURATION = effectDuration.feverweedBrewHungerDuration.get();
+    public static final int ASTRAL_TRAVEL_DURATION = effectDuration.astralTravelDuration.get();
 
     //Potions
     public static final List<EffectInstance> STRONG_SNOWBERRY_INSTANCE = ImmutableList.of(new EffectInstance(REGENERATION, SNOWBERRY_BREW_REGENERATION_DURATION * 2 / 3, 2), new EffectInstance(NAUSEA, SNOWBERRY_BREW_NAUSEA_DURATION * 2 / 3, 2));

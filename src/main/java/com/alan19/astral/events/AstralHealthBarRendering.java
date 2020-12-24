@@ -166,7 +166,7 @@ public class AstralHealthBarRendering {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableDepthTest();
         GlStateManager.disableAlphaTest();
-        int sleepTime = Math.toIntExact((long) (sleep * (100.0 / AstralConfig.getTravelingSettings().getStartupTime())));
+        int sleepTime = Math.toIntExact((long) (sleep * (100.0 / AstralConfig.getTravelingSettings().startupTime.get())));
         float opacity = (float) sleepTime / 100.0F;
 
         if (opacity > 1.0F) {

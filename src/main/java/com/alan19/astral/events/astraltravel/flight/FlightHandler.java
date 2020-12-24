@@ -4,6 +4,7 @@ import com.alan19.astral.api.heightadjustment.HeightAdjustmentCapability;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan19.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan19.astral.configs.AstralConfig;
+import com.alan19.astral.configs.TravelingSettings;
 import com.alan19.astral.effects.AstralEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class FlightHandler {
+
+    private static final TravelingSettings travelingSettings = AstralConfig.getTravelingSettings();
 
     //Copied from Entity.java
     private static Vector3d getAbsoluteMotion(Vector3d relative, float facing) {
@@ -80,11 +83,11 @@ public class FlightHandler {
      */
     public static Vector3d generateVerticalVector(PlayerEntity player, int closestY, Vector3d nextMovement, IHeightAdjustmentCapability heightAdjustmentCapability) {
         if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : (AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0))
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : (travelingSettings.baseSpeed.get() / 8), 0))
             ;
         }
         else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : -(AstralConfig.getFlightSettings().getBaseSpeed() / 8), 0));
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : -(travelingSettings.baseSpeed.get() / 8), 0));
         }
         else {
             //Smooth flying up and down
@@ -127,7 +130,7 @@ public class FlightHandler {
         if (player.world.isRemote()) {
             if (InputHandler.isHoldingSprint(player) && !heightAdjustmentCapability.isActive()) {
                 heightAdjustmentCapability.activate();
-                heightAdjustmentCapability.setHeightDifference((int) Math.min(AstralConfig.getFlightSettings().getHeightPenaltyLimit(), player.getPosY() - closestY));
+                heightAdjustmentCapability.setHeightDifference((int) Math.min(travelingSettings.heightPenaltyLimit.get(), player.getPosY() - closestY));
             }
             else if (!InputHandler.isHoldingSprint(player) && heightAdjustmentCapability.isActive()) {
                 heightAdjustmentCapability.deactivate();
@@ -145,10 +148,10 @@ public class FlightHandler {
      * @return The vertical velocity of the player
      */
     private static double getAdjustedVerticalSpeed(int targetDistance, double heightAboveGround) {
-        final double maxFlyingSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 40;
+        final double maxFlyingSpeed = travelingSettings.baseSpeed.get() / 40;
         final double deltaHeight = Math.abs(heightAboveGround - targetDistance);
-        if (deltaHeight <= AstralConfig.getFlightSettings().getDecelerationDistance()) {
-            double acceleration = -Math.pow(maxFlyingSpeed, 2) / (2 * AstralConfig.getFlightSettings().getDecelerationDistance());
+        if (deltaHeight <= travelingSettings.decelerationDistance.get()) {
+            double acceleration = -Math.pow(maxFlyingSpeed, 2) / (2 * travelingSettings.decelerationDistance.get());
             return Math.sqrt(Math.pow(maxFlyingSpeed, 2) + (2 * acceleration * deltaHeight));
         }
         return maxFlyingSpeed;
@@ -176,17 +179,17 @@ public class FlightHandler {
      * @return The speed that the player will travel at, in blocks/tick
      */
     private static double calculateSpeedForward(double posY, int closestBlock, MovementType movementType, int amplifier) {
-        double baseSpeed = AstralConfig.getFlightSettings().getBaseSpeed() / 20;
+        double baseSpeed = travelingSettings.baseSpeed.get() / 20;
         if (movementType == MovementType.SNEAKING) {
             return 0.0655;
         }
         else if (movementType == MovementType.SPRINTING) {
             baseSpeed *= 1.3;
         }
-        double speedMultiplier = AstralConfig.getFlightSettings().getMaxMultiplier();
-        double maxChange = AstralConfig.getFlightSettings().getMaxPenalty();
+        double speedMultiplier = travelingSettings.maxMultiplier.get();
+        double maxChange = travelingSettings.maxPenalty.get();
 
-        int maxDifference = AstralConfig.getFlightSettings().getHeightPenaltyLimit();
+        int maxDifference = travelingSettings.heightPenaltyLimit.get();
         double difference = Math.min(maxDifference, posY - closestBlock);
         double speedPenalty = (difference / maxDifference) * maxChange;
         return baseSpeed * (speedMultiplier - speedPenalty) * (1 + amplifier * .5);

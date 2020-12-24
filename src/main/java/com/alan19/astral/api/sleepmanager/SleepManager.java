@@ -41,7 +41,7 @@ public class SleepManager implements ISleepManager {
 
     @Override
     public boolean isEntityTraveling() {
-        return sleepCount >= AstralConfig.getTravelingSettings().getStartupTime();
+        return sleepCount >= AstralConfig.getTravelingSettings().startupTime.get();
     }
 
 

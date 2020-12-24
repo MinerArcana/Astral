@@ -80,16 +80,11 @@ sourceSets {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.16.3:7.3.2.29")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-//    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.15.2-1.0.0-Snapshot.6")
+    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2")
     compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
     compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
-//    compile fg.deobf("curse.maven:terraforged:3021604")
-//    compile fg.deobf("curse.maven:natures-compass:2893530")
-//    compile fg.deobf("curse.maven:the-one-proble:3037741")
-//    compile fg.deobf("curse.maven:shutup-experimental-settings:3090291")
 }
 
 // I believe this is for using datagens with forge tags
