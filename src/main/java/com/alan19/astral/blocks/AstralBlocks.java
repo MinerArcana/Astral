@@ -57,6 +57,7 @@ public class AstralBlocks {
     public static final RegistryObject<BoneSheets> METAPHORIC_BONE_BLOCK = BLOCKS.register("metaphoric_bone_block", BoneSheets::new);
     public static final RegistryObject<MetaphoricFleshBlock> METAPHORIC_FLESH_BLOCK = BLOCKS.register("metaphoric_flesh_block", MetaphoricFleshBlock::new);
     public static final RegistryObject<CrystalWeb> CRYSTAL_WEB = BLOCKS.register("crystal_web", CrystalWeb::new);
+    public static final RegistryObject<EtherealSpawner> ETHEREAL_SPAWNER = BLOCKS.register("ethereal_spawner", EtherealSpawner::new);
 
     public static void register(IEventBus modBus) {
         BLOCKS.register(modBus);

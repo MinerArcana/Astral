@@ -29,6 +29,7 @@ public class BlockRenderHandler {
         RenderTypeLookup.setRenderLayer(METAPHORIC_FLESH_BLOCK.get(), cutout);
         RenderTypeLookup.setRenderLayer(CRYSTAL_WEB.get(), cutout);
         RenderTypeLookup.setRenderLayer(ETHERIC_POWDER.get(), cutout);
+        RenderTypeLookup.setRenderLayer(ETHEREAL_SPAWNER.get(), cutout);
     }
 
     public static void setupBlockColors() {

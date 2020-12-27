@@ -73,6 +73,7 @@ public class AstralItems {
     public static final RegistryObject<PhantasmalShovel> PHANTASMAL_SHOVEL = ITEMS.register("phantasmal_shovel", PhantasmalShovel::new);
     public static final RegistryObject<PhantasmalAxe> PHANTASMAL_AXE = ITEMS.register("phantasmal_axe", PhantasmalAxe::new);
     public static final RegistryObject<PhantasmalShears> PHANTASMAL_SHEARS = ITEMS.register("phantasmal_shears", PhantasmalShears::new);
+    public static final RegistryObject<BlockNamedItem> ETHEREAL_SPAWNER_ITEM = ITEMS.register("ethereal_spawner", () -> convertToBlockItem(ETHEREAL_SPAWNER.get()));
 
     /**
      * Converts a block into a BlockNamedItem that belongs to the Astral tab

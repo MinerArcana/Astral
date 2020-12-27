@@ -10,6 +10,9 @@ public class WorldgenSettings {
     public final ForgeConfigSpec.ConfigValue<Integer> snowberryMaxPatchSize;
     public final ForgeConfigSpec.ConfigValue<Integer> snowberryPatchSpawnRate;
     public final ForgeConfigSpec.ConfigValue<Integer> snowberrySpreadSnowChance;
+    public final ForgeConfigSpec.ConfigValue<Integer> ethericIslesSpacing;
+    public final ForgeConfigSpec.ConfigValue<Integer> ethericIslesSeparation;
+    public final ForgeConfigSpec.ConfigValue<Integer> crystalWebSpreadChance;
 
     public WorldgenSettings(ForgeConfigSpec.Builder builder) {
         builder.comment("Settings for controlling Astral worldgen such as Feverweed, Snowberry, and Etheric Isles").push("worldgenSettings");
@@ -41,6 +44,18 @@ public class WorldgenSettings {
         snowberrySpreadSnowChance = builder.comment("Controls how often Snowberries add snow nearby, in terms of 1 in x times it grows")
                 .translation("astral.config.common.snowberrySpreadSnowChance")
                 .define("snowberrySpreadSnowChance", 5);
+
+        ethericIslesSpacing = builder.comment("The average number of chunks between two Etheric Isles")
+                .translation("astral.config.common.ethericIslesSpacing")
+                .define("ethericIslesSpacing", 3);
+
+        ethericIslesSeparation = builder.comment("The minimum number of chunks between two Etheric Isles. Must be less than spacing.")
+                .translation("astral.config.common.ethericIslesSeparation")
+                .define("ethericIslesSeparation", 1);
+
+        crystalWebSpreadChance = builder.comment("The 1 in x chance of a crystal web spreading when it's tick function is called.")
+                .translation("astral.config.common.crystalWebSpreadChance")
+                .define("crystalWebSpreadChance", 30);
 
         builder.pop();
     }

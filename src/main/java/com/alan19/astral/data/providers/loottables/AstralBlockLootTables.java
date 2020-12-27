@@ -109,6 +109,7 @@ public class AstralBlockLootTables extends BlockLootTables {
         registerLootTable(METAPHORIC_STONE.get(), droppingWithSilkTouch(METAPHORIC_STONE.get(), METAPHORIC_BONE_BLOCK.get()));
         registerLootTable(METAPHORIC_BONE_BLOCK.get(), dropping(METAPHORIC_BONE_BLOCK.get()));
         registerLootTable(METAPHORIC_FLESH_BLOCK.get(), dropping(METAPHORIC_FLESH_BLOCK.get()));
+        registerLootTable(ETHEREAL_SPAWNER.get(), blockNoDrop());
     }
 
     @Override

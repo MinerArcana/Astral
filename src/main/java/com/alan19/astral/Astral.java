@@ -50,6 +50,7 @@ import com.alan19.astral.world.AstralConfiguredFeatures;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.AstralStructures;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.tileentity.MobSpawnerTileEntityRenderer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -147,6 +148,7 @@ public class Astral {
     public void setRenderLayers(FMLClientSetupEvent event) {
         BlockRenderHandler.setRenderLayers();
         ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(AstralTiles.ETHEREAL_MOB_SPAWNER.get(), MobSpawnerTileEntityRenderer::new);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -109,6 +109,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(METAPHORIC_STONE.get(), "Metaphoric Stone");
         add(METAPHORIC_FLESH_BLOCK.get(), "Metaphoric Flesh Block");
         add(CRYSTAL_WEB.get(), "Crystal Web");
+        add(ETHEREAL_SPAWNER.get(), "Ethereal Spawner");
     }
 
     private void addItems() {
@@ -158,6 +159,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(PHANTASMAL_SHOVEL.get(), "Phantasmal Shovel");
         add(PHANTASMAL_AXE.get(), "Phantasmal Axe");
         add(PHANTASMAL_SHEARS.get(), "Phantasmal Shears");
+        add(ETHEREAL_SPAWNER_ITEM.get(), "Ethereal Spawner");
     }
 
     private void addPotions() {

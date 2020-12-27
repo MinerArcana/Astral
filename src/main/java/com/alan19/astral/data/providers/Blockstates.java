@@ -71,6 +71,7 @@ public class Blockstates extends BlockStateProvider {
         getVariantBuilder(ETHERIC_POWDER.get())
                 .partialState().with(TripWireHookBlock.POWERED, false).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder"), exFileHelper)).addModel()
                 .partialState().with(TripWireHookBlock.POWERED, true).modelForState().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/etheric_powder_on"), exFileHelper)).addModel();
+        simpleBlock(ETHEREAL_SPAWNER.get());
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {
