@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:random_patch",
+  "type": "astral:sticky_random_placer",
   "config": {
     "can_replace": false,
     "project": false,

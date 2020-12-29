@@ -48,8 +48,9 @@ public class EtherealBlock extends Block implements Ethereal {
         return Ethereal.getOpacity();
     }
 
+    @Nonnull
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

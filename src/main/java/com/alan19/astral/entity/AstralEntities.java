@@ -9,16 +9,11 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.Heightmap;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
 
 public class AstralEntities {
     public static final String PHYSICAL_BODY = "physical_body";
@@ -64,12 +59,5 @@ public class AstralEntities {
     public static void registerAttributes() {
         GlobalEntityTypeAttributes.put(AstralEntities.CRYSTAL_SPIDER.get(), CrystalSpiderEntity.registerAttributes().create());
         GlobalEntityTypeAttributes.put(AstralEntities.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntity.registerAttributes().create());
-    }
-
-    public static void addSpawnsToBiomes(BiomeLoadingEvent event) {
-        List<MobSpawnInfo.Spawners> spawners = event.getSpawns().getSpawner(EntityClassification.MONSTER);
-        if (event.getCategory() == Biome.Category.OCEAN) {
-            spawners.add(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 10, 1, 2));
-        }
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
+import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.MultipleRandomFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
@@ -36,6 +37,7 @@ public class AstralFeatures {
     public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
     public static final RegistryObject<BuriedEtherealSpawnerFeature> BURIED_SPAWNER_FEATURE = FEATURES.register("buried_ethereal_spawner", () -> new BuriedEtherealSpawnerFeature(BuriedEtherealSpawnerConfig.CODEC));
     public static final RegistryObject<GenerateMultipleFeature> GENERATE_MULTIPLE_FEATURE = FEATURES.register("generate_multiple_features", () -> new GenerateMultipleFeature(MultipleRandomFeatureConfig.field_236583_a_));
+    public static final RegistryObject<StickyRandomPlacerFeature> STICKY_RANDOM_PLACER_FEATURE = FEATURES.register("sticky_random_placer", () -> new StickyRandomPlacerFeature(BlockClusterFeatureConfig.field_236587_a_));
 
     public static void register(IEventBus modBus) {
         FEATURES.register(modBus);

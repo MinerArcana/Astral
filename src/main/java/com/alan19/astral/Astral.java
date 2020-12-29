@@ -123,7 +123,6 @@ public class Astral {
         modEventBus.addListener(AstralPotions::registerRecipes);
 
         modEventBus.addListener(this::newRegistry);
-        forgeBus.addListener(AstralEntities::addSpawnsToBiomes);
         forgeBus.addListener(AstralFeatures::addFeatures);
         forgeBus.addListener(AstralFeatures::addDimensionSpacing);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
