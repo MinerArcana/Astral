@@ -7,7 +7,7 @@
     "size": 1,
     "spawnerNBT": {
       "SpawnData": {
-        "id": "cave_spider"
+        "id": "astral:crystal_spider"
       },
       "SpawnRange": 7
     },
