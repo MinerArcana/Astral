@@ -55,6 +55,24 @@
         "projection": "rigid",
         "element_type": "minecraft:feature_pool_element"
       }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "feature": "astral:etheric_isle/crystal_spider_spawner",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "feature": "astral:etheric_isle/ether_stone",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
     }
   ]
 }

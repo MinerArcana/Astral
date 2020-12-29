@@ -1,10 +1,7 @@
 package com.alan19.astral.world;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.world.features.FeverweedFeature;
-import com.alan19.astral.world.features.FeverweedFeatureConfig;
-import com.alan19.astral.world.features.SnowberryFeature;
-import com.alan19.astral.world.features.SnowberryFeatureConfig;
+import com.alan19.astral.world.features.*;
 import com.alan19.astral.world.trees.EtherealTreeFeature;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -12,6 +9,7 @@ import net.minecraft.world.gen.FlatChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.MultipleRandomFeatureConfig;
 import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.settings.DimensionStructuresSettings;
 import net.minecraft.world.gen.settings.StructureSeparationSettings;
@@ -35,8 +33,9 @@ public class AstralFeatures {
 
     // Vegetation
     public static final RegistryObject<EtherealTreeFeature> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new EtherealTreeFeature(BaseTreeFeatureConfig.CODEC));
-    public static final RegistryObject<Feature<FeverweedFeatureConfig>> FEVERWEED_FEATURE = FEATURES.register("feverweed", FeverweedFeature::new);
     public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
+    public static final RegistryObject<BuriedEtherealSpawnerFeature> BURIED_SPAWNER_FEATURE = FEATURES.register("buried_ethereal_spawner", () -> new BuriedEtherealSpawnerFeature(BuriedEtherealSpawnerConfig.CODEC));
+    public static final RegistryObject<GenerateMultipleFeature> GENERATE_MULTIPLE_FEATURE = FEATURES.register("generate_multiple_features", () -> new GenerateMultipleFeature(MultipleRandomFeatureConfig.field_236583_a_));
 
     public static void register(IEventBus modBus) {
         FEATURES.register(modBus);

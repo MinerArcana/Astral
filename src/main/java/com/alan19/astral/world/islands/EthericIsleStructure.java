@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class EthericIsleStructure extends Structure<NoFeatureConfig> {
             JigsawManager.func_242837_a(registries, new VillageConfig(() -> registries.getRegistry(Registry.JIGSAW_POOL_KEY).getOrDefault(new ResourceLocation(Astral.MOD_ID, "etheric_isle/start_pool")), 50), AbstractVillagePiece::new, generator, templateManagerIn, blockpos, this.components, this.rand, true, false);
 
             this.recalculateStructureSize();
-            Astral.LOGGER.log(Level.DEBUG, "Etheric Isle spawned at " + blockpos.getX() + " " + blockpos.getY() + " " + blockpos.getZ());
+            Astral.LOGGER.log(Level.DEBUG, MessageFormat.format("Etheric Isle spawned at {0} {1} {2}", blockpos.getX(), blockpos.getY(), blockpos.getZ()));
         }
 
     }

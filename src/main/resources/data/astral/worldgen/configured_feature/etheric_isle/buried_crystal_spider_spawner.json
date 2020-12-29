@@ -1,0 +1,20 @@
+{
+  "config": {
+    "target": {
+      "block": "astral:ether_dirt",
+      "predicate_type": "minecraft:block_match"
+    },
+    "size": 1,
+    "spawnerNBT": {
+      "SpawnData": {
+        "id": "cave_spider"
+      },
+      "SpawnRange": 7
+    },
+    "xspread": 9,
+    "yspread": 5,
+    "zspread": 9,
+    "tried": 64
+  },
+  "type": "astral:buried_ethereal_spawner"
+}

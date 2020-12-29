@@ -1,0 +1,16 @@
+{
+  "config": {
+    "features": [
+      {
+        "feature": "astral:etheric_isle/buried_crystal_spider_spawner",
+        "chance": 1
+      },
+      {
+        "feature": "astral:etheric_isle/crystal_webs",
+        "chance": 1
+      }
+    ],
+    "default": "astral:etheric_isle/buried_crystal_spider_spawner"
+  },
+  "type": "astral:generate_multiple_features"
+}
