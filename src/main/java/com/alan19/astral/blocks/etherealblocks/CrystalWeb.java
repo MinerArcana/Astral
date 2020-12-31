@@ -53,7 +53,7 @@ public class CrystalWeb extends EtherealBlock {
         final int moonPhase = worldIn.getDimensionType().getMoonPhase(worldIn.getDayTime());
         //Spread in a direction based on moon phasae
         if (worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
-            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).collect(Collectors.toList());
+            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).map(BlockPos::toImmutable).collect(Collectors.toList());
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
                 worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);

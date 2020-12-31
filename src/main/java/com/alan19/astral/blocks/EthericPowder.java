@@ -17,6 +17,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,6 +38,7 @@ public class EthericPowder extends EtherealBlock {
         setDefaultState(getStateContainer().getBaseState().with(POWERED, false));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Nonnull
     @Override
     public VoxelShape getShape(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, @Nonnull ISelectionContext context) {
