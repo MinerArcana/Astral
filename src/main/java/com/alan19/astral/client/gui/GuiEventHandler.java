@@ -23,7 +23,9 @@ public class GuiEventHandler {
 
             final Advancement stepsOnTheWind = Minecraft.getInstance().player.connection.getAdvancementManager().getAdvancementList().getAdvancement(new ResourceLocation(Astral.MOD_ID, "steps_on_the_wind"));
             final AdvancementProgress stepsOnTheWindProgress = Minecraft.getInstance().player.connection.getAdvancementManager().advancementToProgress.get(stepsOnTheWind);
-            button.visible = stepsOnTheWindProgress.isDone();
+            if (stepsOnTheWindProgress != null) {
+                button.visible = stepsOnTheWindProgress.isDone();
+            }
         }
     }
 }
