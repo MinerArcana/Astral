@@ -1,8 +1,6 @@
 package com.alan19.astral.world.islands;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.entity.AstralEntities;
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +8,6 @@ import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.DynamicRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
@@ -26,15 +23,11 @@ import org.apache.logging.log4j.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.MessageFormat;
-import java.util.List;
 
 /**
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
 public class EthericIsleStructure extends Structure<NoFeatureConfig> {
-    // TODO Decrease spawn rate of trees, add crystal web and metaphoric rock features
-    private static final List<MobSpawnInfo.Spawners> SPAWN_LIST = ImmutableList.of(new MobSpawnInfo.Spawners(AstralEntities.CRYSTAL_SPIDER.get(), 1, 1, 1));
-
 
     public EthericIsleStructure(Codec<NoFeatureConfig> codec) {
         super(codec);

@@ -4,7 +4,7 @@ import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.events.astraltravel.TravelEffects;
-import net.minecraft.block.Block;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 public class CrystalWeb extends EtherealBlock {
     public CrystalWeb() {
-        super(Block.Properties.create(Material.WEB).doesNotBlockMovement().hardnessAndResistance(4.0F).notSolid());
+        super(AbstractBlock.Properties.create(Material.WEB).doesNotBlockMovement().hardnessAndResistance(4.0F).notSolid());
     }
 
     @Override

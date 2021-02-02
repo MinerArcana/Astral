@@ -47,7 +47,7 @@ public class WorldgenSettings {
 
         ethericIslesSpacing = builder.comment("The average number of chunks between two Etheric Isles")
                 .translation("astral.config.common.ethericIslesSpacing")
-                .define("ethericIslesSpacing", 3);
+                .define("ethericIslesSpacing", 15);
 
         ethericIslesSeparation = builder.comment("The minimum number of chunks between two Etheric Isles. Must be less than spacing.")
                 .translation("astral.config.common.ethericIslesSeparation")
