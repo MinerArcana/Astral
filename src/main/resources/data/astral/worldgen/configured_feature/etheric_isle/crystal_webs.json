@@ -14,7 +14,10 @@
     "tries": 64,
     "state_provider": {
       "state": {
-        "Name": "astral:crystal_web"
+        "Name": "astral:crystal_web",
+        "Properties": {
+          "generation": "0"
+        }
       },
       "type": "minecraft:simple_state_provider"
     },

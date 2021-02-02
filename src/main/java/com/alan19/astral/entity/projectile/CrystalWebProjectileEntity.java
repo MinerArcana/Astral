@@ -1,6 +1,7 @@
 package com.alan19.astral.entity.projectile;
 
 import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.blocks.etherealblocks.CrystalWeb;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.IAstralBeing;
@@ -240,7 +241,8 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
 
     private void setWeb(World world, BlockPos pos) {
         if (world.isAirBlock(pos) && world instanceof ServerWorld) {
-            world.setBlockState(pos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
+            // TODO Make generation property from spewed webs configurable
+            world.setBlockState(pos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState().with(CrystalWeb.GENERATION, 9), 3);
         }
         else {
             Block.spawnAsEntity(world, pos, new ItemStack(AstralItems.DREAMCORD.get()));

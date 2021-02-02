@@ -5,12 +5,15 @@ import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Difficulty;
@@ -26,8 +29,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CrystalWeb extends EtherealBlock {
+    public static final IntegerProperty GENERATION = IntegerProperty.create("generation", 0, 256);
+
     public CrystalWeb() {
         super(AbstractBlock.Properties.create(Material.WEB).doesNotBlockMovement().hardnessAndResistance(4.0F).notSolid());
+        setDefaultState(getStateContainer().getBaseState().with(GENERATION, 0));
     }
 
     @Override
@@ -52,11 +58,15 @@ public class CrystalWeb extends EtherealBlock {
         super.tick(state, worldIn, pos, rand);
         final int moonPhase = worldIn.getDimensionType().getMoonPhase(worldIn.getDayTime());
         //Spread in a direction based on moon phasae
-        if (worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
+        final Integer spreadGenerations = state.get(GENERATION);
+        // TODO Make this configurable
+        // Controls how many generations the web can spread
+        Integer maxGenerations = 10;
+        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
             final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).map(BlockPos::toImmutable).collect(Collectors.toList());
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
-                worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState(), 3);
+                worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState().with(GENERATION, spreadGenerations + 1), 3);
             }
         }
         //Remove block if exposed to rain or any liquid
@@ -86,5 +96,10 @@ public class CrystalWeb extends EtherealBlock {
             default:
                 throw new IllegalStateException("Unexpected value: " + moonPhase);
         }
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(GENERATION);
     }
 }
