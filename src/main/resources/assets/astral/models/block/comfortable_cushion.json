@@ -4,6 +4,7 @@
     "0": "astral:block/comfortable_cushion",
     "particle": "astral:block/comfortable_cushion"
   },
+  "parent": "block/block",
   "elements": [
     {
       "from": [
@@ -83,61 +84,5 @@
         }
       }
     }
-  ],
-  "display": {
-    "thirdperson_righthand": {
-      "translation": [
-        0,
-        4.25,
-        -5.25
-      ]
-    },
-    "thirdperson_lefthand": {
-      "translation": [
-        0,
-        4.25,
-        -5.25
-      ]
-    },
-    "firstperson_righthand": {
-      "rotation": [
-        75,
-        0,
-        0
-      ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [
-        75,
-        0,
-        0
-      ]
-    },
-    "ground": {
-      "translation": [
-        0,
-        5.75,
-        0
-      ]
-    },
-    "gui": {
-      "rotation": [
-        30,
-        70,
-        0
-      ],
-      "translation": [
-        -1.75,
-        5.5,
-        0
-      ]
-    },
-    "head": {
-      "rotation": [
-        -180,
-        0,
-        0
-      ]
-    }
-  }
+  ]
 }
