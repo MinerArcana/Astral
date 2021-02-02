@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.9.12'
+version = '1.9.13'
 group = 'com.alan19.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
 
@@ -80,9 +80,8 @@ sourceSets {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2")
+    compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2-Snapshot.3")
     compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
     compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
 }
