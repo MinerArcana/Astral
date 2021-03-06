@@ -17,12 +17,14 @@ import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.PhantomEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -58,12 +60,23 @@ public class TravelEffects {
         }
     }
 
+    /**
+     * Add the Astral Attack Damage attribute to entities that don't have it
+     *
+     * @param event The EntityAttributeModificationEvent that allows for attributes to be added to entities
+     */
+    @SubscribeEvent
+    public static void attachAstralDamageAttribute(EntityAttributeModificationEvent event) {
+        event.getTypes().stream().filter(entityType -> !event.has(entityType, AstralModifiers.ASTRAL_ATTACK_DAMAGE.get())).forEach(entityType -> event.add(entityType, AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()));
+    }
+
     @SubscribeEvent
     public static void spiritualMobAttributes(EntityJoinWorldEvent event) {
-        if (event.getEntity().getType() == EntityType.PHANTOM) {
+        if (AstralTags.SPIRITUAL_BEINGS.contains(event.getEntity().getType())) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
-            if (!livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
-                livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
+            final ModifiableAttributeInstance attribute = livingEntity.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get());
+            if (attribute != null && !attribute.hasModifier(Constants.SPIRITUAL_MOB_MODIFER)) {
+                attribute.applyPersistentModifier(Constants.SPIRITUAL_MOB_MODIFER);
             }
         }
     }

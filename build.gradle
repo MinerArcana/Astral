@@ -79,7 +79,7 @@ sourceSets {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.4'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.0.46'
     compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2-Snapshot.3")
     compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
