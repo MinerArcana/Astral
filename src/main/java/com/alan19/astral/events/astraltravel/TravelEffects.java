@@ -24,7 +24,6 @@ import net.minecraft.entity.monster.PhantomEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -58,16 +57,6 @@ public class TravelEffects {
                 }
             });
         }
-    }
-
-    /**
-     * Add the Astral Attack Damage attribute to entities that don't have it
-     *
-     * @param event The EntityAttributeModificationEvent that allows for attributes to be added to entities
-     */
-    @SubscribeEvent
-    public static void attachAstralDamageAttribute(EntityAttributeModificationEvent event) {
-        event.getTypes().stream().filter(entityType -> !event.has(entityType, AstralModifiers.ASTRAL_ATTACK_DAMAGE.get())).forEach(entityType -> event.add(entityType, AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()));
     }
 
     @SubscribeEvent

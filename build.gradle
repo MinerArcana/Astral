@@ -21,14 +21,15 @@ archivesBaseName = 'astral'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    mappings channel: "snapshot", version: "20201028-1.16.3"
+    mappings channel: "snapshot", version: "20210309-1.16.5"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 astral {
                     source sourceSets.main
@@ -45,8 +46,8 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            properties 'mixin.env.disableRefMap': 'true'
-
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 astral {
                     source sourceSets.main
@@ -57,9 +58,10 @@ minecraft {
         data {
             workingDirectory project.file("run")
             environment 'target', 'fmluserdevdata'
-            properties 'mixin.env.disableRefMap': 'true'
             properties 'fml.earlyprogresswindow': 'false'
 
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--all', '--output', file('src/generated/resources/'),
                     '--mod', 'astral', '--reports',
                     '--existing', sourceSets.main.resources.srcDirs[0]
@@ -82,8 +84,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.0.46'
     compile fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2-Snapshot.3")
-    compile fg.deobf("vazkii.botania:Botania:1.16.3-409")
-    compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.2.0")
+    compile fg.deobf("vazkii.botania:Botania:1.16.5-416")
+    compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.1")
+    implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3188120")
 }
 
 // I believe this is for using datagens with forge tags

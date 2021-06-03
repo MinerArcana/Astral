@@ -24,7 +24,7 @@ public class StickyRandomPlacerFeature extends Feature<BlockClusterFeatureConfig
     @ParametersAreNonnullByDefault
     public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockClusterFeatureConfig config) {
         BlockPos blockpos;
-        if (config.field_227298_k_) {
+        if (config.project) {
             blockpos = reader.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
         }
         else {

@@ -22,7 +22,7 @@ public class AstralStructures {
     static final DeferredRegister<Structure<?>> STRUCTURE_FEATURES = DeferredRegister.create(ForgeRegistries.STRUCTURE_FEATURES, Astral.MOD_ID);
 
     // Structures
-    public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE = STRUCTURE_FEATURES.register("etheric_isle", () -> new EthericIsleStructure(NoFeatureConfig.field_236558_a_));
+    public static final RegistryObject<Structure<NoFeatureConfig>> ETHERIC_ISLE = STRUCTURE_FEATURES.register("etheric_isle", () -> new EthericIsleStructure(NoFeatureConfig.CODEC));
 
     public static void setupStructures() {
         setupStructure(ETHERIC_ISLE.get(), new StructureSeparationSettings(3, 1, 11262020), false);

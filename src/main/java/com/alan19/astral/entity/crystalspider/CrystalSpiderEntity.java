@@ -42,6 +42,7 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
         super(type, worldIn);
     }
 
+    @Nonnull
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return CaveSpiderEntity.registerAttributes().createMutableAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), 2);
     }

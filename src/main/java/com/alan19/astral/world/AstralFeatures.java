@@ -36,8 +36,8 @@ public class AstralFeatures {
     public static final RegistryObject<EtherealTreeFeature> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new EtherealTreeFeature(BaseTreeFeatureConfig.CODEC));
     public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
     public static final RegistryObject<BuriedEtherealSpawnerFeature> BURIED_SPAWNER_FEATURE = FEATURES.register("buried_ethereal_spawner", () -> new BuriedEtherealSpawnerFeature(BuriedEtherealSpawnerConfig.CODEC));
-    public static final RegistryObject<GenerateMultipleFeature> GENERATE_MULTIPLE_FEATURE = FEATURES.register("generate_multiple_features", () -> new GenerateMultipleFeature(MultipleRandomFeatureConfig.field_236583_a_));
-    public static final RegistryObject<StickyRandomPlacerFeature> STICKY_RANDOM_PLACER_FEATURE = FEATURES.register("sticky_random_placer", () -> new StickyRandomPlacerFeature(BlockClusterFeatureConfig.field_236587_a_));
+    public static final RegistryObject<GenerateMultipleFeature> GENERATE_MULTIPLE_FEATURE = FEATURES.register("generate_multiple_features", () -> new GenerateMultipleFeature(MultipleRandomFeatureConfig.CODEC));
+    public static final RegistryObject<StickyRandomPlacerFeature> STICKY_RANDOM_PLACER_FEATURE = FEATURES.register("sticky_random_placer", () -> new StickyRandomPlacerFeature(BlockClusterFeatureConfig.CODEC));
 
     public static void register(IEventBus modBus) {
         FEATURES.register(modBus);

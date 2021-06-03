@@ -8,7 +8,7 @@ import net.minecraft.world.gen.feature.template.RuleTest;
 
 public class BuriedEtherealSpawnerConfig implements IFeatureConfig {
     public static final Codec<BuriedEtherealSpawnerConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RuleTest.field_237127_c_.fieldOf("target").forGetter(config -> config.target),
+            RuleTest.CODEC.fieldOf("target").forGetter(config -> config.target),
             Codec.intRange(0, 64).fieldOf("size").forGetter(config -> config.size),
             CompoundNBT.CODEC.fieldOf("spawnerNBT").forGetter(config -> config.spawnerNBT),
             Codec.INT.fieldOf("xspread").orElse(7).forGetter(config -> config.xSpread),

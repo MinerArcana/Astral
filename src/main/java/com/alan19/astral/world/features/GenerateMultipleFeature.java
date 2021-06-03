@@ -22,7 +22,7 @@ public class GenerateMultipleFeature extends Feature<MultipleRandomFeatureConfig
         final float aFloat = rand.nextFloat();
         boolean atLeastOneGenerated = false;
         for (ConfiguredRandomFeatureList configuredRandomFeatureList : config.features) {
-            if (aFloat < configuredRandomFeatureList.chance && configuredRandomFeatureList.func_242787_a(reader, generator, rand, pos)) {
+            if (aFloat < configuredRandomFeatureList.chance && configuredRandomFeatureList.generate(reader, generator, rand, pos)) {
                 atLeastOneGenerated = true;
             }
         }
