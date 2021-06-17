@@ -7,6 +7,8 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -14,6 +16,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GhostEntity extends MonsterEntity {
     private static final DataParameter<Boolean> HAS_POSSESSED_ID = EntityDataManager.createKey(GhostEntity.class, DataSerializers.BOOLEAN);
@@ -98,9 +102,21 @@ public class GhostEntity extends MonsterEntity {
         if (entityIn instanceof PlayerEntity && !entityIn.isRidingSameEntity(this)) {
             entityIn.startRiding(this, true);
             setHasPossessed(true);
+            eatRandom((PlayerEntity) entityIn);
             return true;
         }
         return false;
+    }
+
+    private void eatRandom(PlayerEntity entityIn) {
+        final List<ItemStack> foodsAndPotions = new ArrayList<>();
+        for (ItemStack stack : entityIn.inventory.mainInventory) {
+            if (stack.getItem().isFood() || stack.getItem() == Items.POTION) {
+                foodsAndPotions.add(stack);
+            }
+        }
+        final ItemStack itemStack = foodsAndPotions.get(rand.nextInt(foodsAndPotions.size()));
+        itemStack.onItemUseFinish(world, entityIn);
     }
 
     @Override

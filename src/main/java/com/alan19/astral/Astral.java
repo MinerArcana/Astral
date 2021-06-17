@@ -167,7 +167,6 @@ public class Astral {
         //Initializes worldgen
         AstralEntities.setupSpawnPlacement();
         event.enqueueWork(AstralDimensions::setupDimension);
-        event.enqueueWork(AstralEntities::registerAttributes);
 
         //Register Serializers
         DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);

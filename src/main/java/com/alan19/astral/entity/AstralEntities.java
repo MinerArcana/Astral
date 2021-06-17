@@ -9,7 +9,6 @@ import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.RegistryObject;
@@ -66,9 +65,4 @@ public class AstralEntities {
         EntitySpawnPlacementRegistry.register(AstralEntities.CRYSTAL_SPIDER.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IAstralBeing::canEtherealEntitySpawn);
     }
 
-    public static void registerAttributes() {
-        GlobalEntityTypeAttributes.put(AstralEntities.CRYSTAL_SPIDER.get(), CrystalSpiderEntity.registerAttributes().create());
-        GlobalEntityTypeAttributes.put(AstralEntities.PHYSICAL_BODY_ENTITY.get(), PhysicalBodyEntity.registerAttributes().create());
-        GlobalEntityTypeAttributes.put(AstralEntities.GHOST_ENTITY.get(), GhostEntity.registerAttributes().create());
-    }
 }

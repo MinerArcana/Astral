@@ -150,8 +150,9 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     /**
      * Offering Braziers can accept fuel items in slot 0, and non-fuel and tile entities in slot 1
      *
-     * @return The IItemHandler for the Offering Braizer
+     * @return The IItemHandler for the Offering Braizier
      */
+    @Nonnull
     private IItemHandler createHandler() {
         return new ItemStackHandler(2) {
             @Override
