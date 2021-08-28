@@ -48,6 +48,7 @@ public class AstralCommands {
      * @throws CommandSyntaxException Thrown when there is an error in the command syntax
      */
     private static int addItemToInnerRealmInventory(CommandSource source, Collection<ServerPlayerEntity> targets, ItemStack itemStack) throws CommandSyntaxException {
+        // TODO Possibly simulate offering brazier recipes
         ItemStack copy = itemStack.copy();
         AstralAPI.getOverworldPsychicInventory(source.asPlayer().getServerWorld()).ifPresent(iPsychicInventory -> {
             targets.forEach(target -> {

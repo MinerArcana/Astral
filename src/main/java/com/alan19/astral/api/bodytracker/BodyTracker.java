@@ -47,10 +47,11 @@ public class BodyTracker implements IBodyTracker {
      */
     @Override
     public void setBodyNBT(UUID uuid, CompoundNBT nbt, ServerWorld world) {
+        // TODO Refactor parameters to take a ServerPlayerEntity
         bodyTrackerMap.put(uuid, nbt);
-        final ServerPlayerEntity playerByUuid = (ServerPlayerEntity) world.getPlayerByUuid(uuid);
-        if (playerByUuid != null) {
-            updatePlayer(playerByUuid);
+        final ServerPlayerEntity player = world.getServer().getPlayerList().getPlayerByUUID(uuid);
+        if (player != null) {
+            updatePlayer(player);
         }
     }
 

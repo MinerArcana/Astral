@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,6 +30,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -206,7 +208,7 @@ public class PhysicalBodyEntity extends LivingEntity {
      */
     @Override
     protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
-        if (getGameProfile().map(GameProfile::getId).map(uuid -> world.getPlayerByUuid(uuid)).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()) {
+        if (getGameProfile().map(GameProfile::getId).map(uuid -> getLinkedPlayer()).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()) {
             return;
         }
         super.damageEntity(damageSrc, damageAmount);
@@ -233,6 +235,7 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     public Optional<GameProfile> getGameProfile() {
+        // TODO Refactor to allow ID to be fetched without game profile
         return dataManager.get(gameProfile);
     }
 
@@ -261,14 +264,14 @@ public class PhysicalBodyEntity extends LivingEntity {
      */
     @Override
     public void onDeath(@Nonnull DamageSource cause) {
-        if (!world.isRemote() && getGameProfile().isPresent()) {
-            PlayerEntity playerEntity = world.getPlayerByUuid(getGameProfile().get().getId());
+        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+            PlayerEntity playerEntity = getLinkedPlayer();
             //If body is killed, drop inventory and kill the player
             if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
                 super.onDeath(cause);
                 setBodyLinkInfo((ServerWorld) world);
             }
-            else if (cause.getDamageType().equals("despawn")){
+            else if (cause.getDamageType().equals("despawn")) {
                 super.onDeath(cause);
             }
             //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player
@@ -278,6 +281,16 @@ public class PhysicalBodyEntity extends LivingEntity {
                 dataManager.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
                 super.onDeath(cause);
             }
+        }
+    }
+
+    @Nullable
+    private ServerPlayerEntity getLinkedPlayer() {
+        if (getEntityWorld() instanceof ServerWorld && getEntityWorld().getServer() != null && getGameProfile().isPresent()) {
+            return getEntityWorld().getServer().getPlayerList().getPlayerByUUID(getGameProfile().get().getId());
+        }
+        else {
+            return null;
         }
     }
 }
