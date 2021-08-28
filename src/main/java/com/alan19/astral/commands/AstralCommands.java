@@ -3,6 +3,7 @@ package com.alan19.astral.commands;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
+import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.util.Constants;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -38,7 +39,7 @@ public class AstralCommands {
     }
 
     /**
-     * Adds an ItemStack to a player's Inner Realm inventory. If the player is using their Inner Realm inventory, inserts directly into inventory instead
+     * Adds an ItemStack to a player's Inner Realm inventory. If the player is in the Inner Realm, inserts directly into inventory instead
      *
      * @param source    The command source
      * @param targets   The players to insert the ItemStack into
@@ -52,7 +53,7 @@ public class AstralCommands {
             targets.forEach(target -> {
                 final PsychicInventoryInstance playerInventory = iPsychicInventory.getInventoryOfPlayer(target.getUniqueID());
                 //Insert directly into player inventory if they are using their inner realm inventory
-                if (playerInventory.getInventoryType() == InventoryType.INNER_REALM) {
+                if (playerInventory.getInventoryType() == InventoryType.ASTRAL && target.world.getDimensionKey() == AstralDimensions.INNER_REALM) {
                     target.inventory.addItemStackToInventory(itemStack);
                 }
                 else {
