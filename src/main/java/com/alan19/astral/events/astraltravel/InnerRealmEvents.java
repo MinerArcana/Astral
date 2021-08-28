@@ -34,10 +34,15 @@ public class InnerRealmEvents {
         }
     }
 
+    /**
+     * Drop all items without the astral pickup tag when the player leaves the inner realm
+     *
+     * @param event The EntityTravelToDimensionEvent that contains the dimension the entity to traveling to
+     */
     @SubscribeEvent
     public static void dropNonAstralItems(EntityTravelToDimensionEvent event) {
         final Entity entity = event.getEntity();
-        if (event.getDimension() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayerEntity) {
+        if (entity.getEntityWorld().getDimensionKey() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entity;
             AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()), (ServerWorld) playerEntity.getEntityWorld()));
         }

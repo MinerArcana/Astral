@@ -110,13 +110,13 @@ public class PhysicalBodyEntity extends LivingEntity {
     private void clearPhysicalInventory() {
         if (world instanceof ServerWorld && getGameProfile().isPresent()) {
             AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
-                for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); i++) {
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); ++i) {
                     psychicInventoryInstance.getPhysicalInventory().setStackInSlot(i, ItemStack.EMPTY);
                 }
-                for (int i = 0; i < psychicInventoryInstance.getPhysicalArmor().getSlots(); i++) {
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalArmor().getSlots(); ++i) {
                     psychicInventoryInstance.getPhysicalArmor().setStackInSlot(i, ItemStack.EMPTY);
                 }
-                for (int i = 0; i < psychicInventoryInstance.getPhysicalHands().getSlots(); i++) {
+                for (int i = 0; i < psychicInventoryInstance.getPhysicalHands().getSlots(); ++i) {
                     psychicInventoryInstance.getPhysicalHands().setStackInSlot(i, ItemStack.EMPTY);
                 }
             });
