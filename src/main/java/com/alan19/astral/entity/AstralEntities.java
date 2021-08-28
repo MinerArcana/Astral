@@ -2,7 +2,6 @@ package com.alan19.astral.entity;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
-import com.alan19.astral.entity.ghost.GhostEntity;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.entity.projectile.IntentionBeam;
@@ -25,16 +24,9 @@ public class AstralEntities {
     public static final RegistryObject<EntityType<CrystalSpiderEntity>> CRYSTAL_SPIDER = ENTITIES.register("crystal_spider", AstralEntities::getCrystalSpider);
     public static final RegistryObject<EntityType<CrystalWebProjectileEntity>> CRYSTAL_WEB_PROJECTILE_ENTITY = ENTITIES.register(CRYSTAL_WEB_NAME, AstralEntities::getCrystalWeb);
     public static final RegistryObject<EntityType<IntentionBeam>> INTENTION_BEAM_ENTITY = ENTITIES.register("intention_beam", AstralEntities::getIntentionBeam);
-    public static final RegistryObject<EntityType<GhostEntity>> GHOST_ENTITY = ENTITIES.register("ghost", AstralEntities::getGhost);
 
     public static void register(IEventBus modBus) {
         ENTITIES.register(modBus);
-    }
-
-    private static EntityType<GhostEntity> getGhost() {
-        EntityType.Builder<GhostEntity> ghostEntityBuilder = EntityType.Builder.create(GhostEntity::new, EntityClassification.MONSTER);
-        ghostEntityBuilder.size(1F, 2F);
-        return ghostEntityBuilder.build("ghost");
     }
 
     private static EntityType<IntentionBeam> getIntentionBeam() {

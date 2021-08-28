@@ -5,7 +5,6 @@ import com.alan19.astral.client.gui.AstralInventoryScreen;
 import com.alan19.astral.client.gui.GuiEventHandler;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.renderer.entity.CrystalSpiderRenderer;
-import com.alan19.astral.renderer.entity.GhostEntityRenderer;
 import com.alan19.astral.renderer.entity.IntentionBeamRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import net.minecraft.client.Minecraft;
@@ -40,7 +39,6 @@ public class ClientSetup {
         rendererManager.register(AstralEntities.CRYSTAL_SPIDER.get(), new CrystalSpiderRenderer(rendererManager));
         rendererManager.register(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), new SpriteRenderer<>(rendererManager, itemRenderer, 1, true));
         rendererManager.register(AstralEntities.INTENTION_BEAM_ENTITY.get(), new IntentionBeamRenderer(rendererManager));
-        rendererManager.register(AstralEntities.GHOST_ENTITY.get(), new GhostEntityRenderer(rendererManager));
         ScreenManager.registerFactory(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), AstralInventoryScreen::new);
         registerKeybinds();
     }
