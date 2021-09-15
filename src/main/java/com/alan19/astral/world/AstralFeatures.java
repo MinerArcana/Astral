@@ -46,13 +46,13 @@ public class AstralFeatures {
     // Adds features from biomes
     public static void addFeatures(BiomeLoadingEvent event) {
         if (event.getCategory() == Biome.Category.TAIGA) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_SNOWBERRY.get());
+            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_SNOWBERRY);
         }
         if (event.getCategory() == Biome.Category.JUNGLE) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED.get());
+            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED);
         }
         if (event.getCategory() == Biome.Category.OCEAN) {
-            event.getGeneration().getStructures().add(AstralConfiguredFeatures.CONFIGURED_ETHERIC_ISLE);
+            event.getGeneration().getStructures().add(() -> AstralConfiguredFeatures.CONFIGURED_ETHERIC_ISLE);
         }
     }
 

@@ -86,6 +86,7 @@ dependencies {
     compile fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2-Snapshot.3")
     compile fg.deobf("vazkii.botania:Botania:1.16.5-416")
     compile fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.1")
+    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.2.1-forge")
     implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3188120")
 }
 
@@ -116,6 +117,9 @@ repositories {
     }
     maven {
         url = "https://www.cursemaven.com"
+    }
+    maven {
+        url "https://nexus.resourcefulbees.com/repository/maven-public/"
     }
 }
 
