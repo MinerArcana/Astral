@@ -5,14 +5,13 @@ import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.mentalconstructs.AstralMentalConstructs;
 import com.alan19.astral.util.Constants;
 import com.alan19.astral.util.ExperienceHelper;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SPlaySoundEventPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.LecternTileEntity;
@@ -38,16 +37,18 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
 
     public IndexOfKnowledge() {
-        super(Block.Properties.create(Material.ROCK, MaterialColor.RED).hardnessAndResistance(1.5F));
+        super(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.RED).hardnessAndResistance(1.5F));
         this.setDefaultState(getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(Constants.LIBRARY_LEVEL, 0).with(Constants.CAPPED_LEVEL, false));
     }
 
+    @Nonnull
     @Override
     @ParametersAreNonnullByDefault
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
 
+    @Nonnull
     @Override
     public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
         final int libraryLevel = state.get(Constants.LIBRARY_LEVEL);
@@ -58,10 +59,7 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
                 worldIn.setBlockState(pos, state.with(Constants.TRACKED_CONSTRUCT, true));
                 worldIn.setBlockState(pos, state.with(Constants.LIBRARY_LEVEL, libraryLevel + 1));
                 AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.LIBRARY.get(), Math.min(calculateLevel(worldIn, pos), state.get(Constants.LIBRARY_LEVEL))));
-                if (player instanceof ServerPlayerEntity) {
-                    ((ServerPlayerEntity) player).connection.sendPacket(new SPlaySoundEventPacket());
-                }
-                worldIn.playSound(null, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
+                worldIn.playSound(player, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
                 state.with(Constants.CAPPED_LEVEL, libraryLevel >= calculateLevel(worldIn, pos));
                 final int newLevel = state.get(Constants.LIBRARY_LEVEL);
                 IntStream.range(0, newLevel).forEach(i -> ((ServerWorld) worldIn).spawnParticle(ParticleTypes.ENCHANT, pos.getX() + (double) i / newLevel, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01));
@@ -88,7 +86,7 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
     public int calculateLevel(World world, BlockPos pos) {
         return BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3))
                 .map(blockPos -> sumStates(world, blockPos))
-                .reduce((integerIntegerPair, integerIntegerPair2) -> Pair.of(integerIntegerPair.getLeft() + integerIntegerPair2.getLeft(), integerIntegerPair.getRight() * +integerIntegerPair2.getRight()))
+                .reduce((integerIntegerPair, integerIntegerPair2) -> Pair.of(integerIntegerPair.getLeft() + integerIntegerPair2.getLeft(), integerIntegerPair.getRight() + integerIntegerPair2.getRight()))
                 .map(integerIntegerPair -> (int) (integerIntegerPair.getLeft() * .25 + integerIntegerPair.getRight() * .5))
                 .orElse(0);
     }
@@ -96,7 +94,6 @@ public class IndexOfKnowledge extends Block implements MentalConstructController
     private Pair<Integer, Integer> sumStates(World world, BlockPos blockPos) {
         return Pair.of(world.getBlockState(blockPos).getBlock() == Blocks.BOOKSHELF ? 1 : 0, world.getTileEntity(blockPos) instanceof LecternTileEntity && ((LecternTileEntity) world.getTileEntity(blockPos)).hasBook() ? 1 : 0);
     }
-
 
     @Override
     public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
