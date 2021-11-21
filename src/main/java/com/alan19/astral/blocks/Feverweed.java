@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BushBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
@@ -72,6 +73,6 @@ public class Feverweed extends BushBlock {
         BlockPos blockpos = pos.down();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();
-        return AstralTags.FEVERWEED_SUSTAIN.contains(block) || blockstate.canSustainPlant(worldIn, blockpos, net.minecraft.util.Direction.UP, this);
+        return AstralTags.FEVERWEED_SUSTAIN.contains(block) || blockstate.canSustainPlant(worldIn, blockpos, Direction.UP, this);
     }
 }
