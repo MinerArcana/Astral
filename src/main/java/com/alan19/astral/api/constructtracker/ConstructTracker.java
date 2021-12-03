@@ -17,10 +17,10 @@ public class ConstructTracker implements IConstructTracker {
 
     @Override
     public PlayerMentalConstructTracker getMentalConstructsForPlayer(PlayerEntity player) {
-        if (!playerConstructTracker.containsKey(player.getUniqueID())) {
-            playerConstructTracker.put(player.getUniqueID(), new PlayerMentalConstructTracker());
+        if (!playerConstructTracker.containsKey(player.getUUID())) {
+            playerConstructTracker.put(player.getUUID(), new PlayerMentalConstructTracker());
         }
-        return playerConstructTracker.get(player.getUniqueID());
+        return playerConstructTracker.get(player.getUUID());
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ConstructTracker implements IConstructTracker {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        for (String s : nbt.keySet()) {
+        for (String s : nbt.getAllKeys()) {
             PlayerMentalConstructTracker tracker = new PlayerMentalConstructTracker();
             tracker.deserializeNBT(nbt.getCompound(s));
             playerConstructTracker.put(UUID.fromString(s), tracker);
@@ -44,7 +44,7 @@ public class ConstructTracker implements IConstructTracker {
         playerConstructTracker.values().stream().filter(tracker -> {
             if (tracker.getMentalConstructs().containsKey(mentalConstruct.getRegistryName())) {
                 final MentalConstruct entry = tracker.getMentalConstructs().get(mentalConstruct.getRegistryName());
-                return entry.getConstructPos().equals(blockPos) && worldIn.getDimensionKey() == entry.getDimensionKey();
+                return entry.getConstructPos().equals(blockPos) && worldIn.dimension() == entry.getDimensionKey();
             }
             return false;
         }).forEach(filteredTracker -> filteredTracker.removeMentalConstruct(mentalConstruct));

@@ -24,6 +24,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.text.MessageFormat;
 
+import net.minecraft.world.gen.feature.structure.Structure.IStartFactory;
+
 /**
  * Adapted from https://github.com/SlimeKnights/TinkersConstruct
  */
@@ -35,7 +37,7 @@ public class EthericIsleStructure extends Structure<NoFeatureConfig> {
 
     @Nonnull
     @Override
-    public GenerationStage.Decoration getDecorationStage() {
+    public GenerationStage.Decoration step() {
         return GenerationStage.Decoration.TOP_LAYER_MODIFICATION;
     }
 
@@ -53,15 +55,15 @@ public class EthericIsleStructure extends Structure<NoFeatureConfig> {
 
         @Override
         @ParametersAreNonnullByDefault
-        public void func_230364_a_(DynamicRegistries registries, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
+        public void generatePieces(DynamicRegistries registries, ChunkGenerator generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn, NoFeatureConfig config) {
             int x = (chunkX << 4) + 7;
             int z = (chunkZ << 4) + 7;
-            int heightModifier = rand.nextInt(32) + 64;
-            BlockPos blockpos = new BlockPos(x, generator.getHeight(x, z, Heightmap.Type.WORLD_SURFACE) + heightModifier, z);
+            int heightModifier = random.nextInt(32) + 64;
+            BlockPos blockpos = new BlockPos(x, generator.getBaseHeight(x, z, Heightmap.Type.WORLD_SURFACE) + heightModifier, z);
 
-            JigsawManager.func_242837_a(registries, new VillageConfig(() -> registries.getRegistry(Registry.JIGSAW_POOL_KEY).getOrDefault(new ResourceLocation(Astral.MOD_ID, "etheric_isle/start_pool")), 50), AbstractVillagePiece::new, generator, templateManagerIn, blockpos, this.components, this.rand, true, false);
+            JigsawManager.addPieces(registries, new VillageConfig(() -> registries.registryOrThrow(Registry.TEMPLATE_POOL_REGISTRY).get(new ResourceLocation(Astral.MOD_ID, "etheric_isle/start_pool")), 50), AbstractVillagePiece::new, generator, templateManagerIn, blockpos, this.pieces, this.random, true, false);
 
-            this.recalculateStructureSize();
+            this.calculateBoundingBox();
             Astral.LOGGER.log(Level.DEBUG, MessageFormat.format("Etheric Isle spawned at {0} {1} {2}", blockpos.getX(), blockpos.getY(), blockpos.getZ()));
         }
 

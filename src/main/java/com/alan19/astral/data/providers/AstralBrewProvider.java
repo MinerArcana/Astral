@@ -28,10 +28,10 @@ public class AstralBrewProvider extends BrewProvider {
     }
 
     @Override
-    protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL.get(), Ingredient.fromItems(Items.NETHER_WART), Ingredient.fromItems(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW.get(), Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.SNOWBERRY.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
-        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW.get(), Ingredient.fromItems(Items.REDSTONE), Ingredient.fromItems(AstralItems.FEVERWEED.get()), Ingredient.fromItems(Items.GLOWSTONE_DUST));
+    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL.get(), Ingredient.of(Items.NETHER_WART), Ingredient.of(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()), Ingredient.of(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.SNOWBERRY.get()), Ingredient.of(Items.GLOWSTONE_DUST));
+        createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.FEVERWEED.get()), Ingredient.of(Items.GLOWSTONE_DUST));
     }
 
     private void createBotanicalBreweryRecipe(Consumer<IFinishedRecipe> consumer, Brew brew, Ingredient... ingredients) {
@@ -51,10 +51,10 @@ public class AstralBrewProvider extends BrewProvider {
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             json.addProperty("brew", brew.getRegistryName().toString());
             JsonArray ingredients = new JsonArray();
-            Arrays.stream(inputs).map(Ingredient::serialize).forEach(ingredients::add);
+            Arrays.stream(inputs).map(Ingredient::toJson).forEach(ingredients::add);
             json.add("ingredients", ingredients);
             final JsonObject isBotaniaLoaded = CraftingHelper.serialize(new ModLoadedCondition("botania"));
             JsonArray conditionArray = new JsonArray();
@@ -64,25 +64,25 @@ public class AstralBrewProvider extends BrewProvider {
 
         @Override
         @Nonnull
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return id;
         }
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getSerializer() {
+        public IRecipeSerializer<?> getType() {
             return ModRecipeTypes.BREW_SERIALIZER;
         }
 
         @Nullable
         @Override
-        public JsonObject getAdvancementJson() {
+        public JsonObject serializeAdvancement() {
             return null;
         }
 
         @Nullable
         @Override
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return null;
         }
     }

@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 
 public class EnlightenmentKey extends Item {
     public EnlightenmentKey() {
-        super(new Item.Properties().group(AstralItems.ASTRAL_ITEMS));
+        super(new Item.Properties().tab(AstralItems.ASTRAL_ITEMS));
     }
 
     /**
@@ -31,22 +31,22 @@ public class EnlightenmentKey extends Item {
      */
     @Override
     @Nonnull
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        if (world.getDimensionKey() == AstralDimensions.INNER_REALM && world instanceof ServerWorld) {
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        if (world.dimension() == AstralDimensions.INNER_REALM && world instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) world;
-            ChunkPos meridianChunk = new ChunkPos(context.getPos());
-            if (world.getBlockState(context.getPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
-                BlockState meridianBlockState = world.getBlockState(context.getPos()).getBlockState();
-                int meridianDirection = meridianBlockState.get(AstralMeridian.DIRECTION);
+            ChunkPos meridianChunk = new ChunkPos(context.getClickedPos());
+            if (world.getBlockState(context.getClickedPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
+                BlockState meridianBlockState = world.getBlockState(context.getClickedPos()).getBlockState();
+                int meridianDirection = meridianBlockState.getValue(AstralMeridian.DIRECTION);
                 // Break the wall on the player's side, and let the capability break it on the other side since the other side may be claimed by another player
                 InnerRealmUtils.destroyWall(serverWorld, meridianChunk, meridianDirection);
-                Chunk chunkToGenerateBoxIn = InnerRealmUtils.getAdjacentChunk(context.getPos(), meridianDirection, world);
+                Chunk chunkToGenerateBoxIn = InnerRealmUtils.getAdjacentChunk(context.getClickedPos(), meridianDirection, world);
                 AstralAPI.getChunkClaimTracker(serverWorld).ifPresent(cap -> cap.claimChunk((ServerPlayerEntity) context.getPlayer(), chunkToGenerateBoxIn.getPos()));
-                context.getItem().setCount(context.getItem().getCount() - 1);
+                context.getItemInHand().setCount(context.getItemInHand().getCount() - 1);
                 return ActionResultType.CONSUME;
             }
         }
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 }

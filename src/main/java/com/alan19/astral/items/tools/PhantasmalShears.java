@@ -10,11 +10,11 @@ import javax.annotation.Nonnull;
 
 public class PhantasmalShears extends ShearsItem {
     public PhantasmalShears() {
-        super(new Item.Properties().group(AstralItems.ASTRAL_ITEMS).maxDamage(120));
+        super(new Item.Properties().tab(AstralItems.ASTRAL_ITEMS).durability(120));
     }
 
     @Override
-    public boolean canHarvestBlock(@Nonnull BlockState blockIn) {
-        return super.canHarvestBlock(blockIn) || blockIn.getBlock() == AstralBlocks.CRYSTAL_WEB.get();
+    public boolean isCorrectToolForDrops(@Nonnull BlockState blockIn) {
+        return super.isCorrectToolForDrops(blockIn) || blockIn.getBlock() == AstralBlocks.CRYSTAL_WEB.get();
     }
 }

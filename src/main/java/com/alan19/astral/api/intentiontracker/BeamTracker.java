@@ -12,12 +12,12 @@ public class BeamTracker implements IBeamTracker {
 
     @Override
     public Optional<IntentionBeam> getIntentionBeam(ServerWorld world) {
-        return Optional.ofNullable(beamEntityID != null && world.getEntityByUuid(beamEntityID) instanceof IntentionBeam ? (IntentionBeam)world.getEntityByUuid(beamEntityID) : null);
+        return Optional.ofNullable(beamEntityID != null && world.getEntity(beamEntityID) instanceof IntentionBeam ? (IntentionBeam)world.getEntity(beamEntityID) : null);
     }
 
     @Override
     public void setIntentionBeam(IntentionBeam beam) {
-        beamEntityID = beam.getUniqueID();
+        beamEntityID = beam.getUUID();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class BeamTracker implements IBeamTracker {
     public CompoundNBT serializeNBT() {
         CompoundNBT compoundNBT = new CompoundNBT();
         if (beamEntityID != null){
-            compoundNBT.putUniqueId("beamID", beamEntityID);
+            compoundNBT.putUUID("beamID", beamEntityID);
         }
         return compoundNBT;
     }
@@ -37,7 +37,7 @@ public class BeamTracker implements IBeamTracker {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         if (nbt.contains("beamID")){
-            beamEntityID = nbt.getUniqueId("beamID");
+            beamEntityID = nbt.getUUID("beamID");
         }
     }
 }

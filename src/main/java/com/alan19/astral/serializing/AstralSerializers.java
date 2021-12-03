@@ -17,7 +17,7 @@ public class AstralSerializers {
         public void write(@Nonnull PacketBuffer packetBuffer, @Nonnull Optional<GameProfile> gameProfile) {
             if (gameProfile.isPresent()) {
                 packetBuffer.writeBoolean(true);
-                packetBuffer.writeCompoundTag(NBTUtil.writeGameProfile(new CompoundNBT(), gameProfile.get()));
+                packetBuffer.writeNbt(NBTUtil.writeGameProfile(new CompoundNBT(), gameProfile.get()));
             }
             else {
                 packetBuffer.writeBoolean(false);
@@ -27,12 +27,12 @@ public class AstralSerializers {
         @Override
         @Nonnull
         public Optional<GameProfile> read(@Nonnull PacketBuffer packetBuffer) {
-            return packetBuffer.readBoolean() ? Optional.of(NBTUtil.readGameProfile(packetBuffer.readCompoundTag())) : Optional.empty();
+            return packetBuffer.readBoolean() ? Optional.of(NBTUtil.readGameProfile(packetBuffer.readNbt())) : Optional.empty();
         }
 
         @Override
         @Nonnull
-        public Optional<GameProfile> copyValue(@Nonnull Optional<GameProfile> gameProfile) {
+        public Optional<GameProfile> copy(@Nonnull Optional<GameProfile> gameProfile) {
             return gameProfile;
         }
     };
@@ -43,7 +43,7 @@ public class AstralSerializers {
             if (itemStackHandlerLazyOptional.isPresent()) {
                 itemStackHandlerLazyOptional.ifPresent(itemStackHandler -> {
                     packetBuffer.writeBoolean(true);
-                    packetBuffer.writeCompoundTag(itemStackHandler.serializeNBT());
+                    packetBuffer.writeNbt(itemStackHandler.serializeNBT());
                 });
             }
             else {
@@ -56,7 +56,7 @@ public class AstralSerializers {
         public LazyOptional<ItemStackHandler> read(PacketBuffer packetBuffer) {
             if (packetBuffer.readBoolean()) {
                 final ItemStackHandler itemStackHandler = new ItemStackHandler();
-                itemStackHandler.deserializeNBT(packetBuffer.readCompoundTag());
+                itemStackHandler.deserializeNBT(packetBuffer.readNbt());
                 return LazyOptional.of(() -> itemStackHandler);
             }
             return LazyOptional.empty();
@@ -64,7 +64,7 @@ public class AstralSerializers {
 
         @Nonnull
         @Override
-        public LazyOptional<ItemStackHandler> copyValue(@Nonnull LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public LazyOptional<ItemStackHandler> copy(@Nonnull LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             return itemStackHandlerLazyOptional;
         }
     };

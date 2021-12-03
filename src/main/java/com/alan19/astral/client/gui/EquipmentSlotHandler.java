@@ -35,7 +35,7 @@ public class EquipmentSlotHandler extends SlotItemHandler {
      * the case of armor slots)
      */
     @Override
-    public int getSlotStackLimit() {
+    public int getMaxStackSize() {
         return type == EquipmentSlotType.OFFHAND ? 64 : 1;
     }
 
@@ -43,7 +43,7 @@ public class EquipmentSlotHandler extends SlotItemHandler {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean mayPlace(@Nonnull ItemStack stack) {
         return type == EquipmentSlotType.OFFHAND || stack.canEquip(type, playerEntity);
     }
 
@@ -51,14 +51,14 @@ public class EquipmentSlotHandler extends SlotItemHandler {
      * Return whether this slot's stack can be taken from this slot.
      */
     @Override
-    public boolean canTakeStack(PlayerEntity playerIn) {
-        ItemStack itemstack = this.getStack();
-        return (itemstack.isEmpty() || playerIn.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.canTakeStack(playerIn);
+    public boolean mayPickup(PlayerEntity playerIn) {
+        ItemStack itemstack = this.getItem();
+        return (itemstack.isEmpty() || playerIn.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.mayPickup(playerIn);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public Pair<ResourceLocation, ResourceLocation> getBackground() {
-        return Pair.of(PlayerContainer.LOCATION_BLOCKS_TEXTURE, type == EquipmentSlotType.OFFHAND ? emptyArmorSlotShield : armorSlotTextures[type.getIndex()]);
+    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        return Pair.of(PlayerContainer.BLOCK_ATLAS, type == EquipmentSlotType.OFFHAND ? emptyArmorSlotShield : armorSlotTextures[type.getIndex()]);
     }
 }

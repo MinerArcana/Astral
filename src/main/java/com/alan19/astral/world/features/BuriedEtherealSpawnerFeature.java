@@ -23,20 +23,20 @@ public class BuriedEtherealSpawnerFeature extends Feature<BuriedEtherealSpawnerC
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BuriedEtherealSpawnerConfig config) {
-        BlockState blockstate = AstralBlocks.ETHEREAL_SPAWNER.get().getDefaultState();
+    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BuriedEtherealSpawnerConfig config) {
+        BlockState blockstate = AstralBlocks.ETHEREAL_SPAWNER.get().defaultBlockState();
 
         int generatedCount = 0;
         BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 
         for (int j = 0; j < config.tryCount && generatedCount < config.size; ++j) {
-            mutablePos.setAndOffset(pos, rand.nextInt(config.xSpread + 1) - rand.nextInt(config.xSpread + 1), rand.nextInt(config.ySpread + 1) - rand.nextInt(config.ySpread + 1), rand.nextInt(config.zSpread + 1) - rand.nextInt(config.zSpread + 1));
-            if (config.target.test(reader.getBlockState(mutablePos), rand) && Arrays.stream(Direction.values()).noneMatch(direction -> reader.isAirBlock(mutablePos.offset(direction)))) {
-                reader.setBlockState(mutablePos, blockstate, 2);
-                final TileEntity type = reader.getTileEntity(mutablePos);
+            mutablePos.setWithOffset(pos, rand.nextInt(config.xSpread + 1) - rand.nextInt(config.xSpread + 1), rand.nextInt(config.ySpread + 1) - rand.nextInt(config.ySpread + 1), rand.nextInt(config.zSpread + 1) - rand.nextInt(config.zSpread + 1));
+            if (config.target.test(reader.getBlockState(mutablePos), rand) && Arrays.stream(Direction.values()).noneMatch(direction -> reader.isEmptyBlock(mutablePos.relative(direction)))) {
+                reader.setBlock(mutablePos, blockstate, 2);
+                final TileEntity type = reader.getBlockEntity(mutablePos);
                 if (type instanceof EtherealMobSpawnerTileEntity) {
                     final AbstractSpawner spawnerBaseLogic = ((EtherealMobSpawnerTileEntity) type).getSpawnerBaseLogic();
-                    spawnerBaseLogic.read(config.spawnerNBT);
+                    spawnerBaseLogic.load(config.spawnerNBT);
                 }
                 generatedCount++;
             }

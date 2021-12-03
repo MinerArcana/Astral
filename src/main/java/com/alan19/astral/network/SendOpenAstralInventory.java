@@ -22,12 +22,12 @@ public class SendOpenAstralInventory {
         contextSupplier.get().enqueueWork(() -> {
             ServerPlayerEntity player = contextSupplier.get().getSender();
             if (player != null) {
-                ItemStack stack = player.inventory.getItemStack();
-                player.inventory.setItemStack(ItemStack.EMPTY);
+                ItemStack stack = player.inventory.getCarried();
+                player.inventory.setCarried(ItemStack.EMPTY);
                 NetworkHooks.openGui(player, new AstralContainerProvider());
 
                 if (!stack.isEmpty()) {
-                    player.inventory.setItemStack(stack);
+                    player.inventory.setCarried(stack);
                     AstralNetwork.syncPacketGrabbedItem(player, stack);
                 }
             }

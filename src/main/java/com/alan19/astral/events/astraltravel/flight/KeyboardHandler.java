@@ -27,15 +27,15 @@ public class KeyboardHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getInstance();
-            GameSettings settings = mc.gameSettings;
+            GameSettings settings = mc.options;
             if (mc.getConnection() != null) {
-                boolean upNow = settings.keyBindJump.isKeyDown();
-                boolean downNow = settings.keyBindSneak.isKeyDown();
-                boolean forwardsNow = settings.keyBindForward.isKeyDown();
-                boolean backwardsNow = settings.keyBindBack.isKeyDown();
-                boolean leftNow = settings.keyBindLeft.isKeyDown();
-                boolean rightNow = settings.keyBindRight.isKeyDown();
-                boolean sprintNow = settings.keyBindSprint.isKeyDown();
+                boolean upNow = settings.keyJump.isDown();
+                boolean downNow = settings.keyShift.isDown();
+                boolean forwardsNow = settings.keyUp.isDown();
+                boolean backwardsNow = settings.keyDown.isDown();
+                boolean leftNow = settings.keyLeft.isDown();
+                boolean rightNow = settings.keyRight.isDown();
+                boolean sprintNow = settings.keySprint.isDown();
 
                 if (upNow != up || downNow != down || forwardsNow != forwards || backwardsNow != backwards || leftNow != left || rightNow != right || sprintNow != sprint) {
                     up = upNow;
@@ -55,13 +55,13 @@ public class KeyboardHandler {
 
     @SubscribeEvent
     public static void cancelRegularMovement(InputUpdateEvent event) {
-        if (event.getPlayer().isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+        if (event.getPlayer().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
             final MovementInput movementInput = event.getMovementInput();
-            movementInput.backKeyDown = false;
-            movementInput.forwardKeyDown = false;
-            movementInput.moveForward = 0;
-            movementInput.rightKeyDown = false;
-            movementInput.moveStrafe = 0;
+            movementInput.down = false;
+            movementInput.up = false;
+            movementInput.forwardImpulse = 0;
+            movementInput.right = false;
+            movementInput.leftImpulse = 0;
         }
     }
 }

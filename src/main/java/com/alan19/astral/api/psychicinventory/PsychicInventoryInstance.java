@@ -117,7 +117,7 @@ public class PsychicInventoryInstance {
         if (slotIn == EquipmentSlotType.OFFHAND) {
             inventories[2].setStackInSlot(1, stack);
         }
-        else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+        else if (slotIn.getType() == EquipmentSlotType.Group.ARMOR) {
             inventories[1].setStackInSlot(slotIn.getIndex(), stack);
         }
     }
@@ -134,7 +134,7 @@ public class PsychicInventoryInstance {
         if (slotType == EquipmentSlotType.OFFHAND) {
             return inventory[2].getStackInSlot(0);
         }
-        return slotType.getSlotType() == EquipmentSlotType.Group.ARMOR ? inventory[1].getStackInSlot(slotType.getIndex()) : ItemStack.EMPTY;
+        return slotType.getType() == EquipmentSlotType.Group.ARMOR ? inventory[1].getStackInSlot(slotType.getIndex()) : ItemStack.EMPTY;
     }
 
     /**
@@ -169,19 +169,19 @@ public class PsychicInventoryInstance {
         final ItemStackHandler[] inventories = getInventory(inventoryType);
         final ItemStackHandler mainInventory = inventories[0];
         IntStream.range(0, mainInventory.getSlots()).forEach(i -> {
-            if (playerInventory.getStackInSlot(i) == ItemStack.EMPTY) {
-                playerInventory.setInventorySlotContents(i, mainInventory.getStackInSlot(i));
+            if (playerInventory.getItem(i) == ItemStack.EMPTY) {
+                playerInventory.setItem(i, mainInventory.getStackInSlot(i));
             }
         });
         final ItemStackHandler armorInventory = inventories[1];
         final ItemStackHandler handsInventory = inventories[2];
         for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-            EquipmentSlotType.Group group = slot.getSlotType();
+            EquipmentSlotType.Group group = slot.getType();
             if (group == EquipmentSlotType.Group.HAND && !slot.equals(EquipmentSlotType.MAINHAND)) {
-                playerInventory.player.setItemStackToSlot(slot, handsInventory.getStackInSlot(slot.getIndex()));
+                playerInventory.player.setItemSlot(slot, handsInventory.getStackInSlot(slot.getIndex()));
             }
             else if (group == EquipmentSlotType.Group.ARMOR) {
-                playerInventory.player.setItemStackToSlot(slot, armorInventory.getStackInSlot(slot.getIndex()));
+                playerInventory.player.setItemSlot(slot, armorInventory.getStackInSlot(slot.getIndex()));
             }
         }
     }
@@ -196,7 +196,7 @@ public class PsychicInventoryInstance {
         final ItemStackHandler[] originalInventories = getInventory(this.inventoryType);
         ItemStackHandler mainInventory = originalInventories[0];
 
-        final NonNullList<ItemStack> playerMainInventory = playerInventory.mainInventory;
+        final NonNullList<ItemStack> playerMainInventory = playerInventory.items;
         for (int i = 0; i < playerMainInventory.size(); i++) {
             ItemStack itemStack = playerMainInventory.get(i);
             mainInventory.setStackInSlot(i, itemStack);
@@ -204,7 +204,7 @@ public class PsychicInventoryInstance {
         }
         //Insert armor and offhand to capability
         for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
-            setItemStackToSlot(slotType, playerInventory.player.getItemStackFromSlot(slotType), inventoryType);
+            setItemStackToSlot(slotType, playerInventory.player.getItemBySlot(slotType), inventoryType);
         }
     }
 

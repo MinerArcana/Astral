@@ -20,7 +20,7 @@ public class AstralItems {
     //Astral ItemGroup using  a Snowberry Bush as an icon
     public static final ItemGroup ASTRAL_ITEMS = new ItemGroup("astral") {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return Constants.getAstronomicon();
         }
     };
@@ -48,15 +48,15 @@ public class AstralItems {
     public static final RegistryObject<BlockNamedItem> TALL_WILDWEED_ITEM = ITEMS.register("tall_wildweed", () -> convertToBlockItem(TALL_WILDWEED.get()));
     public static final RegistryObject<BlockNamedItem> BLUECAP_MUSHROOM_ITEM = ITEMS.register("bluecap_mushroom", () -> convertToBlockItem(BLUECAP_MUSHROOM.get()));
     public static final RegistryObject<BlockNamedItem> RUSTCAP_MUSHROOM_ITEM = ITEMS.register("rustcap_mushroom", () -> convertToBlockItem(RUSTCAP_MUSHROOM.get()));
-    public static final RegistryObject<Item> METAPHORIC_BONE = ITEMS.register("metaphoric_bone", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
+    public static final RegistryObject<Item> METAPHORIC_BONE = ITEMS.register("metaphoric_bone", () -> new Item(new Item.Properties().tab(ASTRAL_ITEMS)));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_PLANKS_ITEM = ITEMS.register("ethereal_planks", () -> convertToBlockItem(ETHEREAL_PLANKS.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_WOOD_ITEM = ITEMS.register("ethereal_wood", () -> convertToBlockItem(ETHEREAL_WOOD.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_DOOR_ITEM = ITEMS.register("ethereal_door", () -> convertToBlockItem(ETHEREAL_DOOR.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_TRAPDOOR_ITEM = ITEMS.register("ethereal_trapdoor", () -> convertToBlockItem(ETHEREAL_TRAPDOOR.get()));
     public static final RegistryObject<BlockNamedItem> STRIPPED_ETHEREAL_LOG_ITEM = ITEMS.register("stripped_ethereal_log", () -> convertToBlockItem(STRIPPED_ETHEREAL_LOG.get()));
     public static final RegistryObject<BlockNamedItem> STRIPPED_ETHEREAL_WOOD_ITEM = ITEMS.register("stripped_ethereal_wood", () -> convertToBlockItem(STRIPPED_ETHEREAL_WOOD.get()));
-    public static final RegistryObject<Item> DREAMCORD = ITEMS.register("dreamcord", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
-    public static final RegistryObject<Item> DREAMWEAVE = ITEMS.register("dreamweave", () -> new Item(new Item.Properties().group(ASTRAL_ITEMS)));
+    public static final RegistryObject<Item> DREAMCORD = ITEMS.register("dreamcord", () -> new Item(new Item.Properties().tab(ASTRAL_ITEMS)));
+    public static final RegistryObject<Item> DREAMWEAVE = ITEMS.register("dreamweave", () -> new Item(new Item.Properties().tab(ASTRAL_ITEMS)));
     public static final RegistryObject<BlockNamedItem> COMFORTABLE_CUSHION_ITEM = ITEMS.register("comfortable_cushion", () -> convertToBlockItem(COMFORTABLE_CUSHION.get()));
     public static final RegistryObject<BlockNamedItem> ETHEREAL_SAPLING_ITEM = ITEMS.register("ethereal_sapling", () -> convertToBlockItem(ETHEREAL_SAPLING.get()));
     public static final RegistryObject<BlockNamedItem> INDEX_OF_KNOWLEDGE_ITEM = ITEMS.register("index_of_knowledge", () -> convertToBlockItem(INDEX_OF_KNOWLEDGE.get()));
@@ -82,7 +82,7 @@ public class AstralItems {
      * @return A converted block
      */
     private static BlockNamedItem convertToBlockItem(Block block) {
-        return new BlockNamedItem(block, new Item.Properties().group(ASTRAL_ITEMS));
+        return new BlockNamedItem(block, new Item.Properties().tab(ASTRAL_ITEMS));
     }
 
     public static void register(IEventBus modBus) {

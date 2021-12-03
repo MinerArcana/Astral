@@ -18,7 +18,7 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
 
     @Override
     public boolean isChunkClaimedByPlayer(ServerPlayerEntity player, ChunkPos chunk) {
-        return claimedChunksMap.getOrDefault(player.getUniqueID(), Collections.emptyList()).contains(chunk);
+        return claimedChunksMap.getOrDefault(player.getUUID(), Collections.emptyList()).contains(chunk);
     }
 
     /**
@@ -34,7 +34,7 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
      */
     @Override
     public boolean claimChunk(ServerPlayerEntity player, ChunkPos chunk) {
-        UUID playerID = player.getUniqueID();
+        UUID playerID = player.getUUID();
         // Player fails to claim chunk if the chunk has been claimed
         if (claimedChunksMap.entrySet().stream().flatMap(uuidListEntry -> uuidListEntry.getValue().stream()).collect(Collectors.toList()).contains(chunk)) {
             return false;
@@ -44,12 +44,12 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
             chunks.add(chunk);
             return chunks;
         });
-        InnerRealmUtils.generateInnerRealmChunk(player.getServerWorld(), chunk);
+        InnerRealmUtils.generateInnerRealmChunk(player.getLevel(), chunk);
         for (int i = 0; i < 4; i++) {
-            Chunk adjacentChunk = InnerRealmUtils.getAdjacentChunk(chunk.asBlockPos(), i, player.getEntityWorld());
+            Chunk adjacentChunk = InnerRealmUtils.getAdjacentChunk(chunk.getWorldPosition(), i, player.getCommandSenderWorld());
             if (isChunkClaimedByPlayer(player, adjacentChunk.getPos())) {
-                InnerRealmUtils.destroyWall(player.getServerWorld(), chunk, i);
-                InnerRealmUtils.destroyWall(player.getServerWorld(), adjacentChunk.getPos(), (i + 2) % 4);
+                InnerRealmUtils.destroyWall(player.getLevel(), chunk, i);
+                InnerRealmUtils.destroyWall(player.getLevel(), adjacentChunk.getPos(), (i + 2) % 4);
             }
         }
 
@@ -64,7 +64,7 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
             List<ChunkPos> chunkPosList = entry.getValue();
             final ListNBT chunkListNBT = new ListNBT();
             // Convert each of the ChunkPos stored in the entry to a BlockPos CompoundNBT and then store them in a list
-            chunkListNBT.addAll(chunkPosList.stream().map(chunkPos -> NBTUtil.writeBlockPos(chunkPos.asBlockPos())).collect(Collectors.toList()));
+            chunkListNBT.addAll(chunkPosList.stream().map(chunkPos -> NBTUtil.writeBlockPos(chunkPos.getWorldPosition())).collect(Collectors.toList()));
             playerChunkMap.put(key.toString(), chunkListNBT);
         }
         return playerChunkMap;
@@ -74,7 +74,7 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
     public void deserializeNBT(CompoundNBT nbt) {
         Map<UUID, List<ChunkPos>> claimedChunkMap = new HashMap<>();
         // Iterate over each key (player UUID) add the UUID and the ListNBT converted to a list of ChunkPos as entries to the HashMap
-        for (String s : nbt.keySet()) {
+        for (String s : nbt.getAllKeys()) {
             List<ChunkPos> list = new ArrayList<>();
             for (INBT inbt : nbt.getList(s, Constants.NBT.TAG_COMPOUND)) {
                 ChunkPos pos = new ChunkPos(NBTUtil.readBlockPos((CompoundNBT) inbt));

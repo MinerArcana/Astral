@@ -14,6 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class EtherealBlock extends Block implements Ethereal {
     public EtherealBlock(Properties properties) {
         super(properties);
@@ -21,8 +23,8 @@ public class EtherealBlock extends Block implements Ethereal {
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -44,13 +46,13 @@ public class EtherealBlock extends Block implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Nonnull
     @Override
-    public PushReaction getPushReaction(@Nonnull BlockState state) {
+    public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

@@ -16,12 +16,12 @@ public class FeverweedItem extends BlockNamedItem {
      */
     public FeverweedItem() {
         super(AstralBlocks.FEVERWEED_BLOCK.get(), new Item.Properties()
-                .group(AstralItems.ASTRAL_ITEMS)
+                .tab(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
-                        .setAlwaysEdible()
-                        .saturation(-1F)
-                        .hunger(1)
-                        .fastToEat()
+                        .alwaysEat()
+                        .saturationMod(-1F)
+                        .nutrition(1)
+                        .fast()
                         .effect(() -> new EffectInstance(Effects.LUCK, AstralConfig.getEffectDuration().feverweedLuckDuration.get(), 1), 1)
                         .effect(() -> new EffectInstance(Effects.HUNGER, AstralConfig.getEffectDuration().feverweedHungerDuration.get(), 1), 1)
                         .build()));

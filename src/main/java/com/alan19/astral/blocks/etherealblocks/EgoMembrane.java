@@ -11,22 +11,24 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class EgoMembrane extends Block implements Ethereal {
     public EgoMembrane() {
-        super(Properties.create(Material.DRAGON_EGG)
-                .hardnessAndResistance(-1.0F, 3600000.0F)
+        super(Properties.of(Material.EGG)
+                .strength(-1.0F, 3600000.0F)
                 .noDrops()
-                .setLightLevel(value -> 14));
+                .lightLevel(value -> 14));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState(), 2);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        worldIn.setBlock(pos, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState(), 2);
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.IGNORE;
     }
 }

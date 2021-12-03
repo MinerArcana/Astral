@@ -53,20 +53,20 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
     public CrystalWebProjectileEntity(World worldIn, CrystalSpiderEntity entity) {
         this(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), worldIn);
         this.projectileOwner = entity;
-        this.setPosition(entity.getPosX() - (double) (entity.getWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entity.renderYawOffset * ((float) Math.PI / 180F)), entity.getPosYEye() - (double) 0.1F, entity.getPosZ() + (double) (entity.getWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entity.renderYawOffset * ((float) Math.PI / 180F)));
+        this.setPos(entity.getX() - (double) (entity.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.sin(entity.yBodyRot * ((float) Math.PI / 180F)), entity.getEyeY() - (double) 0.1F, entity.getZ() + (double) (entity.getBbWidth() + 1.0F) * 0.5D * (double) MathHelper.cos(entity.yBodyRot * ((float) Math.PI / 180F)));
     }
 
     @OnlyIn(Dist.CLIENT)
     public CrystalWebProjectileEntity(World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         this(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), worldIn);
-        this.setPosition(x, y, z);
+        this.setPos(x, y, z);
 
         for (int i = 0; i < 7; ++i) {
             double d0 = 0.4D + 0.1D * (double) i;
             worldIn.addParticle(ParticleTypes.SPIT, x, y, z, xSpeed * d0, ySpeed, zSpeed * d0);
         }
 
-        this.setMotion(xSpeed, ySpeed, zSpeed);
+        this.setDeltaMovement(xSpeed, ySpeed, zSpeed);
     }
 
     /**
@@ -79,51 +79,51 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
             this.restoreOwnerFromSave();
         }
 
-        Vector3d vec3d = this.getMotion();
-        RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, this::func_230298_a_);
+        Vector3d vec3d = this.getDeltaMovement();
+        RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
         if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
             this.onHit(raytraceresult);
         }
 
-        double d0 = this.getPosX() + vec3d.x;
-        double d1 = this.getPosY() + vec3d.y;
-        double d2 = this.getPosZ() + vec3d.z;
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
+        double d0 = this.getX() + vec3d.x;
+        double d1 = this.getY() + vec3d.y;
+        double d2 = this.getZ() + vec3d.z;
+        float f = MathHelper.sqrt(getHorizontalDistanceSqr(vec3d));
+        this.yRot = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
 
-        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
 
-        while (this.rotationPitch - this.prevRotationPitch < -180.0F) {
-            this.prevRotationPitch -= 360.0F;
+        while (this.xRot - this.xRotO < -180.0F) {
+            this.xRotO -= 360.0F;
         }
 
-        while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-            this.prevRotationPitch += 360.0F;
+        while (this.xRot - this.xRotO >= 180.0F) {
+            this.xRotO += 360.0F;
         }
 
-        while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
-            this.prevRotationYaw -= 360.0F;
+        while (this.yRot - this.yRotO < -180.0F) {
+            this.yRotO -= 360.0F;
         }
 
-        while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-            this.prevRotationYaw += 360.0F;
+        while (this.yRot - this.yRotO >= 180.0F) {
+            this.yRotO += 360.0F;
         }
 
-        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
-        if (this.world.func_234853_a_(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
+        this.xRot = MathHelper.lerp(0.2F, this.xRotO, this.xRot);
+        this.yRot = MathHelper.lerp(0.2F, this.yRotO, this.yRot);
+        if (this.level.getBlockStates(this.getBoundingBox()).noneMatch(AbstractBlock.AbstractBlockState::isAir)) {
             this.remove();
         }
-        else if (this.isInWaterOrBubbleColumn()) {
+        else if (this.isInWaterOrBubble()) {
             this.remove();
         }
         else {
-            this.setMotion(vec3d.scale(0.99F));
-            if (!this.hasNoGravity()) {
-                this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
+            this.setDeltaMovement(vec3d.scale(0.99F));
+            if (!this.isNoGravity()) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.06F, 0.0D));
             }
 
-            this.setPosition(d0, d1, d2);
+            this.setPos(d0, d1, d2);
         }
     }
 
@@ -132,15 +132,15 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void setVelocity(double x, double y, double z) {
-        this.setMotion(x, y, z);
-        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
+    public void lerpMotion(double x, double y, double z) {
+        this.setDeltaMovement(x, y, z);
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             float f = MathHelper.sqrt(x * x + z * z);
-            this.rotationPitch = (float) (MathHelper.atan2(y, f) * (double) (180F / (float) Math.PI));
-            this.rotationYaw = (float) (MathHelper.atan2(x, z) * (double) (180F / (float) Math.PI));
-            this.prevRotationPitch = this.rotationPitch;
-            this.prevRotationYaw = this.rotationYaw;
-            this.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            this.xRot = (float) (MathHelper.atan2(y, f) * (double) (180F / (float) Math.PI));
+            this.yRot = (float) (MathHelper.atan2(x, z) * (double) (180F / (float) Math.PI));
+            this.xRotO = this.xRot;
+            this.yRotO = this.yRot;
+            this.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, this.xRot);
         }
 
     }
@@ -150,13 +150,13 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
-        this.setMotion(vec3d);
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
-        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-        this.prevRotationYaw = this.rotationYaw;
-        this.prevRotationPitch = this.rotationPitch;
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        this.setDeltaMovement(vec3d);
+        float f = MathHelper.sqrt(getHorizontalDistanceSqr(vec3d));
+        this.yRot = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        this.yRotO = this.yRot;
+        this.xRotO = this.xRot;
     }
 
     public void onHit(RayTraceResult result) {
@@ -164,21 +164,21 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
         if (resultType == RayTraceResult.Type.ENTITY && projectileOwner != null) {
             Entity entity = ((EntityRayTraceResult) result).getEntity();
             if (entity instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entity)) {
-                entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.projectileOwner), 2F);
+                entity.hurt(DamageSource.indirectMagic(this, this.projectileOwner), 2F);
             }
-            if ((world.getDifficulty() == Difficulty.NORMAL || world.getDifficulty() == Difficulty.HARD) && entity instanceof LivingEntity) {
-                ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
+            if ((level.getDifficulty() == Difficulty.NORMAL || level.getDifficulty() == Difficulty.HARD) && entity instanceof LivingEntity) {
+                ((LivingEntity) entity).addEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }
-            this.applyEnchantments(this.projectileOwner, entity);
+            this.doEnchantDamageEffects(this.projectileOwner, entity);
             this.remove();
         }
-        else if (resultType == RayTraceResult.Type.BLOCK && !this.world.isRemote) {
+        else if (resultType == RayTraceResult.Type.BLOCK && !this.level.isClientSide) {
             this.remove();
         }
 
     }
 
-    protected void registerData() {
+    protected void defineSynchedData() {
         //Do not register any data
     }
 
@@ -186,7 +186,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
         if (compound.contains(OWNER, 10)) {
             this.ownerNbt = compound.getCompound(OWNER);
         }
@@ -194,22 +194,22 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
     }
 
     @Override
-    protected void writeAdditional(@Nonnull CompoundNBT compound) {
+    protected void addAdditionalSaveData(@Nonnull CompoundNBT compound) {
         if (this.projectileOwner != null) {
             CompoundNBT compoundNBT = new CompoundNBT();
-            UUID uuid = this.projectileOwner.getUniqueID();
-            compoundNBT.putUniqueId(OWNER_UUID, uuid);
+            UUID uuid = this.projectileOwner.getUUID();
+            compoundNBT.putUUID(OWNER_UUID, uuid);
             compound.put(OWNER, compoundNBT);
         }
 
     }
 
     private void restoreOwnerFromSave() {
-        if (this.ownerNbt != null && this.ownerNbt.hasUniqueId(OWNER_UUID)) {
-            UUID uuid = this.ownerNbt.getUniqueId(OWNER_UUID);
+        if (this.ownerNbt != null && this.ownerNbt.hasUUID(OWNER_UUID)) {
+            UUID uuid = this.ownerNbt.getUUID(OWNER_UUID);
 
-            for (CrystalSpiderEntity entity : this.world.getEntitiesWithinAABB(CrystalSpiderEntity.class, this.getBoundingBox().grow(15.0D))) {
-                if (entity.getUniqueID().equals(uuid)) {
+            for (CrystalSpiderEntity entity : this.level.getEntitiesOfClass(CrystalSpiderEntity.class, this.getBoundingBox().inflate(15.0D))) {
+                if (entity.getUUID().equals(uuid)) {
                     this.projectileOwner = entity;
                     break;
                 }
@@ -220,7 +220,7 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
     }
 
     @Nonnull
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -233,19 +233,19 @@ public class CrystalWebProjectileEntity extends ThrowableEntity implements IRend
 
     @Override
     public void remove() {
-        if (getPosY() >= 128) {
-            setWeb(world, getPosition());
+        if (getY() >= 128) {
+            setWeb(level, blockPosition());
         }
         super.remove();
     }
 
     private void setWeb(World world, BlockPos pos) {
-        if (world.isAirBlock(pos) && world instanceof ServerWorld) {
+        if (world.isEmptyBlock(pos) && world instanceof ServerWorld) {
             // TODO Make generation property from spewed webs configurable
-            world.setBlockState(pos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState().with(CrystalWeb.GENERATION, 9), 3);
+            world.setBlock(pos, AstralBlocks.CRYSTAL_WEB.get().defaultBlockState().setValue(CrystalWeb.GENERATION, 9), 3);
         }
         else {
-            Block.spawnAsEntity(world, pos, new ItemStack(AstralItems.DREAMCORD.get()));
+            Block.popResource(world, pos, new ItemStack(AstralItems.DREAMCORD.get()));
         }
     }
 }

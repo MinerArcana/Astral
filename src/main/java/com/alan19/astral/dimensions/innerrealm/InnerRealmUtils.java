@@ -21,13 +21,13 @@ public class InnerRealmUtils {
     public static Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
         switch (direction) {
             case 0:
-                return world.getChunkAt(blockPos.add(0, 0, -16));
+                return world.getChunkAt(blockPos.offset(0, 0, -16));
             case 1:
-                return world.getChunkAt(blockPos.add(16, 0, 0));
+                return world.getChunkAt(blockPos.offset(16, 0, 0));
             case 2:
-                return world.getChunkAt(blockPos.add(0, 0, 16));
+                return world.getChunkAt(blockPos.offset(0, 0, 16));
             case 3:
-                return world.getChunkAt(blockPos.add(-16, 0, 0));
+                return world.getChunkAt(blockPos.offset(-16, 0, 0));
             default:
                 throw new IllegalStateException("Unexpected value: " + direction);
         }
@@ -49,43 +49,43 @@ public class InnerRealmUtils {
     public static void generateInnerRealmChunk(ServerWorld world, ChunkPos chunk) {
         ServerWorld innerRealm = getInnerRealm(world);
         //XZ plane
-        BlockPos.getAllInBox(chunk.asBlockPos().add(0, innerRealm.getSeaLevel(), 0), chunk.asBlockPos().add(15, innerRealm.getSeaLevel(), 15))
-                .flatMap(blockPos -> Stream.of(blockPos.toImmutable(), blockPos.up(15).toImmutable()))
-                .forEach(blockPos -> innerRealm.setBlockState(blockPos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState()));
+        BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel(), 0), chunk.getWorldPosition().offset(15, innerRealm.getSeaLevel(), 15))
+                .flatMap(blockPos -> Stream.of(blockPos.immutable(), blockPos.above(15).immutable()))
+                .forEach(blockPos -> innerRealm.setBlockAndUpdate(blockPos, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState()));
 
         //XY Plane
-        BlockPos.getAllInBox(chunk.asBlockPos().add(0, innerRealm.getSeaLevel(), 0), chunk.asBlockPos().add(15, innerRealm.getSeaLevel() + 15, 0))
+        BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel(), 0), chunk.getWorldPosition().offset(15, innerRealm.getSeaLevel() + 15, 0))
                 .forEach(blockPos -> {
                     if (Range.closed(7, 8).containsAll(ImmutableList.of(convertNegativeCoordinate(blockPos.getX()), convertNegativeCoordinate(blockPos.getY())))) {
-                        innerRealm.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 0));
+                        innerRealm.setBlockAndUpdate(blockPos.immutable(), AstralBlocks.ASTRAL_MERIDIAN.get().defaultBlockState().setValue(AstralMeridian.DIRECTION, 0));
                     }
                     else {
-                        innerRealm.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                        innerRealm.setBlockAndUpdate(blockPos.immutable(), AstralBlocks.EGO_MEMBRANE.get().defaultBlockState());
                     }
-                    BlockPos otherSide = blockPos.add(0, 0, 15).toImmutable();
+                    BlockPos otherSide = blockPos.offset(0, 0, 15).immutable();
                     if (Range.closed(7, 8).containsAll(ImmutableList.of(convertNegativeCoordinate(otherSide.getX()), convertNegativeCoordinate(otherSide.getY())))) {
-                        innerRealm.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 2));
+                        innerRealm.setBlockAndUpdate(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().defaultBlockState().setValue(AstralMeridian.DIRECTION, 2));
                     }
                     else {
-                        innerRealm.setBlockState(otherSide, AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                        innerRealm.setBlockAndUpdate(otherSide, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState());
                     }
                 });
 
         //YZ Plane
-        BlockPos.getAllInBox(chunk.asBlockPos().add(0, innerRealm.getSeaLevel(), 0), chunk.asBlockPos().add(0, innerRealm.getSeaLevel() + 15, 15))
+        BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel(), 0), chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel() + 15, 15))
                 .forEach(blockPos -> {
                     if (Range.closed(7, 8).containsAll(ImmutableList.of(convertNegativeCoordinate(blockPos.getY()), convertNegativeCoordinate(blockPos.getZ())))) {
-                        innerRealm.setBlockState(blockPos.toImmutable(), AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 3));
+                        innerRealm.setBlockAndUpdate(blockPos.immutable(), AstralBlocks.ASTRAL_MERIDIAN.get().defaultBlockState().setValue(AstralMeridian.DIRECTION, 3));
                     }
                     else {
-                        innerRealm.setBlockState(blockPos.toImmutable(), AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                        innerRealm.setBlockAndUpdate(blockPos.immutable(), AstralBlocks.EGO_MEMBRANE.get().defaultBlockState());
                     }
-                    BlockPos otherSide = blockPos.add(15, 0, 0).toImmutable();
+                    BlockPos otherSide = blockPos.offset(15, 0, 0).immutable();
                     if (Range.closed(7, 8).containsAll(ImmutableList.of(convertNegativeCoordinate(otherSide.getY()), convertNegativeCoordinate(otherSide.getZ())))) {
-                        innerRealm.setBlockState(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().getDefaultState().with(AstralMeridian.DIRECTION, 1));
+                        innerRealm.setBlockAndUpdate(otherSide, AstralBlocks.ASTRAL_MERIDIAN.get().defaultBlockState().setValue(AstralMeridian.DIRECTION, 1));
                     }
                     else {
-                        innerRealm.setBlockState(otherSide, AstralBlocks.EGO_MEMBRANE.get().getDefaultState());
+                        innerRealm.setBlockAndUpdate(otherSide, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState());
                     }
                 });
     }
@@ -95,22 +95,22 @@ public class InnerRealmUtils {
         switch (meridianDirection) {
             //North
             case 0:
-                BlockPos.getAllInBox(chunk.asBlockPos().add(1, world.getSeaLevel() + 1, 0), chunk.asBlockPos().add(14, world.getSeaLevel() + 14, 0)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
+                BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(1, world.getSeaLevel() + 1, 0), chunk.getWorldPosition().offset(14, world.getSeaLevel() + 14, 0)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
                 break;
 
             //South
             case 2:
-                BlockPos.getAllInBox(chunk.asBlockPos().add(1, world.getSeaLevel() + 1, 15), chunk.asBlockPos().add(14, world.getSeaLevel() + 14, 15)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
+                BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(1, world.getSeaLevel() + 1, 15), chunk.getWorldPosition().offset(14, world.getSeaLevel() + 14, 15)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
                 break;
 
             //East
             case 1:
-                BlockPos.getAllInBox(chunk.asBlockPos().add(15, world.getSeaLevel() + 1, 1), chunk.asBlockPos().add(15, world.getSeaLevel() + 14, 14)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
+                BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(15, world.getSeaLevel() + 1, 1), chunk.getWorldPosition().offset(15, world.getSeaLevel() + 14, 14)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
                 break;
 
             //West
             case 3:
-                BlockPos.getAllInBox(chunk.asBlockPos().add(0, world.getSeaLevel() + 1, 1), chunk.asBlockPos().add(0, world.getSeaLevel() + 14, 14)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
+                BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, world.getSeaLevel() + 1, 1), chunk.getWorldPosition().offset(0, world.getSeaLevel() + 14, 14)).forEach(blockPos -> innerRealm.destroyBlock(blockPos, false));
                 break;
 
             default:
@@ -119,6 +119,6 @@ public class InnerRealmUtils {
     }
 
     private static ServerWorld getInnerRealm(ServerWorld world) {
-        return world.getServer().getWorld(AstralDimensions.INNER_REALM);
+        return world.getServer().getLevel(AstralDimensions.INNER_REALM);
     }
 }

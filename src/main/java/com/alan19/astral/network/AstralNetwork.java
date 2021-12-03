@@ -87,11 +87,11 @@ public class AstralNetwork {
     }
 
     public static void sendAstralEffectStarting(EffectInstance effectInstance, Entity astralEntity) {
-        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getEntityId(), effectInstance));
+        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getId(), effectInstance));
     }
 
     public static void sendAstralEffectEnding(Entity astralEntity) {
-        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getEntityId()));
+        Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StopTrackingAstralPotionMessage(astralEntity.getId()));
     }
 
     public static void sendUpdateInputMessage(boolean upNow, boolean downNow, boolean forwardsNow, boolean backwardsNow, boolean leftNow, boolean rightNow, boolean sprintNow) {
@@ -99,11 +99,11 @@ public class AstralNetwork {
     }
 
     public static void sendClientAstralTravelStart(ServerPlayerEntity playerEntity, ISleepManager sleepManager) {
-        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelStarting(playerEntity.getEntityId(), sleepManager));
+        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelStarting(playerEntity.getId(), sleepManager));
     }
 
     public static void sendClientAstralTravelEnd(ServerPlayerEntity playerEntity) {
-        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelEnding(playerEntity.getEntityId()));
+        Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelEnding(playerEntity.getId()));
     }
 
     public static void sendOfferingBrazierFinishParticles(BlockPos blockPos, Chunk chunk) {

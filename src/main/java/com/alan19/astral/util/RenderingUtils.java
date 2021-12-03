@@ -17,6 +17,6 @@ public class RenderingUtils {
 
     @OnlyIn(Dist.CLIENT)
     public static void reloadRenderers() {
-        Minecraft.getInstance().worldRenderer.loadRenderers();
+        Minecraft.getInstance().levelRenderer.allChanged();
     }
 }

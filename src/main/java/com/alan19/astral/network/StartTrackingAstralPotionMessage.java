@@ -40,10 +40,10 @@ public class StartTrackingAstralPotionMessage {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world -> {
-                        Entity clientEntity = world.getEntityByID(message.entityID);
+                        Entity clientEntity = world.getEntity(message.entityID);
                         if (clientEntity instanceof LivingEntity) {
-                            LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(message.entityID);
-                            clientLivingEntity.addPotionEffect(message.potionEffect);
+                            LivingEntity clientLivingEntity = (LivingEntity) world.getEntity(message.entityID);
+                            clientLivingEntity.addEffect(message.potionEffect);
                         }
                     }
             );

@@ -19,7 +19,7 @@ public class BlockRenderHandler {
     }
 
     public static void setRenderLayers() {
-        RenderType cutout = RenderType.getCutout();
+        RenderType cutout = RenderType.cutout();
         RenderTypeLookup.setRenderLayer(FEVERWEED_BLOCK.get(), cutout);
         RenderTypeLookup.setRenderLayer(SNOWBERRY_BUSH.get(), cutout);
         RenderTypeLookup.setRenderLayer(OFFERING_BRAZIER.get(), cutout);
@@ -34,6 +34,6 @@ public class BlockRenderHandler {
 
     public static void setupBlockColors() {
         BlockColors blockColors = new BlockColors();
-        blockColors.register((state, reader, pos, color) -> RedstoneWireBlock.getRGBByPower(15), ETHERIC_POWDER.get());
+        blockColors.register((state, reader, pos, color) -> RedstoneWireBlock.getColorForPower(15), ETHERIC_POWDER.get());
     }
 }

@@ -152,9 +152,9 @@ public class Astral {
 
     @OnlyIn(Dist.CLIENT)
     public void registerParticleFactories(ParticleFactoryRegisterEvent event) {
-        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
-        Minecraft.getInstance().particles.registerFactory(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);
-        Minecraft.getInstance().particles.registerFactory(AstralParticles.INTENTION_BEAM_PARTICLE.get(), IntentionBeamParticle.Factory::new);
+        Minecraft.getInstance().particleEngine.register(AstralParticles.ETHEREAL_REPLACE_PARTICLE.get(), spriteSetIn -> new EtherealReplaceParticle.Factory());
+        Minecraft.getInstance().particleEngine.register(AstralParticles.ETHEREAL_FLAME.get(), EtherealFlame.Factory::new);
+        Minecraft.getInstance().particleEngine.register(AstralParticles.INTENTION_BEAM_PARTICLE.get(), IntentionBeamParticle.Factory::new);
     }
 
     public void newRegistry(RegistryEvent.NewRegistry newRegistry) {

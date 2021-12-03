@@ -14,8 +14,8 @@ public class CrystalSpiderGlidingGoal extends RandomWalkingGoal {
 
 
     @Override
-    public boolean shouldExecute() {
-        return entityIn.getPosY() < 128;
+    public boolean canUse() {
+        return entityIn.getY() < 128;
     }
 
     @Override

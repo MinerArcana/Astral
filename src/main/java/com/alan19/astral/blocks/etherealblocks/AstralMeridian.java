@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class AstralMeridian extends Block implements Ethereal {
 
     /**
@@ -32,37 +34,37 @@ public class AstralMeridian extends Block implements Ethereal {
     public static final IntegerProperty DIRECTION = IntegerProperty.create("direction", 0, 3);
 
     public AstralMeridian() {
-        super(Properties.create(Material.PORTAL)
-                .hardnessAndResistance(-1.0F, 3600000.0F)
+        super(Properties.of(Material.PORTAL)
+                .strength(-1.0F, 3600000.0F)
                 .noDrops()
-                .setLightLevel(value -> 14));
+                .lightLevel(value -> 14));
 
-        this.setDefaultState(this.getStateContainer().getBaseState().with(DIRECTION, 0));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(DIRECTION, 0));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(DIRECTION));
-    }
-
-    @Override
-    @ParametersAreNonnullByDefault
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        worldIn.setBlockState(pos, AstralBlocks.EGO_MEMBRANE.get().getDefaultState(), 2);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(DIRECTION));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (handIn == Hand.MAIN_HAND && player.getHeldItem(handIn).isEmpty()) {
-            player.removePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        worldIn.setBlock(pos, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState(), 2);
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (handIn == Hand.MAIN_HAND && player.getItemInHand(handIn).isEmpty()) {
+            player.removeEffect(AstralEffects.ASTRAL_TRAVEL.get());
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.IGNORE;
     }
 }

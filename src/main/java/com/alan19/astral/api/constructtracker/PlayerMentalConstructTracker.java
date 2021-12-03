@@ -33,15 +33,15 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         RegistryKey<World> oldConstructWorld = entry.getDimensionKey();
         if (oldConstructWorld != null) {
             BlockPos oldPos = entry.getConstructPos();
-            final BlockState blockState = world.getServer().getWorld(oldConstructWorld).getBlockState(oldPos);
+            final BlockState blockState = world.getServer().getLevel(oldConstructWorld).getBlockState(oldPos);
             if (blockState.getProperties().contains(Constants.TRACKED_CONSTRUCT)) {
-                blockState.with(Constants.TRACKED_CONSTRUCT, false);
+                blockState.setValue(Constants.TRACKED_CONSTRUCT, false);
             }
         }
         entry.setLevel(level);
         entry.setConstructPos(pos);
         entry.setDimensionKey(world);
-        world.getBlockState(pos).with(Constants.TRACKED_CONSTRUCT, true);
+        world.getBlockState(pos).setValue(Constants.TRACKED_CONSTRUCT, true);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        for (String mentalConstructKey : nbt.keySet()) {
+        for (String mentalConstructKey : nbt.getAllKeys()) {
             final ResourceLocation resourceLocation = new ResourceLocation(mentalConstructKey);
             if (AstralAPI.MENTAL_CONSTRUCT_TYPES.get().containsKey(resourceLocation)) {
                 MentalConstruct construct = AstralAPI.MENTAL_CONSTRUCT_TYPES.get().getValue(resourceLocation).create();

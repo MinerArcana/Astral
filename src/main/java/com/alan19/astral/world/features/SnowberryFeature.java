@@ -31,7 +31,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean generate(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
+    public boolean place(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
 /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
@@ -43,18 +43,18 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
             int centerX = pos.getX() + rand.nextInt(16);
             int centerZ = pos.getZ() + rand.nextInt(16);
 
-            BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState();
+            BlockState snowberries = AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState();
             for (int tries = 0; tries < 40 && spawned < numberOfPlants; tries++) {
                 int dist = (int) Math.ceil(Math.sqrt(config.getMaxPatchSize())) / 2 + 1;
                 int x = centerX + rand.nextInt(dist * 2) - dist;
                 int z = centerZ + rand.nextInt(dist * 2) - dist;
                 int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
-                if (worldIn.isAirBlock(generatingPos) && (worldIn.getWorld().getDimensionKey() != World.THE_NETHER || generatingPos.getY() < worldIn.getWorld().getHeight()) && snowberries.isValidPosition(worldIn, generatingPos)) {
+                if (worldIn.isEmptyBlock(generatingPos) && (worldIn.getLevel().dimension() != World.NETHER || generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight()) && snowberries.canSurvive(worldIn, generatingPos)) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
-                else if ((worldIn.getWorld().getDimensionKey() != World.THE_NETHER || (generatingPos.getY() < worldIn.getWorld().getHeight())) && (snowberries.isValidPosition(worldIn, generatingPos.down()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+                else if ((worldIn.getLevel().dimension() != World.NETHER || (generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight())) && (snowberries.canSurvive(worldIn, generatingPos.below()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
@@ -64,13 +64,13 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
     }
 
     private int spawnSnowberries(@Nonnull IWorld worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
-        worldIn.setBlockState(generatingPos.down(), Blocks.SNOW_BLOCK.getDefaultState(), 2);
-        worldIn.setBlockState(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().getDefaultState(), 2);
+        worldIn.setBlock(generatingPos.below(), Blocks.SNOW_BLOCK.defaultBlockState(), 2);
+        worldIn.setBlock(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState(), 2);
         spawned++;
         for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
             int layerLevel = rand.nextInt(4);
-            if (worldIn.isAirBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.getDefaultState().isValidPosition(worldIn, adjacentPos)) {
-                worldIn.setBlockState(adjacentPos, Blocks.SNOW.getStateContainer().getBaseState().with(BlockStateProperties.LAYERS_1_8, layerLevel), 2);
+            if (worldIn.isEmptyBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.defaultBlockState().canSurvive(worldIn, adjacentPos)) {
+                worldIn.setBlock(adjacentPos, Blocks.SNOW.getStateDefinition().any().setValue(BlockStateProperties.LAYERS, layerLevel), 2);
             }
         }
         return spawned;

@@ -7,6 +7,6 @@ import net.minecraftforge.common.ToolType;
 
 public class MetaphoricStone extends EtherealBlock implements Ethereal {
     public MetaphoricStone() {
-        super(Block.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F).harvestTool(ToolType.PICKAXE).harvestLevel(0).notSolid());
+        super(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F).harvestTool(ToolType.PICKAXE).harvestLevel(0).noOcclusion());
     }
 }

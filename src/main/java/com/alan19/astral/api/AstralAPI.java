@@ -74,7 +74,7 @@ public class AstralAPI {
     }
 
     public static ServerWorld getOverworld(ServerWorld world) {
-        return world.getServer().getWorld(World.OVERWORLD);
+        return world.getServer().getLevel(World.OVERWORLD);
     }
 
     @Nullable

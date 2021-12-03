@@ -26,34 +26,36 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SnowberryBush extends SweetBerryBushBlock {
 
     public SnowberryBush() {
-        super(Properties.create(Material.PLANTS)
-                .sound(SoundType.PLANT)
-                .tickRandomly()
-                .hardnessAndResistance(0.2f)
-                .notSolid());
+        super(Properties.of(Material.PLANT)
+                .sound(SoundType.GRASS)
+                .randomTicks()
+                .strength(0.2f)
+                .noOcclusion());
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, IBlockReader worldIn, BlockPos pos) {
         Block block = state.getBlock();
         return AstralTags.SNOWBERRY_SUSTAIN.contains(block);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        BlockPos blockpos = pos.down();
-        return this.isValidGround(worldIn.getBlockState(blockpos), worldIn, blockpos);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        BlockPos blockpos = pos.below();
+        return this.mayPlaceOn(worldIn.getBlockState(blockpos), worldIn, blockpos);
     }
 
     @Nonnull
     @Override
     @ParametersAreNonnullByDefault
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
         return new ItemStack(AstralItems.SNOWBERRY.get().asItem());
     }
 
@@ -73,30 +75,30 @@ public class SnowberryBush extends SweetBerryBushBlock {
     @Nonnull
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        int age = state.get(AGE);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        int age = state.getValue(AGE);
         boolean readyToHarvest = age == 3;
-        if (!readyToHarvest && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {
+        if (!readyToHarvest && player.getItemInHand(handIn).getItem() == Items.BONE_MEAL) {
             return ActionResultType.PASS;
         }
         else if (age > 1) {
-            int j = 1 + worldIn.rand.nextInt(2);
-            spawnAsEntity(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.get().asItem(), j + (readyToHarvest ? 1 : 0)));
-            worldIn.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
-            worldIn.setBlockState(pos, state.with(AGE, 1), 2);
+            int j = 1 + worldIn.random.nextInt(2);
+            popResource(worldIn, pos, new ItemStack(AstralItems.SNOWBERRY.get().asItem(), j + (readyToHarvest ? 1 : 0)));
+            worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
+            worldIn.setBlock(pos, state.setValue(AGE, 1), 2);
             return ActionResultType.SUCCESS;
         }
         else {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        int i = state.get(AGE);
-        if (i < 3 && worldIn.getLightSubtracted(pos.up(), 0) >= 9 && ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt(5) == 0)) {
-            worldIn.setBlockState(pos, state.with(AGE, i + 1), 2);
+        int i = state.getValue(AGE);
+        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt(5) == 0)) {
+            worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
             spreadSnow(worldIn, pos, rand);
             ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
@@ -104,17 +106,17 @@ public class SnowberryBush extends SweetBerryBushBlock {
 
     public void spreadSnow(ServerWorld worldIn, BlockPos pos, Random rand) {
         if (rand.nextInt(AstralConfig.getWorldgenSettings().snowberrySpreadSnowChance.get()) == 0) {
-            BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 0, 1))
+            BlockPos.betweenClosedStream(pos.offset(-1, 0, -1), pos.offset(1, 0, 1))
                     .filter(blockPos -> isBlockAirOrSnow(blockPos, worldIn))
-                    .map(blockPos -> getPosSnowLevelPair(blockPos.toImmutable(), worldIn))
+                    .map(blockPos -> getPosSnowLevelPair(blockPos.immutable(), worldIn))
                     .min(Comparator.comparing(Pair::getRight))
                     .ifPresent(blockPosIntegerPair -> {
                         final BlockState blockState = worldIn.getBlockState(blockPosIntegerPair.getLeft());
                         if (blockState.getBlock() == Blocks.AIR) {
-                            worldIn.setBlockState(blockPosIntegerPair.getLeft(), Blocks.SNOW.getDefaultState(), 2);
+                            worldIn.setBlock(blockPosIntegerPair.getLeft(), Blocks.SNOW.defaultBlockState(), 2);
                         }
                         else if (blockState.getBlock() == Blocks.SNOW) {
-                            worldIn.setBlockState(blockPosIntegerPair.getLeft(), blockState.with(SnowBlock.LAYERS, blockState.get(SnowBlock.LAYERS) + 1), 2);
+                            worldIn.setBlock(blockPosIntegerPair.getLeft(), blockState.setValue(SnowBlock.LAYERS, blockState.getValue(SnowBlock.LAYERS) + 1), 2);
                         }
                     });
         }
@@ -122,7 +124,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
 
     private boolean isBlockAirOrSnow(BlockPos blockPos, ServerWorld worldIn) {
         BlockState state = worldIn.getBlockState(blockPos);
-        return Blocks.SNOW.getDefaultState().isValidPosition(worldIn, blockPos) && (state.getBlock() == Blocks.SNOW ? state.get(SnowBlock.LAYERS) < 8 : state.getBlock() == Blocks.AIR);
+        return Blocks.SNOW.defaultBlockState().canSurvive(worldIn, blockPos) && (state.getBlock() == Blocks.SNOW ? state.getValue(SnowBlock.LAYERS) < 8 : state.getBlock() == Blocks.AIR);
     }
 
     private Pair<BlockPos, Integer> getPosSnowLevelPair(BlockPos pos, ServerWorld worldIn) {
@@ -130,15 +132,15 @@ public class SnowberryBush extends SweetBerryBushBlock {
             return Pair.of(pos, 0);
         }
         else if (worldIn.getBlockState(pos).getBlock() == Blocks.SNOW) {
-            return Pair.of(pos, worldIn.getBlockState(pos).get(SnowBlock.LAYERS));
+            return Pair.of(pos, worldIn.getBlockState(pos).getValue(SnowBlock.LAYERS));
         }
         return Pair.of(pos, -1);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        super.grow(worldIn, rand, pos, state);
+    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+        super.performBonemeal(worldIn, rand, pos, state);
         spreadSnow(worldIn, pos, rand);
     }
 }

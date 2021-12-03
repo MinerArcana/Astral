@@ -55,7 +55,7 @@ public class Blockstates extends BlockStateProvider {
         simpleBlock(INDEX_OF_KNOWLEDGE.get(), new ModelFile.ExistingModelFile(modLoc("block/index_of_knowledge"), exFileHelper));
         simpleBlock(CRYSTAL_WEB.get(), new ConfiguredModel(models().cross("crystal_web", modLoc("block/crystal_web"))));
 
-        getVariantBuilder(SNOWBERRY_BUSH.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/snowberry_bush_" + state.get(SweetBerryBushBlock.AGE)), exFileHelper)).build());
+        getVariantBuilder(SNOWBERRY_BUSH.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/snowberry_bush_" + state.getValue(SweetBerryBushBlock.AGE)), exFileHelper)).build());
 
         simpleCross(FEVERWEED_BLOCK);
 
@@ -95,7 +95,7 @@ public class Blockstates extends BlockStateProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
-        super.act(cache);
+    public void run(DirectoryCache cache) throws IOException {
+        super.run(cache);
     }
 }

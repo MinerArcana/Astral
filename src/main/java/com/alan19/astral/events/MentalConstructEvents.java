@@ -19,15 +19,15 @@ public class MentalConstructEvents {
     @SubscribeEvent
     public static void passiveMentalConstructs(TickEvent.PlayerTickEvent event) {
         if (event.player instanceof ServerPlayerEntity) {
-            AstralAPI.getConstructTracker(((ServerPlayerEntity) event.player).getServerWorld()).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(event.player).performAllPassiveEffects(event.player));
+            AstralAPI.getConstructTracker(((ServerPlayerEntity) event.player).getLevel()).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(event.player).performAllPassiveEffects(event.player));
         }
     }
 
     @SubscribeEvent
     public static void libraryMinXP(LivingHealEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity && !((ServerPlayerEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+        if (event.getEntity() instanceof ServerPlayerEntity && !((ServerPlayerEntity) event.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) event.getEntity();
-            AstralAPI.getConstructTracker(playerEntity.getServerWorld()).ifPresent(tracker -> {
+            AstralAPI.getConstructTracker(playerEntity.getLevel()).ifPresent(tracker -> {
                 final Map<ResourceLocation, MentalConstruct> mentalConstructs = tracker.getMentalConstructsForPlayer(playerEntity).getMentalConstructs();
                 if (mentalConstructs.containsKey(AstralMentalConstructs.LIBRARY.getId())) {
                     final MentalConstruct libraryEntry = mentalConstructs.get(AstralMentalConstructs.LIBRARY.getId());

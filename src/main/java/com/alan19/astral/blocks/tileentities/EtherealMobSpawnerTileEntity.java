@@ -23,41 +23,41 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
 
         @Override
         public void broadcastEvent(int id) {
-            world.addBlockEvent(pos, Blocks.SPAWNER, id, 0);
+            level.blockEvent(worldPosition, Blocks.SPAWNER, id, 0);
         }
 
         @Override
-        public World getWorld() {
-            return world;
+        public World getLevel() {
+            return level;
         }
 
         @Nonnull
         @Override
-        public BlockPos getSpawnerPosition() {
-            return pos;
+        public BlockPos getPos() {
+            return worldPosition;
         }
 
         @Override
         public void setNextSpawnData(@Nonnull WeightedSpawnerEntity spawnerEntity) {
             super.setNextSpawnData(spawnerEntity);
-            if (this.getWorld() != null) {
-                BlockState blockState = this.getWorld().getBlockState(this.getSpawnerPosition());
-                this.getWorld().notifyBlockUpdate(pos, blockState, blockState, 4);
+            if (this.getLevel() != null) {
+                BlockState blockState = this.getLevel().getBlockState(this.getPos());
+                this.getLevel().sendBlockUpdated(worldPosition, blockState, blockState, 4);
             }
         }
 
         @Override
-        public boolean isActivated() {
-            return isAstralPlayerNearby((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, super.activatingRangeFromPlayer);
+        public boolean isNearPlayer() {
+            return isAstralPlayerNearby((double) worldPosition.getX() + 0.5D, (double) worldPosition.getY() + 0.5D, (double) worldPosition.getZ() + 0.5D, super.requiredPlayerRange);
         }
 
         private boolean isAstralPlayerNearby(double x, double y, double z, double range) {
-            if (world != null && range >= 0) {
-                return world.getPlayers().stream()
-                        .filter(EntityPredicates.IS_LIVING_ALIVE)
-                        .filter(EntityPredicates.NOT_SPECTATING)
-                        .filter(playerEntity -> playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()))
-                        .anyMatch(playerEntity -> playerEntity.getDistanceSq(x, y, z) <= range * range);
+            if (level != null && range >= 0) {
+                return level.players().stream()
+                        .filter(EntityPredicates.LIVING_ENTITY_STILL_ALIVE)
+                        .filter(EntityPredicates.NO_SPECTATORS)
+                        .filter(playerEntity -> playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()))
+                        .anyMatch(playerEntity -> playerEntity.distanceToSqr(x, y, z) <= range * range);
             }
             return false;
         }
@@ -69,16 +69,16 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
 
     @Override
     @ParametersAreNonnullByDefault
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
-        this.spawnerLogic.read(nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
+        this.spawnerLogic.load(nbt);
     }
 
     @Override
     @Nonnull
-    public CompoundNBT write(@Nonnull CompoundNBT compound) {
-        super.write(compound);
-        this.spawnerLogic.write(compound);
+    public CompoundNBT save(@Nonnull CompoundNBT compound) {
+        super.save(compound);
+        this.spawnerLogic.save(compound);
         return compound;
     }
 
@@ -94,31 +94,31 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 1, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 1, this.getUpdateTag());
     }
 
     @Override
     @Nonnull
     public CompoundNBT getUpdateTag() {
-        CompoundNBT compoundnbt = this.write(new CompoundNBT());
+        CompoundNBT compoundnbt = this.save(new CompoundNBT());
         compoundnbt.remove("SpawnPotentials");
         return compoundnbt;
     }
 
     @Override
-    public boolean receiveClientEvent(int id, int type) {
-        return this.spawnerLogic.setDelayToMin(id) || super.receiveClientEvent(id, type);
+    public boolean triggerEvent(int id, int type) {
+        return this.spawnerLogic.onEventTriggered(id) || super.triggerEvent(id, type);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        if (world != null) {
-            this.read(world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        if (level != null) {
+            this.load(level.getBlockState(pkt.getPos()), pkt.getTag());
         }
     }
 
     @Override
-    public boolean onlyOpsCanSetNbt() {
+    public boolean onlyOpCanSetNbt() {
         return true;
     }
 

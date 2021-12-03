@@ -17,26 +17,26 @@ import javax.annotation.Nullable;
 public class BrazierRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<BrazierRecipe> {
     @Nonnull
     @Override
-    public BrazierRecipe read(@Nonnull ResourceLocation recipeId, JsonObject json) {
+    public BrazierRecipe fromJson(@Nonnull ResourceLocation recipeId, JsonObject json) {
         final int cookTime = json.get("cookTime").getAsInt();
-        final Ingredient input = Ingredient.deserialize(json.get("input"));
-        final ItemStack result = ShapedRecipe.deserializeItem(json.getAsJsonObject("result"));
+        final Ingredient input = Ingredient.fromJson(json.get("input"));
+        final ItemStack result = ShapedRecipe.itemFromJson(json.getAsJsonObject("result"));
         return new BrazierRecipe(AstralRecipeTypes.BRAZIER_RECIPE, recipeId, cookTime, result, input);
     }
 
     @Nullable
     @Override
-    public BrazierRecipe read(@Nonnull ResourceLocation recipeId, PacketBuffer buffer) {
+    public BrazierRecipe fromNetwork(@Nonnull ResourceLocation recipeId, PacketBuffer buffer) {
         int cookTime = buffer.readInt();
-        ItemStack result = buffer.readItemStack();
-        Ingredient input = Ingredient.read(buffer);
+        ItemStack result = buffer.readItem();
+        Ingredient input = Ingredient.fromNetwork(buffer);
         return new BrazierRecipe(AstralRecipeTypes.BRAZIER_RECIPE, recipeId, cookTime, result, input);
     }
 
     @Override
-    public void write(PacketBuffer buffer, BrazierRecipe recipe) {
+    public void toNetwork(PacketBuffer buffer, BrazierRecipe recipe) {
         buffer.writeInt(recipe.getCookTime());
-        buffer.writeItemStack(recipe.getRecipeOutput());
-        recipe.getIngredient().write(buffer);
+        buffer.writeItem(recipe.getResultItem());
+        recipe.getIngredient().toNetwork(buffer);
     }
 }

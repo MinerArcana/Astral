@@ -53,7 +53,7 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void add(Attribute attribute, String name) {
-        add("attribute.name." + attribute.getAttributeName(), name);
+        add("attribute.name." + attribute.getDescriptionId(), name);
     }
 
     private void addEntities() {

@@ -46,10 +46,10 @@ public class AstralFeatures {
     // Adds features from biomes
     public static void addFeatures(BiomeLoadingEvent event) {
         if (event.getCategory() == Biome.Category.TAIGA) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_SNOWBERRY);
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_SNOWBERRY);
         }
         if (event.getCategory() == Biome.Category.JUNGLE) {
-            event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED);
+            event.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED);
         }
         if (event.getCategory() == Biome.Category.OCEAN) {
             event.getGeneration().getStructures().add(() -> AstralConfiguredFeatures.CONFIGURED_ETHERIC_ISLE);
@@ -60,10 +60,10 @@ public class AstralFeatures {
     public static void addDimensionSpacing(WorldEvent.Load event) {
         if (event.getWorld() instanceof ServerWorld) {
             ServerWorld serverWorld = (ServerWorld) event.getWorld();
-            if (!(serverWorld.getChunkProvider().getChunkGenerator() instanceof FlatChunkGenerator) && serverWorld.getDimensionKey().equals(World.OVERWORLD)) {
-                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkProvider().generator.func_235957_b_().func_236195_a_());
-                tempMap.put(AstralStructures.ETHERIC_ISLE.get(), DimensionStructuresSettings.field_236191_b_.get(AstralStructures.ETHERIC_ISLE.get()));
-                serverWorld.getChunkProvider().generator.func_235957_b_().field_236193_d_ = tempMap;
+            if (!(serverWorld.getChunkSource().getGenerator() instanceof FlatChunkGenerator) && serverWorld.dimension().equals(World.OVERWORLD)) {
+                Map<Structure<?>, StructureSeparationSettings> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
+                tempMap.put(AstralStructures.ETHERIC_ISLE.get(), DimensionStructuresSettings.DEFAULTS.get(AstralStructures.ETHERIC_ISLE.get()));
+                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
             }
         }
     }

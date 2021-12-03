@@ -21,7 +21,7 @@ public class AstralTravelRendering {
 
     @SubscribeEvent
     public static void reloadWhenAstralTravelEnds(TickEvent.ClientTickEvent event) {
-        if (Minecraft.getInstance().player != null && RenderingUtils.shouldReloadRenderers() && !Minecraft.getInstance().player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+        if (Minecraft.getInstance().player != null && RenderingUtils.shouldReloadRenderers() && !Minecraft.getInstance().player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
             RenderingUtils.reloadRenderers();
             RenderingUtils.setReloadRenderers(false);
         }
@@ -42,8 +42,8 @@ public class AstralTravelRendering {
     @SubscribeEvent(receiveCanceled = true)
     public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.getRenderViewEntity() instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) minecraft.getRenderViewEntity();
+        if (minecraft.getCameraEntity() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) minecraft.getCameraEntity();
             if (TravelEffects.isEntityAstral(playerEntity)) {
                 //Cancel rendering of hunger bar
                 if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
@@ -55,7 +55,7 @@ public class AstralTravelRendering {
                 }
             }
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
-                if (playerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
+                if (playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
                     AstralHealthBarRendering.renderAstralScreenFade(event.getMatrixStack(), iSleepManager.getSleep());
                 }
             });

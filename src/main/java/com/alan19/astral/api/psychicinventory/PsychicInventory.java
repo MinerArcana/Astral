@@ -23,7 +23,7 @@ public class PsychicInventory implements IPsychicInventory {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        for (String s : nbt.getCompound(PSYCHIC_INVENTORIES).keySet()) {
+        for (String s : nbt.getCompound(PSYCHIC_INVENTORIES).getAllKeys()) {
             final PsychicInventoryInstance psychicInventoryInstance = new PsychicInventoryInstance();
             psychicInventoryInstance.deserialize(nbt.getCompound(PSYCHIC_INVENTORIES).getCompound(s));
             playerInventoriesMap.put(UUID.fromString(s), psychicInventoryInstance);

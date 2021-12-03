@@ -11,10 +11,10 @@ public class EtherealSaplingIntentionTrackerBehavior implements IIntentionTracke
     @Override
     public void onIntentionBeamHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
         if (playerEntity instanceof ServerPlayerEntity && ExperienceHelper.getPlayerXP(playerEntity) >= 10) {
-            playerEntity.experienceTotal -= 10;
+            playerEntity.totalExperience -= 10;
             final ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
             SaplingBlock block = (SaplingBlock) blockState.getBlock();
-            block.grow(serverPlayerEntity.getServerWorld(), serverPlayerEntity.getServerWorld().getRandom(), result.getPos(), blockState);
+            block.performBonemeal(serverPlayerEntity.getLevel(), serverPlayerEntity.getLevel().getRandom(), result.getBlockPos(), blockState);
         }
     }
 }

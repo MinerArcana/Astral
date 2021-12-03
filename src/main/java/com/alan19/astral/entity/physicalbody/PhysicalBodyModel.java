@@ -8,12 +8,12 @@ public class PhysicalBodyModel extends PlayerModel<PhysicalBodyEntity> {
     }
 
     @Override
-    public void setLivingAnimations(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         //Disable animations
     }
 
     @Override
-    public void setRotationAngles(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //Disable rotations
     }
 }

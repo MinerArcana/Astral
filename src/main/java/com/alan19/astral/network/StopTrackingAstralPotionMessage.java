@@ -31,10 +31,10 @@ public class StopTrackingAstralPotionMessage {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world -> {
-                        Entity clientEntity = world.getEntityByID(startTrackingAstralPotionMessage.entityID);
+                        Entity clientEntity = world.getEntity(startTrackingAstralPotionMessage.entityID);
                         if (clientEntity instanceof LivingEntity) {
-                            LivingEntity clientLivingEntity = (LivingEntity) world.getEntityByID(startTrackingAstralPotionMessage.entityID);
-                            clientLivingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                            LivingEntity clientLivingEntity = (LivingEntity) world.getEntity(startTrackingAstralPotionMessage.entityID);
+                            clientLivingEntity.removeEffectNoUpdate(AstralEffects.ASTRAL_TRAVEL.get());
                         }
                     }
             );

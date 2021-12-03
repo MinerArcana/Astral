@@ -33,13 +33,13 @@ public class ClientSetup {
 
     public static void clientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(GuiEventHandler.class);
-        EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
+        EntityRendererManager rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         rendererManager.register(AstralEntities.PHYSICAL_BODY_ENTITY.get(), new PhysicalBodyEntityRenderer(rendererManager));
         rendererManager.register(AstralEntities.CRYSTAL_SPIDER.get(), new CrystalSpiderRenderer(rendererManager));
         rendererManager.register(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), new SpriteRenderer<>(rendererManager, itemRenderer, 1, true));
         rendererManager.register(AstralEntities.INTENTION_BEAM_ENTITY.get(), new IntentionBeamRenderer(rendererManager));
-        ScreenManager.registerFactory(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), AstralInventoryScreen::new);
+        ScreenManager.register(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), AstralInventoryScreen::new);
         registerKeybinds();
     }
 }

@@ -30,26 +30,26 @@ public class AstralEntities {
     }
 
     private static EntityType<IntentionBeam> getIntentionBeam() {
-        EntityType.Builder<IntentionBeam> intentionBeamBuilder = EntityType.Builder.create(IntentionBeam::new, EntityClassification.MISC);
-        intentionBeamBuilder.size(1F, 1F);
+        EntityType.Builder<IntentionBeam> intentionBeamBuilder = EntityType.Builder.of(IntentionBeam::new, EntityClassification.MISC);
+        intentionBeamBuilder.sized(1F, 1F);
         return intentionBeamBuilder.build(CRYSTAL_WEB_NAME);
     }
 
     private static EntityType<CrystalWebProjectileEntity> getCrystalWeb() {
-        EntityType.Builder<CrystalWebProjectileEntity> crystalWebProjectileEntityBuilder = EntityType.Builder.create(CrystalWebProjectileEntity::new, EntityClassification.MISC);
-        crystalWebProjectileEntityBuilder.size(1F, 1F);
+        EntityType.Builder<CrystalWebProjectileEntity> crystalWebProjectileEntityBuilder = EntityType.Builder.of(CrystalWebProjectileEntity::new, EntityClassification.MISC);
+        crystalWebProjectileEntityBuilder.sized(1F, 1F);
         return crystalWebProjectileEntityBuilder.build(CRYSTAL_WEB_NAME);
     }
 
     private static EntityType<PhysicalBodyEntity> getPhysicalBody() {
-        return EntityType.Builder.create(PhysicalBodyEntity::new, EntityClassification.MISC)
-                .size(1.8F, .6F)
+        return EntityType.Builder.of(PhysicalBodyEntity::new, EntityClassification.MISC)
+                .sized(1.8F, .6F)
                 .build(PHYSICAL_BODY);
     }
 
     private static EntityType<CrystalSpiderEntity> getCrystalSpider() {
-        return EntityType.Builder.create(CrystalSpiderEntity::new, EntityClassification.MONSTER)
-                .size(0.7F, 0.5F)
+        return EntityType.Builder.of(CrystalSpiderEntity::new, EntityClassification.MONSTER)
+                .sized(0.7F, 0.5F)
                 .build("crystal_spider");
     }
 

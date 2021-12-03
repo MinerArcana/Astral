@@ -39,7 +39,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     }
 
     private void loadTemplate(TemplateManager templateManager) {
-        Template template = templateManager.getTemplateDefaulted(new ResourceLocation(Astral.MOD_ID, "astral_island/" + templateName));
+        Template template = templateManager.getOrCreate(new ResourceLocation(Astral.MOD_ID, "astral_island/" + templateName));
         PlacementSettings placementsettings = (new PlacementSettings()).setIgnoreEntities(true).setRotation(this.rotation).setMirror(this.mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK);
         this.setup(template, this.templatePosition, placementsettings);
     }
@@ -48,8 +48,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
      * (abstract) Helper method to read subclass data from NBT
      */
     @Override
-    protected void readAdditional(@Nonnull CompoundNBT tagCompound) {
-        super.readAdditional(tagCompound);
+    protected void addAdditionalSaveData(@Nonnull CompoundNBT tagCompound) {
+        super.addAdditionalSaveData(tagCompound);
         tagCompound.putString("Template", this.templateName);
         tagCompound.putInt("Variant", this.variant.getIndex());
         tagCompound.putString("Rot", this.placeSettings.getRotation().name());
@@ -58,8 +58,8 @@ public class AstralIslandPiece extends TemplateStructurePiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean func_230383_a_(ISeedReader seedReader, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox mutableBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
-        return super.func_230383_a_(seedReader, structureManager, chunkGenerator, random, mutableBoundingBox, chunkPos, blockPos);
+    public boolean postProcess(ISeedReader seedReader, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox mutableBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+        return super.postProcess(seedReader, structureManager, chunkGenerator, random, mutableBoundingBox, chunkPos, blockPos);
     }
 
     @Override

@@ -10,6 +10,6 @@ public class EthericPowderIntentionTrackerBehavior implements IIntentionTrackerB
     @Override
     public void onIntentionBeamHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
         EthericPowder ethericPowder = (EthericPowder) blockState.getBlock();
-        ethericPowder.onBlockActivated(blockState, playerEntity.getEntityWorld(), result.getPos(), playerEntity, Hand.MAIN_HAND, result);
+        ethericPowder.use(blockState, playerEntity.getCommandSenderWorld(), result.getBlockPos(), playerEntity, Hand.MAIN_HAND, result);
     }
 }

@@ -10,6 +10,6 @@ public interface IAstralDamage {
     }
 
     static boolean canDamageTypeDamageAstral(DamageSource source) {
-        return isDamageAstral(source) || source.isMagicDamage() || source.canHarmInCreative() || source.getDamageType().equals(DAMAGE_NAME);
+        return isDamageAstral(source) || source.isMagic() || source.isBypassInvul() || source.getMsgId().equals(DAMAGE_NAME);
     }
 }

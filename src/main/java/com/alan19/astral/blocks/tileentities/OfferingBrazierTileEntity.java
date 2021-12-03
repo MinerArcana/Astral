@@ -54,8 +54,8 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Override
     public void tick() {
-        if (world instanceof ServerWorld) {
-            if (world.getGameTime() % 10 == 0) {
+        if (level instanceof ServerWorld) {
+            if (level.getGameTime() % 10 == 0) {
                 updateOfferingBrazierInventory();
             }
             handler.ifPresent(inventory -> boundPlayer.ifPresent(uuid -> {
@@ -67,18 +67,18 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 }
                 else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
                     final ItemStack fuelInSlot = inventory.getStackInSlot(0);
-                    burnTicks += AbstractFurnaceTileEntity.getBurnTimes().get(fuelInSlot.getItem());
+                    burnTicks += AbstractFurnaceTileEntity.getFuel().get(fuelInSlot.getItem());
                     fuelInSlot.shrink(1);
                     updateOfferingBrazierInventory();
                 }
-                this.world.setBlockState(pos, this.getBlockState().with(AbstractFurnaceBlock.LIT, burnTicks > 0));
+                this.level.setBlockAndUpdate(worldPosition, this.getBlockState().setValue(AbstractFurnaceBlock.LIT, burnTicks > 0));
             }));
         }
     }
 
     private AbstractBrazierRecipe matchRecipe(ItemStack stackInSlot) {
-        if (world != null) {
-            return world.getRecipeManager().getRecipes().stream().filter(recipe -> recipe instanceof AbstractBrazierRecipe).map(recipe -> (AbstractBrazierRecipe) recipe).filter(recipe -> recipe.matches(stackInSlot)).findFirst().orElse(null);
+        if (level != null) {
+            return level.getRecipeManager().getRecipes().stream().filter(recipe -> recipe instanceof AbstractBrazierRecipe).map(recipe -> (AbstractBrazierRecipe) recipe).filter(recipe -> recipe.matches(stackInSlot)).findFirst().orElse(null);
         }
         return null;
     }
@@ -91,17 +91,17 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         else {
             progress++;
         }
-        if (progress >= 200 && boundPlayer.isPresent() && world != null) {
+        if (progress >= 200 && boundPlayer.isPresent() && level != null) {
             AbstractBrazierRecipe recipe = matchRecipe(inventory.getStackInSlot(1));
-            ItemStack output = recipe != null ? recipe.getRecipeOutput() : new ItemStack(lastStack.getItem());
-            this.world.setBlockState(pos, getBlockState().with(AbstractFurnaceBlock.LIT, true));
+            ItemStack output = recipe != null ? recipe.getResultItem() : new ItemStack(lastStack.getItem());
+            this.level.setBlockAndUpdate(worldPosition, getBlockState().setValue(AbstractFurnaceBlock.LIT, true));
 
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).ifPresent(overworldPsychicInventory -> {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) level).ifPresent(overworldPsychicInventory -> {
                 final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
                 ItemHandlerHelper.insertItemStacked(innerRealmMain, output, false);
                 lastStack.shrink(1);
             });
-            AstralNetwork.sendOfferingBrazierFinishParticles(pos, world.getChunkAt(pos));
+            AstralNetwork.sendOfferingBrazierFinishParticles(worldPosition, level.getChunkAt(worldPosition));
             updateOfferingBrazierInventory();
             progress = 0;
         }
@@ -113,7 +113,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     public void extractInsertItem(PlayerEntity playerEntity, Hand hand) {
         handler.ifPresent(inventory -> {
-            ItemStack held = playerEntity.getHeldItem(hand);
+            ItemStack held = playerEntity.getItemInHand(hand);
             if (!held.isEmpty()) {
                 insertItem(inventory, held);
             }
@@ -127,21 +127,21 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     public void extractItem(PlayerEntity playerEntity, IItemHandler inventory) {
         if (!inventory.getStackInSlot(1).isEmpty()) {
             ItemStack itemStack = inventory.extractItem(1, inventory.getStackInSlot(1).getCount(), false);
-            playerEntity.addItemStackToInventory(itemStack);
+            playerEntity.addItem(itemStack);
         }
         else if (!inventory.getStackInSlot(0).isEmpty()) {
             ItemStack itemStack = inventory.extractItem(0, inventory.getStackInSlot(0).getCount(), false);
-            playerEntity.addItemStackToInventory(itemStack);
+            playerEntity.addItem(itemStack);
         }
-        markDirty();
+        setChanged();
     }
 
     public void insertItem(IItemHandler brazierInventory, ItemStack heldItem) {
-        if (brazierInventory.isItemValid(0, heldItem) && !brazierInventory.insertItem(0, heldItem, true).isItemEqual(heldItem)) {
+        if (brazierInventory.isItemValid(0, heldItem) && !brazierInventory.insertItem(0, heldItem, true).sameItem(heldItem)) {
             final int leftover = brazierInventory.insertItem(0, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
         }
-        else if (brazierInventory.isItemValid(1, heldItem) && !brazierInventory.insertItem(1, heldItem, true).isItemEqual(heldItem)) {
+        else if (brazierInventory.isItemValid(1, heldItem) && !brazierInventory.insertItem(1, heldItem, true).sameItem(heldItem)) {
             final int leftover = brazierInventory.insertItem(1, heldItem.copy(), false).getCount();
             heldItem.setCount(leftover);
         }
@@ -162,7 +162,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
             @Override
             protected void onContentsChanged(int slot) {
-                markDirty();
+                setChanged();
             }
 
             @Override
@@ -171,8 +171,8 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                     return AbstractFurnaceTileEntity.isFuel(stack) && super.isItemValid(slot, stack);
                 }
                 else {
-                    final Block blockFromItem = Block.getBlockFromItem(stack.getItem());
-                    return !AbstractFurnaceTileEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.getDefaultState()) && super.isItemValid(slot, stack);
+                    final Block blockFromItem = Block.byItem(stack.getItem());
+                    return !AbstractFurnaceTileEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.defaultBlockState()) && super.isItemValid(slot, stack);
                 }
             }
         };
@@ -184,16 +184,16 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     public void updateOfferingBrazierInventory() {
         requestModelDataUpdate();
-        this.markDirty();
-        if (this.getWorld() != null) {
-            this.getWorld().notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), 3);
+        this.setChanged();
+        if (this.getLevel() != null) {
+            this.getLevel().sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
         }
     }
 
     @Nullable
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.getPos(), -1, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.getBlockPos(), -1, this.getUpdateTag());
     }
 
     @Override
@@ -203,8 +203,8 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
         CompoundNBT fuelSlot = new CompoundNBT();
         CompoundNBT itemSlot = new CompoundNBT();
-        itemHandler.getStackInSlot(0).write(fuelSlot);
-        itemHandler.getStackInSlot(1).write(itemSlot);
+        itemHandler.getStackInSlot(0).save(fuelSlot);
+        itemHandler.getStackInSlot(1).save(itemSlot);
         updateTag.put("fuel", fuelSlot);
         updateTag.put("item", itemSlot);
         return updateTag;
@@ -213,17 +213,17 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     @Override
     public void handleUpdateTag(BlockState state, CompoundNBT tag) {
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
-        ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.read(tag.getCompound("fuel")));
-        ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.read(tag.getCompound("item")));
+        ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.of(tag.getCompound("fuel")));
+        ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.of(tag.getCompound("item")));
     }
 
     @Override
-    public void read(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
+        super.load(state, nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
         boolean boundPlayerExists = nbt.getBoolean("boundPlayerExists");
-        boundPlayer = boundPlayerExists ? Optional.of(nbt.getUniqueId("boundPlayer")) : Optional.empty();
+        boundPlayer = boundPlayerExists ? Optional.of(nbt.getUUID("boundPlayer")) : Optional.empty();
         lastStack.deserializeNBT(nbt.getCompound("lastStack"));
         handler.ifPresent(iItemHandler -> {
             if (iItemHandler instanceof ItemStackHandler) {
@@ -234,12 +234,12 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Override
     @Nonnull
-    public CompoundNBT write(@Nonnull CompoundNBT nbt) {
-        super.write(nbt);
+    public CompoundNBT save(@Nonnull CompoundNBT nbt) {
+        super.save(nbt);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("progress", progress);
         nbt.putBoolean("boundPlayerExists", boundPlayer.isPresent());
-        boundPlayer.ifPresent(uuid -> nbt.putUniqueId("boundPlayer", uuid));
+        boundPlayer.ifPresent(uuid -> nbt.putUUID("boundPlayer", uuid));
         nbt.put("lastStack", lastStack.serializeNBT());
         handler.ifPresent(iItemHandler -> {
             if (iItemHandler instanceof ItemStackHandler) {

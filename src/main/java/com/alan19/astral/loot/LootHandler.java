@@ -15,7 +15,7 @@ public class LootHandler {
     @SubscribeEvent
     public static void lootLoad(LootTableLoadEvent event) {
 
-        if (event.getName().equals(EntityType.PHANTOM.getLootTable())) {
+        if (event.getName().equals(EntityType.PHANTOM.getDefaultLootTable())) {
             event.getTable().addPool(getInjectPool("phantom"));
         }
         if (event.getName().equals(new ResourceLocation("chests/shipwreck_supply"))){
@@ -24,14 +24,14 @@ public class LootHandler {
     }
 
     private static LootPool getInjectPool(String pool) {
-        return LootPool.builder()
-                .addEntry(getInjectEntry(pool, 1))
+        return LootPool.lootPool()
+                .add(getInjectEntry(pool, 1))
                 .name("astral_inject")
                 .build();
     }
 
     private static LootEntry.Builder<?> getInjectEntry(String name, int weight) {
         ResourceLocation injectedFolder = new ResourceLocation(Astral.MOD_ID, "inject/" + name);
-        return TableLootEntry.builder(injectedFolder).weight(weight);
+        return TableLootEntry.lootTableReference(injectedFolder).setWeight(weight);
     }
 }

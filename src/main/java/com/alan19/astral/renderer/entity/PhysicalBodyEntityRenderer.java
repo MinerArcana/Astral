@@ -32,7 +32,7 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
 
     @Nonnull
     @Override
-    public ResourceLocation getEntityTexture(PhysicalBodyEntity entity) {
+    public ResourceLocation getTextureLocation(PhysicalBodyEntity entity) {
         return entity.getGameProfile()
                 .map(this::getSkin)
                 .orElseGet(() -> new ResourceLocation("minecraft:textures/entity/steve.png"));
@@ -45,9 +45,9 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
         else {
             final Minecraft minecraft = Minecraft.getInstance();
             SkinManager skinManager = minecraft.getSkinManager();
-            final Map<Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.loadSkinFromCache(gameProfile); // returned map may or may not be typed
+            final Map<Type, MinecraftProfileTexture> loadSkinFromCache = skinManager.getInsecureSkinInformation(gameProfile); // returned map may or may not be typed
             if (loadSkinFromCache.containsKey(MinecraftProfileTexture.Type.SKIN)) {
-                return skinManager.loadSkin(loadSkinFromCache.get(Type.SKIN), Type.SKIN);
+                return skinManager.registerTexture(loadSkinFromCache.get(Type.SKIN), Type.SKIN);
             }
             else {
                 return DefaultPlayerSkin.getDefaultSkin(gameProfile.getId());
@@ -57,20 +57,20 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
 
     @Nonnull
     @Override
-    public PhysicalBodyModel getEntityModel() {
-        return super.getEntityModel();
+    public PhysicalBodyModel getModel() {
+        return super.getModel();
     }
 
     @Override
-    protected void applyRotations(PhysicalBodyEntity entityLiving, @Nonnull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
+    protected void setupRotations(PhysicalBodyEntity entityLiving, @Nonnull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
         float rotationDegrees = 90F;
         matrixStackIn.translate(0, .125, -1);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(rotationDegrees));
-        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(this.getDeathMaxRotation(entityLiving)));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(entityLiving.isFaceDown() ? 270F : 90F));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(rotationDegrees));
+        matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(this.getFlipDegrees(entityLiving)));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(entityLiving.isFaceDown() ? 270F : 90F));
 
-        super.applyRotations(entityLiving, matrixStackIn, 0, 0, 0);
+        super.setupRotations(entityLiving, matrixStackIn, 0, 0, 0);
     }
 
 }

@@ -21,39 +21,39 @@ import java.util.Random;
 
 public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     public MetaphoricFleshBlock() {
-        super(Block.Properties.create(Material.ORGANIC, MaterialColor.RED).hardnessAndResistance(2.0F).notSolid().tickRandomly());
+        super(Block.Properties.of(Material.GRASS, MaterialColor.COLOR_RED).strength(2.0F).noOcclusion().randomTicks());
     }
 
     @Override
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        if (worldIn.getDimensionKey() == AstralDimensions.INNER_REALM) {
+        if (worldIn.dimension() == AstralDimensions.INNER_REALM) {
             boolean didModify = false;
             final ImmutableList<BlockPos> adjacentBlockPos = getAdjacentBlockPos(pos);
             for (BlockPos blockPos : adjacentBlockPos) {
                 final BlockState blockState = worldIn.getBlockState(blockPos);
                 final Block block = blockState.getBlock();
                 if (block == AstralBlocks.ETHER_DIRT.get() && EtherGrass.canGrassSpread(blockState, worldIn, blockPos)) {
-                    worldIn.setBlockState(blockPos, AstralBlocks.ETHER_GRASS.get().getDefaultState());
+                    worldIn.setBlockAndUpdate(blockPos, AstralBlocks.ETHER_GRASS.get().defaultBlockState());
                     didModify = true;
                 }
                 else if (block == AstralBlocks.ETHER_GRASS.get()) {
                     IGrowable etherGrass = (IGrowable) block;
-                    if (etherGrass.canGrow(worldIn, blockPos, blockState, false)) {
-                        etherGrass.grow(worldIn, rand, blockPos, blockState);
+                    if (etherGrass.isValidBonemealTarget(worldIn, blockPos, blockState, false)) {
+                        etherGrass.performBonemeal(worldIn, rand, blockPos, blockState);
                         didModify = true;
                     }
                 }
             }
             if (didModify) {
-                worldIn.setBlockState(pos, Fluids.WATER.getDefaultState().getBlockState());
+                worldIn.setBlockAndUpdate(pos, Fluids.WATER.defaultFluidState().createLegacyBlock());
             }
         }
     }
 
     private ImmutableList<BlockPos> getAdjacentBlockPos(BlockPos pos) {
-        final BlockPos immutablePos = pos.toImmutable();
-        return ImmutableList.of(immutablePos.up(), immutablePos.down(), immutablePos.east(), immutablePos.west(), immutablePos.north(), immutablePos.south());
+        final BlockPos immutablePos = pos.immutable();
+        return ImmutableList.of(immutablePos.above(), immutablePos.below(), immutablePos.east(), immutablePos.west(), immutablePos.north(), immutablePos.south());
     }
 
     @Override
@@ -61,7 +61,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     @ParametersAreNonnullByDefault
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
         super.animateTick(stateIn, worldIn, pos, rand);
-        if (worldIn.getDimensionKey() == AstralDimensions.INNER_REALM && canWork(pos, worldIn)) {
+        if (worldIn.dimension() == AstralDimensions.INNER_REALM && canWork(pos, worldIn)) {
             for (int i = 0; i < 2; i++) {
                 final double x = pos.getX() + rand.nextDouble();
                 final double y = pos.getY() + rand.nextDouble();
@@ -79,7 +79,7 @@ public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
                 return true;
             }
             else if (block == AstralBlocks.ETHER_GRASS.get()){
-                return ((EtherGrass)block).canGrow(worldIn, blockPos, blockState, true);
+                return ((EtherGrass)block).isValidBonemealTarget(worldIn, blockPos, blockState, true);
             }
             else {
                 return false;

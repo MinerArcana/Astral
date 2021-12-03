@@ -10,7 +10,7 @@ public class AstralBiomeProvider extends BiomeProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) {
-        super.act(cache);
+    public void run(DirectoryCache cache) {
+        super.run(cache);
     }
 }

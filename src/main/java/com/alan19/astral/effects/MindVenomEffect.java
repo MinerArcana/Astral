@@ -15,24 +15,24 @@ public class MindVenomEffect extends Effect {
     }
 
     @Override
-    public void performEffect(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
+    public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
         if (entityLivingBaseIn instanceof PlayerEntity && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
             final PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
             if (playerEntity.experienceLevel <= 30) {
                 playerEntity.giveExperiencePoints(-5);
             }
             else {
-                playerEntity.giveExperiencePoints((int) Math.max(playerEntity.experienceTotal * .01, 1) * -1);
+                playerEntity.giveExperiencePoints((int) Math.max(playerEntity.totalExperience * .01, 1) * -1);
             }
         }
         else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) <= 0) {
-            entityLivingBaseIn.attackEntityFrom(DamageSource.MAGIC, 1.0F);
+            entityLivingBaseIn.hurt(DamageSource.MAGIC, 1.0F);
         }
 
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         int interval = 25 >> amplifier;
         return interval <= 0 || duration % interval == 0;
 

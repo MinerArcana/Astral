@@ -10,35 +10,37 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.item.Item.Properties;
+
 public class IntrospectionMedicine extends Item {
     public IntrospectionMedicine() {
         super(new Properties()
                 .food(new Food.Builder()
-                        .setAlwaysEdible()
-                        .hunger(1)
-                        .saturation(-2F)
+                        .alwaysEat()
+                        .nutrition(1)
+                        .saturationMod(-2F)
                         .build())
-                .group(AstralItems.ASTRAL_ITEMS)
-                .maxStackSize(1)
+                .tab(AstralItems.ASTRAL_ITEMS)
+                .stacksTo(1)
         );
     }
 
     @Nonnull
     @Override
-    public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
-            playerEntity.addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE));
+            playerEntity.addItem(new ItemStack(Items.BOWL));
+            playerEntity.addEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE));
             playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(cap -> cap.setGoingToInnerRealm(true));
         }
-        super.onItemUseFinish(stack, worldIn, entityLiving);
+        super.finishUsingItem(stack, worldIn, entityLiving);
         return ItemStack.EMPTY;
     }
 
     @Override
     @Nonnull
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
 }

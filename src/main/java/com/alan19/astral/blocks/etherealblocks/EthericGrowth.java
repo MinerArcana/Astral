@@ -19,19 +19,19 @@ import java.util.Random;
 
 public class EthericGrowth extends TallGrassBlock implements Ethereal {
     public EthericGrowth() {
-        super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0F).sound(SoundType.PLANT));
+        super(Block.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0F).sound(SoundType.GRASS));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
         return this == AstralBlocks.GENTLEGRASS.get() || this == AstralBlocks.WILDWEED.get() || this == AstralBlocks.CYANGRASS.get() || this == AstralBlocks.REDBULB.get();
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        if (worldIn.isAirBlock(pos.up())){
+    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+        if (worldIn.isEmptyBlock(pos.above())){
             if (this == AstralBlocks.GENTLEGRASS.get()){
                 AstralBlocks.TALL_GENTLEGRASS.get().placeAt(worldIn, pos, 2);
             }
@@ -49,8 +49,8 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -72,12 +72,12 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
 }

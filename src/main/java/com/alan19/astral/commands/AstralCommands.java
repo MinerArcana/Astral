@@ -28,7 +28,7 @@ public class AstralCommands {
 
     public static void registerCommands(CommandDispatcher<CommandSource> commandDispatcher) {
         //Burn command is structured similarly to vanilla's give command
-        final LiteralArgumentBuilder<CommandSource> burnCommand = Commands.literal("burn").requires(commandSource -> commandSource.hasPermissionLevel(2))
+        final LiteralArgumentBuilder<CommandSource> burnCommand = Commands.literal("burn").requires(commandSource -> commandSource.hasPermission(2))
                 .then(Commands.argument(TARGETS, EntityArgument.players())
                         .then(Commands.argument(ITEM, ItemArgument.item())
                                 .then(Commands.argument(COUNT, IntegerArgumentType.integer(1))
@@ -50,22 +50,22 @@ public class AstralCommands {
     private static int addItemToInnerRealmInventory(CommandSource source, Collection<ServerPlayerEntity> targets, ItemStack itemStack) throws CommandSyntaxException {
         // TODO Possibly simulate offering brazier recipes
         ItemStack copy = itemStack.copy();
-        AstralAPI.getOverworldPsychicInventory(source.asPlayer().getServerWorld()).ifPresent(iPsychicInventory -> {
+        AstralAPI.getOverworldPsychicInventory(source.getPlayerOrException().getLevel()).ifPresent(iPsychicInventory -> {
             targets.forEach(target -> {
-                final PsychicInventoryInstance playerInventory = iPsychicInventory.getInventoryOfPlayer(target.getUniqueID());
+                final PsychicInventoryInstance playerInventory = iPsychicInventory.getInventoryOfPlayer(target.getUUID());
                 //Insert directly into player inventory if they are using their inner realm inventory
-                if (playerInventory.getInventoryType() == InventoryType.ASTRAL && target.world.getDimensionKey() == AstralDimensions.INNER_REALM) {
-                    target.inventory.addItemStackToInventory(itemStack);
+                if (playerInventory.getInventoryType() == InventoryType.ASTRAL && target.level.dimension() == AstralDimensions.INNER_REALM) {
+                    target.inventory.add(itemStack);
                 }
                 else {
                     ItemHandlerHelper.insertItemStacked(playerInventory.getInnerRealmMain(), itemStack, false);
                 }
             });
             if (targets.size() == 1) {
-                source.sendFeedback(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_SINGLE, copy.getCount(), copy.getTextComponent(), targets.iterator().next().getDisplayName()), true);
+                source.sendSuccess(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_SINGLE, copy.getCount(), copy.getDisplayName(), targets.iterator().next().getDisplayName()), true);
             }
             else {
-                source.sendFeedback(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_MULTIPLE, copy.getCount(), copy.getTextComponent(), targets.size()), true);
+                source.sendSuccess(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_MULTIPLE, copy.getCount(), copy.getDisplayName(), targets.size()), true);
             }
         });
         return 0;

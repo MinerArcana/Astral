@@ -13,7 +13,7 @@ public class AstralInventoryButton extends ImageButton {
             if (!(gui instanceof AstralInventoryScreen)) {
                 if (gui instanceof InventoryScreen) {
                     InventoryScreen inventoryScreen = (InventoryScreen) gui;
-                    RecipeBookGui recipeBookGui = inventoryScreen.getRecipeGui();
+                    RecipeBookGui recipeBookGui = inventoryScreen.getRecipeBookComponent();
 
                     if (recipeBookGui.isVisible()) {
                         recipeBookGui.toggleVisibility();

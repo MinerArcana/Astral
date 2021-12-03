@@ -29,8 +29,8 @@ public class PotionRegistryGroup {
 
     private final Supplier<Ingredient> baseReagent;
     private Supplier<Potion> potionBase = () -> Potions.AWKWARD;
-    private Supplier<Ingredient> longReagent = () -> Ingredient.fromItems(Items.REDSTONE);
-    private Supplier<Ingredient> strongReagent = () -> Ingredient.fromItems(Items.GLOWSTONE_DUST);
+    private Supplier<Ingredient> longReagent = () -> Ingredient.of(Items.REDSTONE);
+    private Supplier<Ingredient> strongReagent = () -> Ingredient.of(Items.GLOWSTONE_DUST);
 
     public Optional<Potion> convertSupplierToOptional(RegistryObject<Potion> potion) {
         return Optional.ofNullable(potion)
@@ -90,7 +90,7 @@ public class PotionRegistryGroup {
 
     public PotionRegistryGroup addLongBrew(Supplier<Potion> longEffect, Supplier<IItemProvider> reagent) {
         this.longEffect = longEffect;
-        this.longReagent = () -> Ingredient.fromItems(reagent.get());
+        this.longReagent = () -> Ingredient.of(reagent.get());
         return this;
     }
 
@@ -101,7 +101,7 @@ public class PotionRegistryGroup {
 
     public PotionRegistryGroup addStrongBrew(Supplier<Potion> strongEffect, Supplier<IItemProvider> reagent) {
         this.strongEffect = strongEffect;
-        this.strongReagent = () -> Ingredient.fromItems(reagent.get());
+        this.strongReagent = () -> Ingredient.of(reagent.get());
         return this;
     }
 
@@ -111,17 +111,17 @@ public class PotionRegistryGroup {
     }
 
     private static ItemStack potionToItemStack(Potion potion) {
-        return PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), potion);
+        return PotionUtils.setPotion(new ItemStack(Items.POTION), potion);
     }
 
     private static ItemStack potionToSplashPotionItemStack(Potion potion) {
-        return PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potion);
+        return PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), potion);
     }
 
     public static class PotionIngredient extends NBTIngredient {
 
         private PotionIngredient(Potion potion, ItemStack stack) {
-            super(PotionUtils.addPotionToItemStack(stack, potion));
+            super(PotionUtils.setPotion(stack, potion));
         }
 
         public static PotionIngredient asSplashPotion(Potion potion) {

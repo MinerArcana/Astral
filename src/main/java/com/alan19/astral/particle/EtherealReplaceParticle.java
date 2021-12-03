@@ -24,17 +24,17 @@ public class EtherealReplaceParticle extends DiggingParticle {
     public EtherealReplaceParticle(ClientWorld worldIn, double xCoordIn, double yCoordIn, double zCoordIn, BlockState state) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, 0, 0, 0, state);
         this.sourceState = state;
-        this.setSprite(Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state));
-        this.particleGravity = 0.0F;
-        this.maxAge = 80;
-        this.canCollide = false;
+        this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getParticleIcon(state));
+        this.gravity = 0.0F;
+        this.lifetime = 80;
+        this.hasPhysics = false;
 
     }
 
     @Override
     public void tick() {
-        if (this.age++ >= this.maxAge) {
-            this.setExpired();
+        if (this.age++ >= this.lifetime) {
+            this.remove();
         }
     }
 
@@ -45,14 +45,14 @@ public class EtherealReplaceParticle extends DiggingParticle {
     }
 
     @Override
-    public int getBrightnessForRender(float partialTick) {
-        return WorldRenderer.getCombinedLight(this.world, new BlockPos(posX, posY, posZ));
+    public int getLightColor(float partialTick) {
+        return WorldRenderer.getLightColor(this.level, new BlockPos(x, y, z));
     }
 
     @OnlyIn(Dist.CLIENT)
     public static class Factory implements IParticleFactory<BlockParticleData> {
-        public Particle makeParticle(BlockParticleData typeIn, @Nonnull ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            BlockState blockstate = typeIn.getBlockState();
+        public Particle createParticle(BlockParticleData typeIn, @Nonnull ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            BlockState blockstate = typeIn.getState();
             if (!blockstate.isAir() && blockstate.getBlock() != Blocks.MOVING_PISTON) {
                 return (new EtherealReplaceParticle(worldIn, x, y, z, blockstate)).updateSprite(typeIn.getPos());
             }
@@ -62,7 +62,7 @@ public class EtherealReplaceParticle extends DiggingParticle {
 
     private Particle updateSprite(BlockPos pos) { //FORGE: we cannot assume that the x y z of the particles match the block pos of the block.
         if (pos != null) // There are cases where we are not able to obtain the correct source pos, and need to fallback to the non-model data version
-            this.setSprite(Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getTexture(sourceState, world, pos));
+            this.setSprite(Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getTexture(sourceState, level, pos));
         return this;
     }
 

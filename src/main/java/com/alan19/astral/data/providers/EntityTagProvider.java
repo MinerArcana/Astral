@@ -19,15 +19,15 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
         AstralEntities.ENTITIES.getEntries().stream().filter(entityType -> entityType.get() instanceof IAstralBeing).forEach(this::addAstralBeing);
-        getOrCreateBuilder(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
-        getOrCreateBuilder(AstralTags.ATTUNED_ENTITIES).addTags(AstralTags.SPIRITUAL_BEINGS, AstralTags.ETHEREAL_BEINGS);
-        getOrCreateBuilder(AstralTags.NEUTRAL_MOBS).add(EntityType.SPIDER, EntityType.ENDERMAN, EntityType.PHANTOM, EntityType.ZOMBIFIED_PIGLIN, EntityType.PIGLIN);
-        getOrCreateBuilder(AstralTags.ETHEREAL_BEINGS).add(AstralEntities.CRYSTAL_SPIDER.get(), AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get());
+        tag(AstralTags.SPIRITUAL_BEINGS).add(EntityType.PHANTOM);
+        tag(AstralTags.ATTUNED_ENTITIES).addTags(AstralTags.SPIRITUAL_BEINGS, AstralTags.ETHEREAL_BEINGS);
+        tag(AstralTags.NEUTRAL_MOBS).add(EntityType.SPIDER, EntityType.ENDERMAN, EntityType.PHANTOM, EntityType.ZOMBIFIED_PIGLIN, EntityType.PIGLIN);
+        tag(AstralTags.ETHEREAL_BEINGS).add(AstralEntities.CRYSTAL_SPIDER.get(), AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get());
     }
 
     private void addAstralBeing(RegistryObject<EntityType<?>> entityTypeRegistryObject) {
-        getOrCreateBuilder(AstralTags.ETHEREAL_BEINGS).add(entityTypeRegistryObject.get());
+        tag(AstralTags.ETHEREAL_BEINGS).add(entityTypeRegistryObject.get());
     }
 }

@@ -36,8 +36,8 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
         super(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), id);
         this.playerInventory = playerInventory;
         final PlayerEntity player = playerInventory.player;
-        if (player instanceof ServerPlayerEntity && AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).isPresent()) {
-            AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getServerWorld()).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(player.getUniqueID())).ifPresent(psychicInventoryInstance -> inventory = psychicInventoryInstance);
+        if (player instanceof ServerPlayerEntity && AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getLevel()).isPresent()) {
+            AstralAPI.getOverworldPsychicInventory(((ServerPlayerEntity) player).getLevel()).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(player.getUUID())).ifPresent(psychicInventoryInstance -> inventory = psychicInventoryInstance);
         }
 
         //Add crafting result
@@ -65,7 +65,7 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
 
         //Add armor slots
         IntStream.range(0, 4)
-                .mapToObj(i -> EquipmentSlotType.fromSlotTypeAndIndex(EquipmentSlotType.Group.ARMOR, i))
+                .mapToObj(i -> EquipmentSlotType.byTypeAndIndex(EquipmentSlotType.Group.ARMOR, i))
                 .map(equipmentSlotType -> new EquipmentSlotHandler(equipmentSlotType, player, inventory.getAstralArmorInventory(), equipmentSlotType.getIndex(), 8, 8 + (3 - equipmentSlotType.getIndex()) * 18))
                 .forEach(this::addSlot);
 
@@ -76,38 +76,38 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
     }
 
     @Override
-    public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
+    public boolean stillValid(@Nonnull PlayerEntity playerIn) {
         return true;
     }
 
     @Override
-    public void fillStackedContents(@Nonnull RecipeItemHelper itemHelperIn) {
+    public void fillCraftSlotsStackedContents(@Nonnull RecipeItemHelper itemHelperIn) {
         craftMatrix.fillStackedContents(itemHelperIn);
     }
 
     @Override
-    public void clear() {
-        this.craftResult.clear();
-        this.craftMatrix.clear();
+    public void clearCraftingContent() {
+        this.craftResult.clearContent();
+        this.craftMatrix.clearContent();
     }
 
     @Override
-    public boolean matches(@Nonnull IRecipe<? super CraftingInventory> recipeIn) {
-        return recipeIn.matches(this.craftMatrix, playerInventory.player.getEntityWorld());
+    public boolean recipeMatches(@Nonnull IRecipe<? super CraftingInventory> recipeIn) {
+        return recipeIn.matches(this.craftMatrix, playerInventory.player.getCommandSenderWorld());
     }
 
     @Override
-    public int getOutputSlot() {
+    public int getResultSlotIndex() {
         return 0;
     }
 
     @Override
-    public int getWidth() {
+    public int getGridWidth() {
         return 2;
     }
 
     @Override
-    public int getHeight() {
+    public int getGridHeight() {
         return 2;
     }
 
@@ -120,38 +120,38 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
-    public RecipeBookCategory func_241850_m() {
+    public RecipeBookCategory getRecipeBookType() {
         return RecipeBookCategory.CRAFTING;
     }
 
     @Override
-    public void onContainerClosed(@Nonnull PlayerEntity playerIn) {
-        super.onContainerClosed(playerIn);
-        this.craftResult.clear();
-        if (playerIn.world instanceof ServerWorld) {
-            this.clearContainer(playerIn, playerIn.world, this.craftMatrix);
+    public void removed(@Nonnull PlayerEntity playerIn) {
+        super.removed(playerIn);
+        this.craftResult.clearContent();
+        if (playerIn.level instanceof ServerWorld) {
+            this.clearContainer(playerIn, playerIn.level, this.craftMatrix);
         }
     }
 
     @Override
-    public void onCraftMatrixChanged(@Nonnull IInventory inventoryIn) {
-        updateCraftingResult(this.windowId, playerInventory.player.world, playerInventory.player, this.craftMatrix, this.craftResult);
+    public void slotsChanged(@Nonnull IInventory inventoryIn) {
+        updateCraftingResult(this.containerId, playerInventory.player.level, playerInventory.player, this.craftMatrix, this.craftResult);
     }
 
     private void updateCraftingResult(int id, World worldIn, PlayerEntity playerIn, CraftingInventory inventoryIn, CraftResultInventory inventoryResult) {
         if (worldIn instanceof ServerWorld && worldIn.getServer() != null) {
             ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) playerIn;
             ItemStack itemstack = ItemStack.EMPTY;
-            Optional<ICraftingRecipe> optional = worldIn.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventoryIn, worldIn);
+            Optional<ICraftingRecipe> optional = worldIn.getServer().getRecipeManager().getRecipeFor(IRecipeType.CRAFTING, inventoryIn, worldIn);
             if (optional.isPresent()) {
                 ICraftingRecipe icraftingrecipe = optional.get();
-                if (inventoryResult.canUseRecipe(worldIn, serverplayerentity, icraftingrecipe)) {
-                    itemstack = icraftingrecipe.getCraftingResult(inventoryIn);
+                if (inventoryResult.setRecipeUsed(worldIn, serverplayerentity, icraftingrecipe)) {
+                    itemstack = icraftingrecipe.assemble(inventoryIn);
                 }
             }
 
-            inventoryResult.setInventorySlotContents(0, itemstack);
-            serverplayerentity.connection.sendPacket(new SSetSlotPacket(id, 0, itemstack));
+            inventoryResult.setItem(0, itemstack);
+            serverplayerentity.connection.send(new SSetSlotPacket(id, 0, itemstack));
         }
     }
 
@@ -162,7 +162,7 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
      */
     @Override
     @Nonnull
-    public ItemStack transferStackInSlot(@Nonnull PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(@Nonnull PlayerEntity playerIn, int index) {
         return ItemStack.EMPTY;
     }
 
@@ -171,8 +171,8 @@ public class AstralInventoryContainer extends RecipeBookContainer<CraftingInvent
      * null for the initial slot that was double-clicked.
      */
     @Override
-    public boolean canMergeSlot(@Nonnull ItemStack stack, Slot slotIn) {
-        return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
+    public boolean canTakeItemForPickAll(@Nonnull ItemStack stack, Slot slotIn) {
+        return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
     }
 
 }

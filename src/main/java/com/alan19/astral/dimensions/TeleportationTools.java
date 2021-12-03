@@ -24,10 +24,10 @@ public class TeleportationTools {
      */
     @ParametersAreNonnullByDefault
     public static void performTeleport(ServerPlayerEntity player, RegistryKey<World> dimension, BlockPos dest, @Nullable Direction direction) {
-        ServerWorld destWorld = player.getServer().getWorld(dimension);
-        player.teleport(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, (Optional.ofNullable(direction).map(Direction::getHorizontalAngle).orElseGet(() -> player.rotationYaw)), player.rotationPitch);
+        ServerWorld destWorld = player.getServer().getLevel(dimension);
+        player.teleportTo(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, (Optional.ofNullable(direction).map(Direction::toYRot).orElseGet(() -> player.yRot)), player.xRot);
         // Resync some things that Vanilla is missing:
-        player.getActivePotionEffects().forEach(effectInstance -> player.connection.sendPacket(new SPlayEntityEffectPacket(player.getEntityId(), effectInstance)));
-        player.setExperienceLevel(player.experienceLevel);
+        player.getActiveEffects().forEach(effectInstance -> player.connection.send(new SPlayEntityEffectPacket(player.getId(), effectInstance)));
+        player.setExperienceLevels(player.experienceLevel);
     }
 }

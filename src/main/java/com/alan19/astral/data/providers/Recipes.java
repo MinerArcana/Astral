@@ -25,104 +25,104 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
 
-        ShapelessRecipeBuilder.shapelessRecipe(INTROSPECTION_MEDICINE.get())
-                .addIngredient(Tags.Items.MUSHROOMS)
-                .addIngredient(Items.POISONOUS_POTATO)
-                .addIngredient(FEVERWEED.get())
-                .addIngredient(Items.BOWL)
-                .addCriterion("bowl", hasItem(Items.BOWL))
-                .build(consumer);
+        ShapelessRecipeBuilder.shapeless(INTROSPECTION_MEDICINE.get())
+                .requires(Tags.Items.MUSHROOMS)
+                .requires(Items.POISONOUS_POTATO)
+                .requires(FEVERWEED.get())
+                .requires(Items.BOWL)
+                .unlockedBy("bowl", has(Items.BOWL))
+                .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(TRAVELING_MEDICINE.get())
-                .addIngredient(Items.SUGAR)
-                .addIngredient(SNOWBERRY.get())
-                .addIngredient(Items.BOWL)
-                .addIngredient(FEVERWEED.get())
-                .addCriterion("bowl", hasItem(Items.BOWL))
-                .build(consumer);
+        ShapelessRecipeBuilder.shapeless(TRAVELING_MEDICINE.get())
+                .requires(Items.SUGAR)
+                .requires(SNOWBERRY.get())
+                .requires(Items.BOWL)
+                .requires(FEVERWEED.get())
+                .unlockedBy("bowl", has(Items.BOWL))
+                .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ETHERIC_POWDER_ITEM.get(), 3)
-                .addIngredient(Items.CHARCOAL)
-                .addIngredient(ETHER_DIRT_ITEM.get())
-                .addIngredient(CRYSTAL_CHITIN.get())
-                .addCriterion("crystal_chitin", hasItem(CRYSTAL_CHITIN.get()))
-                .build(consumer);
+        ShapelessRecipeBuilder.shapeless(ETHERIC_POWDER_ITEM.get(), 3)
+                .requires(Items.CHARCOAL)
+                .requires(ETHER_DIRT_ITEM.get())
+                .requires(CRYSTAL_CHITIN.get())
+                .unlockedBy("crystal_chitin", has(CRYSTAL_CHITIN.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(OFFERING_BRAZIER_ITEM.get())
-                .key('C', Items.CAULDRON)
-                .key('F', Items.CAMPFIRE)
-                .patternLine(" C ")
-                .patternLine(" F ")
-                .addCriterion("cauldron", hasItem(Items.CAULDRON))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(OFFERING_BRAZIER_ITEM.get())
+                .define('C', Items.CAULDRON)
+                .define('F', Items.CAMPFIRE)
+                .pattern(" C ")
+                .pattern(" F ")
+                .unlockedBy("cauldron", has(Items.CAULDRON))
+                .save(consumer);
 
-        ShapelessRecipeBuilder.shapelessRecipe(ETHEREAL_PLANKS_ITEM.get(), 4)
-                .addIngredient(ETHEREAL_LOG_ITEM.get())
-                .addCriterion("ethereal_wood", hasItem(ETHEREAL_LOG_ITEM.get()))
-                .build(consumer);
+        ShapelessRecipeBuilder.shapeless(ETHEREAL_PLANKS_ITEM.get(), 4)
+                .requires(ETHEREAL_LOG_ITEM.get())
+                .unlockedBy("ethereal_wood", has(ETHEREAL_LOG_ITEM.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(ETHEREAL_WOOD_ITEM.get(), 3)
-                .key('W', ETHEREAL_LOG_ITEM.get())
-                .patternLine("WW ")
-                .patternLine("WW ")
-                .patternLine("   ")
-                .addCriterion("ethereal_log", hasItem(ETHEREAL_LOG_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(ETHEREAL_WOOD_ITEM.get(), 3)
+                .define('W', ETHEREAL_LOG_ITEM.get())
+                .pattern("WW ")
+                .pattern("WW ")
+                .pattern("   ")
+                .unlockedBy("ethereal_log", has(ETHEREAL_LOG_ITEM.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(ETHEREAL_DOOR_ITEM.get(), 3)
-                .key('W', ETHEREAL_PLANKS_ITEM.get())
-                .patternLine("WW ")
-                .patternLine("WW ")
-                .patternLine("WW ")
-                .addCriterion("ethereal_door", hasItem(ETHEREAL_PLANKS_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(ETHEREAL_DOOR_ITEM.get(), 3)
+                .define('W', ETHEREAL_PLANKS_ITEM.get())
+                .pattern("WW ")
+                .pattern("WW ")
+                .pattern("WW ")
+                .unlockedBy("ethereal_door", has(ETHEREAL_PLANKS_ITEM.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(METAPHORIC_BONE.get(), 4)
-                .key('P', ETHEREAL_PLANKS_ITEM.get())
-                .patternLine("   ")
-                .patternLine(" P ")
-                .patternLine(" P ")
-                .addCriterion("ethereal_planks", hasItem(ETHEREAL_PLANKS_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(METAPHORIC_BONE.get(), 4)
+                .define('P', ETHEREAL_PLANKS_ITEM.get())
+                .pattern("   ")
+                .pattern(" P ")
+                .pattern(" P ")
+                .unlockedBy("ethereal_planks", has(ETHEREAL_PLANKS_ITEM.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(ETHEREAL_TRAPDOOR_ITEM.get(), 2)
-                .key('P', ETHEREAL_PLANKS_ITEM.get())
-                .patternLine("   ")
-                .patternLine("PPP")
-                .patternLine("PPP")
-                .addCriterion("ethereal_planks", hasItem(ETHEREAL_PLANKS_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(ETHEREAL_TRAPDOOR_ITEM.get(), 2)
+                .define('P', ETHEREAL_PLANKS_ITEM.get())
+                .pattern("   ")
+                .pattern("PPP")
+                .pattern("PPP")
+                .unlockedBy("ethereal_planks", has(ETHEREAL_PLANKS_ITEM.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(STRIPPED_ETHEREAL_WOOD_ITEM.get(), 3)
-                .key('W', STRIPPED_ETHEREAL_LOG_ITEM.get())
-                .patternLine("WW ")
-                .patternLine("WW ")
-                .patternLine("   ")
-                .addCriterion("stripped_ethereal_log", hasItem(STRIPPED_ETHEREAL_LOG_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(STRIPPED_ETHEREAL_WOOD_ITEM.get(), 3)
+                .define('W', STRIPPED_ETHEREAL_LOG_ITEM.get())
+                .pattern("WW ")
+                .pattern("WW ")
+                .pattern("   ")
+                .unlockedBy("stripped_ethereal_log", has(STRIPPED_ETHEREAL_LOG_ITEM.get()))
+                .save(consumer);
 
         createTwoByTwoRecipe(consumer, DREAMWEAVE.get(), DREAMCORD.get(), 1);
 
-        ShapedRecipeBuilder.shapedRecipe(COMFORTABLE_CUSHION_ITEM.get(), 1)
-                .key('W', DREAMWEAVE.get())
-                .key('L', ItemTags.LEAVES)
-                .patternLine("LLL")
-                .patternLine("WWW")
-                .patternLine("WWW")
-                .addCriterion("dreamweave", hasItem(DREAMWEAVE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(COMFORTABLE_CUSHION_ITEM.get(), 1)
+                .define('W', DREAMWEAVE.get())
+                .define('L', ItemTags.LEAVES)
+                .pattern("LLL")
+                .pattern("WWW")
+                .pattern("WWW")
+                .unlockedBy("dreamweave", has(DREAMWEAVE.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(INDEX_OF_KNOWLEDGE_ITEM.get(), 1)
-                .key('S', METAPHORIC_STONE_ITEM.get())
-                .key('E', SLEEPLESS_EYE.get())
-                .key('B', Items.BOOK)
-                .patternLine(" B ")
-                .patternLine("ESE")
-                .patternLine("SSS")
-                .addCriterion("metaphoric_stone", hasItem(METAPHORIC_STONE_ITEM.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(INDEX_OF_KNOWLEDGE_ITEM.get(), 1)
+                .define('S', METAPHORIC_STONE_ITEM.get())
+                .define('E', SLEEPLESS_EYE.get())
+                .define('B', Items.BOOK)
+                .pattern(" B ")
+                .pattern("ESE")
+                .pattern("SSS")
+                .unlockedBy("metaphoric_stone", has(METAPHORIC_STONE_ITEM.get()))
+                .save(consumer);
 
         createTwoByTwoRecipe(consumer, METAPHORIC_BONE_BLOCK_ITEM.get(), METAPHORIC_BONE.get(), 1);
         createTwoByTwoRecipe(consumer, Items.GLASS, CRYSTAL_CHITIN.get(), 1, new ResourceLocation(Astral.MOD_ID, "chitin_glass"));
@@ -130,76 +130,76 @@ public class Recipes extends RecipeProvider {
 
         ShapelessNBTRecipeBuilder.shapelessRecipe(Constants.getAstronomicon())
                 .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
-                .addIngredient(Ingredient.fromItems(Items.PAPER), 3)
-                .addCriterion("basic_astral_plants", hasItem(AstralTags.BASIC_ASTRAL_PLANTS))
+                .addIngredient(Ingredient.of(Items.PAPER), 3)
+                .addCriterion("basic_astral_plants", has(AstralTags.BASIC_ASTRAL_PLANTS))
                 .addCondition(new ModLoadedCondition("patchouli"))
                 .build(consumer, new ResourceLocation(Astral.MOD_ID, "astronomicon"));
 
-        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SWORD.get())
-                .key('P', PHANTOM_EDGE.get())
-                .key('B', METAPHORIC_BONE.get())
-                .patternLine(" P ")
-                .patternLine(" P ")
-                .patternLine(" B ")
-                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(PHANTASMAL_SWORD.get())
+                .define('P', PHANTOM_EDGE.get())
+                .define('B', METAPHORIC_BONE.get())
+                .pattern(" P ")
+                .pattern(" P ")
+                .pattern(" B ")
+                .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_PICKAXE.get())
-                .key('P', PHANTOM_EDGE.get())
-                .key('B', METAPHORIC_BONE.get())
-                .patternLine("PPP")
-                .patternLine(" B ")
-                .patternLine(" B ")
-                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(PHANTASMAL_PICKAXE.get())
+                .define('P', PHANTOM_EDGE.get())
+                .define('B', METAPHORIC_BONE.get())
+                .pattern("PPP")
+                .pattern(" B ")
+                .pattern(" B ")
+                .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SHOVEL.get())
-                .key('P', PHANTOM_EDGE.get())
-                .key('B', METAPHORIC_BONE.get())
-                .patternLine(" P ")
-                .patternLine(" B ")
-                .patternLine(" B ")
-                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(PHANTASMAL_SHOVEL.get())
+                .define('P', PHANTOM_EDGE.get())
+                .define('B', METAPHORIC_BONE.get())
+                .pattern(" P ")
+                .pattern(" B ")
+                .pattern(" B ")
+                .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_AXE.get())
-                .key('P', PHANTOM_EDGE.get())
-                .key('B', METAPHORIC_BONE.get())
-                .patternLine("PP ")
-                .patternLine("PB ")
-                .patternLine(" B ")
-                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(PHANTASMAL_AXE.get())
+                .define('P', PHANTOM_EDGE.get())
+                .define('B', METAPHORIC_BONE.get())
+                .pattern("PP ")
+                .pattern("PB ")
+                .pattern(" B ")
+                .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
+                .save(consumer);
 
-        ShapedRecipeBuilder.shapedRecipe(PHANTASMAL_SHEARS.get())
-                .key('P', PHANTOM_EDGE.get())
-                .patternLine("   ")
-                .patternLine(" P ")
-                .patternLine("P  ")
-                .addCriterion("phantom_edge", hasItem(PHANTOM_EDGE.get()))
-                .build(consumer);
+        ShapedRecipeBuilder.shaped(PHANTASMAL_SHEARS.get())
+                .define('P', PHANTOM_EDGE.get())
+                .pattern("   ")
+                .pattern(" P ")
+                .pattern("P  ")
+                .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
+                .save(consumer);
 
-        CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(METAPHORIC_BONE_BLOCK_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200)
-                .addCriterion("metaphoric_bone_block", hasItem(METAPHORIC_BONE_BLOCK_ITEM.get()))
-                .build(consumer);
+        CookingRecipeBuilder.smelting(Ingredient.of(METAPHORIC_BONE_BLOCK_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200)
+                .unlockedBy("metaphoric_bone_block", has(METAPHORIC_BONE_BLOCK_ITEM.get()))
+                .save(consumer);
     }
 
     private ShapedRecipeBuilder generateTwoByTwoRecipeBuilder(Item output, Item input, int count) {
         char inputFirstLetter = Character.toUpperCase(input.getRegistryName().getPath().charAt(0));
-        return ShapedRecipeBuilder.shapedRecipe(output, count)
-                .key(inputFirstLetter, input)
-                .patternLine("   ")
-                .patternLine(String.format(" %s%s", inputFirstLetter, inputFirstLetter))
-                .patternLine(String.format(" %s%s", inputFirstLetter, inputFirstLetter))
-                .addCriterion(input.getRegistryName().getPath(), hasItem(input));
+        return ShapedRecipeBuilder.shaped(output, count)
+                .define(inputFirstLetter, input)
+                .pattern("   ")
+                .pattern(String.format(" %s%s", inputFirstLetter, inputFirstLetter))
+                .pattern(String.format(" %s%s", inputFirstLetter, inputFirstLetter))
+                .unlockedBy(input.getRegistryName().getPath(), has(input));
     }
 
     private void createTwoByTwoRecipe(@Nonnull Consumer<IFinishedRecipe> consumer, Item output, Item input, int count) {
-        generateTwoByTwoRecipeBuilder(output, input, count).build(consumer);
+        generateTwoByTwoRecipeBuilder(output, input, count).save(consumer);
     }
 
     private void createTwoByTwoRecipe(@Nonnull Consumer<IFinishedRecipe> consumer, Item output, Item input, int count, ResourceLocation resourceLocation) {
-        generateTwoByTwoRecipeBuilder(output, input, count).build(consumer, resourceLocation);
+        generateTwoByTwoRecipeBuilder(output, input, count).save(consumer, resourceLocation);
     }
 
     @Nonnull

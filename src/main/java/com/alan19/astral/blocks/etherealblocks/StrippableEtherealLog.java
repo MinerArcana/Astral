@@ -25,11 +25,11 @@ public class StrippableEtherealLog extends EtherealLog {
     }
 
     @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if (player.getHeldItem(handIn).getItem() instanceof AxeItem) {
-            worldIn.playSound(player, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            worldIn.setBlockState(pos, strippedLog.get().getDefaultState().with(RotatedPillarBlock.AXIS, state.get(RotatedPillarBlock.AXIS)), 11);
-            player.getHeldItem(handIn).damageItem(1, player, playerEntity -> playerEntity.sendBreakAnimation(handIn));
+    public ActionResultType use(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
+        if (player.getItemInHand(handIn).getItem() instanceof AxeItem) {
+            worldIn.playSound(player, pos, SoundEvents.AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            worldIn.setBlock(pos, strippedLog.get().defaultBlockState().setValue(RotatedPillarBlock.AXIS, state.getValue(RotatedPillarBlock.AXIS)), 11);
+            player.getItemInHand(handIn).hurtAndBreak(1, player, playerEntity -> playerEntity.broadcastBreakEvent(handIn));
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;

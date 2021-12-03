@@ -4,13 +4,15 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.ToolType;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class EtherDirt extends EtherealBlock implements Ethereal {
     public EtherDirt() {
-        super(Properties.create(Material.EARTH)
-                .hardnessAndResistance(.5f)
+        super(Properties.of(Material.DIRT)
+                .strength(.5f)
                 .harvestTool(ToolType.SHOVEL)
-                .sound(SoundType.GROUND)
-                .notSolid());
+                .sound(SoundType.GRAVEL)
+                .noOcclusion());
     }
 
 }
