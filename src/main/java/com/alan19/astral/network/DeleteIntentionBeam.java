@@ -4,22 +4,22 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.util.ExperienceHelper;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class DeleteIntentionBeam {
 
-    public static DeleteIntentionBeam decode(PacketBuffer packetBuffer) {
+    public static DeleteIntentionBeam decode(FriendlyByteBuf packetBuffer) {
         return new DeleteIntentionBeam();
     }
 
-    public static void encode(DeleteIntentionBeam deleteIntentionBeam, PacketBuffer packetBuffer) {
+    public static void encode(DeleteIntentionBeam deleteIntentionBeam, FriendlyByteBuf packetBuffer) {
         // No need to encode
     }
 
@@ -32,7 +32,7 @@ public class DeleteIntentionBeam {
      */
     public static void handle(DeleteIntentionBeam deleteIntentionBeam, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final ServerPlayerEntity sender = contextSupplier.get().getSender();
+            final ServerPlayer sender = contextSupplier.get().getSender();
             //Player is only teleported if they have Astral Travel
             if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
                 sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getLevel()).ifPresent(intentionBeam -> {

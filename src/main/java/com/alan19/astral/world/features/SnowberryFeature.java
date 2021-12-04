@@ -1,16 +1,16 @@
 package com.alan19.astral.world.features;
 
 import com.alan19.astral.blocks.AstralBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,7 +31,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean place(ISeedReader worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
+    public boolean place(WorldGenLevel worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
 /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
@@ -48,13 +48,13 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
                 int dist = (int) Math.ceil(Math.sqrt(config.getMaxPatchSize())) / 2 + 1;
                 int x = centerX + rand.nextInt(dist * 2) - dist;
                 int z = centerZ + rand.nextInt(dist * 2) - dist;
-                int y = worldIn.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
+                int y = worldIn.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
                 BlockPos generatingPos = new BlockPos(x, y, z);
-                if (worldIn.isEmptyBlock(generatingPos) && (worldIn.getLevel().dimension() != World.NETHER || generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight()) && snowberries.canSurvive(worldIn, generatingPos)) {
+                if (worldIn.isEmptyBlock(generatingPos) && (worldIn.getLevel().dimension() != Level.NETHER || generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight()) && snowberries.canSurvive(worldIn, generatingPos)) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
-                else if ((worldIn.getLevel().dimension() != World.NETHER || (generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight())) && (snowberries.canSurvive(worldIn, generatingPos.below()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
+                else if ((worldIn.getLevel().dimension() != Level.NETHER || (generatingPos.getY() < worldIn.getLevel().getMaxBuildHeight())) && (snowberries.canSurvive(worldIn, generatingPos.below()) || worldIn.getBlockState(pos).getBlock().equals(Blocks.SNOW))) {
                     spawned = spawnSnowberries(worldIn, rand, spawned, generatingPos);
                     generated = true;
                 }
@@ -63,7 +63,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
         return generated;
     }
 
-    private int spawnSnowberries(@Nonnull IWorld worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
+    private int spawnSnowberries(@Nonnull LevelAccessor worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
         worldIn.setBlock(generatingPos.below(), Blocks.SNOW_BLOCK.defaultBlockState(), 2);
         worldIn.setBlock(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState(), 2);
         spawned++;

@@ -1,17 +1,17 @@
 package com.alan19.astral.api.bodytracker;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Map;
 import java.util.UUID;
 
-public interface IBodyTracker extends INBTSerializable<CompoundNBT> {
-    Map<UUID, CompoundNBT> getBodyTrackerMap();
+public interface IBodyTracker extends INBTSerializable<CompoundTag> {
+    Map<UUID, CompoundTag> getBodyTrackerMap();
 
-    void setBodyNBT(UUID uuid, CompoundNBT nbt, ServerWorld world);
+    void setBodyNBT(UUID uuid, CompoundTag nbt, ServerLevel world);
 
-    void mergePlayerWithBody(ServerPlayerEntity serverPlayerEntity, ServerWorld world);
+    void mergePlayerWithBody(ServerPlayer serverPlayerEntity, ServerLevel world);
 }

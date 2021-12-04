@@ -1,8 +1,8 @@
 package com.alan19.astral.events.astraldamage;
 
 import com.alan19.astral.events.IAstralDamage;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.Entity;
 
 import javax.annotation.Nullable;
 

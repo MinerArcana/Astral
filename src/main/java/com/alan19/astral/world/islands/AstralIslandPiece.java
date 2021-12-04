@@ -2,22 +2,22 @@ package com.alan19.astral.world.islands;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.world.AstralStructures;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.structure.StructureManager;
-import net.minecraft.world.gen.feature.structure.TemplateStructurePiece;
-import net.minecraft.world.gen.feature.template.BlockIgnoreStructureProcessor;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
-import net.minecraft.world.gen.feature.template.TemplateManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -29,7 +29,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
     private final Rotation rotation;
     private final Mirror mirror;
 
-    public AstralIslandPiece(TemplateManager templateManager, CompoundNBT nbt) {
+    public AstralIslandPiece(StructureManager templateManager, CompoundTag nbt) {
         super(AstralStructures.ASTRAL_ISLAND_PIECE, nbt);
         this.templateName = nbt.getString("Template");
         this.variant = AstralIslandVariant.getVariantFromIndex(nbt.getInt("Variant"));
@@ -38,9 +38,9 @@ public class AstralIslandPiece extends TemplateStructurePiece {
         this.loadTemplate(templateManager);
     }
 
-    private void loadTemplate(TemplateManager templateManager) {
-        Template template = templateManager.getOrCreate(new ResourceLocation(Astral.MOD_ID, "astral_island/" + templateName));
-        PlacementSettings placementsettings = (new PlacementSettings()).setIgnoreEntities(true).setRotation(this.rotation).setMirror(this.mirror).addProcessor(BlockIgnoreStructureProcessor.STRUCTURE_BLOCK);
+    private void loadTemplate(StructureManager templateManager) {
+        StructureTemplate template = templateManager.getOrCreate(new ResourceLocation(Astral.MOD_ID, "astral_island/" + templateName));
+        StructurePlaceSettings placementsettings = (new StructurePlaceSettings()).setIgnoreEntities(true).setRotation(this.rotation).setMirror(this.mirror).addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
         this.setup(template, this.templatePosition, placementsettings);
     }
 
@@ -48,7 +48,7 @@ public class AstralIslandPiece extends TemplateStructurePiece {
      * (abstract) Helper method to read subclass data from NBT
      */
     @Override
-    protected void addAdditionalSaveData(@Nonnull CompoundNBT tagCompound) {
+    protected void addAdditionalSaveData(@Nonnull CompoundTag tagCompound) {
         super.addAdditionalSaveData(tagCompound);
         tagCompound.putString("Template", this.templateName);
         tagCompound.putInt("Variant", this.variant.getIndex());
@@ -58,13 +58,13 @@ public class AstralIslandPiece extends TemplateStructurePiece {
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean postProcess(ISeedReader seedReader, StructureManager structureManager, ChunkGenerator chunkGenerator, Random random, MutableBoundingBox mutableBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+    public boolean postProcess(WorldGenLevel seedReader, StructureFeatureManager structureManager, ChunkGenerator chunkGenerator, Random random, BoundingBox mutableBoundingBox, ChunkPos chunkPos, BlockPos blockPos) {
         return super.postProcess(seedReader, structureManager, chunkGenerator, random, mutableBoundingBox, chunkPos, blockPos);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void handleDataMarker(String function, BlockPos pos, IServerWorld worldIn, Random rand, MutableBoundingBox sbb) {
+    protected void handleDataMarker(String function, BlockPos pos, ServerLevelAccessor worldIn, Random rand, BoundingBox sbb) {
         // We don't need data markers
     }
 }

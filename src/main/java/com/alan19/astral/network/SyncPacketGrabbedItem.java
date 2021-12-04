@@ -1,10 +1,10 @@
 package com.alan19.astral.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -15,17 +15,17 @@ public class SyncPacketGrabbedItem {
         this.itemStack = stack;
     }
 
-    public static SyncPacketGrabbedItem decode(PacketBuffer packetBuffer) {
+    public static SyncPacketGrabbedItem decode(FriendlyByteBuf packetBuffer) {
         return new SyncPacketGrabbedItem(packetBuffer.readItem());
     }
 
-    public static void encode(SyncPacketGrabbedItem syncPacketGrabbedItem, PacketBuffer packetBuffer) {
+    public static void encode(SyncPacketGrabbedItem syncPacketGrabbedItem, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeItem(syncPacketGrabbedItem.itemStack);
     }
 
     public static void handle(SyncPacketGrabbedItem syncPacketGrabbedItem, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            ClientPlayerEntity player = Minecraft.getInstance().player;
+            LocalPlayer player = Minecraft.getInstance().player;
             player.inventory.setCarried(syncPacketGrabbedItem.itemStack);
         });
         contextSupplier.get().setPacketHandled(true);

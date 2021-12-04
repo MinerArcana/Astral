@@ -1,12 +1,12 @@
 package com.alan19.astral.util;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.material.Material;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.block.material.Material.*;
+import static net.minecraft.world.level.material.Material.*;
 
 public class IntentionBeamMaterials {
     public static final ImmutableList<Material> level0Materials = ImmutableList.of(AIR, STRUCTURAL_AIR, PLANT, WATER_PLANT, REPLACEABLE_PLANT, REPLACEABLE_WATER_PLANT, WATER, BUBBLE_COLUMN, FIRE, DECORATION, WEB, LEAVES, BAMBOO_SAPLING);

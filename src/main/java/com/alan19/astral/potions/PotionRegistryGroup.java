@@ -1,17 +1,17 @@
 package com.alan19.astral.potions;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -88,7 +88,7 @@ public class PotionRegistryGroup {
         return this;
     }
 
-    public PotionRegistryGroup addLongBrew(Supplier<Potion> longEffect, Supplier<IItemProvider> reagent) {
+    public PotionRegistryGroup addLongBrew(Supplier<Potion> longEffect, Supplier<ItemLike> reagent) {
         this.longEffect = longEffect;
         this.longReagent = () -> Ingredient.of(reagent.get());
         return this;
@@ -99,7 +99,7 @@ public class PotionRegistryGroup {
         return this;
     }
 
-    public PotionRegistryGroup addStrongBrew(Supplier<Potion> strongEffect, Supplier<IItemProvider> reagent) {
+    public PotionRegistryGroup addStrongBrew(Supplier<Potion> strongEffect, Supplier<ItemLike> reagent) {
         this.strongEffect = strongEffect;
         this.strongReagent = () -> Ingredient.of(reagent.get());
         return this;

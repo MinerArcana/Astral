@@ -1,11 +1,11 @@
 package com.alan19.astral.loot;
 
 import com.alan19.astral.Astral;
-import net.minecraft.entity.EntityType;
-import net.minecraft.loot.LootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.TableLootEntry;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.entries.LootTableReference;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,8 +30,8 @@ public class LootHandler {
                 .build();
     }
 
-    private static LootEntry.Builder<?> getInjectEntry(String name, int weight) {
+    private static LootPoolEntryContainer.Builder<?> getInjectEntry(String name, int weight) {
         ResourceLocation injectedFolder = new ResourceLocation(Astral.MOD_ID, "inject/" + name);
-        return TableLootEntry.lootTableReference(injectedFolder).setWeight(weight);
+        return LootTableReference.lootTableReference(injectedFolder).setWeight(weight);
     }
 }

@@ -1,10 +1,10 @@
 package com.alan19.astral.client.gui;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -60,9 +60,9 @@ public class UiTexture {
             float vi = v + dv * y1;
             float vf = v + dv * y2;
 
-            Tessellator tesselator = Tessellator.getInstance();
+            Tesselator tesselator = Tesselator.getInstance();
             BufferBuilder bufferBuilder = tesselator.getBuilder();
-            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder.vertex(xi, yi, 0D).uv(ui, vi).endVertex();
             bufferBuilder.vertex(xi, yf, 0D).uv(ui, vf).endVertex();
             bufferBuilder.vertex(xf, yf, 0D).uv(uf, vf).endVertex();

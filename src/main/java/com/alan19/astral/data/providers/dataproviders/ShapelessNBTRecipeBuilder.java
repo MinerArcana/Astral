@@ -5,18 +5,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.IRequirementsStrategy;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -63,21 +63,21 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Adds an ingredient that can be any item in the given tag.
      */
-    public ShapelessNBTRecipeBuilder addIngredient(ITag<Item> tagIn) {
+    public ShapelessNBTRecipeBuilder addIngredient(Tag<Item> tagIn) {
         return this.addIngredient(Ingredient.of(tagIn));
     }
 
     /**
      * Adds an ingredient of the given item.
      */
-    public ShapelessNBTRecipeBuilder addIngredient(IItemProvider itemIn) {
+    public ShapelessNBTRecipeBuilder addIngredient(ItemLike itemIn) {
         return this.addIngredient(itemIn, 1);
     }
 
     /**
      * Adds the given ingredient multiple times.
      */
-    public ShapelessNBTRecipeBuilder addIngredient(IItemProvider itemIn, int quantity) {
+    public ShapelessNBTRecipeBuilder addIngredient(ItemLike itemIn, int quantity) {
         for (int i = 0; i < quantity; ++i) {
             this.addIngredient(Ingredient.of(itemIn));
         }
@@ -106,7 +106,7 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Adds a criterion needed to unlock the recipe.
      */
-    public ShapelessNBTRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
+    public ShapelessNBTRecipeBuilder addCriterion(String name, CriterionTriggerInstance criterionIn) {
         this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
@@ -119,7 +119,7 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn) {
+    public void build(Consumer<FinishedRecipe> consumerIn) {
         this.build(consumerIn, ForgeRegistries.ITEMS.getKey(this.result.getItem()));
     }
 
@@ -127,7 +127,7 @@ public class ShapelessNBTRecipeBuilder {
      * Builds this recipe into an {@link IFinishedRecipe}. Use {@link #build(Consumer)} if save is the same as the ID for
      * the result.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
+    public void build(Consumer<FinishedRecipe> consumerIn, String save) {
         ResourceLocation resourcelocation = ForgeRegistries.ITEMS.getKey(this.result.getItem());
         if ((new ResourceLocation(save)).equals(resourcelocation)) {
             throw new IllegalStateException("Shapeless Recipe " + save + " should remove its 'save' argument");
@@ -140,9 +140,9 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Builds this recipe into an {@link IFinishedRecipe}.
      */
-    public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
+    public void build(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
+        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumerIn.accept(new ShapelessNBTRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), conditions));
     }
 
@@ -165,7 +165,7 @@ public class ShapelessNBTRecipeBuilder {
         return this;
     }
 
-    public static class Result implements IFinishedRecipe {
+    public static class Result implements FinishedRecipe {
         private final ResourceLocation id;
         private final ItemStack resultItemStack;
         private final int count;
@@ -217,8 +217,8 @@ public class ShapelessNBTRecipeBuilder {
 
         }
 
-        public IRecipeSerializer<?> getType() {
-            return IRecipeSerializer.SHAPELESS_RECIPE;
+        public RecipeSerializer<?> getType() {
+            return RecipeSerializer.SHAPELESS_RECIPE;
         }
 
         /**

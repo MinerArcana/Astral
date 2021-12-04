@@ -4,16 +4,16 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryInstance;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.dimensions.TeleportationTools;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +31,8 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
      * @param player The player to be teleported into the inner realm
      */
     @Override
-    public void teleport(ServerPlayerEntity player) {
-        ServerWorld innerRealmWorld = player.getLevel().getServer().getLevel(AstralDimensions.INNER_REALM);
+    public void teleport(ServerPlayer player) {
+        ServerLevel innerRealmWorld = player.getLevel().getServer().getLevel(AstralDimensions.INNER_REALM);
         final BlockPos spawnLocation = spawnLocations.computeIfAbsent(player.getUUID(), uuid -> {
             final BlockPos pos = new BlockPos(spawnLocations.size() * 256 + 8, player.getCommandSenderWorld().getSeaLevel() + 4, 8);
             AstralAPI.getChunkClaimTracker(innerRealmWorld).ifPresent(cap -> cap.claimChunk(player, new ChunkPos(pos)));
@@ -48,8 +48,8 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
      * @param playerEntity      The player who was teleproted to the Inner Realm
      * @param inventoryOfPlayer The PsychicInventoryInstance of the player
      */
-    private void dropInnerRealmItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer) {
-        World entityWorld = playerEntity.level;
+    private void dropInnerRealmItems(Player playerEntity, PsychicInventoryInstance inventoryOfPlayer) {
+        Level entityWorld = playerEntity.level;
         int inventorySlots = inventoryOfPlayer.getInnerRealmMain().getSlots();
         for (int i = 0; i < inventorySlots; i++) {
             Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getInnerRealmMain().extractItem(i, 64, false));
@@ -67,17 +67,17 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT spawnLocationTag = new CompoundNBT();
-        spawnLocations.forEach((key, value) -> spawnLocationTag.put(key.toString(), NBTUtil.writeBlockPos(value)));
+    public CompoundTag serializeNBT() {
+        CompoundTag spawnLocationTag = new CompoundTag();
+        spawnLocations.forEach((key, value) -> spawnLocationTag.put(key.toString(), NbtUtils.writeBlockPos(value)));
         return spawnLocationTag;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         Map<UUID, BlockPos> newSpawnMap = new HashMap<>();
         for (String id : nbt.getAllKeys()) {
-            newSpawnMap.put(UUID.fromString(id), NBTUtil.readBlockPos(nbt.getCompound(id)));
+            newSpawnMap.put(UUID.fromString(id), NbtUtils.readBlockPos(nbt.getCompound(id)));
         }
         this.spawnLocations = newSpawnMap;
     }

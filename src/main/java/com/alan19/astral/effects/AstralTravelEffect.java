@@ -1,16 +1,16 @@
 package com.alan19.astral.effects;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 
-public class AstralTravelEffect extends Effect {
+public class AstralTravelEffect extends MobEffect {
     public AstralTravelEffect() {
-        super(EffectType.NEUTRAL, 13158600);
+        super(MobEffectCategory.NEUTRAL, 13158600);
     }
 
     /**
@@ -23,11 +23,11 @@ public class AstralTravelEffect extends Effect {
     @Override
     public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth() && !entityLivingBaseIn.hasEffect(AstralEffects.MIND_VENOM.get())) {
-            if (entityLivingBaseIn instanceof PlayerEntity) {
-                PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
+            if (entityLivingBaseIn instanceof Player) {
+                Player playerEntity = (Player) entityLivingBaseIn;
                 if (playerEntity.totalExperience > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
                     entityLivingBaseIn.heal((amplifier * 0.5F) + 1.0F);
-                    ((PlayerEntity) entityLivingBaseIn).giveExperiencePoints(-1);
+                    ((Player) entityLivingBaseIn).giveExperiencePoints(-1);
                 }
                 playerEntity.getFoodData().setFoodLevel(15);
                 playerEntity.getFoodData().saturationLevel = 0;

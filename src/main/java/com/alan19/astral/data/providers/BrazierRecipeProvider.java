@@ -4,20 +4,20 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-import static net.minecraft.item.Items.*;
+import static net.minecraft.world.item.Items.*;
 
 public class BrazierRecipeProvider extends RecipeProvider {
     public BrazierRecipeProvider(DataGenerator generatorIn) {
@@ -25,34 +25,34 @@ public class BrazierRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.of(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
         createRecipe("bucket", new ItemStack(BUCKET), Ingredient.of(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
     }
 
-    private void allowThroughBrazier(@Nonnull Consumer<IFinishedRecipe> consumer, Item item, String path, Ingredient ingredient) {
+    private void allowThroughBrazier(@Nonnull Consumer<FinishedRecipe> consumer, Item item, String path, Ingredient ingredient) {
         createRecipe(path, new ItemStack(item), ingredient, consumer);
     }
 
-    private void createRecipe(String name, ItemStack output, Ingredient input, Consumer<IFinishedRecipe> consumer) {
-        consumer.accept(new FinishedRecipe(new ResourceLocation(Astral.MOD_ID, "brazier/" + name), output, input));
+    private void createRecipe(String name, ItemStack output, Ingredient input, Consumer<FinishedRecipe> consumer) {
+        consumer.accept(new BrazierRecipe(new ResourceLocation(Astral.MOD_ID, "brazier/" + name), output, input));
     }
 
     //Copied it since inner class was private
-    private static class FinishedRecipe implements IFinishedRecipe {
+    private static class BrazierRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final ItemStack output;
         private final Ingredient input;
         private final int cookTime;
 
-        private FinishedRecipe(ResourceLocation id, ItemStack output, Ingredient input, int cookTime) {
+        private BrazierRecipe(ResourceLocation id, ItemStack output, Ingredient input, int cookTime) {
             this.id = id;
             this.output = output;
             this.input = input;
             this.cookTime = cookTime;
         }
 
-        private FinishedRecipe(ResourceLocation id, ItemStack output, Ingredient input) {
+        private BrazierRecipe(ResourceLocation id, ItemStack output, Ingredient input) {
             this.id = id;
             this.output = output;
             this.input = input;
@@ -89,7 +89,7 @@ public class BrazierRecipeProvider extends RecipeProvider {
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return AstralRecipeSerializer.BRAZIER_DESTROY_SERIALIZER.get();
         }
 

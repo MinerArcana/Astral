@@ -1,8 +1,8 @@
 package com.alan19.astral.api.innerrealmchunkclaim;
 
 import com.alan19.astral.api.AstralAPI;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmChunkClaimProvider implements ICapabilitySerializable<CompoundNBT> {
+public class InnerRealmChunkClaimProvider implements ICapabilitySerializable<CompoundTag> {
     private final InnerRealmChunkClaim chunkClaimCapability;
     private final LazyOptional<IInnerRealmChunkClaim> chunkClaimOptional;
 
@@ -30,12 +30,12 @@ public class InnerRealmChunkClaimProvider implements ICapabilitySerializable<Com
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         return chunkClaimCapability.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         chunkClaimCapability.deserializeNBT(nbt);
     }
 }

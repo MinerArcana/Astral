@@ -5,14 +5,14 @@ import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.blocks.etherealblocks.EthericGrowth;
 import com.alan19.astral.blocks.etherealblocks.TallEthericGrowth;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;

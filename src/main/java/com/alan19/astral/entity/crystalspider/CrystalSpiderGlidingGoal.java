@@ -1,13 +1,13 @@
 package com.alan19.astral.entity.crystalspider;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 
-public class CrystalSpiderGlidingGoal extends RandomWalkingGoal {
-    private final MobEntity entityIn;
+public class CrystalSpiderGlidingGoal extends RandomStrollGoal {
+    private final Mob entityIn;
 
-    public CrystalSpiderGlidingGoal(CreatureEntity creatureIn, double speedIn) {
+    public CrystalSpiderGlidingGoal(PathfinderMob creatureIn, double speedIn) {
         super(creatureIn, speedIn);
         entityIn = creatureIn;
     }

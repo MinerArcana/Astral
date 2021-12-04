@@ -1,10 +1,10 @@
 package com.alan19.astral.mentalconstructs;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class Library extends MentalConstruct {
     @Override
-    public void performEffect(PlayerEntity player, int level) {
+    public void performEffect(Player player, int level) {
         if (player.experienceLevel < level) {
             player.giveExperienceLevels(1);
             player.experienceProgress = 0;

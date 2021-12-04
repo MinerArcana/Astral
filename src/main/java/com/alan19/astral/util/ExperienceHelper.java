@@ -1,20 +1,20 @@
 package com.alan19.astral.util;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Helper class that manages XP. Adapted the ExperienceHelper class from Reskillable: https://github.com/Coders-After-Dark/Reskillable which is from OpenBlocksLib: https://github.com/OpenMods/OpenModsLib to 1.15
  */
 public class ExperienceHelper {
-    public static int getPlayerXP(PlayerEntity player) {
+    public static int getPlayerXP(Player player) {
         return (int) (getExperienceForLevel(player.experienceLevel) + player.experienceProgress * player.getXpNeededForNextLevel());
     }
 
-    public static void drainPlayerXP(PlayerEntity player, int amount) {
+    public static void drainPlayerXP(Player player, int amount) {
         addPlayerXP(player, -amount);
     }
 
-    public static void addPlayerXP(PlayerEntity player, int amount) {
+    public static void addPlayerXP(Player player, int amount) {
         int experience = getPlayerXP(player) + amount;
         player.totalExperience = experience;
         player.experienceLevel = getLevelForExperience(experience);

@@ -4,20 +4,20 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.mentalconstructs.MentalConstruct;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.util.Constants;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNBT> {
+public class PlayerMentalConstructTracker implements INBTSerializable<CompoundTag> {
     //Map of mental construct ResourceLocation as String to Mental Construct info
     private final Map<ResourceLocation, MentalConstruct> mentalConstructs = new HashMap<>();
 
@@ -25,12 +25,12 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         return mentalConstructs;
     }
 
-    public void modifyConstructInfo(BlockPos pos, ServerWorld world, MentalConstructType type, int level) {
+    public void modifyConstructInfo(BlockPos pos, ServerLevel world, MentalConstructType type, int level) {
         if (!mentalConstructs.containsKey(type.getRegistryName())) {
             mentalConstructs.put(type.getRegistryName(), type.create());
         }
         final MentalConstruct entry = mentalConstructs.get(type.getRegistryName());
-        RegistryKey<World> oldConstructWorld = entry.getDimensionKey();
+        ResourceKey<Level> oldConstructWorld = entry.getDimensionKey();
         if (oldConstructWorld != null) {
             BlockPos oldPos = entry.getConstructPos();
             final BlockState blockState = world.getServer().getLevel(oldConstructWorld).getBlockState(oldPos);
@@ -45,14 +45,14 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         mentalConstructs.forEach((key, value) -> nbt.put(key.toString(), value.serializeNBT()));
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         for (String mentalConstructKey : nbt.getAllKeys()) {
             final ResourceLocation resourceLocation = new ResourceLocation(mentalConstructKey);
             if (AstralAPI.MENTAL_CONSTRUCT_TYPES.get().containsKey(resourceLocation)) {
@@ -63,7 +63,7 @@ public class PlayerMentalConstructTracker implements INBTSerializable<CompoundNB
         }
     }
 
-    public void performAllPassiveEffects(PlayerEntity playerEntity) {
+    public void performAllPassiveEffects(Player playerEntity) {
         for (MentalConstruct mentalConstructIntegerPair : mentalConstructs.values()) {
             if (mentalConstructIntegerPair.getEffectType() == MentalConstruct.EffectType.PASSIVE) {
                 mentalConstructIntegerPair.performEffect(playerEntity, mentalConstructIntegerPair.getLevel());

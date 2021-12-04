@@ -4,12 +4,13 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.data.providers.dataproviders.ShapelessNBTRecipeBuilder;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
-import net.minecraft.data.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.recipes.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
@@ -25,7 +26,7 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
 
         ShapelessRecipeBuilder.shapeless(INTROSPECTION_MEDICINE.get())
                 .requires(Tags.Items.MUSHROOMS)
@@ -179,7 +180,7 @@ public class Recipes extends RecipeProvider {
                 .unlockedBy("phantom_edge", has(PHANTOM_EDGE.get()))
                 .save(consumer);
 
-        CookingRecipeBuilder.smelting(Ingredient.of(METAPHORIC_BONE_BLOCK_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200)
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(METAPHORIC_BONE_BLOCK_ITEM.get()), METAPHORIC_STONE_ITEM.get(), .1f, 200)
                 .unlockedBy("metaphoric_bone_block", has(METAPHORIC_BONE_BLOCK_ITEM.get()))
                 .save(consumer);
     }
@@ -194,11 +195,11 @@ public class Recipes extends RecipeProvider {
                 .unlockedBy(input.getRegistryName().getPath(), has(input));
     }
 
-    private void createTwoByTwoRecipe(@Nonnull Consumer<IFinishedRecipe> consumer, Item output, Item input, int count) {
+    private void createTwoByTwoRecipe(@Nonnull Consumer<FinishedRecipe> consumer, Item output, Item input, int count) {
         generateTwoByTwoRecipeBuilder(output, input, count).save(consumer);
     }
 
-    private void createTwoByTwoRecipe(@Nonnull Consumer<IFinishedRecipe> consumer, Item output, Item input, int count, ResourceLocation resourceLocation) {
+    private void createTwoByTwoRecipe(@Nonnull Consumer<FinishedRecipe> consumer, Item output, Item input, int count, ResourceLocation resourceLocation) {
         generateTwoByTwoRecipeBuilder(output, input, count).save(consumer, resourceLocation);
     }
 

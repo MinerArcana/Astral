@@ -1,14 +1,14 @@
 package com.alan19.astral.api.intentiontracker;
 
 import com.alan19.astral.entity.projectile.IntentionBeam;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Optional;
 
-public interface IBeamTracker extends INBTSerializable<CompoundNBT> {
-    Optional<IntentionBeam> getIntentionBeam(ServerWorld world);
+public interface IBeamTracker extends INBTSerializable<CompoundTag> {
+    Optional<IntentionBeam> getIntentionBeam(ServerLevel world);
     void setIntentionBeam(IntentionBeam beam);
     void clearIntentionBeam();
 }

@@ -1,6 +1,6 @@
 package com.alan19.astral.entity.physicalbody;
 
-import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.client.model.PlayerModel;
 
 public class PhysicalBodyModel extends PlayerModel<PhysicalBodyEntity> {
     public PhysicalBodyModel(float p_i46304_1_, boolean p_i46304_2_) {

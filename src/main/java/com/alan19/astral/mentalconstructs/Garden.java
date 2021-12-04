@@ -2,9 +2,9 @@ package com.alan19.astral.mentalconstructs;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.util.ModCompat;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import top.theillusivec4.curios.api.CuriosCapability;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -43,7 +43,7 @@ public class Garden extends MentalConstruct {
     }
 
     @Override
-    public void performEffect(PlayerEntity player, int level) {
+    public void performEffect(Player player, int level) {
         final float newSaturation = player.getFoodData().getSaturationLevel();
         saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
         if (saturationCounter >= getConversionRatio(level) && player.getFoodData().needsFood()) {
@@ -63,7 +63,7 @@ public class Garden extends MentalConstruct {
      * @param playerEntity The player to send the mana to
      * @param manaToSend   The amount of mana to send
      */
-    private void addMana(PlayerEntity playerEntity, int manaToSend) {
+    private void addMana(Player playerEntity, int manaToSend) {
         List<ItemStack> items = getManaItems(playerEntity);
         items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
     }
@@ -74,7 +74,7 @@ public class Garden extends MentalConstruct {
     }
 
 
-    private List<ItemStack> getManaItems(PlayerEntity player) {
+    private List<ItemStack> getManaItems(Player player) {
         final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
         curiosItems.addAll(player.inventory.items);
         return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
@@ -91,15 +91,15 @@ public class Garden extends MentalConstruct {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = super.serializeNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = super.serializeNBT();
         nbt.putFloat("saturationSnapshot", saturationSnapshot);
         nbt.putFloat("saturationCounter", saturationCounter);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         super.deserializeNBT(nbt);
         saturationSnapshot = nbt.getFloat("saturationSnapshot");
         saturationCounter = nbt.getFloat("saturationCounter");

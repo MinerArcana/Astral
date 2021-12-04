@@ -1,23 +1,23 @@
 package com.alan19.astral.effects;
 
 import com.alan19.astral.util.ExperienceHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import javax.annotation.Nonnull;
 
-public class MindVenomEffect extends Effect {
+public class MindVenomEffect extends MobEffect {
     protected MindVenomEffect() {
-        super(EffectType.HARMFUL, 7486647);
+        super(MobEffectCategory.HARMFUL, 7486647);
     }
 
     @Override
     public void applyEffectTick(@Nonnull LivingEntity entityLivingBaseIn, int amplifier) {
-        if (entityLivingBaseIn instanceof PlayerEntity && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) > 0) {
-            final PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
+        if (entityLivingBaseIn instanceof Player && ExperienceHelper.getPlayerXP((Player) entityLivingBaseIn) > 0) {
+            final Player playerEntity = (Player) entityLivingBaseIn;
             if (playerEntity.experienceLevel <= 30) {
                 playerEntity.giveExperiencePoints(-5);
             }
@@ -25,7 +25,7 @@ public class MindVenomEffect extends Effect {
                 playerEntity.giveExperiencePoints((int) Math.max(playerEntity.totalExperience * .01, 1) * -1);
             }
         }
-        else if (entityLivingBaseIn instanceof PlayerEntity && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((PlayerEntity) entityLivingBaseIn) <= 0) {
+        else if (entityLivingBaseIn instanceof Player && entityLivingBaseIn.getHealth() > 1.0F && ExperienceHelper.getPlayerXP((Player) entityLivingBaseIn) <= 0) {
             entityLivingBaseIn.hurt(DamageSource.MAGIC, 1.0F);
         }
 

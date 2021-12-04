@@ -3,24 +3,24 @@ package com.alan19.astral.network;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.projectile.IntentionBeam;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class SendIntentionBeam {
-    public static void encode(SendIntentionBeam sendIntentionBeam, PacketBuffer packetBuffer) {
+    public static void encode(SendIntentionBeam sendIntentionBeam, FriendlyByteBuf packetBuffer) {
         //No need to encode
     }
 
-    public static SendIntentionBeam decode(PacketBuffer packetBuffer) {
+    public static SendIntentionBeam decode(FriendlyByteBuf packetBuffer) {
         return new SendIntentionBeam();
     }
 
     public static void handle(SendIntentionBeam sendIntentionBeam, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final ServerPlayerEntity sender = contextSupplier.get().getSender();
+            final ServerPlayer sender = contextSupplier.get().getSender();
             if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
                 final Boolean isBeamActive = sender.getCapability(AstralAPI.beamTrackerCapability).map(tracker -> tracker.getIntentionBeam(sender.getLevel()).isPresent()).orElse(false);
                 if (!isBeamActive){

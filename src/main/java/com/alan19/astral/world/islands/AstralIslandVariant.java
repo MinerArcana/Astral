@@ -1,8 +1,8 @@
 package com.alan19.astral.world.islands;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum AstralIslandVariant implements IStringSerializable {
+public enum AstralIslandVariant implements StringRepresentable {
     COMMA(0),
     QUESTION(1),
     INVERTED_PYRAMID(2),

@@ -11,17 +11,19 @@ buildscript {
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
+apply plugin: "java"
+apply plugin: "idea"
 apply plugin: 'maven-publish'
 
 version = '1.9.19'
 group = 'com.alan19.astral' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'astral'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'official', version: '1.18'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     runs {
         client {
@@ -81,7 +83,7 @@ sourceSets {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.2.16'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.13'
     compileClasspath fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compileClasspath fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.4-1.0.2-Snapshot.3")
     compileClasspath fg.deobf("vazkii.botania:Botania:1.16.5-416")

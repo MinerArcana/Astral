@@ -5,14 +5,14 @@ import com.alan19.astral.entity.crystalspider.CrystalSpiderEntity;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.entity.projectile.IntentionBeam;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class AstralEntities {
     public static final String PHYSICAL_BODY = "physical_body";
@@ -30,31 +30,31 @@ public class AstralEntities {
     }
 
     private static EntityType<IntentionBeam> getIntentionBeam() {
-        EntityType.Builder<IntentionBeam> intentionBeamBuilder = EntityType.Builder.of(IntentionBeam::new, EntityClassification.MISC);
+        EntityType.Builder<IntentionBeam> intentionBeamBuilder = EntityType.Builder.of(IntentionBeam::new, MobCategory.MISC);
         intentionBeamBuilder.sized(1F, 1F);
         return intentionBeamBuilder.build(CRYSTAL_WEB_NAME);
     }
 
     private static EntityType<CrystalWebProjectileEntity> getCrystalWeb() {
-        EntityType.Builder<CrystalWebProjectileEntity> crystalWebProjectileEntityBuilder = EntityType.Builder.of(CrystalWebProjectileEntity::new, EntityClassification.MISC);
+        EntityType.Builder<CrystalWebProjectileEntity> crystalWebProjectileEntityBuilder = EntityType.Builder.of(CrystalWebProjectileEntity::new, MobCategory.MISC);
         crystalWebProjectileEntityBuilder.sized(1F, 1F);
         return crystalWebProjectileEntityBuilder.build(CRYSTAL_WEB_NAME);
     }
 
     private static EntityType<PhysicalBodyEntity> getPhysicalBody() {
-        return EntityType.Builder.of(PhysicalBodyEntity::new, EntityClassification.MISC)
+        return EntityType.Builder.of(PhysicalBodyEntity::new, MobCategory.MISC)
                 .sized(1.8F, .6F)
                 .build(PHYSICAL_BODY);
     }
 
     private static EntityType<CrystalSpiderEntity> getCrystalSpider() {
-        return EntityType.Builder.of(CrystalSpiderEntity::new, EntityClassification.MONSTER)
+        return EntityType.Builder.of(CrystalSpiderEntity::new, MobCategory.MONSTER)
                 .sized(0.7F, 0.5F)
                 .build("crystal_spider");
     }
 
     public static void setupSpawnPlacement() {
-        EntitySpawnPlacementRegistry.register(AstralEntities.CRYSTAL_SPIDER.get(), EntitySpawnPlacementRegistry.PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, IAstralBeing::canEtherealEntitySpawn);
+        SpawnPlacements.register(AstralEntities.CRYSTAL_SPIDER.get(), SpawnPlacements.Type.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, IAstralBeing::canEtherealEntitySpawn);
     }
 
 }

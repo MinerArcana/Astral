@@ -2,9 +2,9 @@ package com.alan19.astral.world.features;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class SnowberryFeatureConfig implements IFeatureConfig {
+public class SnowberryFeatureConfig implements FeatureConfiguration {
 
     public static final Codec<SnowberryFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("min_patch_size").forGetter(SnowberryFeatureConfig::getMinPatchSize),

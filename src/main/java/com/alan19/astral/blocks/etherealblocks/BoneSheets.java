@@ -1,7 +1,7 @@
 package com.alan19.astral.blocks.etherealblocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.ToolType;
 
 public class BoneSheets extends EtherealBlock implements Ethereal {

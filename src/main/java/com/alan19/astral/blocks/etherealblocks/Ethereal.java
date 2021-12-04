@@ -3,16 +3,16 @@ package com.alan19.astral.blocks.etherealblocks;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,10 +24,10 @@ public interface Ethereal {
      * @param defaultReturn The BlockRenderType returned from the super function of the block
      * @return Invisible if player does not have Astral Travel, super if player does
      */
-    static BlockRenderType getRenderType(BlockRenderType defaultReturn) {
-        ClientPlayerEntity player = Minecraft.getInstance().player;
+    static RenderShape getRenderType(RenderShape defaultReturn) {
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            return player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultReturn : BlockRenderType.INVISIBLE;
+            return player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultReturn : RenderShape.INVISIBLE;
         }
         return defaultReturn;
     }
@@ -52,11 +52,11 @@ public interface Ethereal {
      * @param context The context of the shape query
      * @return usually a regular shape if the entity is Astral, empty if not
      */
-    static VoxelShape getCollisionShape(ISelectionContext context, VoxelShape parentReturn) {
+    static VoxelShape getCollisionShape(CollisionContext context, VoxelShape parentReturn) {
         if (context.getEntity() instanceof LivingEntity && (((LivingEntity) context.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(context.getEntity().getType())) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
             return parentReturn;
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     /**
@@ -67,9 +67,9 @@ public interface Ethereal {
      */
     @OnlyIn(Dist.CLIENT)
     static VoxelShape getShape(VoxelShape parentShape) {
-        ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
+        LocalPlayer clientPlayerEntity = Minecraft.getInstance().player;
         if (clientPlayerEntity != null && !clientPlayerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            return VoxelShapes.empty();
+            return Shapes.empty();
         }
         return parentShape;
     }

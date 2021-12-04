@@ -1,10 +1,10 @@
 package com.alan19.astral.api.psychicinventory;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.stream.IntStream;
@@ -75,8 +75,8 @@ public class PsychicInventoryInstance {
         return astralArmorInventory;
     }
 
-    public CompoundNBT serialize() {
-        CompoundNBT compoundNBT = new CompoundNBT();
+    public CompoundTag serialize() {
+        CompoundTag compoundNBT = new CompoundTag();
         compoundNBT.put(ASTRAL_MAIN_INVENTORY, astralMainInventory.serializeNBT());
         compoundNBT.put(ASTRAL_HANDS_INVENTORY, astralHandsInventory.serializeNBT());
         compoundNBT.put(ASTRAL_ARMOR_INVENTORY, astralArmorInventory.serializeNBT());
@@ -91,7 +91,7 @@ public class PsychicInventoryInstance {
         return compoundNBT;
     }
 
-    public void deserialize(CompoundNBT nbt) {
+    public void deserialize(CompoundTag nbt) {
         astralMainInventory.deserializeNBT(nbt.getCompound(ASTRAL_MAIN_INVENTORY));
         astralHandsInventory.deserializeNBT(nbt.getCompound(ASTRAL_HANDS_INVENTORY));
         astralArmorInventory.deserializeNBT(nbt.getCompound(ASTRAL_ARMOR_INVENTORY));
@@ -112,12 +112,12 @@ public class PsychicInventoryInstance {
      * @param stack         The itemstack to be inserted
      * @param inventoryType The inventory type to be set
      */
-    public void setItemStackToSlot(EquipmentSlotType slotIn, ItemStack stack, InventoryType inventoryType) {
+    public void setItemStackToSlot(EquipmentSlot slotIn, ItemStack stack, InventoryType inventoryType) {
         final ItemStackHandler[] inventories = getInventory(inventoryType);
-        if (slotIn == EquipmentSlotType.OFFHAND) {
+        if (slotIn == EquipmentSlot.OFFHAND) {
             inventories[2].setStackInSlot(1, stack);
         }
-        else if (slotIn.getType() == EquipmentSlotType.Group.ARMOR) {
+        else if (slotIn.getType() == EquipmentSlot.Type.ARMOR) {
             inventories[1].setStackInSlot(slotIn.getIndex(), stack);
         }
     }
@@ -129,12 +129,12 @@ public class PsychicInventoryInstance {
      * @param inventoryType The inventory category to check
      * @return The stack in the specified equipment slot of the inventory category
      */
-    public ItemStack getStackFromSlot(EquipmentSlotType slotType, InventoryType inventoryType) {
+    public ItemStack getStackFromSlot(EquipmentSlot slotType, InventoryType inventoryType) {
         final ItemStackHandler[] inventory = getInventory(inventoryType);
-        if (slotType == EquipmentSlotType.OFFHAND) {
+        if (slotType == EquipmentSlot.OFFHAND) {
             return inventory[2].getStackInSlot(0);
         }
-        return slotType.getType() == EquipmentSlotType.Group.ARMOR ? inventory[1].getStackInSlot(slotType.getIndex()) : ItemStack.EMPTY;
+        return slotType.getType() == EquipmentSlot.Type.ARMOR ? inventory[1].getStackInSlot(slotType.getIndex()) : ItemStack.EMPTY;
     }
 
     /**
@@ -162,7 +162,7 @@ public class PsychicInventoryInstance {
      * @param inventoryType   The inventory type to switch to
      * @param playerInventory The player inventory to be modified
      */
-    public void setInventoryType(InventoryType inventoryType, PlayerInventory playerInventory) {
+    public void setInventoryType(InventoryType inventoryType, Inventory playerInventory) {
         transferInventoryToCapability(playerInventory);
 
         this.inventoryType = inventoryType;
@@ -175,12 +175,12 @@ public class PsychicInventoryInstance {
         });
         final ItemStackHandler armorInventory = inventories[1];
         final ItemStackHandler handsInventory = inventories[2];
-        for (EquipmentSlotType slot : EquipmentSlotType.values()) {
-            EquipmentSlotType.Group group = slot.getType();
-            if (group == EquipmentSlotType.Group.HAND && !slot.equals(EquipmentSlotType.MAINHAND)) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            EquipmentSlot.Type group = slot.getType();
+            if (group == EquipmentSlot.Type.HAND && !slot.equals(EquipmentSlot.MAINHAND)) {
                 playerInventory.player.setItemSlot(slot, handsInventory.getStackInSlot(slot.getIndex()));
             }
-            else if (group == EquipmentSlotType.Group.ARMOR) {
+            else if (group == EquipmentSlot.Type.ARMOR) {
                 playerInventory.player.setItemSlot(slot, armorInventory.getStackInSlot(slot.getIndex()));
             }
         }
@@ -191,7 +191,7 @@ public class PsychicInventoryInstance {
      *
      * @param playerInventory The player inventory to be emptied
      */
-    private void transferInventoryToCapability(PlayerInventory playerInventory) {
+    private void transferInventoryToCapability(Inventory playerInventory) {
         //Transfer items to capability before extracting
         final ItemStackHandler[] originalInventories = getInventory(this.inventoryType);
         ItemStackHandler mainInventory = originalInventories[0];
@@ -203,7 +203,7 @@ public class PsychicInventoryInstance {
             playerMainInventory.set(i, ItemStack.EMPTY);
         }
         //Insert armor and offhand to capability
-        for (EquipmentSlotType slotType : EquipmentSlotType.values()) {
+        for (EquipmentSlot slotType : EquipmentSlot.values()) {
             setItemStackToSlot(slotType, playerInventory.player.getItemBySlot(slotType), inventoryType);
         }
     }

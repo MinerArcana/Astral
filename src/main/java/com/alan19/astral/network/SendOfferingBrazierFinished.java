@@ -1,12 +1,12 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.particle.AstralParticles;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.Random;
@@ -19,17 +19,17 @@ public class SendOfferingBrazierFinished {
         this.pos = pos;
     }
 
-    public static void encode(SendOfferingBrazierFinished sendOfferingBrazierFinished, PacketBuffer packetBuffer) {
+    public static void encode(SendOfferingBrazierFinished sendOfferingBrazierFinished, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(sendOfferingBrazierFinished.pos);
     }
 
-    public static SendOfferingBrazierFinished decode(PacketBuffer packetBuffer) {
+    public static SendOfferingBrazierFinished decode(FriendlyByteBuf packetBuffer) {
         return new SendOfferingBrazierFinished(packetBuffer.readBlockPos());
     }
 
     public static void handle(SendOfferingBrazierFinished sendOfferingBrazierFinished, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
+            final Optional<Level> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
             optionalWorld.ifPresent(world ->
                     {
                         final Random random = new Random();

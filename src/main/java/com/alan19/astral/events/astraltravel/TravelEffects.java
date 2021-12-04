@@ -10,17 +10,17 @@ import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.events.IAstralDamage;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.PhantomEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Phantom;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -41,15 +41,15 @@ import javax.annotation.Nullable;
 public class TravelEffects {
     @SubscribeEvent
     public static void mobsTargetPhysicalBody(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide() && event.getEntity() instanceof IMob && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
-            MobEntity mobEntity = (MobEntity) event.getEntity();
+        if (!event.getWorld().isClientSide() && event.getEntity() instanceof Enemy && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
+            Mob mobEntity = (Mob) event.getEntity();
             mobEntity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(mobEntity, PhysicalBodyEntity.class, true));
         }
         if (!event.getWorld().isClientSide() && event.getEntity().getType().equals(EntityType.PHANTOM)) {
-            PhantomEntity phantomEntity = (PhantomEntity) event.getEntity();
-            phantomEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<PlayerEntity>(phantomEntity, PlayerEntity.class, true) {
+            Phantom phantomEntity = (Phantom) event.getEntity();
+            phantomEntity.targetSelector.addGoal(1, new NearestAttackableTargetGoal<Player>(phantomEntity, Player.class, true) {
                 @Override
-                protected boolean canAttack(@Nullable LivingEntity potentialTarget, @Nonnull EntityPredicate targetPredicate) {
+                protected boolean canAttack(@Nullable LivingEntity potentialTarget, @Nonnull TargetingConditions targetPredicate) {
                     return potentialTarget != null && isEntityAstral(potentialTarget);
                 }
             });
@@ -74,8 +74,8 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
-        if (event.getEntityLiving() instanceof MobEntity && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving()) && !(AstralTags.SPIRITUAL_BEINGS.contains(event.getTarget().getType()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType()))) {
-            MobEntity mobEntity = (MobEntity) event.getEntityLiving();
+        if (event.getEntityLiving() instanceof Mob && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving()) && !(AstralTags.SPIRITUAL_BEINGS.contains(event.getTarget().getType()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType()))) {
+            Mob mobEntity = (Mob) event.getEntityLiving();
             mobEntity.setTarget(null);
         }
     }
@@ -110,7 +110,7 @@ public class TravelEffects {
 
     public static boolean handleAstralDrowning(LivingAttackEvent event, LivingEntity entityLiving) {
         if (event.getSource().getMsgId().equals("drown")) {
-            if (entityLiving instanceof PlayerEntity && entityLiving.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
+            if (entityLiving instanceof Player && entityLiving.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
                 entityLiving.removeEffectNoUpdate(AstralEffects.ASTRAL_TRAVEL.get());
                 StartAndEndHandling.astralTravelEnd(entityLiving);
             }
@@ -167,7 +167,7 @@ public class TravelEffects {
 
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
-        World world = event.getEntityLiving().level;
+        Level world = event.getEntityLiving().level;
         if (!world.isClientSide() && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer()) && isEntityAstral(event.getEntityLiving()) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
             event.setCanceled(true);
         }
@@ -183,7 +183,7 @@ public class TravelEffects {
      * @return Whether the entity should be receving the benefits of Astral Travel
      */
     public static boolean isEntityAstral(LivingEntity livingEntity) {
-        if (livingEntity instanceof PlayerEntity && livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
+        if (livingEntity instanceof Player && livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
             final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(SleepManager::new);
             return livingEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && sleepManager.isEntityTraveling();
         }
@@ -194,9 +194,9 @@ public class TravelEffects {
 
     @SubscribeEvent
     public static void astralDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().getCommandSenderWorld().isClientSide()) {
-            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            ServerWorld serverWorld = (ServerWorld) event.getEntityLiving().getCommandSenderWorld();
+        if (event.getEntityLiving() instanceof Player && !event.getEntityLiving().getCommandSenderWorld().isClientSide()) {
+            Player playerEntity = (Player) event.getEntityLiving();
+            ServerLevel serverWorld = (ServerLevel) event.getEntityLiving().getCommandSenderWorld();
             if (isEntityAstral(playerEntity)) {
                 AstralAPI.getOverworldPsychicInventory(serverWorld).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID())).ifPresent(psychicInventoryInstance -> {
                     event.getEntityLiving().removeEffect(AstralEffects.ASTRAL_TRAVEL.get());

@@ -1,24 +1,24 @@
 package com.alan19.astral.recipe;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 
 public class BrazierRecipe extends AbstractBrazierRecipe {
     private final ItemStack output;
 
-    public BrazierRecipe(IRecipeType<?> type, ResourceLocation id, int cookTime, ItemStack output, Ingredient input) {
+    public BrazierRecipe(RecipeType<?> type, ResourceLocation id, int cookTime, ItemStack output, Ingredient input) {
         super(type, id, cookTime, input);
         this.output = output;
     }
 
-    public BrazierRecipe(IRecipeType<?> type, ResourceLocation id, ItemStack output, Ingredient input) {
+    public BrazierRecipe(RecipeType<?> type, ResourceLocation id, ItemStack output, Ingredient input) {
         super(type, id, input);
         this.output = output;
     }
@@ -29,12 +29,12 @@ public class BrazierRecipe extends AbstractBrazierRecipe {
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(Container inv, Level worldIn) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(IInventory inv) {
+    public ItemStack assemble(Container inv) {
         return null;
     }
 
@@ -50,7 +50,7 @@ public class BrazierRecipe extends AbstractBrazierRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return AstralRecipeSerializer.BRAZIER_DESTROY_SERIALIZER.get();
     }
 }

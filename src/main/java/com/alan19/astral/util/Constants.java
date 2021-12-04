@@ -1,17 +1,17 @@
 package com.alan19.astral.util;
 
 import com.alan19.astral.Astral;
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.conditions.Alternative;
-import net.minecraft.loot.conditions.MatchTool;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.storage.loot.predicates.AlternativeLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ToolType;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -34,7 +34,7 @@ public class Constants {
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
     public static final AttributeModifier SPIRITUAL_MOB_MODIFER = new AttributeModifier(UUID.fromString("0acc71d8-4489-4df5-880f-6bc95fa988ff"), "adds some astral damage for spiritul entities", 4, AttributeModifier.Operation.ADDITION);
 
-    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).or(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS)));
+    public static final AlternativeLootItemCondition.Builder SILK_TOUCH_OR_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1)))).or(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS)));
 
     public static final ToolType SWORDS = ToolType.get("sword");
     public static final ToolType SHEARS = ToolType.get("shears");

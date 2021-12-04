@@ -9,10 +9,10 @@ import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
 import com.alan19.astral.api.intentiontracker.BeamTrackerProvider;
 import com.alan19.astral.api.psychicinventory.PsychicInventoryProvider;
 import com.alan19.astral.api.sleepmanager.SleepManagerProvider;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,8 +29,8 @@ public class CapabilitiesEventHandler {
     private static final ResourceLocation BEAM_TRACKER = new ResourceLocation(Astral.MOD_ID, "beam_tracker");
 
     @SubscribeEvent
-    public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<World> e) {
-        World world = e.getObject();
+    public static void onAttachCapabilitiesToWorld(AttachCapabilitiesEvent<Level> e) {
+        Level world = e.getObject();
         if (world != null) {
             e.addCapability(INNER_REALM_TELEPORTER, new InnerRealmTeleporterProvider());
             e.addCapability(INNER_REALM_CHUNK_CLAIM, new InnerRealmChunkClaimProvider());
@@ -43,7 +43,7 @@ public class CapabilitiesEventHandler {
     @SubscribeEvent
     public static void onAttachCapabilitiesToEntity(AttachCapabilitiesEvent<Entity> e) {
         //For player capabilities
-        if (e.getObject() instanceof PlayerEntity) {
+        if (e.getObject() instanceof Player) {
             e.addCapability(HEIGHT_ADJUSTMENT, new HeightAdjustmentProvider());
             e.addCapability(SLEEP_MANAGER, new SleepManagerProvider());
             e.addCapability(BEAM_TRACKER, new BeamTrackerProvider());

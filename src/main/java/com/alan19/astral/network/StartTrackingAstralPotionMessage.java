@@ -1,13 +1,13 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LogicalSidedProvider;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -18,18 +18,18 @@ import java.util.function.Supplier;
  */
 public class StartTrackingAstralPotionMessage {
     private final int entityID;
-    private final EffectInstance potionEffect;
+    private final MobEffectInstance potionEffect;
 
-    public StartTrackingAstralPotionMessage(int entityID, EffectInstance potionEffect) {
+    public StartTrackingAstralPotionMessage(int entityID, MobEffectInstance potionEffect) {
         this.entityID = entityID;
         this.potionEffect = potionEffect;
     }
 
-    public static StartTrackingAstralPotionMessage decode(PacketBuffer packetBuffer) {
-        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), packetBuffer.readInt(), packetBuffer.readInt()));
+    public static StartTrackingAstralPotionMessage decode(FriendlyByteBuf packetBuffer) {
+        return new StartTrackingAstralPotionMessage(packetBuffer.readInt(), new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), packetBuffer.readInt(), packetBuffer.readInt()));
     }
 
-    public static void encode(StartTrackingAstralPotionMessage message, PacketBuffer packetBuffer) {
+    public static void encode(StartTrackingAstralPotionMessage message, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(message.entityID);
         packetBuffer.writeInt(message.potionEffect.getDuration());
         packetBuffer.writeInt(message.potionEffect.getAmplifier());
@@ -37,7 +37,7 @@ public class StartTrackingAstralPotionMessage {
 
     public static void handle(StartTrackingAstralPotionMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
+            final Optional<Level> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world -> {
                         Entity clientEntity = world.getEntity(message.entityID);

@@ -7,13 +7,13 @@ import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,8 +27,8 @@ public class InnerRealmEvents {
         if (event.getDimension() == AstralDimensions.INNER_REALM) {
             if (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || !(event.getEntity() instanceof LivingEntity)) {
                 event.setCanceled(true);
-                if (event.getEntity() instanceof PlayerEntity) {
-                    event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL), event.getEntity().getUUID());
+                if (event.getEntity() instanceof Player) {
+                    event.getEntity().sendMessage(new TranslatableComponent(Constants.INVALID_WITHDRAWAL), event.getEntity().getUUID());
                 }
             }
         }
@@ -42,13 +42,13 @@ public class InnerRealmEvents {
     @SubscribeEvent
     public static void dropNonAstralItems(EntityTravelToDimensionEvent event) {
         final Entity entity = event.getEntity();
-        if (entity.getCommandSenderWorld().dimension() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerEntity = (ServerPlayerEntity) entity;
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getCommandSenderWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()), (ServerWorld) playerEntity.getCommandSenderWorld()));
+        if (entity.getCommandSenderWorld().dimension() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayer) {
+            ServerPlayer playerEntity = (ServerPlayer) entity;
+            AstralAPI.getOverworldPsychicInventory((ServerLevel) playerEntity.getCommandSenderWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()), (ServerLevel) playerEntity.getCommandSenderWorld()));
         }
     }
 
-    private static void dropAllNonAstralItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer, ServerWorld entityWorld) {
+    private static void dropAllNonAstralItems(Player playerEntity, PsychicInventoryInstance inventoryOfPlayer, ServerLevel entityWorld) {
         IntStream.range(0, inventoryOfPlayer.getAstralMainInventory().getSlots())
                 .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralMainInventory().getStackInSlot(i).getItem()))
                 .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralMainInventory().extractItem(i, 64, false)));

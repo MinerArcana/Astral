@@ -1,19 +1,20 @@
 package com.alan19.astral.entity;
 
 import com.alan19.astral.events.astraldamage.AstralEntityDamage;
-import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Random;
@@ -23,7 +24,7 @@ public interface IAstralBeing {
     static boolean attackEntityAsMobWithAstralDamage(LivingEntity self, Entity target) {
         if (self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()) != null) {
             float attackDamage = (float) self.getAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get()).getValue();
-            final ModifiableAttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
+            final AttributeInstance knockbackAttribute = self.getAttribute(Attributes.ATTACK_KNOCKBACK);
             float knockback = knockbackAttribute != null ? (float) knockbackAttribute.getValue() : 0;
             if (target instanceof LivingEntity) {
                 attackDamage += EnchantmentHelper.getDamageBonus(self.getMainHandItem(), ((LivingEntity) target).getMobType());
@@ -60,8 +61,8 @@ public interface IAstralBeing {
     }
 
     static void handleShieldBreak(LivingEntity self, Entity target) {
-        if (target instanceof PlayerEntity) {
-            PlayerEntity playerentity = (PlayerEntity) target;
+        if (target instanceof Player) {
+            Player playerentity = (Player) target;
             ItemStack mainHand = self.getMainHandItem();
             ItemStack itemstack1 = playerentity.isUsingItem() ? playerentity.getUseItem() : ItemStack.EMPTY;
             if (!mainHand.isEmpty() && !itemstack1.isEmpty() && mainHand.canDisableShield(itemstack1, playerentity, self) && itemstack1.isShield(playerentity)) {
@@ -76,15 +77,15 @@ public interface IAstralBeing {
 
     static void handleKnockback(LivingEntity self, Entity target, float knockback) {
         if (knockback > 0.0F && target instanceof LivingEntity) {
-            ((LivingEntity) target).knockback(knockback * 0.5F, MathHelper.sin(self.yRot * ((float) Math.PI / 180F)), -MathHelper.cos(self.yRot * ((float) Math.PI / 180F)));
+            ((LivingEntity) target).knockback(knockback * 0.5F, Mth.sin(self.yRot * ((float) Math.PI / 180F)), -Mth.cos(self.yRot * ((float) Math.PI / 180F)));
             self.setDeltaMovement(self.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
         }
     }
 
-    static <T extends MobEntity> boolean canEtherealEntitySpawn(EntityType<T> entityType, IWorld world, SpawnReason spawnReason, BlockPos blockPos, Random random) {
+    static <T extends Mob> boolean canEtherealEntitySpawn(EntityType<T> entityType, LevelAccessor world, MobSpawnType spawnReason, BlockPos blockPos, Random random) {
         BlockPos groundPos = blockPos.below();
-        if (world.getDifficulty() != Difficulty.PEACEFUL && world instanceof ServerWorld && MonsterEntity.isDarkEnoughToSpawn((IServerWorld) world, groundPos, random)) {
-            return spawnReason.equals(SpawnReason.NATURAL) || spawnReason.equals(SpawnReason.CHUNK_GENERATION) || spawnReason == SpawnReason.SPAWNER || world.getBlockState(groundPos).isValidSpawn(world, groundPos, entityType);
+        if (world.getDifficulty() != Difficulty.PEACEFUL && world instanceof ServerLevel && Monster.isDarkEnoughToSpawn((ServerLevelAccessor) world, groundPos, random)) {
+            return spawnReason.equals(MobSpawnType.NATURAL) || spawnReason.equals(MobSpawnType.CHUNK_GENERATION) || spawnReason == MobSpawnType.SPAWNER || world.getBlockState(groundPos).isValidSpawn(world, groundPos, entityType);
         }
         return false;
     }

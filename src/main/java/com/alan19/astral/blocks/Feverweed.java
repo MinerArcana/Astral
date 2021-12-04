@@ -1,22 +1,19 @@
 package com.alan19.astral.blocks;
 
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BushBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
-
-import net.minecraft.block.AbstractBlock.OffsetType;
-import net.minecraft.block.AbstractBlock.Properties;
 
 public class Feverweed extends BushBlock {
     public Feverweed() {
@@ -36,7 +33,7 @@ public class Feverweed extends BushBlock {
 
     //Mushroom spread code but ignores light levels
     @Override
-    public void tick(@Nonnull BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, Random random) {
+    public void tick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, Random random) {
         if (random.nextInt(25) == 0) {
             //If there are more than 5 blocks of Feverweed in a 9 * 2 * 9 cube centered on the block, do nothing
             int maxFeverweedInRange = 5;
@@ -66,13 +63,13 @@ public class Feverweed extends BushBlock {
     }
 
     @Override
-    protected boolean mayPlaceOn(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
         return state.isSolidRender(worldIn, pos);
     }
 
     //Feverweed is sustained by mycelium and podzol
     @Override
-    public boolean canSurvive(@Nonnull BlockState state, IWorldReader worldIn, BlockPos pos) {
+    public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.below();
         BlockState blockstate = worldIn.getBlockState(blockpos);
         Block block = blockstate.getBlock();

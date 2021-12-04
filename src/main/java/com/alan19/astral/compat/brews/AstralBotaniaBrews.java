@@ -3,8 +3,8 @@ package com.alan19.astral.compat.brews;
 import com.alan19.astral.Astral;
 import com.alan19.astral.potions.PotionEffectInstances;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import vazkii.botania.api.brew.Brew;
 
 public class AstralBotaniaBrews {

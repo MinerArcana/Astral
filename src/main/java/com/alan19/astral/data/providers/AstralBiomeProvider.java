@@ -1,16 +1,16 @@
 package com.alan19.astral.data.providers;
 
-import net.minecraft.data.BiomeProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.worldgen.biome.BiomeReport;
 
-public class AstralBiomeProvider extends BiomeProvider {
+public class AstralBiomeProvider extends BiomeReport {
     public AstralBiomeProvider(DataGenerator generator) {
         super(generator);
     }
 
     @Override
-    public void run(DirectoryCache cache) {
+    public void run(HashCache cache) {
         super.run(cache);
     }
 }

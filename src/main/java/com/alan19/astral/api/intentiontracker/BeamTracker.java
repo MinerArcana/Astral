@@ -1,8 +1,8 @@
 package com.alan19.astral.api.intentiontracker;
 
 import com.alan19.astral.entity.projectile.IntentionBeam;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,7 +11,7 @@ public class BeamTracker implements IBeamTracker {
     private UUID beamEntityID;
 
     @Override
-    public Optional<IntentionBeam> getIntentionBeam(ServerWorld world) {
+    public Optional<IntentionBeam> getIntentionBeam(ServerLevel world) {
         return Optional.ofNullable(beamEntityID != null && world.getEntity(beamEntityID) instanceof IntentionBeam ? (IntentionBeam)world.getEntity(beamEntityID) : null);
     }
 
@@ -26,8 +26,8 @@ public class BeamTracker implements IBeamTracker {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT compoundNBT = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag compoundNBT = new CompoundTag();
         if (beamEntityID != null){
             compoundNBT.putUUID("beamID", beamEntityID);
         }
@@ -35,7 +35,7 @@ public class BeamTracker implements IBeamTracker {
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains("beamID")){
             beamEntityID = nbt.getUUID("beamID");
         }

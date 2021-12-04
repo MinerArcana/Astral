@@ -1,12 +1,12 @@
 package com.alan19.astral.dimensions;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.play.server.SPlayEntityEffectPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -23,11 +23,11 @@ public class TeleportationTools {
      * @param direction The direction the player is facing
      */
     @ParametersAreNonnullByDefault
-    public static void performTeleport(ServerPlayerEntity player, RegistryKey<World> dimension, BlockPos dest, @Nullable Direction direction) {
-        ServerWorld destWorld = player.getServer().getLevel(dimension);
+    public static void performTeleport(ServerPlayer player, ResourceKey<Level> dimension, BlockPos dest, @Nullable Direction direction) {
+        ServerLevel destWorld = player.getServer().getLevel(dimension);
         player.teleportTo(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, (Optional.ofNullable(direction).map(Direction::toYRot).orElseGet(() -> player.yRot)), player.xRot);
         // Resync some things that Vanilla is missing:
-        player.getActiveEffects().forEach(effectInstance -> player.connection.send(new SPlayEntityEffectPacket(player.getId(), effectInstance)));
+        player.getActiveEffects().forEach(effectInstance -> player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), effectInstance)));
         player.setExperienceLevels(player.experienceLevel);
     }
 }

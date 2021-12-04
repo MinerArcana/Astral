@@ -2,28 +2,34 @@ package com.alan19.astral.data.providers.loottables;
 
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.util.Constants;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.SweetBerryBushBlock;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.enchantment.Enchantments;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.Inverted;
-import net.minecraft.loot.conditions.SurvivesExplosion;
-import net.minecraft.loot.conditions.TableBonus;
-import net.minecraft.loot.functions.ApplyBonus;
-import net.minecraft.loot.functions.ExplosionDecay;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.storage.loot.ConstantIntValue;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.RandomValueBounds;
+import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nonnull;
 import java.util.stream.Collectors;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 
-
-public class AstralBlockLootTables extends BlockLootTables {
+public class AstralBlockLootTables extends BlockLoot {
 
     @Override
     protected void addTables() {
@@ -42,37 +48,37 @@ public class AstralBlockLootTables extends BlockLootTables {
         add(ETHEREAL_DOOR.get(), createSingleItemTable(ETHEREAL_DOOR.get()));
         add(COMFORTABLE_CUSHION.get(), createSingleItemTable(COMFORTABLE_CUSHION.get()));
         add(ETHEREAL_SAPLING.get(), createSingleItemTable(ETHEREAL_SAPLING.get()));
-        add(CRYSTAL_WEB.get(), droppingWithSilkTouchOrShearsTag(CRYSTAL_WEB.get(), ItemLootEntry.lootTableItem(AstralItems.DREAMCORD.get())));
+        add(CRYSTAL_WEB.get(), droppingWithSilkTouchOrShearsTag(CRYSTAL_WEB.get(), LootItem.lootTableItem(AstralItems.DREAMCORD.get())));
         this.add(SNOWBERRY_BUSH.get(), new LootTable.Builder()
                 .withPool(new LootPool.Builder()
                         .name("ripe")
-                        .add(ItemLootEntry.lootTableItem(AstralItems.SNOWBERRY.get()))
-                        .when(BlockStateProperty.hasBlockStateProperties(SNOWBERRY_BUSH.get())
+                        .add(LootItem.lootTableItem(AstralItems.SNOWBERRY.get()))
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SNOWBERRY_BUSH.get())
                                 .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
-                        .apply(SetCount.setCount(RandomValueRange.between(2, 3)))
-                        .apply(ApplyBonus.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
+                        .apply(SetItemCountFunction.setCount(RandomValueBounds.between(2, 3)))
+                        .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
                 .withPool(new LootPool.Builder()
                         .name("unripe")
-                        .add(ItemLootEntry.lootTableItem(AstralItems.SNOWBERRY.get()))
-                        .when(BlockStateProperty.hasBlockStateProperties(SNOWBERRY_BUSH.get())
+                        .add(LootItem.lootTableItem(AstralItems.SNOWBERRY.get()))
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SNOWBERRY_BUSH.get())
                                 .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2)))
-                        .apply(SetCount.setCount(RandomValueRange.between(1, 2)))
-                        .apply(ApplyBonus.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
+                        .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1, 2)))
+                        .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
                 .withPool(new LootPool.Builder()
                         .name("not_grown")
-                        .add(ItemLootEntry.lootTableItem(AstralItems.SNOWBERRY.get()))
-                        .when(BlockStateProperty.hasBlockStateProperties(SNOWBERRY_BUSH.get())
+                        .add(LootItem.lootTableItem(AstralItems.SNOWBERRY.get()))
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SNOWBERRY_BUSH.get())
                                 .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 1)))
-                        .apply(SetCount.setCount(RandomValueRange.between(1, 1)))
-                        .apply(ApplyBonus.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
+                        .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1, 1)))
+                        .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
                 .withPool(new LootPool.Builder()
                         .name("planted")
-                        .add(ItemLootEntry.lootTableItem(AstralItems.SNOWBERRY.get()))
-                        .when(BlockStateProperty.hasBlockStateProperties(SNOWBERRY_BUSH.get())
+                        .add(LootItem.lootTableItem(AstralItems.SNOWBERRY.get()))
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SNOWBERRY_BUSH.get())
                                 .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 0)))
-                        .apply(SetCount.setCount(RandomValueRange.between(1, 1)))
-                        .apply(ApplyBonus.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
-                .apply(ExplosionDecay.explosionDecay())
+                        .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1, 1)))
+                        .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, 1)))
+                .apply(ApplyExplosionDecay.explosionDecay())
         );
         add(FEVERWEED_BLOCK.get(), createSingleItemTable(FEVERWEED_BLOCK.get()));
         add(OFFERING_BRAZIER.get(), createSingleItemTable(OFFERING_BRAZIER.get()));
@@ -84,23 +90,23 @@ public class AstralBlockLootTables extends BlockLootTables {
         add(ETHEREAL_LOG.get(), createSingleItemTable(ETHEREAL_LOG.get()));
         add(ETHEREAL_LEAVES.get(), new LootTable.Builder()
                 .withPool(new LootPool.Builder()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(AlternativesLootEntry.alternatives(ItemLootEntry.lootTableItem(ETHEREAL_LEAVES.get())
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(AlternativesEntry.alternatives(LootItem.lootTableItem(ETHEREAL_LEAVES.get())
                                         .when(Constants.SILK_TOUCH_OR_SHEARS),
-                                ItemLootEntry.lootTableItem(AstralItems.ETHEREAL_SAPLING_ITEM.get())
-                                        .when(SurvivesExplosion.survivesExplosion())
-                                        .when(TableBonus.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, .05f, .0625f, 0.083333336f, 0.1f)))))
+                                LootItem.lootTableItem(AstralItems.ETHEREAL_SAPLING_ITEM.get())
+                                        .when(ExplosionCondition.survivesExplosion())
+                                        .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, .05f, .0625f, 0.083333336f, 0.1f)))))
                 .withPool(new LootPool.Builder()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.METAPHORIC_BONE.get())
-                                .when(TableBonus.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 0.02f, 0.022222223f, 0.025f, 0.033333335f, 0.1f))
-                                .apply(SetCount.setCount(RandomValueRange.between(1, 2)))
-                                .apply(ExplosionDecay.explosionDecay()))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.METAPHORIC_FLESH.get())
-                                .when(TableBonus.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 0.02f, 0.022222223f, 0.025f, 0.033333335f, 0.1f))
-                                .apply(SetCount.setCount(RandomValueRange.between(1, 2)))
-                                .apply(ExplosionDecay.explosionDecay()))
-                        .when(Inverted.invert(Constants.SILK_TOUCH_OR_SHEARS))));
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(AstralItems.METAPHORIC_BONE.get())
+                                .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 0.02f, 0.022222223f, 0.025f, 0.033333335f, 0.1f))
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1, 2)))
+                                .apply(ApplyExplosionDecay.explosionDecay()))
+                        .add(LootItem.lootTableItem(AstralItems.METAPHORIC_FLESH.get())
+                                .when(BonusLevelTableCondition.bonusLevelFlatChance(Enchantments.BLOCK_FORTUNE, 0.02f, 0.022222223f, 0.025f, 0.033333335f, 0.1f))
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(1, 2)))
+                                .apply(ApplyExplosionDecay.explosionDecay()))
+                        .when(InvertedLootItemCondition.invert(Constants.SILK_TOUCH_OR_SHEARS))));
         add(ETHERIC_POWDER.get(), createSingleItemTable(ETHERIC_POWDER.get()));
         add(STRIPPED_ETHEREAL_LOG.get(), createSingleItemTable(STRIPPED_ETHEREAL_LOG.get()));
         add(STRIPPED_ETHEREAL_WOOD.get(), createSingleItemTable(STRIPPED_ETHEREAL_WOOD.get()));
@@ -121,12 +127,12 @@ public class AstralBlockLootTables extends BlockLootTables {
     private LootTable.Builder onlyWithSilkTouchOrShears(Block block) {
         return LootTable.lootTable()
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantRange.exactly(1))
+                        .setRolls(ConstantIntValue.exactly(1))
                         .when(Constants.SILK_TOUCH_OR_SHEARS)
-                        .add(ItemLootEntry.lootTableItem(block)));
+                        .add(LootItem.lootTableItem(block)));
     }
 
-    private LootTable.Builder droppingWithSilkTouchOrShearsTag(Block block, LootEntry.Builder<?> drops){
+    private LootTable.Builder droppingWithSilkTouchOrShearsTag(Block block, LootPoolEntryContainer.Builder<?> drops){
         return createSelfDropDispatchTable(block, Constants.SILK_TOUCH_OR_SHEARS, drops);
     }
 }

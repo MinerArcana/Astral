@@ -5,24 +5,24 @@ import com.alan19.astral.api.psychicinventory.InventoryType;
 import com.alan19.astral.dimensions.TeleportationTools;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,11 +30,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class BodyTracker implements IBodyTracker {
-    private final Map<UUID, CompoundNBT> bodyTrackerMap = new HashMap<>();
+    private final Map<UUID, CompoundTag> bodyTrackerMap = new HashMap<>();
     public static final UUID HEALTH_ID = UUID.fromString("8bce997a-4c3a-11e6-beb8-9e71128cae77");
 
     @Override
-    public Map<UUID, CompoundNBT> getBodyTrackerMap() {
+    public Map<UUID, CompoundTag> getBodyTrackerMap() {
         return bodyTrackerMap;
     }
 
@@ -46,10 +46,10 @@ public class BodyTracker implements IBodyTracker {
      * @param world The ServerWorld to update the player with
      */
     @Override
-    public void setBodyNBT(UUID uuid, CompoundNBT nbt, ServerWorld world) {
+    public void setBodyNBT(UUID uuid, CompoundTag nbt, ServerLevel world) {
         // TODO Refactor parameters to take a ServerPlayerEntity
         bodyTrackerMap.put(uuid, nbt);
-        final ServerPlayerEntity player = world.getServer().getPlayerList().getPlayer(uuid);
+        final ServerPlayer player = world.getServer().getPlayerList().getPlayer(uuid);
         if (player != null) {
             updatePlayer(player);
         }
@@ -63,8 +63,8 @@ public class BodyTracker implements IBodyTracker {
      * @param playerEntity The player to update
      * @param newMaxHealth The new max health of the player
      */
-    private void setPlayerMaxHealthTo(PlayerEntity playerEntity, float newMaxHealth) {
-        final ModifiableAttributeInstance maxHPAttributeInstance = playerEntity.getAttribute(Attributes.MAX_HEALTH);
+    private void setPlayerMaxHealthTo(Player playerEntity, float newMaxHealth) {
+        final AttributeInstance maxHPAttributeInstance = playerEntity.getAttribute(Attributes.MAX_HEALTH);
         if (maxHPAttributeInstance != null) {
             // New max HP is equal to the current HP of the body, and the modifier is calculated using the body's HP subtracted by the player's normal max HP, which would usually result in either 0 or a negative number
             // This calculation decreases the player's max HP to the body's current HP
@@ -83,7 +83,7 @@ public class BodyTracker implements IBodyTracker {
      *
      * @param playerEntity The player to update
      */
-    public void updatePlayer(ServerPlayerEntity playerEntity) {
+    public void updatePlayer(ServerPlayer playerEntity) {
         if (bodyTrackerMap.containsKey(playerEntity.getUUID())) {
             final float bodyHealth = bodyTrackerMap.get(playerEntity.getUUID()).getFloat("Health");
             if (bodyHealth <= 0) {
@@ -102,7 +102,7 @@ public class BodyTracker implements IBodyTracker {
      * @param world              The ServerWorld object used to find the body and access the Psychic Inventory
      */
     @Override
-    public void mergePlayerWithBody(ServerPlayerEntity serverPlayerEntity, ServerWorld world) {
+    public void mergePlayerWithBody(ServerPlayer serverPlayerEntity, ServerLevel world) {
         // Reset player motion
         serverPlayerEntity.setDeltaMovement(0, 0, 0);
         serverPlayerEntity.hasImpulse = false;
@@ -113,10 +113,10 @@ public class BodyTracker implements IBodyTracker {
 
         // Teleport the player
         if (bodyTrackerMap.containsKey(serverPlayerEntity.getUUID())) {
-            final CompoundNBT bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUUID());
-            final ListNBT posNBT = bodyNBT.getList("Pos", net.minecraftforge.common.util.Constants.NBT.TAG_DOUBLE);
+            final CompoundTag bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUUID());
+            final ListTag posNBT = bodyNBT.getList("Pos", net.minecraftforge.common.util.Constants.NBT.TAG_DOUBLE);
             final BlockPos pos = new BlockPos(posNBT.getDouble(0), posNBT.getDouble(1), posNBT.getDouble(2));
-            TeleportationTools.performTeleport(serverPlayerEntity, RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
+            TeleportationTools.performTeleport(serverPlayerEntity, ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
 
             // Kill the body, reset player stats, and remove the body from the tracker
             findBody(world, bodyNBT).ifPresent(LivingEntity::kill);
@@ -125,18 +125,18 @@ public class BodyTracker implements IBodyTracker {
         }
         //If body is not found, teleport player to their spawn location (bed or world spawn)
         else {
-            RegistryKey<World> playerSpawnDimension = serverPlayerEntity.getRespawnDimension();
+            ResourceKey<Level> playerSpawnDimension = serverPlayerEntity.getRespawnDimension();
             //Teleport to bed
             if (serverPlayerEntity.getSleepingPos().isPresent()) {
                 BlockPos bedPos = serverPlayerEntity.getSleepingPos().get();
                 TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, bedPos, null);
-                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED), serverPlayerEntity.getUUID());
+                serverPlayerEntity.sendMessage(new TranslatableComponent(Constants.SLEEPWALKING_BED), serverPlayerEntity.getUUID());
             }
             //Teleport to spawn
             else {
                 BlockPos serverSpawn = serverPlayerEntity.getLevel().getSharedSpawnPos();
                 TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, serverSpawn, null);
-                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN), serverPlayerEntity.getUUID());
+                serverPlayerEntity.sendMessage(new TranslatableComponent(Constants.SLEEPWALKING_SPAWN), serverPlayerEntity.getUUID());
             }
             resetPlayerStats(serverPlayerEntity);
         }
@@ -149,12 +149,12 @@ public class BodyTracker implements IBodyTracker {
      * @param bodyNBT The NBT of the body.
      * @return Optional.empty() if the body cannot be found, an optional with the body if it is found
      */
-    public Optional<PhysicalBodyEntity> findBody(ServerWorld world, CompoundNBT bodyNBT) {
-        final ServerWorld bodyWorld = world.getServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))));
-        final INBT id = bodyNBT.get("UUID");
+    public Optional<PhysicalBodyEntity> findBody(ServerLevel world, CompoundTag bodyNBT) {
+        final ServerLevel bodyWorld = world.getServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))));
+        final Tag id = bodyNBT.get("UUID");
         // Add null checks to avoid NPEs if entity is not found
         if (id != null && bodyWorld != null) {
-            return Optional.ofNullable((PhysicalBodyEntity) bodyWorld.getEntity(NBTUtil.loadUUID(id)));
+            return Optional.ofNullable((PhysicalBodyEntity) bodyWorld.getEntity(NbtUtils.loadUUID(id)));
         }
         return Optional.empty();
     }
@@ -166,8 +166,8 @@ public class BodyTracker implements IBodyTracker {
      * @param playerEntity The player to reset
      * @param bodyNBT      The NBT of the body
      */
-    public static void resetPlayerStats(PlayerEntity playerEntity, CompoundNBT bodyNBT) {
-        final ModifiableAttributeInstance maxHealthAttribute = playerEntity.getAttribute(Attributes.MAX_HEALTH);
+    public static void resetPlayerStats(Player playerEntity, CompoundTag bodyNBT) {
+        final AttributeInstance maxHealthAttribute = playerEntity.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealthAttribute != null) {
             maxHealthAttribute.removeModifier(HEALTH_ID);
         }
@@ -181,8 +181,8 @@ public class BodyTracker implements IBodyTracker {
      *
      * @param playerEntity The player to reset
      */
-    public static void resetPlayerStats(PlayerEntity playerEntity) {
-        final ModifiableAttributeInstance maxHealthAttribute = playerEntity.getAttribute(Attributes.MAX_HEALTH);
+    public static void resetPlayerStats(Player playerEntity) {
+        final AttributeInstance maxHealthAttribute = playerEntity.getAttribute(Attributes.MAX_HEALTH);
         if (maxHealthAttribute != null) {
             maxHealthAttribute.removeModifier(HEALTH_ID);
         }
@@ -192,14 +192,14 @@ public class BodyTracker implements IBodyTracker {
 
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         bodyTrackerMap.forEach((uuid, mobNBT) -> nbt.put(uuid.toString(), mobNBT));
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         nbt.getAllKeys().forEach(s -> bodyTrackerMap.put(UUID.fromString(s), nbt.getCompound(s)));
     }
 

@@ -4,23 +4,20 @@ package com.alan19.astral.events;
 import com.alan19.astral.Astral;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
-
-import static net.minecraft.client.gui.AbstractGui.GUI_ICONS_LOCATION;
-import static net.minecraftforge.client.gui.ForgeIngameGui.left_height;
 
 public class AstralHealthBarRendering {
 
@@ -30,20 +27,20 @@ public class AstralHealthBarRendering {
     private static int playerHealth;
     private static long lastSystemTime;
 
-    public static void drawTexturedModalRect(MatrixStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
+    public static void drawTexturedModalRect(PoseStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
         Minecraft.getInstance().gui.blit(matrixStack, x, y, textureX, textureY, width, height);
     }
 
-    public static void renderAstralHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
+    public static void renderAstralHearts(PoseStack matrixStack, Minecraft mc, Player player) {
         int scaledWidth = mc.getWindow().getGuiScaledWidth();
         int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
         mc.getProfiler().push("health");
         GlStateManager._enableBlend();
-        mc.getTextureManager().bind(player.hasEffect(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
-        int health = MathHelper.ceil(player.getHealth());
+        mc.getTextureManager().bindForSetup(player.hasEffect(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
+        int health = Mth.ceil(player.getHealth());
         int ticks = mc.gui.getGuiTicks();
-        boolean highlight = healthUpdateCounter > (long) ticks && (healthUpdateCounter - (long) ticks) / 3L % 2L == 1L;
+        boolean highlight = healthUpdateCounter > ticks && (healthUpdateCounter - ticks) / 3L % 2L == 1L;
         if (health < playerHealth && player.invulnerableTime > 0) {
             lastSystemTime = Util.getMillis();
             healthUpdateCounter = (long) ticks + 20;
@@ -61,11 +58,11 @@ public class AstralHealthBarRendering {
 
         playerHealth = health;
 
-        ModifiableAttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
         float healthMax = (float) attrMaxHealth.getValue();
-        float absorb = MathHelper.ceil(player.getAbsorptionAmount());
+        float absorb = Mth.ceil(player.getAbsorptionAmount());
 
-        int healthRows = MathHelper.ceil((healthMax + absorb) / 2.0F / 10.0F);
+        int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
         Random rand = new Random();
@@ -78,15 +75,15 @@ public class AstralHealthBarRendering {
             left_height += 10 - rowHeight;
 
         int regen = -1;
-        if (player.hasEffect(Effects.REGENERATION)) {
+        if (player.hasEffect(MobEffects.REGENERATION)) {
             regen = ticks % 25;
         }
 
         final int TOP = 9 * (highlight ? 1 : 0);
 
-        int numberOfHearts = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1;
+        int numberOfHearts = Mth.ceil((healthMax + absorb) / 2.0F) - 1;
         for (int heartNumber = numberOfHearts; heartNumber >= 0; --heartNumber) {
-            int row = MathHelper.ceil((float) (heartNumber + 1) / 10.0F) - 1;
+            int row = Mth.ceil((float) (heartNumber + 1) / 10.0F) - 1;
             int x = left + heartNumber % 10 * 8;
             int y = top - row * rowHeight;
 
@@ -160,7 +157,7 @@ public class AstralHealthBarRendering {
         mc.getProfiler().pop();
     }
 
-    public static void renderAstralScreenFade(MatrixStack matrixStack, int sleep) {
+    public static void renderAstralScreenFade(PoseStack matrixStack, int sleep) {
         Minecraft mc = Minecraft.getInstance();
         GlStateManager._enableBlend();
         GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -177,7 +174,7 @@ public class AstralHealthBarRendering {
         int scaledWidth = mc.getWindow().getGuiScaledWidth();
         int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
-        AbstractGui.fill(matrixStack, 0, 0, scaledWidth, scaledHeight, color);
+        GuiComponent.fill(matrixStack, 0, 0, scaledWidth, scaledHeight, color);
         GlStateManager._enableAlphaTest();
         GlStateManager._enableDepthTest();
         GlStateManager._enableBlend();
@@ -189,14 +186,14 @@ public class AstralHealthBarRendering {
 
     }
 
-    public static void renderMindVenomHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
+    public static void renderMindVenomHearts(PoseStack matrixStack, Minecraft mc, Player player) {
         int scaledWidth = mc.getWindow().getGuiScaledWidth();
         int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
         mc.getProfiler().push("health");
         GlStateManager._enableBlend();
         mc.getTextureManager().bind(player.hasEffect(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
-        int health = MathHelper.ceil(player.getHealth());
+        int health = Mth.ceil(player.getHealth());
         int ticks = mc.gui.getGuiTicks();
         boolean highlight = healthUpdateCounter > (long) ticks && (healthUpdateCounter - (long) ticks) / 3L % 2L == 1L;
         if (health < playerHealth && player.invulnerableTime > 0) {
@@ -216,11 +213,11 @@ public class AstralHealthBarRendering {
 
         playerHealth = health;
 
-        ModifiableAttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
+        AttributeInstance attrMaxHealth = player.getAttribute(Attributes.MAX_HEALTH);
         float healthMax = (float) attrMaxHealth.getValue();
-        float absorb = MathHelper.ceil(player.getAbsorptionAmount());
+        float absorb = Mth.ceil(player.getAbsorptionAmount());
 
-        int healthRows = MathHelper.ceil((healthMax + absorb) / 2.0F / 10.0F);
+        int healthRows = Mth.ceil((healthMax + absorb) / 2.0F / 10.0F);
         int rowHeight = Math.max(10 - (healthRows - 2), 3);
 
         Random rand = new Random();
@@ -233,15 +230,15 @@ public class AstralHealthBarRendering {
             left_height += 10 - rowHeight;
 
         int regen = -1;
-        if (player.hasEffect(Effects.REGENERATION)) {
+        if (player.hasEffect(MobEffects.REGENERATION)) {
             regen = ticks % 25;
         }
 
         final int TOP = 9 * (highlight ? 1 : 0);
 
-        int numberOfHearts = MathHelper.ceil((healthMax + absorb) / 2.0F) - 1;
+        int numberOfHearts = Mth.ceil((healthMax + absorb) / 2.0F) - 1;
         for (int heartNumber = numberOfHearts; heartNumber >= 0; --heartNumber) {
-            int row = MathHelper.ceil((float) (heartNumber + 1) / 10.0F) - 1;
+            int row = Mth.ceil((float) (heartNumber + 1) / 10.0F) - 1;
             int x = left + heartNumber % 10 * 8;
             int y = top - row * rowHeight;
 

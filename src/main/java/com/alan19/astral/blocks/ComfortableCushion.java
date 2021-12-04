@@ -7,24 +7,32 @@ import com.alan19.astral.mentalconstructs.Garden;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import com.alan19.astral.util.VoxelShapeUtils;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.StateContainer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -32,43 +40,41 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ComfortableCushion extends Block implements MentalConstructController {
     protected static final VoxelShape CUSHION_SHAPE = Block.box(1.0D, 0.0D, 6.0D, 15.0D, 4.0D, 14.0D);
 
 
     public ComfortableCushion() {
         super(Properties.of(Material.WOOL, DyeColor.LIGHT_BLUE).randomTicks().strength(0.8f).sound(SoundType.WOOL).noOcclusion());
-        this.registerDefaultState(this.getStateDefinition().any().setValue(Constants.TRACKED_CONSTRUCT, false).setValue(HorizontalBlock.FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(Constants.TRACKED_CONSTRUCT, false).setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
     }
 
     @Nonnull
     @Override
     @ParametersAreNonnullByDefault
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.getValue(HorizontalBlock.FACING));
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.getValue(HorizontalDirectionalBlock.FACING));
     }
 
     @Nonnull
     @Override
-    public ActionResultType use(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if (worldIn instanceof ServerWorld && worldIn.dimension() == AstralDimensions.INNER_REALM && handIn == Hand.MAIN_HAND) {
+    public InteractionResult use(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand handIn, @Nonnull BlockHitResult hit) {
+        if (worldIn instanceof ServerLevel && worldIn.dimension() == AstralDimensions.INNER_REALM && handIn == InteractionHand.MAIN_HAND) {
             final int level = calculateLevel(worldIn, pos);
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), level));
+            AstralAPI.getConstructTracker((ServerLevel) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerLevel) worldIn, AstralMentalConstructs.GARDEN.get(), level));
             worldIn.setBlockAndUpdate(pos, state.setValue(Constants.TRACKED_CONSTRUCT, true));
             final double particleNum = Math.max(1, 15 - Math.ceil(Garden.getConversionRatio(level)) + 1);
-            worldIn.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
+            worldIn.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
             for (int i = 0; i < particleNum; i++) {
-                ((ServerWorld) worldIn).sendParticles(ParticleTypes.ENCHANT, pos.getX() + i / particleNum, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01);
+                ((ServerLevel) worldIn).sendParticles(ParticleTypes.ENCHANT, pos.getX() + i / particleNum, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01);
             }
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(Constants.TRACKED_CONSTRUCT, AbstractFurnaceBlock.FACING));
     }
 
@@ -79,7 +85,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
      * @param pos     The BlockPos of the comfortable cushion
      * @return The level of the Garden
      */
-    public int calculateLevel(World worldIn, BlockPos pos) {
+    public int calculateLevel(Level worldIn, BlockPos pos) {
         //Get number of water blocks, dirt blocks, leaf blocks, and wood blocks and multiply them by the number of plants
         //TODO Add config option to limit number of "valid" blocks to prevent people from making cubes of organic matter
         return BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3))
@@ -92,7 +98,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(AbstractFurnaceBlock.FACING, context.getHorizontalDirection().getOpposite());
     }
 
@@ -114,18 +120,18 @@ public class ComfortableCushion extends Block implements MentalConstructControll
         return Pair.of(containsObject, containsPlant);
     }
 
-    public Pair<BlockState, FluidState> getStates(IWorld world, BlockPos pos) {
+    public Pair<BlockState, FluidState> getStates(LevelAccessor world, BlockPos pos) {
         return Pair.of(world.getBlockState(pos), world.getFluidState(pos));
     }
 
     @Override
-    public void onRemove(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+    public void onRemove(@Nonnull BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         MentalConstructController.onReplaced(worldIn, pos, this, AstralMentalConstructs.GARDEN.get());
         super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
-    public void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+    public void tick(BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
         MentalConstructController.tick(state, worldIn, pos, calculateLevel(worldIn, pos), AstralMentalConstructs.GARDEN.get());
         super.tick(state, worldIn, pos, rand);
     }
@@ -136,7 +142,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+    public int getAnalogOutputSignal(BlockState blockState, @Nonnull Level worldIn, @Nonnull BlockPos pos) {
         return MentalConstructController.getComparatorInputOverride(blockState, (int) Math.ceil(Garden.getConversionRatio(calculateLevel(worldIn, pos))), super.getAnalogOutputSignal(blockState, worldIn, pos));
     }
 }

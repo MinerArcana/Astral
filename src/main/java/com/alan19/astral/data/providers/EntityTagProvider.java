@@ -4,10 +4,10 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.tags.AstralTags;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.EntityTypeTagsProvider;
-import net.minecraft.entity.EntityType;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 
