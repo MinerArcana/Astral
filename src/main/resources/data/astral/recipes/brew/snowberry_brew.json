@@ -1,0 +1,21 @@
+{
+  "type": "botania:brew",
+  "brew": "astral:snowberry_brew",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "astral:snowberry"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "conditions": [
+    {
+      "modid": "botania",
+      "type": "forge:mod_loaded"
+    }
+  ]
+}

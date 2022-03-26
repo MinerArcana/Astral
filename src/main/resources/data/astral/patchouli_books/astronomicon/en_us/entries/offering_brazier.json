@@ -12,6 +12,14 @@
       "text": "The Offering Brazier cannot be used to transfer anything which burns, inventories or tile entities. Similarly anything which boils away doesn't transfer, resulting in buckets of liquids arriving empty, and potions being reduced to glass bottles etc."
     },
     {
+      "type": "text",
+      "text": "To acquire the items from the Offering Brazier, first, put the item into the brazier in-world while awake by right clicking the brazier with the item in your hand. Next, add fuel to it by right clicking it with the fuel item in your hand. Once the non-fuel item is consumed, you should see blue flames rising from the brazier around your item."
+    },
+    {
+      "type": "text",
+      "text": "When you arrive in your Inner Realm, the items will be added to your inventory. Note: All NBT data is lost upon travel; do not invest in anything you wish to bring with you. You just get the basic item upon arrival."
+    },
+    {
       "type": "crafting",
       "recipe": "astral:offering_brazier"
     }
