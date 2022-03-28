@@ -1,8 +1,8 @@
 package com.alan19.astral.network;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -14,17 +14,17 @@ import java.util.function.Supplier;
  */
 public class SendClaimedChunkMessage {
     // NBT tag with the HashMap information to be used in InnerRealmChunkClaim#deserializeNBT()
-    private final CompoundNBT nbt;
+    private final CompoundTag nbt;
 
-    public SendClaimedChunkMessage(CompoundNBT nbt) {
+    public SendClaimedChunkMessage(CompoundTag nbt) {
         this.nbt = nbt;
     }
 
-    public static SendClaimedChunkMessage decode(PacketBuffer packetBuffer) {
+    public static SendClaimedChunkMessage decode(FriendlyByteBuf packetBuffer) {
         return new SendClaimedChunkMessage(packetBuffer.readNbt());
     }
 
-    public static void encode(SendClaimedChunkMessage sendClaimedChunkMessage, PacketBuffer packetBuffer) {
+    public static void encode(SendClaimedChunkMessage sendClaimedChunkMessage, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeNbt(sendClaimedChunkMessage.nbt);
     }
 
@@ -36,7 +36,7 @@ public class SendClaimedChunkMessage {
      */
     public static void handle(SendClaimedChunkMessage sendClaimedChunkMessage, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
+            final Optional<Level> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
 //            optionalWorld.ifPresent(world ->
 //                    world.getCapability(InnerRealmChunkClaimProvider.CHUNK_CLAIM_CAPABILITY).ifPresent(innerRealmChunkClaimCapability -> {

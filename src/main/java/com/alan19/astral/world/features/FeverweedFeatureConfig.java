@@ -2,12 +2,12 @@ package com.alan19.astral.world.features;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 /**
  * Codec adapted from https://github.com/Vazkii/Botania/blob/62ff10ddca0c6fcf79355daf3e52c7a0dbaefb9e/src/main/java/vazkii/botania/common/world/MysticalFlowerConfig.java#L16
  */
-public class FeverweedFeatureConfig implements IFeatureConfig {
+public class FeverweedFeatureConfig implements FeatureConfiguration {
     public static final Codec<FeverweedFeatureConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("min_patch_size").forGetter(FeverweedFeatureConfig::getMinPatchSize),
             Codec.INT.fieldOf("max_patch_size").forGetter(FeverweedFeatureConfig::getMaxPatchSize),

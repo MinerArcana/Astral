@@ -4,11 +4,11 @@ import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.alan19.astral.util.Constants;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 
@@ -18,9 +18,9 @@ public interface MentalConstructController {
         return blockState.getValue(Constants.TRACKED_CONSTRUCT) ? redstoneLevel : defaultOverrideValue;
     }
 
-    int calculateLevel(World world, BlockPos pos);
+    int calculateLevel(Level world, BlockPos pos);
 
-    static void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, int level, MentalConstructType type) {
+    static void tick(BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, int level, MentalConstructType type) {
         if (state.getValue(Constants.TRACKED_CONSTRUCT) && worldIn.dimension() == AstralDimensions.INNER_REALM) {
             AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(type, worldIn, pos, level));
         }
@@ -33,9 +33,9 @@ public interface MentalConstructController {
      * @param pos     The pos of the block
      * @param block   The instance of the block
      */
-    static void onReplaced(@Nonnull World worldIn, @Nonnull BlockPos pos, Block block, MentalConstructType type) {
-        if (worldIn instanceof ServerWorld) {
-            AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(type, worldIn, pos));
+    static void onReplaced(@Nonnull Level worldIn, @Nonnull BlockPos pos, Block block, MentalConstructType type) {
+        if (worldIn instanceof ServerLevel) {
+            AstralAPI.getConstructTracker((ServerLevel) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(type, worldIn, pos));
             worldIn.updateNeighbourForOutputSignal(pos, block);
         }
     }

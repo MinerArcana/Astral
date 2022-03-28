@@ -4,12 +4,12 @@ import com.alan19.astral.blocks.etherealblocks.Ethereal;
 import com.alan19.astral.blocks.etherealblocks.EthericGrowth;
 import com.alan19.astral.blocks.etherealblocks.TallEthericGrowth;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.ItemTagsProvider;
-import net.minecraft.item.BlockNamedItem;
-import net.minecraft.item.Item;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.fml.RegistryObject;
@@ -44,6 +44,6 @@ public class ItemTagGenerator extends ItemTagsProvider {
     }
 
     private Item[] getAllItemsWithBlockClass(Class<?> aClass) {
-        return ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof BlockNamedItem && (aClass.isInstance(((BlockNamedItem) item).getBlock()))).collect(Collectors.toList()).toArray(new Item[]{});
+        return ITEMS.getEntries().stream().map(RegistryObject::get).filter(item -> item instanceof ItemNameBlockItem && (aClass.isInstance(((ItemNameBlockItem) item).getBlock()))).collect(Collectors.toList()).toArray(new Item[]{});
     }
 }

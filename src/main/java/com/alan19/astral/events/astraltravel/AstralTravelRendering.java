@@ -6,9 +6,9 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.events.AstralHealthBarRendering;
 import com.alan19.astral.util.RenderingUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -42,8 +42,8 @@ public class AstralTravelRendering {
     @SubscribeEvent(receiveCanceled = true)
     public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.getCameraEntity() instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) minecraft.getCameraEntity();
+        if (minecraft.getCameraEntity() instanceof Player) {
+            Player playerEntity = (Player) minecraft.getCameraEntity();
             if (TravelEffects.isEntityAstral(playerEntity)) {
                 //Cancel rendering of hunger bar
                 if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {

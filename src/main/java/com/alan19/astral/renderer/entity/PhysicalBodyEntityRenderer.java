@@ -6,27 +6,27 @@ import com.alan19.astral.entity.physicalbody.PhysicalBodyModel;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.SkinManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntity, PhysicalBodyModel> {
+public class PhysicalBodyEntityRenderer extends LivingEntityRenderer<PhysicalBodyEntity, PhysicalBodyModel> {
 
-    public PhysicalBodyEntityRenderer(EntityRendererManager rendererManager) {
+    public PhysicalBodyEntityRenderer(EntityRenderDispatcher rendererManager) {
         super(rendererManager, new PhysicalBodyModel(0.0f, true), .7F);
-        this.addLayer(new BipedArmorLayer<>(this, new NonRotatingBipedModel(0.5F), new NonRotatingBipedModel(1.0F)));
-        this.addLayer(new HeldItemLayer<>(this));
+        this.addLayer(new HumanoidArmorLayer<>(this, new NonRotatingBipedModel(0.5F), new NonRotatingBipedModel(1.0F)));
+        this.addLayer(new ItemInHandLayer<>(this));
         this.addLayer(new ArrowLayer<>(this));
-        this.addLayer(new HeadLayer<>(this));
+        this.addLayer(new CustomHeadLayer<>(this));
         this.addLayer(new ElytraLayer<>(this));
     }
 
@@ -62,7 +62,7 @@ public class PhysicalBodyEntityRenderer extends LivingRenderer<PhysicalBodyEntit
     }
 
     @Override
-    protected void setupRotations(PhysicalBodyEntity entityLiving, @Nonnull MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void setupRotations(PhysicalBodyEntity entityLiving, @Nonnull PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
         matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
         float rotationDegrees = 90F;
         matrixStackIn.translate(0, .125, -1);

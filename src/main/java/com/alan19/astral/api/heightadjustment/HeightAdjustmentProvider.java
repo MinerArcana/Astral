@@ -1,7 +1,7 @@
 package com.alan19.astral.api.heightadjustment;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class HeightAdjustmentProvider implements ICapabilitySerializable<CompoundNBT> {
+public class HeightAdjustmentProvider implements ICapabilitySerializable<CompoundTag> {
     @CapabilityInject(IHeightAdjustmentCapability.class)
     public static final Capability<IHeightAdjustmentCapability> HEIGHT_ADJUSTMENT_CAPABILITY = null;
 
@@ -27,12 +27,12 @@ public class HeightAdjustmentProvider implements ICapabilitySerializable<Compoun
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         return instance.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         instance.deserializeNBT(nbt);
 
     }

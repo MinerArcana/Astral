@@ -1,13 +1,13 @@
 package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -21,7 +21,7 @@ public class EgoMembrane extends Block implements Ethereal {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         worldIn.setBlock(pos, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState(), 2);
     }
 

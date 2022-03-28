@@ -11,8 +11,8 @@ import com.alan19.astral.util.Constants;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.potion.Potion;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 import vazkii.botania.api.brew.Brew;
 

@@ -3,10 +3,10 @@ package com.alan19.astral.data.providers;
 import com.alan19.astral.Astral;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 
 public class DisplayBuilder {
     private final String advancementName;
@@ -17,7 +17,7 @@ public class DisplayBuilder {
     private boolean hidden = false;
     private ResourceLocation background = null;
 
-    public DisplayBuilder(IItemProvider displayItem, String advancementName) {
+    public DisplayBuilder(ItemLike displayItem, String advancementName) {
         this.advancementName = advancementName;
         this.displayItem = new ItemStack(displayItem);
     }
@@ -54,6 +54,6 @@ public class DisplayBuilder {
     }
 
     public DisplayInfo build() {
-        return new DisplayInfo(displayItem, new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".name"), new TranslationTextComponent(Astral.MOD_ID + ".advancement." + advancementName + ".desc"), background, frameType, showToast, announceToChat, hidden);
+        return new DisplayInfo(displayItem, new TranslatableComponent(Astral.MOD_ID + ".advancement." + advancementName + ".name"), new TranslatableComponent(Astral.MOD_ID + ".advancement." + advancementName + ".desc"), background, frameType, showToast, announceToChat, hidden);
     }
 }

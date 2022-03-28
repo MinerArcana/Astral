@@ -3,9 +3,9 @@ package com.alan19.astral.network;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.api.sleepmanager.SleepManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -21,7 +21,7 @@ public class SendAstralTravelStarting {
         this.sleepManager = sleepManager;
     }
 
-    public static SendAstralTravelStarting decode(PacketBuffer packetBuffer) {
+    public static SendAstralTravelStarting decode(FriendlyByteBuf packetBuffer) {
         int playerId = packetBuffer.readInt();
         SleepManager sleepManager = new SleepManager();
         sleepManager.setSleep(packetBuffer.readInt());
@@ -29,7 +29,7 @@ public class SendAstralTravelStarting {
         return new SendAstralTravelStarting(playerId, sleepManager);
     }
 
-    public static void encode(SendAstralTravelStarting sendAstralTravelStarting, PacketBuffer packetBuffer) {
+    public static void encode(SendAstralTravelStarting sendAstralTravelStarting, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(sendAstralTravelStarting.id);
         packetBuffer.writeInt(sendAstralTravelStarting.sleepManager.getSleep());
         packetBuffer.writeBoolean(sendAstralTravelStarting.sleepManager.isGoingToInnerRealm());
@@ -38,10 +38,10 @@ public class SendAstralTravelStarting {
     public static void handle(SendAstralTravelStarting sendAstralTravelStarting, Supplier<NetworkEvent.Context> contextSupplier) {
         System.out.println("Received on client!");
         contextSupplier.get().enqueueWork(() -> {
-            final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
+            final Optional<Level> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
             optionalWorld.ifPresent(world -> {
-                if (world.getEntity(sendAstralTravelStarting.id) instanceof PlayerEntity) {
-                    PlayerEntity player = (PlayerEntity) world.getEntity(sendAstralTravelStarting.id);
+                if (world.getEntity(sendAstralTravelStarting.id) instanceof Player) {
+                    Player player = (Player) world.getEntity(sendAstralTravelStarting.id);
                     AstralAPI.getSleepManager(player).ifPresent(sleepManager1 -> {
                         sleepManager1.setSleep(sendAstralTravelStarting.sleepManager.getSleep());
                         sleepManager1.setGoingToInnerRealm(sendAstralTravelStarting.sleepManager.isGoingToInnerRealm());

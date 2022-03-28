@@ -3,19 +3,19 @@ package com.alan19.astral.blocks.tileentities;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.recipe.AbstractBrazierRecipe;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OfferingBrazierTileEntity extends TileEntity implements ITickableTileEntity {
+public class OfferingBrazierTileEntity extends BlockEntity implements TickableBlockEntity {
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
@@ -54,7 +54,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Override
     public void tick() {
-        if (level instanceof ServerWorld) {
+        if (level instanceof ServerLevel) {
             if (level.getGameTime() % 10 == 0) {
                 updateOfferingBrazierInventory();
             }
@@ -65,9 +65,9 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
                 if (hasFuel() && inventory.getStackInSlot(1).getCount() > 0) {
                     burnItems(inventory, uuid);
                 }
-                else if (burnTicks <= 0 && AbstractFurnaceTileEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
+                else if (burnTicks <= 0 && AbstractFurnaceBlockEntity.isFuel(inventory.getStackInSlot(0)) && !inventory.getStackInSlot(1).isEmpty()) {
                     final ItemStack fuelInSlot = inventory.getStackInSlot(0);
-                    burnTicks += AbstractFurnaceTileEntity.getFuel().get(fuelInSlot.getItem());
+                    burnTicks += AbstractFurnaceBlockEntity.getFuel().get(fuelInSlot.getItem());
                     fuelInSlot.shrink(1);
                     updateOfferingBrazierInventory();
                 }
@@ -96,7 +96,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
             ItemStack output = recipe != null ? recipe.getResultItem() : new ItemStack(lastStack.getItem());
             this.level.setBlockAndUpdate(worldPosition, getBlockState().setValue(AbstractFurnaceBlock.LIT, true));
 
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) level).ifPresent(overworldPsychicInventory -> {
+            AstralAPI.getOverworldPsychicInventory((ServerLevel) level).ifPresent(overworldPsychicInventory -> {
                 final ItemStackHandler innerRealmMain = overworldPsychicInventory.getInventoryOfPlayer(uuid).getInnerRealmMain();
                 ItemHandlerHelper.insertItemStacked(innerRealmMain, output, false);
                 lastStack.shrink(1);
@@ -111,7 +111,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         return burnTicks > 0;
     }
 
-    public void extractInsertItem(PlayerEntity playerEntity, Hand hand) {
+    public void extractInsertItem(Player playerEntity, InteractionHand hand) {
         handler.ifPresent(inventory -> {
             ItemStack held = playerEntity.getItemInHand(hand);
             if (!held.isEmpty()) {
@@ -124,7 +124,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
         updateOfferingBrazierInventory();
     }
 
-    public void extractItem(PlayerEntity playerEntity, IItemHandler inventory) {
+    public void extractItem(Player playerEntity, IItemHandler inventory) {
         if (!inventory.getStackInSlot(1).isEmpty()) {
             ItemStack itemStack = inventory.extractItem(1, inventory.getStackInSlot(1).getCount(), false);
             playerEntity.addItem(itemStack);
@@ -168,11 +168,11 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 if (slot == 0) {
-                    return AbstractFurnaceTileEntity.isFuel(stack) && super.isItemValid(slot, stack);
+                    return AbstractFurnaceBlockEntity.isFuel(stack) && super.isItemValid(slot, stack);
                 }
                 else {
                     final Block blockFromItem = Block.byItem(stack.getItem());
-                    return !AbstractFurnaceTileEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.defaultBlockState()) && super.isItemValid(slot, stack);
+                    return !AbstractFurnaceBlockEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.defaultBlockState()) && super.isItemValid(slot, stack);
                 }
             }
         };
@@ -192,17 +192,17 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.getBlockPos(), -1, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), -1, this.getUpdateTag());
     }
 
     @Override
     @Nonnull
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT updateTag = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag updateTag = new CompoundTag();
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
-        CompoundNBT fuelSlot = new CompoundNBT();
-        CompoundNBT itemSlot = new CompoundNBT();
+        CompoundTag fuelSlot = new CompoundTag();
+        CompoundTag itemSlot = new CompoundTag();
         itemHandler.getStackInSlot(0).save(fuelSlot);
         itemHandler.getStackInSlot(1).save(itemSlot);
         updateTag.put("fuel", fuelSlot);
@@ -211,14 +211,14 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+    public void handleUpdateTag(BlockState state, CompoundTag tag) {
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
         ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.of(tag.getCompound("fuel")));
         ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.of(tag.getCompound("item")));
     }
 
     @Override
-    public void load(@Nonnull BlockState state, @Nonnull CompoundNBT nbt) {
+    public void load(@Nonnull BlockState state, @Nonnull CompoundTag nbt) {
         super.load(state, nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
@@ -234,7 +234,7 @@ public class OfferingBrazierTileEntity extends TileEntity implements ITickableTi
 
     @Override
     @Nonnull
-    public CompoundNBT save(@Nonnull CompoundNBT nbt) {
+    public CompoundTag save(@Nonnull CompoundTag nbt) {
         super.save(nbt);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("progress", progress);

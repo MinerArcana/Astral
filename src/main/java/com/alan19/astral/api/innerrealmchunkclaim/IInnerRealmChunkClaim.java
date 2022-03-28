@@ -1,13 +1,13 @@
 package com.alan19.astral.api.innerrealmchunkclaim;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface IInnerRealmChunkClaim extends INBTSerializable<CompoundNBT> {
+public interface IInnerRealmChunkClaim extends INBTSerializable<CompoundTag> {
 
-    boolean isChunkClaimedByPlayer(ServerPlayerEntity player, ChunkPos chunk);
+    boolean isChunkClaimedByPlayer(ServerPlayer player, ChunkPos chunk);
 
-    boolean claimChunk(ServerPlayerEntity player, ChunkPos chunk);
+    boolean claimChunk(ServerPlayer player, ChunkPos chunk);
 }

@@ -6,11 +6,10 @@ import com.alan19.astral.items.AstralItems;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import vazkii.botania.api.brew.Brew;
@@ -28,18 +27,18 @@ public class AstralBrewProvider extends BrewProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL.get(), Ingredient.of(Items.NETHER_WART), Ingredient.of(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()), Ingredient.of(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.SNOWBERRY.get()), Ingredient.of(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.FEVERWEED.get()), Ingredient.of(Items.GLOWSTONE_DUST));
     }
 
-    private void createBotanicalBreweryRecipe(Consumer<IFinishedRecipe> consumer, Brew brew, Ingredient... ingredients) {
+    private void createBotanicalBreweryRecipe(Consumer<FinishedRecipe> consumer, Brew brew, Ingredient... ingredients) {
         consumer.accept(new FinishedRecipe(new ResourceLocation(Astral.MOD_ID, "brew/" + brew.getRegistryName().getPath()), brew, ingredients));
     }
 
     //Copied it since inner class was private
-    private static class FinishedRecipe implements IFinishedRecipe {
+    private static class FinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final Brew brew;
         private final Ingredient[] inputs;
@@ -70,7 +69,7 @@ public class AstralBrewProvider extends BrewProvider {
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getType() {
+        public RecipeSerializer<?> getType() {
             return ModRecipeTypes.BREW_SERIALIZER;
         }
 

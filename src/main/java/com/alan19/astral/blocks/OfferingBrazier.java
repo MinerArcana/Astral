@@ -2,26 +2,31 @@ package com.alan19.astral.blocks;
 
 import com.alan19.astral.blocks.tileentities.OfferingBrazierTileEntity;
 import com.alan19.astral.particle.AstralParticles;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -35,10 +40,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import static net.minecraft.block.AbstractFurnaceBlock.LIT;
-
-@SuppressWarnings("deprecated")
-public class OfferingBrazier extends Block {
+public class OfferingBrazier extends AbstractFurnaceBlock {
 
     protected static final VoxelShape BASE_SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     protected static final VoxelShape COLUMN_SHAPE = Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D);
@@ -47,7 +49,7 @@ public class OfferingBrazier extends Block {
     protected static final VoxelShape SOUTH = Block.box(0, 6, 14, 16, 8, 16);
     protected static final VoxelShape EAST = Block.box(14, 6, 0, 16, 8, 16);
     protected static final VoxelShape WEST = Block.box(0, 6, 0, 2, 8, 16);
-    protected static final VoxelShape SHAPE = VoxelShapes.or(BASE_SHAPE, COLUMN_SHAPE, TOP_SHAPE, NORTH, SOUTH, EAST, WEST);
+    protected static final VoxelShape SHAPE = Shapes.or(BASE_SHAPE, COLUMN_SHAPE, TOP_SHAPE, NORTH, SOUTH, EAST, WEST);
 
     public OfferingBrazier() {
         super(Block.Properties
@@ -62,12 +64,12 @@ public class OfferingBrazier extends Block {
     @Nonnull
     @Override
     @ParametersAreNonnullByDefault
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(LIT));
     }
 
@@ -78,15 +80,15 @@ public class OfferingBrazier extends Block {
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity newBlockEntity(BlockState state, BlockGetter world) {
         return new OfferingBrazierTileEntity();
     }
 
     @Override
-    public void setPlacedBy(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
+    public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
         super.setPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
-        if (livingEntity instanceof PlayerEntity) {
-            TileEntity tileEntity = world.getBlockEntity(blockPos);
+        if (livingEntity instanceof Player) {
+            BlockEntity tileEntity = world.getBlockEntity(blockPos);
             if (tileEntity instanceof OfferingBrazierTileEntity) {
                 ((OfferingBrazierTileEntity) tileEntity).setUUID(livingEntity.getUUID());
             }
@@ -95,8 +97,8 @@ public class OfferingBrazier extends Block {
 
     @Nonnull
     @Override
-    public ActionResultType use(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
-        TileEntity entity = world.getBlockEntity(blockPos);
+    public InteractionResult use(@Nonnull BlockState blockState, Level world, @Nonnull BlockPos blockPos, @Nonnull Player playerEntity, @Nonnull InteractionHand hand, @Nonnull BlockHitResult blockRayTraceResult) {
+        BlockEntity entity = world.getBlockEntity(blockPos);
         if (entity instanceof OfferingBrazierTileEntity) {
             //If the block does not have a bound player, sets the bound player to the player
             if (!((OfferingBrazierTileEntity) entity).getBoundPlayer().isPresent()) {
@@ -105,20 +107,20 @@ public class OfferingBrazier extends Block {
             //Sneak click to bind a player, regular right click inserts/extracts
             if (!playerEntity.isCrouching()) {
                 ((OfferingBrazierTileEntity) entity).extractInsertItem(playerEntity, hand);
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             else if (playerEntity.isCrouching()) {
                 ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUUID());
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
         return super.use(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
     }
 
     @Override
-    public void onRemove(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull Level worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof OfferingBrazierTileEntity) {
                 tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> IntStream.range(0, itemHandler.getSlots()).forEach(i -> Block.popResource(worldIn, pos, itemHandler.getStackInSlot(i))));
 
@@ -130,7 +132,7 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         if (!entityIn.fireImmune() && state.getValue(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
             entityIn.hurt(DamageSource.IN_FIRE, 1.0F);
         }
@@ -141,15 +143,15 @@ public class OfferingBrazier extends Block {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
+    public void animateTick(BlockState stateIn, @Nonnull Level worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
         if (stateIn.getValue(LIT)) {
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = pos.getY();
             double d2 = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
-                worldIn.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                worldIn.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
             }
-            TileEntity tileEntity = worldIn.getBlockEntity(pos);
+            BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             boolean lastItem = false;
             if (tileEntity instanceof OfferingBrazierTileEntity) {
                 final LazyOptional<IItemHandler> capability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
@@ -172,8 +174,8 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public int getAnalogOutputSignal(@Nonnull BlockState blockState, World worldIn, @Nonnull BlockPos pos) {
-        final TileEntity tileEntity = worldIn.getBlockEntity(pos);
+    public int getAnalogOutputSignal(@Nonnull BlockState blockState, Level worldIn, @Nonnull BlockPos pos) {
+        final BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (tileEntity instanceof OfferingBrazierTileEntity) {
             final IItemHandler brazierInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new);
             int i = 0;
@@ -188,7 +190,7 @@ public class OfferingBrazier extends Block {
             }
 
             f /= (float) brazierInventory.getSlots();
-            return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+            return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
         }
         return 0;
     }

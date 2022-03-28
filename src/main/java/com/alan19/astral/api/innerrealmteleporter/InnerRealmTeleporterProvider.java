@@ -1,8 +1,8 @@
 package com.alan19.astral.api.innerrealmteleporter;
 
 import com.alan19.astral.api.AstralAPI;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class InnerRealmTeleporterProvider implements ICapabilitySerializable<CompoundNBT> {
+public class InnerRealmTeleporterProvider implements ICapabilitySerializable<CompoundTag> {
     private final InnerRealmTeleporter teleporterCapability;
     private final LazyOptional<IInnerRealmTeleporter> teleporterOptional;
 
@@ -30,12 +30,12 @@ public class InnerRealmTeleporterProvider implements ICapabilitySerializable<Com
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         return teleporterCapability.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         teleporterCapability.deserializeNBT(nbt);
     }
 }

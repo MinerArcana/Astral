@@ -1,6 +1,6 @@
 package com.alan19.astral.events;
 
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.damagesource.DamageSource;
 
 public interface IAstralDamage {
     String DAMAGE_NAME = "astral.astral";

@@ -1,6 +1,6 @@
 package com.alan19.astral.util;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 /**
  * Copied from https://github.com/mekanism/Mekanism/blob/1.15x/src/main/java/mekanism/common/util/EnumUtils.java

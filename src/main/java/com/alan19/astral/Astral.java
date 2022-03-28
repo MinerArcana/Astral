@@ -51,8 +51,8 @@ import com.alan19.astral.world.AstralConfiguredFeatures;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.AstralStructures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -169,8 +169,8 @@ public class Astral {
         event.enqueueWork(AstralDimensions::setupDimension);
 
         //Register Serializers
-        DataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
-        DataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
+        EntityDataSerializers.registerSerializer(OPTIONAL_GAME_PROFILE);
+        EntityDataSerializers.registerSerializer(OPTIONAL_ITEMSTACK_HANDLER);
 //        BiomeManager.addBiome(Constants.ASTRAL, new BiomeManager.BiomeEntry(AstralBiomes.PSYSCAPE_BIOME.get(), 0));
 
         //Add Intention Beam behavior

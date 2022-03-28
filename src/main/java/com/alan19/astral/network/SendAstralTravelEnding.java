@@ -1,7 +1,7 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.util.RenderingUtils;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -13,11 +13,11 @@ public class SendAstralTravelEnding {
         this.entityId = entityId;
     }
 
-    public static SendAstralTravelEnding decode(PacketBuffer packetBuffer) {
+    public static SendAstralTravelEnding decode(FriendlyByteBuf packetBuffer) {
         return new SendAstralTravelEnding(packetBuffer.readInt());
     }
 
-    public static void encode(SendAstralTravelEnding sendAstralTravelEnding, PacketBuffer packetBuffer) {
+    public static void encode(SendAstralTravelEnding sendAstralTravelEnding, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(sendAstralTravelEnding.entityId);
     }
 

@@ -1,6 +1,6 @@
 package com.alan19.astral.api.psychicinventory;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,16 +13,16 @@ public class PsychicInventory implements IPsychicInventory {
 
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT psychicInventoryNBT = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag psychicInventoryNBT = new CompoundTag();
         playerInventoriesMap.forEach((key, value) -> psychicInventoryNBT.put(key.toString(), value.serialize()));
-        CompoundNBT psychicInventoryMap = new CompoundNBT();
+        CompoundTag psychicInventoryMap = new CompoundTag();
         psychicInventoryMap.put(PSYCHIC_INVENTORIES, psychicInventoryNBT);
         return psychicInventoryMap;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         for (String s : nbt.getCompound(PSYCHIC_INVENTORIES).getAllKeys()) {
             final PsychicInventoryInstance psychicInventoryInstance = new PsychicInventoryInstance();
             psychicInventoryInstance.deserialize(nbt.getCompound(PSYCHIC_INVENTORIES).getCompound(s));

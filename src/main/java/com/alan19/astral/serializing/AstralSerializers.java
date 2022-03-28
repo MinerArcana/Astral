@@ -1,10 +1,10 @@
 package com.alan19.astral.serializing;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -12,12 +12,12 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class AstralSerializers {
-    public static final IDataSerializer<Optional<GameProfile>> OPTIONAL_GAME_PROFILE = new IDataSerializer<Optional<GameProfile>>() {
+    public static final EntityDataSerializer<Optional<GameProfile>> OPTIONAL_GAME_PROFILE = new EntityDataSerializer<Optional<GameProfile>>() {
         @Override
-        public void write(@Nonnull PacketBuffer packetBuffer, @Nonnull Optional<GameProfile> gameProfile) {
+        public void write(@Nonnull FriendlyByteBuf packetBuffer, @Nonnull Optional<GameProfile> gameProfile) {
             if (gameProfile.isPresent()) {
                 packetBuffer.writeBoolean(true);
-                packetBuffer.writeNbt(NBTUtil.writeGameProfile(new CompoundNBT(), gameProfile.get()));
+                packetBuffer.writeNbt(NbtUtils.writeGameProfile(new CompoundTag(), gameProfile.get()));
             }
             else {
                 packetBuffer.writeBoolean(false);
@@ -26,8 +26,8 @@ public class AstralSerializers {
 
         @Override
         @Nonnull
-        public Optional<GameProfile> read(@Nonnull PacketBuffer packetBuffer) {
-            return packetBuffer.readBoolean() ? Optional.of(NBTUtil.readGameProfile(packetBuffer.readNbt())) : Optional.empty();
+        public Optional<GameProfile> read(@Nonnull FriendlyByteBuf packetBuffer) {
+            return packetBuffer.readBoolean() ? Optional.of(NbtUtils.readGameProfile(packetBuffer.readNbt())) : Optional.empty();
         }
 
         @Override
@@ -37,9 +37,9 @@ public class AstralSerializers {
         }
     };
 
-    public static final IDataSerializer<LazyOptional<ItemStackHandler>> OPTIONAL_ITEMSTACK_HANDLER = new IDataSerializer<LazyOptional<ItemStackHandler>>() {
+    public static final EntityDataSerializer<LazyOptional<ItemStackHandler>> OPTIONAL_ITEMSTACK_HANDLER = new EntityDataSerializer<LazyOptional<ItemStackHandler>>() {
         @Override
-        public void write(@Nonnull PacketBuffer packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
+        public void write(@Nonnull FriendlyByteBuf packetBuffer, LazyOptional<ItemStackHandler> itemStackHandlerLazyOptional) {
             if (itemStackHandlerLazyOptional.isPresent()) {
                 itemStackHandlerLazyOptional.ifPresent(itemStackHandler -> {
                     packetBuffer.writeBoolean(true);
@@ -53,7 +53,7 @@ public class AstralSerializers {
 
         @Nonnull
         @Override
-        public LazyOptional<ItemStackHandler> read(PacketBuffer packetBuffer) {
+        public LazyOptional<ItemStackHandler> read(FriendlyByteBuf packetBuffer) {
             if (packetBuffer.readBoolean()) {
                 final ItemStackHandler itemStackHandler = new ItemStackHandler();
                 itemStackHandler.deserializeNBT(packetBuffer.readNbt());

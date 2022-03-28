@@ -1,9 +1,9 @@
 package com.alan19.astral.events.astraldamage;
 
 import com.alan19.astral.events.IAstralDamage;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.entity.LivingEntity;
 
 public class AstralDamageSource {
     public static DamageSource causeAstralMobDamage(LivingEntity mob) {

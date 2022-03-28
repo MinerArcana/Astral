@@ -3,9 +3,9 @@ package com.alan19.astral.events.astraltravel.flight;
 import com.alan19.astral.Astral;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.network.AstralNetwork;
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MovementInput;
+import net.minecraft.client.Options;
+import net.minecraft.client.player.Input;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.event.TickEvent;
@@ -27,7 +27,7 @@ public class KeyboardHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getInstance();
-            GameSettings settings = mc.options;
+            Options settings = mc.options;
             if (mc.getConnection() != null) {
                 boolean upNow = settings.keyJump.isDown();
                 boolean downNow = settings.keyShift.isDown();
@@ -56,7 +56,7 @@ public class KeyboardHandler {
     @SubscribeEvent
     public static void cancelRegularMovement(InputUpdateEvent event) {
         if (event.getPlayer().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            final MovementInput movementInput = event.getMovementInput();
+            final Input movementInput = event.getMovementInput();
             movementInput.down = false;
             movementInput.up = false;
             movementInput.forwardImpulse = 0;

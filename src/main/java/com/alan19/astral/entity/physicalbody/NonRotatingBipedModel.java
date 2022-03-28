@@ -1,8 +1,8 @@
 package com.alan19.astral.entity.physicalbody;
 
-import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.model.HumanoidModel;
 
-public class NonRotatingBipedModel extends BipedModel<PhysicalBodyEntity> {
+public class NonRotatingBipedModel extends HumanoidModel<PhysicalBodyEntity> {
     public NonRotatingBipedModel(float modelSize) {
         super(modelSize, 0.0F, 64, 32);
     }

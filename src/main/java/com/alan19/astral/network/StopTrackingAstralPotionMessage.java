@@ -1,10 +1,10 @@
 package com.alan19.astral.network;
 
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -18,17 +18,17 @@ public class StopTrackingAstralPotionMessage {
         this.entityID = entityID;
     }
 
-    public static StopTrackingAstralPotionMessage decode(PacketBuffer packetBuffer) {
+    public static StopTrackingAstralPotionMessage decode(FriendlyByteBuf packetBuffer) {
         return new StopTrackingAstralPotionMessage(packetBuffer.readInt());
     }
 
-    public static void encode(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, PacketBuffer packetBuffer) {
+    public static void encode(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(startTrackingAstralPotionMessage.entityID);
     }
 
     public static void handle(StopTrackingAstralPotionMessage startTrackingAstralPotionMessage, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
-            final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
+            final Optional<Level> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
 
             optionalWorld.ifPresent(world -> {
                         Entity clientEntity = world.getEntity(startTrackingAstralPotionMessage.entityID);

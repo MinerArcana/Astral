@@ -3,19 +3,19 @@ package com.alan19.astral.dimensions.innerrealm;
 import com.alan19.astral.Astral;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.Blockreader;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.biome.provider.BiomeProvider;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.WorldGenRegion;
-import net.minecraft.world.gen.feature.structure.StructureManager;
-import net.minecraft.world.gen.settings.DimensionStructuresSettings;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.StructureSettings;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -26,12 +26,12 @@ import java.util.Optional;
  * Generates a void world, no chunks are generated naturally
  */
 public class InnerRealmChunkGenerator extends ChunkGenerator {
-    public static final Codec<InnerRealmChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(BiomeProvider.CODEC.fieldOf("biome_source")
+    public static final Codec<InnerRealmChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(BiomeSource.CODEC.fieldOf("biome_source")
             .forGetter(ChunkGenerator::getBiomeSource)
     ).apply(instance, instance.stable(InnerRealmChunkGenerator::new)));
 
-    public InnerRealmChunkGenerator(BiomeProvider biomeProvider) {
-        super(biomeProvider, new DimensionStructuresSettings(Optional.empty(), Collections.emptyMap()));
+    public InnerRealmChunkGenerator(BiomeSource biomeProvider) {
+        super(biomeProvider, new StructureSettings(Optional.empty(), Collections.emptyMap()));
     }
 
     public static void register() {
@@ -51,24 +51,24 @@ public class InnerRealmChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public void buildSurfaceAndBedrock(WorldGenRegion p_225551_1_, IChunk p_225551_2_) {
+    public void buildSurfaceAndBedrock(WorldGenRegion p_225551_1_, ChunkAccess p_225551_2_) {
         // We don't generate anything because it's a void world
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void fillFromNoise(IWorld p_230352_1_, StructureManager p_230352_2_, IChunk p_230352_3_) {
+    public void fillFromNoise(LevelAccessor p_230352_1_, StructureFeatureManager p_230352_2_, ChunkAccess p_230352_3_) {
         // We don't generate any structures
     }
 
     @Override
-    public int getBaseHeight(int x, int z, @Nonnull Heightmap.Type heightmapType) {
+    public int getBaseHeight(int x, int z, @Nonnull Heightmap.Types heightmapType) {
         return 0;
     }
 
     @Override
     @Nonnull
-    public IBlockReader getBaseColumn(int p_230348_1_, int p_230348_2_) {
-        return new Blockreader(new BlockState[0]);
+    public BlockGetter getBaseColumn(int p_230348_1_, int p_230348_2_) {
+        return new NoiseColumn(new BlockState[0]);
     }
 }

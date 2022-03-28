@@ -5,11 +5,11 @@ import com.alan19.astral.blocks.etherealblocks.AstralMeridian;
 import com.alan19.astral.dimensions.AstralDimensions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.stream.Stream;
 
@@ -18,7 +18,7 @@ public class InnerRealmUtils {
 
     }
 
-    public static Chunk getAdjacentChunk(BlockPos blockPos, int direction, World world) {
+    public static LevelChunk getAdjacentChunk(BlockPos blockPos, int direction, Level world) {
         switch (direction) {
             case 0:
                 return world.getChunkAt(blockPos.offset(0, 0, -16));
@@ -46,8 +46,8 @@ public class InnerRealmUtils {
     }
 
     // Make 14 block cubes with an Astral Meridian block in the center, except on the XZ plane
-    public static void generateInnerRealmChunk(ServerWorld world, ChunkPos chunk) {
-        ServerWorld innerRealm = getInnerRealm(world);
+    public static void generateInnerRealmChunk(ServerLevel world, ChunkPos chunk) {
+        ServerLevel innerRealm = getInnerRealm(world);
         //XZ plane
         BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel(), 0), chunk.getWorldPosition().offset(15, innerRealm.getSeaLevel(), 15))
                 .flatMap(blockPos -> Stream.of(blockPos.immutable(), blockPos.above(15).immutable()))
@@ -90,8 +90,8 @@ public class InnerRealmUtils {
                 });
     }
 
-    public static void destroyWall(ServerWorld world, ChunkPos chunk, int meridianDirection) {
-        ServerWorld innerRealm = getInnerRealm(world);
+    public static void destroyWall(ServerLevel world, ChunkPos chunk, int meridianDirection) {
+        ServerLevel innerRealm = getInnerRealm(world);
         switch (meridianDirection) {
             //North
             case 0:
@@ -118,7 +118,7 @@ public class InnerRealmUtils {
         }
     }
 
-    private static ServerWorld getInnerRealm(ServerWorld world) {
+    private static ServerLevel getInnerRealm(ServerLevel world) {
         return world.getServer().getLevel(AstralDimensions.INNER_REALM);
     }
 }

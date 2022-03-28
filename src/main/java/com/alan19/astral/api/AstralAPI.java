@@ -10,10 +10,10 @@ import com.alan19.astral.api.psychicinventory.IPsychicInventory;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
 import com.alan19.astral.mentalconstructs.MentalConstructType;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.Lazy;
@@ -49,32 +49,32 @@ public class AstralAPI {
     @CapabilityInject(IInnerRealmTeleporter.class)
     public static Capability<IInnerRealmTeleporter> teleporterCapability;
 
-    public static LazyOptional<IBodyTracker> getBodyTracker(ServerWorld world) {
+    public static LazyOptional<IBodyTracker> getBodyTracker(ServerLevel world) {
         return getOverworld(world).getCapability(bodyTrackerCapability);
     }
 
-    public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerWorld world) {
+    public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerLevel world) {
         return getOverworld(world).getCapability(psychicInventoryCapability);
     }
 
-    public static LazyOptional<ISleepManager> getSleepManager(PlayerEntity playerEntity) {
+    public static LazyOptional<ISleepManager> getSleepManager(Player playerEntity) {
         return playerEntity.getCapability(sleepManagerCapability);
     }
 
-    public static LazyOptional<IConstructTracker> getConstructTracker(ServerWorld world) {
+    public static LazyOptional<IConstructTracker> getConstructTracker(ServerLevel world) {
         return getOverworld(world).getCapability(constructTrackerCapability);
     }
 
-    public static LazyOptional<IInnerRealmChunkClaim> getChunkClaimTracker(ServerWorld world) {
+    public static LazyOptional<IInnerRealmChunkClaim> getChunkClaimTracker(ServerLevel world) {
         return getOverworld(world).getCapability(chunkClaimCapability);
     }
 
-    public static LazyOptional<IInnerRealmTeleporter> getInnerRealmTeleporter(ServerWorld world) {
+    public static LazyOptional<IInnerRealmTeleporter> getInnerRealmTeleporter(ServerLevel world) {
         return getOverworld(world).getCapability(teleporterCapability);
     }
 
-    public static ServerWorld getOverworld(ServerWorld world) {
-        return world.getServer().getLevel(World.OVERWORLD);
+    public static ServerLevel getOverworld(ServerLevel world) {
+        return world.getServer().getLevel(Level.OVERWORLD);
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class AstralAPI {
         return INTENTION_TRACKER_BEHAVIORS.get(block);
     }
 
-    public static void addIntentionTrackerBehavior(Block block, IIntentionTrackerBehavior intentionTrackerBehavior){
+    public static void addIntentionTrackerBehavior(Block block, IIntentionTrackerBehavior intentionTrackerBehavior) {
         INTENTION_TRACKER_BEHAVIORS.put(block, intentionTrackerBehavior);
     }
 

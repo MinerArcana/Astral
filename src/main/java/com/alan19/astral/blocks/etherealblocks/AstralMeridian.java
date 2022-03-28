@@ -2,18 +2,18 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -41,22 +41,22 @@ public class AstralMeridian extends Block implements Ethereal {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(DIRECTION));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         worldIn.setBlock(pos, AstralBlocks.EGO_MEMBRANE.get().defaultBlockState(), 2);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (handIn == Hand.MAIN_HAND && player.getItemInHand(handIn).isEmpty()) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (handIn == InteractionHand.MAIN_HAND && player.getItemInHand(handIn).isEmpty()) {
             player.removeEffect(AstralEffects.ASTRAL_TRAVEL.get());
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.use(state, worldIn, pos, player, handIn, hit);
     }

@@ -2,13 +2,13 @@ package com.alan19.astral.network;
 
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.sleepmanager.ISleepManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -86,7 +86,7 @@ public class AstralNetwork {
         return channel;
     }
 
-    public static void sendAstralEffectStarting(EffectInstance effectInstance, Entity astralEntity) {
+    public static void sendAstralEffectStarting(MobEffectInstance effectInstance, Entity astralEntity) {
         Astral.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> astralEntity), new StartTrackingAstralPotionMessage(astralEntity.getId(), effectInstance));
     }
 
@@ -98,15 +98,15 @@ public class AstralNetwork {
         Astral.INSTANCE.sendToServer(new UpdateInputMessage(upNow, downNow, forwardsNow, backwardsNow, leftNow, rightNow, sprintNow));
     }
 
-    public static void sendClientAstralTravelStart(ServerPlayerEntity playerEntity, ISleepManager sleepManager) {
+    public static void sendClientAstralTravelStart(ServerPlayer playerEntity, ISleepManager sleepManager) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelStarting(playerEntity.getId(), sleepManager));
     }
 
-    public static void sendClientAstralTravelEnd(ServerPlayerEntity playerEntity) {
+    public static void sendClientAstralTravelEnd(ServerPlayer playerEntity) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> playerEntity), new SendAstralTravelEnding(playerEntity.getId()));
     }
 
-    public static void sendOfferingBrazierFinishParticles(BlockPos blockPos, Chunk chunk) {
+    public static void sendOfferingBrazierFinishParticles(BlockPos blockPos, LevelChunk chunk) {
         Astral.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SendOfferingBrazierFinished(blockPos));
     }
 
@@ -114,7 +114,7 @@ public class AstralNetwork {
         Astral.INSTANCE.send(PacketDistributor.SERVER.noArg(), new SendOpenAstralInventory());
     }
 
-    public static void syncPacketGrabbedItem(ServerPlayerEntity player, ItemStack stack) {
+    public static void syncPacketGrabbedItem(ServerPlayer player, ItemStack stack) {
         Astral.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacketGrabbedItem(stack));
     }
 

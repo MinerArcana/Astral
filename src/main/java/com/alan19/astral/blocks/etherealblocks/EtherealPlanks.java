@@ -1,9 +1,9 @@
 package com.alan19.astral.blocks.etherealblocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 
 public class EtherealPlanks extends EtherealBlock implements Ethereal {
     public EtherealPlanks() {

@@ -1,17 +1,17 @@
 package com.alan19.astral.entity.crystalspider;
 
-import net.minecraft.entity.IRangedAttackMob;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
 import java.util.EnumSet;
 
 public class WebAttackGoal extends Goal {
 
-    private final MobEntity entityHost;
-    private final IRangedAttackMob rangedAttackEntityHost;
+    private final Mob entityHost;
+    private final RangedAttackMob rangedAttackEntityHost;
     private LivingEntity attackTarget;
     private int rangedAttackTime = -1;
     private final double entityMoveSpeed;
@@ -21,17 +21,17 @@ public class WebAttackGoal extends Goal {
     private final float attackRadius;
     private final float maxAttackDistance;
 
-    public WebAttackGoal(IRangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
+    public WebAttackGoal(RangedAttackMob attacker, double movespeed, int maxAttackTime, float maxAttackDistanceIn) {
         this(attacker, movespeed, maxAttackTime, maxAttackTime, maxAttackDistanceIn);
     }
 
-    public WebAttackGoal(IRangedAttackMob attacker, double movespeed, int attackIntervalMin, int maxAttackTime, float maxAttackDistanceIn) {
+    public WebAttackGoal(RangedAttackMob attacker, double movespeed, int attackIntervalMin, int maxAttackTime, float maxAttackDistanceIn) {
         if (!(attacker instanceof LivingEntity)) {
             throw new IllegalArgumentException("ArrowAttackGoal requires Mob implements RangedAttackMob");
         }
         else {
             this.rangedAttackEntityHost = attacker;
-            this.entityHost = (MobEntity) attacker;
+            this.entityHost = (Mob) attacker;
             this.entityMoveSpeed = movespeed;
             this.attackIntervalMin = attackIntervalMin;
             this.maxRangedAttackTime = maxAttackTime;
@@ -97,14 +97,14 @@ public class WebAttackGoal extends Goal {
                 return;
             }
 
-            float f = MathHelper.sqrt(d0) / this.attackRadius;
-            float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
+            float f = Mth.sqrt(d0) / this.attackRadius;
+            float lvt_5_1_ = Mth.clamp(f, 0.1F, 1.0F);
             this.rangedAttackEntityHost.performRangedAttack(this.attackTarget, lvt_5_1_);
-            this.rangedAttackTime = MathHelper.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            this.rangedAttackTime = Mth.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
         }
         else if (this.rangedAttackTime < 0) {
-            float f2 = MathHelper.sqrt(d0) / this.attackRadius;
-            this.rangedAttackTime = MathHelper.floor(f2 * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
+            float f2 = Mth.sqrt(d0) / this.attackRadius;
+            this.rangedAttackTime = Mth.floor(f2 * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
         }
     }
 }

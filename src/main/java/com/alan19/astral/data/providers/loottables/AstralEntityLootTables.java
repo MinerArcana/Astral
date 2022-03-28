@@ -5,49 +5,53 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.items.AstralItems;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.advancements.criterion.MobEffectsPredicate;
-import net.minecraft.data.loot.EntityLootTables;
-import net.minecraft.entity.EntityType;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.data.loot.EntityLoot;
 import net.minecraft.loot.*;
-import net.minecraft.loot.conditions.EntityHasProperty;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.functions.LootingEnchantBonus;
-import net.minecraft.loot.functions.SetCount;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
 import javax.annotation.Nonnull;
 
-public class AstralEntityLootTables extends EntityLootTables {
+public class AstralEntityLootTables extends EntityLoot {
 
-    public static final ILootCondition.IBuilder KILLER_PLAYER_HAS_ASTRAL_TRAVEL = EntityHasProperty.hasProperties(LootContext.EntityTarget.KILLER_PLAYER, EntityPredicate.Builder.entity().effects(MobEffectsPredicate.effects().and(AstralEffects.ASTRAL_TRAVEL.get())));
+    public static final LootItemCondition.Builder KILLER_PLAYER_HAS_ASTRAL_TRAVEL = LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.KILLER_PLAYER, EntityPredicate.Builder.entity().effects(MobEffectsPredicate.effects().and(AstralEffects.ASTRAL_TRAVEL.get())));
 
     @Override
     protected void addTables() {
         add(AstralEntities.CRYSTAL_SPIDER.get(), new LootTable.Builder()
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.DREAMCORD.get())
-                                .apply(SetCount.setCount(RandomValueRange.between(0, 2)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1)))))
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(AstralItems.DREAMCORD.get())
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0, 2)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0, 1)))))
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.CRYSTAL_CHITIN.get())
-                                .apply(SetCount.setCount(RandomValueRange.between(-1, 1)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1)))
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(AstralItems.CRYSTAL_CHITIN.get())
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(-1, 1)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0, 1)))
                                 .when(KILLER_PLAYER_HAS_ASTRAL_TRAVEL))));
         add(new ResourceLocation(Astral.MOD_ID, "inject/phantom"), new LootTable.Builder()
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.PHANTOM_EDGE.get())
-                                .apply(SetCount.setCount(RandomValueRange.between(0, 2)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1)))
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(AstralItems.PHANTOM_EDGE.get())
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0, 2)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0, 1)))
                                 .when(KILLER_PLAYER_HAS_ASTRAL_TRAVEL)))
                 .withPool(LootPool.lootPool()
-                        .setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(AstralItems.SLEEPLESS_EYE.get())
-                                .apply(SetCount.setCount(RandomValueRange.between(0, 1)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0, 1)))
+                        .setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(AstralItems.SLEEPLESS_EYE.get())
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0, 1)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0, 1)))
                                 .when(KILLER_PLAYER_HAS_ASTRAL_TRAVEL)))
         );
     }

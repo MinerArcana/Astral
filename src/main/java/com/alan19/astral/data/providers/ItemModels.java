@@ -2,9 +2,9 @@ package com.alan19.astral.data.providers;
 
 import com.alan19.astral.Astral;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.BlockNamedItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
@@ -75,19 +75,19 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         this.singleTexture(item.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/" + item.getId().getPath()));
     }
 
-    private void forBlockItem(RegistryObject<? extends BlockNamedItem> item) {
+    private void forBlockItem(RegistryObject<? extends ItemNameBlockItem> item) {
         getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(new ResourceLocation(Astral.MOD_ID, "block/" + item.get().getBlock().getRegistryName().getPath())));
     }
 
-    private void forBlockItem(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
+    private void forBlockItem(RegistryObject<? extends ItemNameBlockItem> item, ResourceLocation modelLocation) {
         getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(modelLocation));
     }
 
-    private void forBlockItemWithParent(RegistryObject<? extends BlockNamedItem> item, ResourceLocation modelLocation) {
+    private void forBlockItemWithParent(RegistryObject<? extends ItemNameBlockItem> item, ResourceLocation modelLocation) {
         singleTexture(item.getId().getPath(), generatedItem, "layer0", modelLocation);
     }
 
-    private void forBlockItemWithParent(RegistryObject<? extends BlockNamedItem> item) {
+    private void forBlockItemWithParent(RegistryObject<? extends ItemNameBlockItem> item) {
         singleTexture(item.getId().getPath(), generatedItem, "layer0", modLoc("block/" + item.getId().getPath()));
     }
 

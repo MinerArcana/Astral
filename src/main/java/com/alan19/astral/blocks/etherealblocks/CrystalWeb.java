@@ -4,22 +4,22 @@ import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.events.astraltravel.TravelEffects;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,17 +32,17 @@ public class CrystalWeb extends EtherealBlock {
     public static final IntegerProperty GENERATION = IntegerProperty.create("generation", 0, 256);
 
     public CrystalWeb() {
-        super(AbstractBlock.Properties.of(Material.WEB).noCollission().strength(4.0F).noOcclusion());
+        super(BlockBehaviour.Properties.of(Material.WEB).noCollission().strength(4.0F).noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(GENERATION, 0));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !((LivingEntity) entityIn).hasEffect(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof SpiderEntity)) {
-            entityIn.makeStuckInBlock(state, new Vector3d(0.25D, 0.05F, 0.25D));
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !((LivingEntity) entityIn).hasEffect(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof Spider)) {
+            entityIn.makeStuckInBlock(state, new Vec3(0.25D, 0.05F, 0.25D));
             if (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) {
-                ((LivingEntity) entityIn).addEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
+                ((LivingEntity) entityIn).addEffect(new MobEffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }
         }
     }
@@ -54,7 +54,7 @@ public class CrystalWeb extends EtherealBlock {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
         final int moonPhase = worldIn.dimensionType().moonPhase(worldIn.getDayTime());
         //Spread in a direction based on moon phasae
@@ -62,7 +62,7 @@ public class CrystalWeb extends EtherealBlock {
         // TODO Make this configurable
         // Controls how many generations the web can spread
         Integer maxGenerations = 10;
-        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.betweenClosedStream(pos.offset(-2, -2, -2), pos.offset(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
+        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.Precipitation.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.betweenClosedStream(pos.offset(-2, -2, -2), pos.offset(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
             final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isEmptyBlock).map(BlockPos::immutable).collect(Collectors.toList());
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
@@ -99,7 +99,7 @@ public class CrystalWeb extends EtherealBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(GENERATION);
     }
 }

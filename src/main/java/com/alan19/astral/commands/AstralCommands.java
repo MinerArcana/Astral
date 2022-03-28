@@ -9,13 +9,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.command.arguments.ItemArgument;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.item.ItemArgument;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Collection;
@@ -26,9 +26,9 @@ public class AstralCommands {
     public static final String ITEM = "item";
     public static final String COUNT = "count";
 
-    public static void registerCommands(CommandDispatcher<CommandSource> commandDispatcher) {
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> commandDispatcher) {
         //Burn command is structured similarly to vanilla's give command
-        final LiteralArgumentBuilder<CommandSource> burnCommand = Commands.literal("burn").requires(commandSource -> commandSource.hasPermission(2))
+        final LiteralArgumentBuilder<CommandSourceStack> burnCommand = Commands.literal("burn").requires(commandSource -> commandSource.hasPermission(2))
                 .then(Commands.argument(TARGETS, EntityArgument.players())
                         .then(Commands.argument(ITEM, ItemArgument.item())
                                 .then(Commands.argument(COUNT, IntegerArgumentType.integer(1))
@@ -47,7 +47,7 @@ public class AstralCommands {
      * @return The result of the command, 0 in most cases
      * @throws CommandSyntaxException Thrown when there is an error in the command syntax
      */
-    private static int addItemToInnerRealmInventory(CommandSource source, Collection<ServerPlayerEntity> targets, ItemStack itemStack) throws CommandSyntaxException {
+    private static int addItemToInnerRealmInventory(CommandSourceStack source, Collection<ServerPlayer> targets, ItemStack itemStack) throws CommandSyntaxException {
         // TODO Possibly simulate offering brazier recipes
         ItemStack copy = itemStack.copy();
         AstralAPI.getOverworldPsychicInventory(source.getPlayerOrException().getLevel()).ifPresent(iPsychicInventory -> {
@@ -62,10 +62,10 @@ public class AstralCommands {
                 }
             });
             if (targets.size() == 1) {
-                source.sendSuccess(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_SINGLE, copy.getCount(), copy.getDisplayName(), targets.iterator().next().getDisplayName()), true);
+                source.sendSuccess(new TranslatableComponent(Constants.COMMANDS_BURN_SUCCESS_SINGLE, copy.getCount(), copy.getDisplayName(), targets.iterator().next().getDisplayName()), true);
             }
             else {
-                source.sendSuccess(new TranslationTextComponent(Constants.COMMANDS_BURN_SUCCESS_MULTIPLE, copy.getCount(), copy.getDisplayName(), targets.size()), true);
+                source.sendSuccess(new TranslatableComponent(Constants.COMMANDS_BURN_SUCCESS_MULTIPLE, copy.getCount(), copy.getDisplayName(), targets.size()), true);
             }
         });
         return 0;

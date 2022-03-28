@@ -1,7 +1,7 @@
 package com.alan19.astral.api.sleepmanager;
 
 import com.alan19.astral.configs.AstralConfig;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class SleepManager implements ISleepManager {
     public static final String SLEEP_COUNT = "sleepCount";
@@ -46,15 +46,15 @@ public class SleepManager implements ISleepManager {
 
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt(SLEEP_COUNT, sleepCount);
         nbt.putBoolean(GOING_TO_INNER_REALM, goingToInnerRealm);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         sleepCount = nbt.getInt(SLEEP_COUNT);
         goingToInnerRealm = nbt.getBoolean(GOING_TO_INNER_REALM);
     }

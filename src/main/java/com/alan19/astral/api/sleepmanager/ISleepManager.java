@@ -1,9 +1,9 @@
 package com.alan19.astral.api.sleepmanager;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface ISleepManager extends INBTSerializable<CompoundNBT> {
+public interface ISleepManager extends INBTSerializable<CompoundTag> {
     boolean isGoingToInnerRealm();
 
     void setGoingToInnerRealm(boolean goingToInnerRealm);

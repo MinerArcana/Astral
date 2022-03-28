@@ -1,25 +1,25 @@
 package com.alan19.astral.blocks.tileentities;
 
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.WeightedSpawnerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.spawner.AbstractSpawner;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SpawnData;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickableTileEntity {
-    private final AbstractSpawner spawnerLogic = new AbstractSpawner() {
+public class EtherealMobSpawnerTileEntity extends BlockEntity implements TickableBlockEntity {
+    private final BaseSpawner spawnerLogic = new BaseSpawner() {
 
         @Override
         public void broadcastEvent(int id) {
@@ -27,7 +27,7 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
         }
 
         @Override
-        public World getLevel() {
+        public Level getLevel() {
             return level;
         }
 
@@ -38,7 +38,7 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
         }
 
         @Override
-        public void setNextSpawnData(@Nonnull WeightedSpawnerEntity spawnerEntity) {
+        public void setNextSpawnData(@Nonnull SpawnData spawnerEntity) {
             super.setNextSpawnData(spawnerEntity);
             if (this.getLevel() != null) {
                 BlockState blockState = this.getLevel().getBlockState(this.getPos());
@@ -54,8 +54,8 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
         private boolean isAstralPlayerNearby(double x, double y, double z, double range) {
             if (level != null && range >= 0) {
                 return level.players().stream()
-                        .filter(EntityPredicates.LIVING_ENTITY_STILL_ALIVE)
-                        .filter(EntityPredicates.NO_SPECTATORS)
+                        .filter(EntitySelector.LIVING_ENTITY_STILL_ALIVE)
+                        .filter(EntitySelector.NO_SPECTATORS)
                         .filter(playerEntity -> playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()))
                         .anyMatch(playerEntity -> playerEntity.distanceToSqr(x, y, z) <= range * range);
             }
@@ -69,14 +69,14 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
 
     @Override
     @ParametersAreNonnullByDefault
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         this.spawnerLogic.load(nbt);
     }
 
     @Override
     @Nonnull
-    public CompoundNBT save(@Nonnull CompoundNBT compound) {
+    public CompoundTag save(@Nonnull CompoundTag compound) {
         super.save(compound);
         this.spawnerLogic.save(compound);
         return compound;
@@ -93,14 +93,14 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
      */
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 1, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, this.getUpdateTag());
     }
 
     @Override
     @Nonnull
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT compoundnbt = this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        CompoundTag compoundnbt = this.save(new CompoundTag());
         compoundnbt.remove("SpawnPotentials");
         return compoundnbt;
     }
@@ -111,7 +111,7 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         if (level != null) {
             this.load(level.getBlockState(pkt.getPos()), pkt.getTag());
         }
@@ -122,7 +122,7 @@ public class EtherealMobSpawnerTileEntity extends TileEntity implements ITickabl
         return true;
     }
 
-    public AbstractSpawner getSpawnerBaseLogic() {
+    public BaseSpawner getSpawnerBaseLogic() {
         return this.spawnerLogic;
     }
 

@@ -1,6 +1,6 @@
 package com.alan19.astral.api.astraldamage;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class AstralDamage implements IAstralDamage {
     private int damage = 0;
@@ -16,14 +16,14 @@ public class AstralDamage implements IAstralDamage {
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
         nbt.putInt("damage", damage);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         damage = nbt.getInt("damage");
     }
 }

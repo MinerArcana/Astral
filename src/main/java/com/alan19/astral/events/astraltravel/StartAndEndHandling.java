@@ -10,18 +10,18 @@ import com.alan19.astral.entity.AstralEntities;
 import com.alan19.astral.entity.physicalbody.PhysicalBodyEntity;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.util.Constants;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.SPlayEntityEffectPacket;
-import net.minecraft.network.play.server.SRemoveEntityEffectPacket;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.living.PotionEvent;
@@ -43,8 +43,8 @@ public class StartAndEndHandling {
     @SubscribeEvent
     public static void astralTravelAdded(PotionEvent.PotionAddedEvent event) {
         //Only players need the startup effects
-        if (event.getPotionEffect().getEffect().equals(AstralEffects.ASTRAL_TRAVEL.get()) && event.getEntityLiving() instanceof PlayerEntity && !event.getEntityLiving().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
+        if (event.getPotionEffect().getEffect().equals(AstralEffects.ASTRAL_TRAVEL.get()) && event.getEntityLiving() instanceof Player && !event.getEntityLiving().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
+            Player playerEntity = (Player) event.getEntityLiving();
             playerEntity.getEntityData().set(Entity.DATA_POSE, Pose.SLEEPING);
             if (!playerEntity.getCommandSenderWorld().isClientSide()) {
                 //Only apply modifier if it does not exist
@@ -54,16 +54,16 @@ public class StartAndEndHandling {
                 //Reset the sleep manager
                 playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
                     sleepManager.resetSleep();
-                    if (playerEntity instanceof ServerPlayerEntity && !playerEntity.level.isClientSide()) {
-                        final ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
+                    if (playerEntity instanceof ServerPlayer && !playerEntity.level.isClientSide()) {
+                        final ServerPlayer serverPlayerEntity = (ServerPlayer) playerEntity;
                         //Send Astral Travel is starting to client to display fade effect
                         AstralNetwork.sendClientAstralTravelStart(serverPlayerEntity, sleepManager);
-                        serverPlayerEntity.connection.send(new SPlayEntityEffectPacket(serverPlayerEntity.getId(), event.getPotionEffect()));
+                        serverPlayerEntity.connection.send(new ClientboundUpdateMobEffectPacket(serverPlayerEntity.getId(), event.getPotionEffect()));
                     }
                 });
             }
             //Apply Astral Travel to entity on client
-            if (event.getEntityLiving().level instanceof ServerWorld) {
+            if (event.getEntityLiving().level instanceof ServerLevel) {
                 AstralNetwork.sendAstralEffectStarting(event.getPotionEffect(), event.getEntity());
             }
         }
@@ -76,18 +76,18 @@ public class StartAndEndHandling {
      * @param entityLiving The entity that with the potion effect
      */
     public static void astralTravelEnd(LivingEntity entityLiving) {
-        if (entityLiving instanceof PlayerEntity) {
-            PlayerEntity playerEntity = (PlayerEntity) entityLiving;
+        if (entityLiving instanceof Player) {
+            Player playerEntity = (Player) entityLiving;
             if (playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).hasModifier(Constants.DISABLES_GRAVITY)) {
                 playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).removeModifier(Constants.DISABLES_GRAVITY);
             }
             //Only run serverside
             if (!playerEntity.getCommandSenderWorld().isClientSide()) {
                 //Get server versions of world and player
-                ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
-                ServerWorld serverWorld = serverPlayerEntity.getLevel();
+                ServerPlayer serverPlayerEntity = (ServerPlayer) playerEntity;
+                ServerLevel serverWorld = serverPlayerEntity.getLevel();
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(cap -> cap.mergePlayerWithBody(serverPlayerEntity, serverWorld));
-                serverPlayerEntity.connection.send(new SRemoveEntityEffectPacket(serverPlayerEntity.getId(), AstralEffects.ASTRAL_TRAVEL.get()));
+                serverPlayerEntity.connection.send(new ClientboundRemoveMobEffectPacket(serverPlayerEntity.getId(), AstralEffects.ASTRAL_TRAVEL.get()));
                 AstralNetwork.sendClientAstralTravelEnd(serverPlayerEntity);
             }
         }
@@ -117,15 +117,15 @@ public class StartAndEndHandling {
      */
     @SubscribeEvent
     public static void sendCapsToPlayer(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity) {
-            final ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        if (event.getPlayer() instanceof ServerPlayer) {
+            final ServerPlayer player = (ServerPlayer) event.getPlayer();
             AstralAPI.getSleepManager(event.getPlayer()).ifPresent(sleepManager -> AstralNetwork.sendClientAstralTravelStart(player, sleepManager));
         }
     }
 
-    public static void spawnPhysicalBody(ServerPlayerEntity playerEntity) {
+    public static void spawnPhysicalBody(ServerPlayer playerEntity) {
         if (playerEntity != null) {
-            PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getLevel(), ItemStack.EMPTY, playerEntity, playerEntity.blockPosition(), SpawnReason.TRIGGERED, false, false);
+            PhysicalBodyEntity physicalBodyEntity = (PhysicalBodyEntity) AstralEntities.PHYSICAL_BODY_ENTITY.get().spawn(playerEntity.getLevel(), ItemStack.EMPTY, playerEntity, playerEntity.blockPosition(), MobSpawnType.TRIGGERED, false, false);
             if (physicalBodyEntity != null) {
                 if (playerEntity.getMaxHealth() > physicalBodyEntity.getMaxHealth()) {
                     physicalBodyEntity.getAttribute(Attributes.MAX_HEALTH).removeModifier(HEALTH_ID);
@@ -143,7 +143,7 @@ public class StartAndEndHandling {
                 //Insert main inventory to body and clear
                 if (!playerEntity.getCommandSenderWorld().isClientSide()) {
 
-                    final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getCommandSenderWorld());
+                    final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerLevel) playerEntity.getCommandSenderWorld());
 
                     psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
                 }

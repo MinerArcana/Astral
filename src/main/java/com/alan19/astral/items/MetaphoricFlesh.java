@@ -1,6 +1,6 @@
 package com.alan19.astral.items;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class MetaphoricFlesh extends Item {
     public MetaphoricFlesh() {

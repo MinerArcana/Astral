@@ -6,11 +6,11 @@ import com.alan19.astral.items.FeverweedItem;
 import com.alan19.astral.items.Snowberry;
 import com.alan19.astral.potions.AstralPotions;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import xyz.brassgoggledcoders.patchouliprovider.*;
 
 import java.util.function.Consumer;
