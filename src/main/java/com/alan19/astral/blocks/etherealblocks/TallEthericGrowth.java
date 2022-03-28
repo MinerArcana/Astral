@@ -16,13 +16,13 @@ import javax.annotation.Nonnull;
 
 public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
     public TallEthericGrowth() {
-        super(Block.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().hardnessAndResistance(0).sound(SoundType.PLANT));
+        super(Block.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0).sound(SoundType.GRASS));
     }
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -44,17 +44,17 @@ public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
 
     @Override
-    public PushReaction getPushReaction(@Nonnull BlockState state) {
+    public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
 

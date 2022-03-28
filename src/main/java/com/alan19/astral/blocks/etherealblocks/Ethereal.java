@@ -27,7 +27,7 @@ public interface Ethereal {
     static BlockRenderType getRenderType(BlockRenderType defaultReturn) {
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
-            return player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultReturn : BlockRenderType.INVISIBLE;
+            return player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) ? defaultReturn : BlockRenderType.INVISIBLE;
         }
         return defaultReturn;
     }
@@ -41,7 +41,7 @@ public interface Ethereal {
      */
     static boolean canEntityDestroy(Entity entity, boolean defaultReturn) {
         if (entity instanceof LivingEntity) {
-            return ((LivingEntity) entity).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
+            return ((LivingEntity) entity).hasEffect(AstralEffects.ASTRAL_TRAVEL.get());
         }
         return defaultReturn;
     }
@@ -53,7 +53,7 @@ public interface Ethereal {
      * @return usually a regular shape if the entity is Astral, empty if not
      */
     static VoxelShape getCollisionShape(ISelectionContext context, VoxelShape parentReturn) {
-        if (context.getEntity() instanceof LivingEntity && (((LivingEntity) context.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(context.getEntity().getType())) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
+        if (context.getEntity() instanceof LivingEntity && (((LivingEntity) context.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(context.getEntity().getType())) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
             return parentReturn;
         }
         return VoxelShapes.empty();
@@ -68,7 +68,7 @@ public interface Ethereal {
     @OnlyIn(Dist.CLIENT)
     static VoxelShape getShape(VoxelShape parentShape) {
         ClientPlayerEntity clientPlayerEntity = Minecraft.getInstance().player;
-        if (clientPlayerEntity != null && !clientPlayerEntity.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+        if (clientPlayerEntity != null && !clientPlayerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
             return VoxelShapes.empty();
         }
         return parentShape;

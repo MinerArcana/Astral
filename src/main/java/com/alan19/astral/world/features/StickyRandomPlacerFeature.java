@@ -22,10 +22,10 @@ public class StickyRandomPlacerFeature extends Feature<BlockClusterFeatureConfig
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockClusterFeatureConfig config) {
+    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockClusterFeatureConfig config) {
         BlockPos blockpos;
         if (config.project) {
-            blockpos = reader.getHeight(Heightmap.Type.WORLD_SURFACE_WG, pos);
+            blockpos = reader.getHeightmapPos(Heightmap.Type.WORLD_SURFACE_WG, pos);
         }
         else {
             blockpos = pos;
@@ -34,12 +34,12 @@ public class StickyRandomPlacerFeature extends Feature<BlockClusterFeatureConfig
         int i = 0;
         BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 
-        for (int j = 0; j < config.tryCount; ++j) {
-            mutablePos.setAndOffset(blockpos, rand.nextInt(config.xSpread + 1) - rand.nextInt(config.xSpread + 1), rand.nextInt(config.ySpread + 1) - rand.nextInt(config.ySpread + 1), rand.nextInt(config.zSpread + 1) - rand.nextInt(config.zSpread + 1));
-            BlockPos downPos = mutablePos.down();
+        for (int j = 0; j < config.tries; ++j) {
+            mutablePos.setWithOffset(blockpos, rand.nextInt(config.xspread + 1) - rand.nextInt(config.xspread + 1), rand.nextInt(config.yspread + 1) - rand.nextInt(config.yspread + 1), rand.nextInt(config.zspread + 1) - rand.nextInt(config.zspread + 1));
+            BlockPos downPos = mutablePos.below();
             BlockState downState = reader.getBlockState(downPos);
-            BlockState blockstate = config.stateProvider.getBlockState(rand, pos);
-            if ((reader.isAirBlock(mutablePos) || config.isReplaceable && reader.getBlockState(mutablePos).getMaterial().isReplaceable()) && blockstate.isValidPosition(reader, mutablePos) && Arrays.stream(Direction.values()).anyMatch(direction -> !reader.isAirBlock(mutablePos.offset(direction))) && (config.whitelist.isEmpty() || config.whitelist.contains(downState.getBlock())) && !config.blacklist.contains(downState) && (!config.requiresWater || reader.getFluidState(downPos.west()).isTagged(FluidTags.WATER) || reader.getFluidState(downPos.east()).isTagged(FluidTags.WATER) || reader.getFluidState(downPos.north()).isTagged(FluidTags.WATER) || reader.getFluidState(downPos.south()).isTagged(FluidTags.WATER))) {
+            BlockState blockstate = config.stateProvider.getState(rand, pos);
+            if ((reader.isEmptyBlock(mutablePos) || config.canReplace && reader.getBlockState(mutablePos).getMaterial().isReplaceable()) && blockstate.canSurvive(reader, mutablePos) && Arrays.stream(Direction.values()).anyMatch(direction -> !reader.isEmptyBlock(mutablePos.relative(direction))) && (config.whitelist.isEmpty() || config.whitelist.contains(downState.getBlock())) && !config.blacklist.contains(downState) && (!config.needWater || reader.getFluidState(downPos.west()).is(FluidTags.WATER) || reader.getFluidState(downPos.east()).is(FluidTags.WATER) || reader.getFluidState(downPos.north()).is(FluidTags.WATER) || reader.getFluidState(downPos.south()).is(FluidTags.WATER))) {
                 config.blockPlacer.place(reader, mutablePos, blockstate, rand);
                 ++i;
             }

@@ -29,13 +29,13 @@ import java.util.Random;
 import static net.minecraft.block.TripWireBlock.POWERED;
 
 public class EthericPowder extends EtherealBlock {
-    private static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 1.0D, 13.0D);
+    private static final VoxelShape BASE_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 1.0D, 13.0D);
 
     protected EthericPowder() {
-        super(Properties.create(Material.MISCELLANEOUS)
-                .doesNotBlockMovement()
-                .hardnessAndResistance(0));
-        setDefaultState(getStateContainer().getBaseState().with(POWERED, false));
+        super(Properties.of(Material.DECORATION)
+                .noCollission()
+                .strength(0));
+        registerDefaultState(getStateDefinition().any().setValue(POWERED, false));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -46,14 +46,14 @@ public class EthericPowder extends EtherealBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
     }
 
     @ParametersAreNonnullByDefault
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (worldIn instanceof ServerWorld && !state.get(POWERED)) {
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (worldIn instanceof ServerWorld && !state.getValue(POWERED)) {
             this.updateState(worldIn, pos);
         }
     }
@@ -61,31 +61,31 @@ public class EthericPowder extends EtherealBlock {
     @ParametersAreNonnullByDefault
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        if (state.get(POWERED)) {
+        if (state.getValue(POWERED)) {
             this.updateState(worldIn, pos);
         }
     }
 
     private void updateState(World worldIn, BlockPos pos) {
         BlockState blockState = worldIn.getBlockState(pos);
-        boolean isPowered = blockState.get(POWERED);
+        boolean isPowered = blockState.getValue(POWERED);
         if (!blockState.getShape(worldIn, pos).isEmpty()) {
-            List<? extends Entity> mobsInBlock = worldIn.getEntitiesWithinAABBExcludingEntity(null, blockState.getShape(worldIn, pos).getBoundingBox().offset(pos));
+            List<? extends Entity> mobsInBlock = worldIn.getEntities(null, blockState.getShape(worldIn, pos).bounds().move(pos));
 
             // Checks if entity is an Astral Entity and triggers pressure plates
             final boolean canTrigger = mobsInBlock.stream().anyMatch(EthericPowder::isEntityAstralAndTriggersPressurePlate);
 
             if (isPowered != canTrigger) {
-                blockState = blockState.with(POWERED, canTrigger);
-                worldIn.setBlockState(pos, blockState, 3);
+                blockState = blockState.setValue(POWERED, canTrigger);
+                worldIn.setBlock(pos, blockState, 3);
             }
             if (canTrigger) {
-                worldIn.getPendingBlockTicks().scheduleTick(new BlockPos(pos), this, 30);
+                worldIn.getBlockTicks().scheduleTick(new BlockPos(pos), this, 30);
             }
         }
         else {
-            blockState = blockState.with(POWERED, false);
-            worldIn.setBlockState(pos, blockState, 3);
+            blockState = blockState.setValue(POWERED, false);
+            worldIn.setBlock(pos, blockState, 3);
         }
 
     }
@@ -96,23 +96,23 @@ public class EthericPowder extends EtherealBlock {
     }
 
     public static boolean isEntityAstralAndTriggersPressurePlate(Entity entity) {
-        return !entity.doesEntityNotTriggerPressurePlate() && entity instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entity);
+        return !entity.isIgnoringBlockTriggers() && entity instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entity);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(TripWireHookBlock.POWERED) ? 15 : 0;
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(TripWireHookBlock.POWERED) ? 15 : 0;
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(TripWireHookBlock.POWERED) ? 15 : 0;
+    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(TripWireHookBlock.POWERED) ? 15 : 0;
     }
 
     @Override
     public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(TripWireHookBlock.POWERED) ? 7 : 0;
+        return state.getValue(TripWireHookBlock.POWERED) ? 7 : 0;
     }
 }

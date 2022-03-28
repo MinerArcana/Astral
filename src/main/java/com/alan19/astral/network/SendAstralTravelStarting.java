@@ -40,8 +40,8 @@ public class SendAstralTravelStarting {
         contextSupplier.get().enqueueWork(() -> {
             final Optional<World> optionalWorld = LogicalSidedProvider.CLIENTWORLD.get(contextSupplier.get().getDirection().getReceptionSide());
             optionalWorld.ifPresent(world -> {
-                if (world.getEntityByID(sendAstralTravelStarting.id) instanceof PlayerEntity) {
-                    PlayerEntity player = (PlayerEntity) world.getEntityByID(sendAstralTravelStarting.id);
+                if (world.getEntity(sendAstralTravelStarting.id) instanceof PlayerEntity) {
+                    PlayerEntity player = (PlayerEntity) world.getEntity(sendAstralTravelStarting.id);
                     AstralAPI.getSleepManager(player).ifPresent(sleepManager1 -> {
                         sleepManager1.setSleep(sendAstralTravelStarting.sleepManager.getSleep());
                         sleepManager1.setGoingToInnerRealm(sendAstralTravelStarting.sleepManager.isGoingToInnerRealm());

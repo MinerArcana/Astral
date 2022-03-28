@@ -32,14 +32,14 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
      */
     @Override
     public void teleport(ServerPlayerEntity player) {
-        ServerWorld innerRealmWorld = player.getServerWorld().getServer().getWorld(AstralDimensions.INNER_REALM);
-        final BlockPos spawnLocation = spawnLocations.computeIfAbsent(player.getUniqueID(), uuid -> {
-            final BlockPos pos = new BlockPos(spawnLocations.size() * 256 + 8, player.getEntityWorld().getSeaLevel() + 4, 8);
+        ServerWorld innerRealmWorld = player.getLevel().getServer().getLevel(AstralDimensions.INNER_REALM);
+        final BlockPos spawnLocation = spawnLocations.computeIfAbsent(player.getUUID(), uuid -> {
+            final BlockPos pos = new BlockPos(spawnLocations.size() * 256 + 8, player.getCommandSenderWorld().getSeaLevel() + 4, 8);
             AstralAPI.getChunkClaimTracker(innerRealmWorld).ifPresent(cap -> cap.claimChunk(player, new ChunkPos(pos)));
             return pos;
         });
         TeleportationTools.performTeleport(player, AstralDimensions.INNER_REALM, new BlockPos(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()), Direction.UP);
-        AstralAPI.getOverworldPsychicInventory(innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUniqueID())));
+        AstralAPI.getOverworldPsychicInventory(innerRealmWorld).ifPresent(psychicInventory -> dropInnerRealmItems(player, psychicInventory.getInventoryOfPlayer(player.getUUID())));
     }
 
     /**
@@ -49,20 +49,20 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
      * @param inventoryOfPlayer The PsychicInventoryInstance of the player
      */
     private void dropInnerRealmItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer) {
-        World entityWorld = playerEntity.world;
+        World entityWorld = playerEntity.level;
         int inventorySlots = inventoryOfPlayer.getInnerRealmMain().getSlots();
         for (int i = 0; i < inventorySlots; i++) {
-            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmMain().extractItem(i, 64, false));
+            Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getInnerRealmMain().extractItem(i, 64, false));
         }
 
         int armorSlots = inventoryOfPlayer.getInnerRealmArmor().getSlots();
         for (int i = 0; i < armorSlots; i++) {
-            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmArmor().extractItem(i, 64, false));
+            Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getInnerRealmArmor().extractItem(i, 64, false));
         }
 
         int handSlots = inventoryOfPlayer.getInnerRealmHands().getSlots();
         for (int i = 0; i < handSlots; i++) {
-            Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getInnerRealmHands().extractItem(i, 64, false));
+            Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getInnerRealmHands().extractItem(i, 64, false));
         }
     }
 
@@ -76,7 +76,7 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         Map<UUID, BlockPos> newSpawnMap = new HashMap<>();
-        for (String id : nbt.keySet()) {
+        for (String id : nbt.getAllKeys()) {
             newSpawnMap.put(UUID.fromString(id), NBTUtil.readBlockPos(nbt.getCompound(id)));
         }
         this.spawnLocations = newSpawnMap;

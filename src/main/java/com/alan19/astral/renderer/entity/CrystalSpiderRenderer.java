@@ -18,12 +18,12 @@ public class CrystalSpiderRenderer extends SpiderRenderer<CrystalSpiderEntity> {
 
     public CrystalSpiderRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn);
-        this.shadowSize *= 0.7F;
+        this.shadowRadius *= 0.7F;
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void preRenderCallback(CrystalSpiderEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void scale(CrystalSpiderEntity entitylivingbaseIn, MatrixStack matrixStackIn, float partialTickTime) {
         matrixStackIn.scale(0.7F, 0.7F, 0.7F);
     }
 
@@ -32,7 +32,7 @@ public class CrystalSpiderRenderer extends SpiderRenderer<CrystalSpiderEntity> {
      */
     @Override
     @Nonnull
-    public ResourceLocation getEntityTexture(@Nonnull CrystalSpiderEntity entity) {
+    public ResourceLocation getTextureLocation(@Nonnull CrystalSpiderEntity entity) {
         return CAVE_SPIDER_TEXTURES;
     }
 }

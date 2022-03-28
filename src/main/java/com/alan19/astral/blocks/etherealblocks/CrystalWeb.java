@@ -32,23 +32,23 @@ public class CrystalWeb extends EtherealBlock {
     public static final IntegerProperty GENERATION = IntegerProperty.create("generation", 0, 256);
 
     public CrystalWeb() {
-        super(AbstractBlock.Properties.create(Material.WEB).doesNotBlockMovement().hardnessAndResistance(4.0F).notSolid());
-        setDefaultState(getStateContainer().getBaseState().with(GENERATION, 0));
+        super(AbstractBlock.Properties.of(Material.WEB).noCollission().strength(4.0F).noOcclusion());
+        registerDefaultState(getStateDefinition().any().setValue(GENERATION, 0));
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !((LivingEntity) entityIn).isPotionActive(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof SpiderEntity)) {
-            entityIn.setMotionMultiplier(state, new Vector3d(0.25D, 0.05F, 0.25D));
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn) && !((LivingEntity) entityIn).hasEffect(AstralEffects.MIND_VENOM.get()) && !(entityIn instanceof SpiderEntity)) {
+            entityIn.makeStuckInBlock(state, new Vector3d(0.25D, 0.05F, 0.25D));
             if (worldIn.getDifficulty() == Difficulty.NORMAL || worldIn.getDifficulty() == Difficulty.HARD) {
-                ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
+                ((LivingEntity) entityIn).addEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }
         }
     }
 
     @Override
-    public boolean ticksRandomly(@Nonnull BlockState state) {
+    public boolean isRandomlyTicking(@Nonnull BlockState state) {
         return true;
     }
 
@@ -56,17 +56,17 @@ public class CrystalWeb extends EtherealBlock {
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        final int moonPhase = worldIn.getDimensionType().getMoonPhase(worldIn.getDayTime());
+        final int moonPhase = worldIn.dimensionType().moonPhase(worldIn.getDayTime());
         //Spread in a direction based on moon phasae
-        final Integer spreadGenerations = state.get(GENERATION);
+        final Integer spreadGenerations = state.getValue(GENERATION);
         // TODO Make this configurable
         // Controls how many generations the web can spread
         Integer maxGenerations = 10;
-        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
-            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isAirBlock).map(BlockPos::toImmutable).collect(Collectors.toList());
+        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.RainType.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.betweenClosedStream(pos.offset(-2, -2, -2), pos.offset(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
+            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isEmptyBlock).map(BlockPos::immutable).collect(Collectors.toList());
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
-                worldIn.setBlockState(newWebPos, AstralBlocks.CRYSTAL_WEB.get().getDefaultState().with(GENERATION, spreadGenerations + 1), 3);
+                worldIn.setBlock(newWebPos, AstralBlocks.CRYSTAL_WEB.get().defaultBlockState().setValue(GENERATION, spreadGenerations + 1), 3);
             }
         }
         //Remove block if exposed to rain or any liquid
@@ -78,28 +78,28 @@ public class CrystalWeb extends EtherealBlock {
     public Stream<BlockPos> getBoxForMoonPhase(int moonPhase, BlockPos center) {
         switch (moonPhase) {
             case 0:
-                return BlockPos.getAllInBox(center.east().down().south(), center.east(3).up().north());
+                return BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().north());
             case 1:
-                return BlockPos.getAllInBox(center.north().down().east(), center.north(3).up().east(3));
+                return BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().east(3));
             case 2:
-                return BlockPos.getAllInBox(center.north().down().east(), center.north(3).up().west());
+                return BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().west());
             case 3:
-                return BlockPos.getAllInBox(center.north().down().west(), center.north(3).up().west(3));
+                return BlockPos.betweenClosedStream(center.north().below().west(), center.north(3).above().west(3));
             case 4:
-                return BlockPos.getAllInBox(center.west().down().south(), center.west(3).up().north());
+                return BlockPos.betweenClosedStream(center.west().below().south(), center.west(3).above().north());
             case 5:
-                return BlockPos.getAllInBox(center.west().down().north(), center.west(3).up().south(3));
+                return BlockPos.betweenClosedStream(center.west().below().north(), center.west(3).above().south(3));
             case 6:
-                return BlockPos.getAllInBox(center.west().down().south(), center.east().up().south(3));
+                return BlockPos.betweenClosedStream(center.west().below().south(), center.east().above().south(3));
             case 7:
-                return BlockPos.getAllInBox(center.east().down().south(), center.east(3).up().south());
+                return BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().south());
             default:
                 throw new IllegalStateException("Unexpected value: " + moonPhase);
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(GENERATION);
     }
 }

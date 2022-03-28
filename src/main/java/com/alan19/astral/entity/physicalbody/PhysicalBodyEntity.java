@@ -36,31 +36,31 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 public class PhysicalBodyEntity extends LivingEntity {
-    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
-    private static final DataParameter<Boolean> faceDown = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> hungerLevel = EntityDataManager.createKey(PhysicalBodyEntity.class, DataSerializers.VARINT);
-    private static final DataParameter<LazyOptional<ItemStackHandler>> armorInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
-    private static final DataParameter<LazyOptional<ItemStackHandler>> handsInventory = EntityDataManager.createKey(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
+    private static final DataParameter<Optional<GameProfile>> gameProfile = EntityDataManager.defineId(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_GAME_PROFILE);
+    private static final DataParameter<Boolean> faceDown = EntityDataManager.defineId(PhysicalBodyEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> hungerLevel = EntityDataManager.defineId(PhysicalBodyEntity.class, DataSerializers.INT);
+    private static final DataParameter<LazyOptional<ItemStackHandler>> armorInventory = EntityDataManager.defineId(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
+    private static final DataParameter<LazyOptional<ItemStackHandler>> handsInventory = EntityDataManager.defineId(PhysicalBodyEntity.class, AstralSerializers.OPTIONAL_ITEMSTACK_HANDLER);
 
     public PhysicalBodyEntity(EntityType<? extends LivingEntity> type, World world) {
         super(type, world);
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return LivingEntity.registerAttributes();
+        return LivingEntity.createLivingAttributes();
     }
 
     private LazyOptional<ItemStackHandler> getArmor() {
-        return dataManager.get(armorInventory);
+        return entityData.get(armorInventory);
     }
 
     private LazyOptional<ItemStackHandler> getHands() {
-        return dataManager.get(handsInventory);
+        return entityData.get(handsInventory);
     }
 
     @Nonnull
     @Override
-    public Iterable<ItemStack> getArmorInventoryList() {
+    public Iterable<ItemStack> getArmorSlots() {
         NonNullList<ItemStack> itemStackList = NonNullList.withSize(4, ItemStack.EMPTY);
         int bound = itemStackList.size();
         IntStream.range(0, bound).forEach(i -> itemStackList.set(i, getArmor().orElseGet(() -> new ItemStackHandler(4)).getStackInSlot(i)));
@@ -69,8 +69,8 @@ public class PhysicalBodyEntity extends LivingEntity {
 
     @Nonnull
     @Override
-    public ItemStack getItemStackFromSlot(EquipmentSlotType slotIn) {
-        switch (slotIn.getSlotType()) {
+    public ItemStack getItemBySlot(EquipmentSlotType slotIn) {
+        switch (slotIn.getType()) {
             case HAND:
                 return getHands().map(itemStackHandler -> itemStackHandler.getStackInSlot(slotIn.getIndex())).orElse(ItemStack.EMPTY);
             case ARMOR:
@@ -81,37 +81,37 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     @Override
-    public void read(@Nonnull CompoundNBT compound) {
-        super.read(compound);
+    public void load(@Nonnull CompoundNBT compound) {
+        super.load(compound);
 
-        dataManager.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.ofNullable(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
-        dataManager.set(faceDown, compound.getBoolean("facedown"));
-        if (!world.isRemote() && world instanceof ServerWorld && getGameProfile().isPresent()) {
+        entityData.set(gameProfile, !compound.getBoolean("gameProfileExists") ? Optional.empty() : Optional.ofNullable(NBTUtil.readGameProfile(compound.getCompound("gameProfile"))));
+        entityData.set(faceDown, compound.getBoolean("facedown"));
+        if (!level.isClientSide() && level instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = getGameProfile().get().getId();
-            dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
-            dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) world).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
+            entityData.set(armorInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) level).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
+            entityData.set(handsInventory, AstralAPI.getOverworldPsychicInventory((ServerWorld) level).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        compound.putBoolean("gameProfileExists", dataManager.get(gameProfile).isPresent());
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        compound.putBoolean("gameProfileExists", entityData.get(gameProfile).isPresent());
         if (getGameProfile().isPresent()) {
-            compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), dataManager.get(gameProfile).get()));
+            compound.put("gameProfile", NBTUtil.writeGameProfile(new CompoundNBT(), entityData.get(gameProfile).get()));
         }
-        compound.putBoolean("faceDown", dataManager.get(faceDown));
-        super.writeAdditional(compound);
+        compound.putBoolean("faceDown", entityData.get(faceDown));
+        super.addAdditionalSaveData(compound);
     }
 
     @Override
-    protected void dropInventory() {
-        super.dropInventory();
+    protected void dropEquipment() {
+        super.dropEquipment();
         dropPhysicalInventory();
     }
 
     private void clearPhysicalInventory() {
-        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
+        if (level instanceof ServerWorld && getGameProfile().isPresent()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) level).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
                 for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); ++i) {
                     psychicInventoryInstance.getPhysicalInventory().setStackInSlot(i, ItemStack.EMPTY);
                 }
@@ -127,18 +127,18 @@ public class PhysicalBodyEntity extends LivingEntity {
 
 
     private void dropPhysicalInventory() {
-        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) world).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
+        if (level instanceof ServerWorld && getGameProfile().isPresent()) {
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) level).map(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(getGameProfile().get().getId())).ifPresent(psychicInventoryInstance -> {
                 for (int i = 0; i < psychicInventoryInstance.getPhysicalInventory().getSlots(); i++) {
-                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalInventory().getStackInSlot(i));
+                    Block.popResource(level, blockPosition(), psychicInventoryInstance.getPhysicalInventory().getStackInSlot(i));
                     psychicInventoryInstance.getPhysicalInventory().setStackInSlot(i, ItemStack.EMPTY);
                 }
                 for (int i = 0; i < psychicInventoryInstance.getPhysicalArmor().getSlots(); i++) {
-                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalArmor().getStackInSlot(i));
+                    Block.popResource(level, blockPosition(), psychicInventoryInstance.getPhysicalArmor().getStackInSlot(i));
                     psychicInventoryInstance.getPhysicalArmor().setStackInSlot(i, ItemStack.EMPTY);
                 }
                 for (int i = 0; i < psychicInventoryInstance.getPhysicalHands().getSlots(); i++) {
-                    Block.spawnAsEntity(world, getPosition(), psychicInventoryInstance.getPhysicalHands().getStackInSlot(i));
+                    Block.popResource(level, blockPosition(), psychicInventoryInstance.getPhysicalHands().getStackInSlot(i));
                     psychicInventoryInstance.getPhysicalHands().setStackInSlot(i, ItemStack.EMPTY);
                 }
             });
@@ -146,18 +146,18 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     @Override
-    public void setItemStackToSlot(EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
-        if (slotIn.getSlotType() == EquipmentSlotType.Group.HAND) {
+    public void setItemSlot(EquipmentSlotType slotIn, @Nonnull ItemStack stack) {
+        if (slotIn.getType() == EquipmentSlotType.Group.HAND) {
             getHands().orElseGet(() -> new ItemStackHandler(2)).setStackInSlot(slotIn.getIndex(), stack);
         }
-        else if (slotIn.getSlotType() == EquipmentSlotType.Group.ARMOR) {
+        else if (slotIn.getType() == EquipmentSlotType.Group.ARMOR) {
             getArmor().orElseGet(() -> new ItemStackHandler(4)).setStackInSlot(slotIn.getIndex(), stack);
         }
     }
 
     @Nonnull
     @Override
-    public HandSide getPrimaryHand() {
+    public HandSide getMainArm() {
         return HandSide.RIGHT;
     }
 
@@ -166,14 +166,14 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(gameProfile, Optional.empty());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(gameProfile, Optional.empty());
         // Approximately 5% of the storage mobs will be facedown
-        dataManager.register(faceDown, Math.random() < .05);
-        dataManager.register(hungerLevel, 20);
-        dataManager.register(armorInventory, LazyOptional.empty());
-        dataManager.register(handsInventory, LazyOptional.empty());
+        entityData.define(faceDown, Math.random() < .05);
+        entityData.define(hungerLevel, 20);
+        entityData.define(armorInventory, LazyOptional.empty());
+        entityData.define(handsInventory, LazyOptional.empty());
     }
 
     /**
@@ -181,12 +181,12 @@ public class PhysicalBodyEntity extends LivingEntity {
      */
     @Override
     public void tick() {
-        if (world instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) world;
-            serverWorld.forceChunk(this.chunkCoordX, this.chunkCoordZ, true);
-            if (world.getGameTime() % AstralConfig.getTravelingSettings().syncInterval.get() == 0 && isAlive()) {
+        if (level instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) level;
+            serverWorld.setChunkForced(this.xChunk, this.zChunk, true);
+            if (level.getGameTime() % AstralConfig.getTravelingSettings().syncInterval.get() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
-                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.setBodyNBT(getUniqueID(), serializeNBT(), serverWorld));
+                AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.setBodyNBT(getUUID(), serializeNBT(), serverWorld));
             }
         }
         super.tick();
@@ -195,8 +195,8 @@ public class PhysicalBodyEntity extends LivingEntity {
     @Override
     public CompoundNBT serializeNBT() {
         final CompoundNBT compoundNBT = super.serializeNBT();
-        compoundNBT.putInt("Hunger", dataManager.get(hungerLevel));
-        compoundNBT.putString("Dimension", getEntityWorld().getDimensionKey().getLocation().toString());
+        compoundNBT.putInt("Hunger", entityData.get(hungerLevel));
+        compoundNBT.putString("Dimension", getCommandSenderWorld().dimension().location().toString());
         return compoundNBT;
     }
 
@@ -207,17 +207,17 @@ public class PhysicalBodyEntity extends LivingEntity {
      * @param damageAmount The damage amount
      */
     @Override
-    protected void damageEntity(@Nonnull DamageSource damageSrc, float damageAmount) {
-        if (getGameProfile().map(GameProfile::getId).map(uuid -> getLinkedPlayer()).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.canHarmInCreative()) {
+    protected void actuallyHurt(@Nonnull DamageSource damageSrc, float damageAmount) {
+        if (getGameProfile().map(GameProfile::getId).map(uuid -> getLinkedPlayer()).map(PlayerEntity::isCreative).orElse(false) && !damageSrc.isBypassInvul()) {
             return;
         }
-        super.damageEntity(damageSrc, damageAmount);
-        if (damageSrc.damageType.equals("drown") && world instanceof ServerWorld){
+        super.actuallyHurt(damageSrc, damageAmount);
+        if (damageSrc.msgId.equals("drown") && level instanceof ServerWorld) {
             getGameProfile().ifPresent(gp -> {
-                final Entity entity = ((ServerWorld) world).getEntityByUuid(gp.getId());
-                if (entity instanceof LivingEntity){
+                final Entity entity = ((ServerWorld) level).getEntity(gp.getId());
+                if (entity instanceof LivingEntity) {
                     final LivingEntity livingEntity = (LivingEntity) entity;
-                    livingEntity.removeActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+                    livingEntity.removeEffectNoUpdate(AstralEffects.ASTRAL_TRAVEL.get());
                     StartAndEndHandling.astralTravelEnd(livingEntity);
                 }
             });
@@ -231,30 +231,30 @@ public class PhysicalBodyEntity extends LivingEntity {
     }
 
     public boolean isFaceDown() {
-        return dataManager.get(faceDown);
+        return entityData.get(faceDown);
     }
 
     public Optional<GameProfile> getGameProfile() {
         // TODO Refactor to allow ID to be fetched without game profile
-        return dataManager.get(gameProfile);
+        return entityData.get(gameProfile);
     }
 
     public void setGameProfile(GameProfile playerProfile) {
-        dataManager.set(gameProfile, Optional.of(playerProfile));
-        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+        entityData.set(gameProfile, Optional.of(playerProfile));
+        if (level instanceof ServerWorld && getGameProfile().isPresent()) {
             final UUID playerId = playerProfile.getId();
-            PlayerEntity playerEntity = world.getPlayerByUuid(playerId);
-            final ServerWorld serverWorld = (ServerWorld) this.world;
+            PlayerEntity playerEntity = level.getPlayerByUUID(playerId);
+            final ServerWorld serverWorld = (ServerWorld) this.level;
             if (playerEntity != null) {
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(cap -> cap.setBodyNBT(getGameProfile().get().getId(), serializeNBT(), serverWorld));
             }
-            dataManager.set(armorInventory, AstralAPI.getOverworldPsychicInventory(serverWorld).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
-            dataManager.set(handsInventory, AstralAPI.getOverworldPsychicInventory(serverWorld).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
+            entityData.set(armorInventory, AstralAPI.getOverworldPsychicInventory(serverWorld).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalArmor()));
+            entityData.set(handsInventory, AstralAPI.getOverworldPsychicInventory(serverWorld).lazyMap(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerId).getPhysicalHands()));
         }
     }
 
     public void setHungerLevel(int hunger) {
-        dataManager.set(hungerLevel, hunger);
+        entityData.set(hungerLevel, hunger);
     }
 
     /**
@@ -263,31 +263,31 @@ public class PhysicalBodyEntity extends LivingEntity {
      * @param cause The cause of death
      */
     @Override
-    public void onDeath(@Nonnull DamageSource cause) {
-        if (world instanceof ServerWorld && getGameProfile().isPresent()) {
+    public void die(@Nonnull DamageSource cause) {
+        if (level instanceof ServerWorld && getGameProfile().isPresent()) {
             PlayerEntity playerEntity = getLinkedPlayer();
             //If body is killed, drop inventory and kill the player
-            if (!cause.getDamageType().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
-                super.onDeath(cause);
-                setBodyLinkInfo((ServerWorld) world);
+            if (!cause.getMsgId().equals("outOfWorld") && playerEntity != null && getGameProfile().isPresent()) {
+                super.die(cause);
+                setBodyLinkInfo((ServerWorld) level);
             }
-            else if (cause.getDamageType().equals("despawn")) {
-                super.onDeath(cause);
+            else if (cause.getMsgId().equals("despawn")) {
+                super.die(cause);
             }
             //If body despawns because Astral Travel ends, clear the inventory so nothing gets dropped while inventory gets transferred to player
             else {
                 clearPhysicalInventory();
-                dataManager.set(armorInventory, LazyOptional.of(() -> new ItemStackHandler(4)));
-                dataManager.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
-                super.onDeath(cause);
+                entityData.set(armorInventory, LazyOptional.of(() -> new ItemStackHandler(4)));
+                entityData.set(handsInventory, LazyOptional.of(() -> new ItemStackHandler(2)));
+                super.die(cause);
             }
         }
     }
 
     @Nullable
     private ServerPlayerEntity getLinkedPlayer() {
-        if (getEntityWorld() instanceof ServerWorld && getEntityWorld().getServer() != null && getGameProfile().isPresent()) {
-            return getEntityWorld().getServer().getPlayerList().getPlayerByUUID(getGameProfile().get().getId());
+        if (getCommandSenderWorld() instanceof ServerWorld && getCommandSenderWorld().getServer() != null && getGameProfile().isPresent()) {
+            return getCommandSenderWorld().getServer().getPlayerList().getPlayer(getGameProfile().get().getId());
         }
         else {
             return null;

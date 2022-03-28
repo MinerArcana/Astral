@@ -23,7 +23,7 @@ public class OfferingBrazierTileEntityRenderer extends TileEntityRenderer<Offeri
 
     @Override
     public void render(@Nonnull OfferingBrazierTileEntity offeringBrazierTileEntity, float partialTicks, @Nonnull MatrixStack matrixStackIn, @Nonnull IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        if (!offeringBrazierTileEntity.hasWorld()) {
+        if (!offeringBrazierTileEntity.hasLevel()) {
             return;
         }
 
@@ -36,18 +36,18 @@ public class OfferingBrazierTileEntityRenderer extends TileEntityRenderer<Offeri
         ItemStack fuel = itemHandler.getStackInSlot(0);
         ItemStack burning = itemHandler.getStackInSlot(1);
         if (!burning.isEmpty()) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.6, 0.5);
-            itemRenderer.renderItem(burning, ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
-            matrixStackIn.pop();
+            itemRenderer.renderStatic(burning, ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            matrixStackIn.popPose();
         }
         if (!fuel.isEmpty()) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.4, 0.5);
             matrixStackIn.scale(.5f, .5f, .5f);
-            matrixStackIn.rotate(new Quaternion(-90, 0, 0, true));
-            itemRenderer.renderItem(fuel, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
-            matrixStackIn.pop();
+            matrixStackIn.mulPose(new Quaternion(-90, 0, 0, true));
+            itemRenderer.renderStatic(fuel, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            matrixStackIn.popPose();
         }
     }
 }

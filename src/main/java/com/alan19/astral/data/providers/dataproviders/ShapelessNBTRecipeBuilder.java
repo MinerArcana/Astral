@@ -37,7 +37,7 @@ public class ShapelessNBTRecipeBuilder {
     private final ItemStack result;
     private final int count;
     private final List<Ingredient> ingredients = Lists.newArrayList();
-    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
+    private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
     private String group;
     private List<ICondition> conditions = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class ShapelessNBTRecipeBuilder {
      * Adds an ingredient that can be any item in the given tag.
      */
     public ShapelessNBTRecipeBuilder addIngredient(ITag<Item> tagIn) {
-        return this.addIngredient(Ingredient.fromTag(tagIn));
+        return this.addIngredient(Ingredient.of(tagIn));
     }
 
     /**
@@ -79,7 +79,7 @@ public class ShapelessNBTRecipeBuilder {
      */
     public ShapelessNBTRecipeBuilder addIngredient(IItemProvider itemIn, int quantity) {
         for (int i = 0; i < quantity; ++i) {
-            this.addIngredient(Ingredient.fromItems(itemIn));
+            this.addIngredient(Ingredient.of(itemIn));
         }
 
         return this;
@@ -107,7 +107,7 @@ public class ShapelessNBTRecipeBuilder {
      * Adds a criterion needed to unlock the recipe.
      */
     public ShapelessNBTRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
-        this.advancementBuilder.withCriterion(name, criterionIn);
+        this.advancementBuilder.addCriterion(name, criterionIn);
         return this;
     }
 
@@ -142,8 +142,8 @@ public class ShapelessNBTRecipeBuilder {
      */
     public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
-        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-        consumerIn.accept(new ShapelessNBTRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getGroup().getPath() + "/" + id.getPath()), conditions));
+        this.advancementBuilder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", new RecipeUnlockedTrigger.Instance(EntityPredicate.AndPredicate.ANY, id)).rewards(AdvancementRewards.Builder.recipe(id)).requirements(IRequirementsStrategy.OR);
+        consumerIn.accept(new ShapelessNBTRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getItem().getItemCategory().getRecipeFolderName() + "/" + id.getPath()), conditions));
     }
 
     /**
@@ -187,14 +187,14 @@ public class ShapelessNBTRecipeBuilder {
         }
 
         @ParametersAreNonnullByDefault
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             if (!this.group.isEmpty()) {
                 json.addProperty("group", this.group);
             }
 
             JsonArray jsonArray = new JsonArray();
 
-            this.ingredients.stream().map(Ingredient::serialize).forEach(jsonArray::add);
+            this.ingredients.stream().map(Ingredient::toJson).forEach(jsonArray::add);
 
             json.add("ingredients", jsonArray);
 
@@ -217,14 +217,14 @@ public class ShapelessNBTRecipeBuilder {
 
         }
 
-        public IRecipeSerializer<?> getSerializer() {
-            return IRecipeSerializer.CRAFTING_SHAPELESS;
+        public IRecipeSerializer<?> getType() {
+            return IRecipeSerializer.SHAPELESS_RECIPE;
         }
 
         /**
          * Gets the ID for the recipe.
          */
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return this.id;
         }
 
@@ -232,8 +232,8 @@ public class ShapelessNBTRecipeBuilder {
          * Gets the JSON for the advancement that unlocks this recipe. Null if there is no advancement.
          */
         @Nullable
-        public JsonObject getAdvancementJson() {
-            return this.advancementBuilder.serialize();
+        public JsonObject serializeAdvancement() {
+            return this.advancementBuilder.serializeToJson();
         }
 
         /**
@@ -241,7 +241,7 @@ public class ShapelessNBTRecipeBuilder {
          * is non-null.
          */
         @Nullable
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return this.advancementId;
         }
     }

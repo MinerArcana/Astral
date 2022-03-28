@@ -35,7 +35,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, IRangedAttackMob {
-    private static final DataParameter<Boolean> ATTACKING = EntityDataManager.createKey(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Boolean> ATTACKING = EntityDataManager.defineId(CrystalSpiderEntity.class, DataSerializers.BOOLEAN);
     private static final AttributeModifier REDUCED_GRAVITY = new AttributeModifier(UUID.fromString("67a3c1a3-489d-4885-8041-3ae39896a2c0"), "drastically reduce gravity for crystal spiders", -1.1, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public CrystalSpiderEntity(EntityType<? extends SpiderEntity> type, World worldIn) {
@@ -44,25 +44,25 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
 
     @Nonnull
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return CaveSpiderEntity.registerAttributes().createMutableAttribute(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), 2);
+        return CaveSpiderEntity.createCaveSpider().add(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), 2);
     }
 
 
     @Override
-    public boolean onLivingFall(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float distance, float damageMultiplier) {
         return false;
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
         //Do nothing when falling
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(ATTACKING, true);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(ATTACKING, true);
     }
 
     @Override
@@ -79,24 +79,24 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
     }
 
     public void setAttacking(boolean attacking) {
-        dataManager.set(ATTACKING, attacking);
+        entityData.set(ATTACKING, attacking);
     }
 
     @Override
-    public boolean attackEntityAsMob(@Nonnull Entity entityIn) {
+    public boolean doHurtTarget(@Nonnull Entity entityIn) {
         boolean isAttackSuccessful = IAstralBeing.attackEntityAsMobWithAstralDamage(this, entityIn);
         if (isAttackSuccessful) {
             if (entityIn instanceof LivingEntity) {
                 int mindVenomDuration = 0;
-                if (this.world.getDifficulty() == Difficulty.NORMAL) {
+                if (this.level.getDifficulty() == Difficulty.NORMAL) {
                     mindVenomDuration = 7;
                 }
-                else if (this.world.getDifficulty() == Difficulty.HARD) {
+                else if (this.level.getDifficulty() == Difficulty.HARD) {
                     mindVenomDuration = 15;
                 }
 
-                if (mindVenomDuration > 0 && !((LivingEntity) entityIn).isPotionActive(AstralEffects.MIND_VENOM.get())) {
-                    ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
+                if (mindVenomDuration > 0 && !((LivingEntity) entityIn).hasEffect(AstralEffects.MIND_VENOM.get())) {
+                    ((LivingEntity) entityIn).addEffect(new EffectInstance(AstralEffects.MIND_VENOM.get(), mindVenomDuration * 20, 0));
                 }
             }
             return true;
@@ -107,14 +107,14 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
     }
 
     @Override
-    public void attackEntityWithRangedAttack(LivingEntity target, float distanceFactor) {
-        CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(world, this);
-        final double x = target.getPosX() - getPosX();
-        final double y = target.getPosYHeight(0.3333333333333333D) - crystalWebProjectileEntity.getPosY();
-        final double z = target.getPosZ() - getPosZ();
+    public void performRangedAttack(LivingEntity target, float distanceFactor) {
+        CrystalWebProjectileEntity crystalWebProjectileEntity = new CrystalWebProjectileEntity(level, this);
+        final double x = target.getX() - getX();
+        final double y = target.getY(0.3333333333333333D) - crystalWebProjectileEntity.getY();
+        final double z = target.getZ() - getZ();
         crystalWebProjectileEntity.shoot(x, y + MathHelper.sqrt(x * x + z * z) * 0.2F, z, .5F, 10F);
-        world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_LLAMA_SPIT, getSoundCategory(), 1.0F, 2.0F + (world.getRandom().nextFloat() - world.getRandom().nextFloat()) * 0.2F);
-        world.addEntity(crystalWebProjectileEntity);
+        level.playSound(null, getX(), getY(), getZ(), SoundEvents.LLAMA_SPIT, getSoundSource(), 1.0F, 2.0F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.2F);
+        level.addFreshEntity(crystalWebProjectileEntity);
     }
 
     static class AttackGoal extends MeleeAttackGoal {
@@ -127,28 +127,28 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
          * method as well.
          */
         @Override
-        public boolean shouldExecute() {
-            return super.shouldExecute() && !this.attacker.isBeingRidden();
+        public boolean canUse() {
+            return super.canUse() && !this.mob.isVehicle();
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         @Override
-        public boolean shouldContinueExecuting() {
-            float f = this.attacker.getBrightness();
-            if (f >= 0.5F && this.attacker.getRNG().nextInt(100) == 0) {
-                this.attacker.setAttackTarget(null);
+        public boolean canContinueToUse() {
+            float f = this.mob.getBrightness();
+            if (f >= 0.5F && this.mob.getRandom().nextInt(100) == 0) {
+                this.mob.setTarget(null);
                 return false;
             }
             else {
-                return super.shouldContinueExecuting();
+                return super.canContinueToUse();
             }
         }
 
         @Override
         protected double getAttackReachSqr(LivingEntity attackTarget) {
-            return 4.0F + attackTarget.getWidth();
+            return 4.0F + attackTarget.getBbWidth();
         }
     }
 
@@ -167,43 +167,43 @@ public class CrystalSpiderEntity extends SpiderEntity implements IAstralBeing, I
          * method as well.
          */
         @Override
-        public boolean shouldExecute() {
-            float f = this.goalOwner.getBrightness();
-            return f < 0.5F && super.shouldExecute();
+        public boolean canUse() {
+            float f = this.mob.getBrightness();
+            return f < 0.5F && super.canUse();
         }
 
         @Override
         @ParametersAreNonnullByDefault
-        protected boolean isSuitableTarget(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
-            return potentialTarget != null && potentialTarget.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get());
+        protected boolean canAttack(@Nullable LivingEntity potentialTarget, EntityPredicate targetPredicate) {
+            return potentialTarget != null && potentialTarget.hasEffect(AstralEffects.ASTRAL_TRAVEL.get());
         }
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if (getPosY() < 128) {
-            setMotion(getMotion().x, Math.max(0, getMotion().y), getMotion().z);
+    public void aiStep() {
+        super.aiStep();
+        if (getY() < 128) {
+            setDeltaMovement(getDeltaMovement().x, Math.max(0, getDeltaMovement().y), getDeltaMovement().z);
         }
         final ModifiableAttributeInstance gravityAttribute = getAttribute(ForgeMod.ENTITY_GRAVITY.get());
-        if (getPosY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
-            gravityAttribute.applyPersistentModifier(REDUCED_GRAVITY);
+        if (getY() < 128 && !gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
+            gravityAttribute.addPermanentModifier(REDUCED_GRAVITY);
         }
-        else if (getPosY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
+        else if (getY() >= 128 && gravityAttribute.hasModifier(REDUCED_GRAVITY)) {
             gravityAttribute.removeModifier(REDUCED_GRAVITY);
         }
     }
 
     @Override
-    protected boolean canBeRidden(@Nonnull Entity entityIn) {
+    protected boolean canRide(@Nonnull Entity entityIn) {
         return entityIn instanceof LivingEntity && TravelEffects.isEntityAstral((LivingEntity) entityIn);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        final ILivingEntityData spawnData = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        getPassengers().stream().filter(entity -> entity instanceof LivingEntity).forEach(entity -> ((LivingEntity) entity).addPotionEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE)));
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        final ILivingEntityData spawnData = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        getPassengers().stream().filter(entity -> entity instanceof LivingEntity).forEach(entity -> ((LivingEntity) entity).addEffect(new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE)));
         return spawnData;
     }
 }

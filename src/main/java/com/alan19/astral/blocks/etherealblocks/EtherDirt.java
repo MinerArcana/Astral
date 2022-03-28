@@ -6,11 +6,11 @@ import net.minecraftforge.common.ToolType;
 
 public class EtherDirt extends EtherealBlock implements Ethereal {
     public EtherDirt() {
-        super(Properties.create(Material.EARTH)
-                .hardnessAndResistance(.5f)
+        super(Properties.of(Material.DIRT)
+                .strength(.5f)
                 .harvestTool(ToolType.SHOVEL)
-                .sound(SoundType.GROUND)
-                .notSolid());
+                .sound(SoundType.GRAVEL)
+                .noOcclusion());
     }
 
 }

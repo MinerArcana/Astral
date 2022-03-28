@@ -10,9 +10,9 @@ public class IndexOfKnowledgeIntentionTrackerBehavior implements IIntentionTrack
     @Override
     public void onIntentionBeamHit(PlayerEntity playerEntity, int beamLevel, BlockRayTraceResult result, BlockState blockState) {
         IndexOfKnowledge indexOfKnowledge = (IndexOfKnowledge) blockState.getBlock();
-        if (playerEntity.experienceLevel < Math.min(indexOfKnowledge.calculateLevel(playerEntity.getEntityWorld(), result.getPos()), blockState.get(Constants.LIBRARY_LEVEL))) {
-            playerEntity.addExperienceLevel(1);
-            playerEntity.experience = 0;
+        if (playerEntity.experienceLevel < Math.min(indexOfKnowledge.calculateLevel(playerEntity.getCommandSenderWorld(), result.getBlockPos()), blockState.getValue(Constants.LIBRARY_LEVEL))) {
+            playerEntity.giveExperienceLevels(1);
+            playerEntity.experienceProgress = 0;
         }
     }
 }

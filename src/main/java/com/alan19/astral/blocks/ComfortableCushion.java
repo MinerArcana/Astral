@@ -33,41 +33,41 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 
 public class ComfortableCushion extends Block implements MentalConstructController {
-    protected static final VoxelShape CUSHION_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 6.0D, 15.0D, 4.0D, 14.0D);
+    protected static final VoxelShape CUSHION_SHAPE = Block.box(1.0D, 0.0D, 6.0D, 15.0D, 4.0D, 14.0D);
 
 
     public ComfortableCushion() {
-        super(Properties.create(Material.WOOL, DyeColor.LIGHT_BLUE).tickRandomly().hardnessAndResistance(0.8f).sound(SoundType.CLOTH).notSolid());
-        this.setDefaultState(this.getStateContainer().getBaseState().with(Constants.TRACKED_CONSTRUCT, false).with(HorizontalBlock.HORIZONTAL_FACING, Direction.NORTH));
+        super(Properties.of(Material.WOOL, DyeColor.LIGHT_BLUE).randomTicks().strength(0.8f).sound(SoundType.WOOL).noOcclusion());
+        this.registerDefaultState(this.getStateDefinition().any().setValue(Constants.TRACKED_CONSTRUCT, false).setValue(HorizontalBlock.FACING, Direction.NORTH));
     }
 
     @Nonnull
     @Override
     @ParametersAreNonnullByDefault
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.get(HorizontalBlock.HORIZONTAL_FACING));
+        return VoxelShapeUtils.rotateHorizontal(CUSHION_SHAPE, state.getValue(HorizontalBlock.FACING));
     }
 
     @Nonnull
     @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
-        if (worldIn instanceof ServerWorld && worldIn.getDimensionKey() == AstralDimensions.INNER_REALM && handIn == Hand.MAIN_HAND) {
+    public ActionResultType use(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity player, @Nonnull Hand handIn, @Nonnull BlockRayTraceResult hit) {
+        if (worldIn instanceof ServerWorld && worldIn.dimension() == AstralDimensions.INNER_REALM && handIn == Hand.MAIN_HAND) {
             final int level = calculateLevel(worldIn, pos);
             AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.getMentalConstructsForPlayer(player).modifyConstructInfo(pos, (ServerWorld) worldIn, AstralMentalConstructs.GARDEN.get(), level));
-            worldIn.setBlockState(pos, state.with(Constants.TRACKED_CONSTRUCT, true));
+            worldIn.setBlockAndUpdate(pos, state.setValue(Constants.TRACKED_CONSTRUCT, true));
             final double particleNum = Math.max(1, 15 - Math.ceil(Garden.getConversionRatio(level)) + 1);
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
+            worldIn.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundCategory.BLOCKS, 1.0F, worldIn.getRandom().nextFloat() * 0.1F + 0.9F);
             for (int i = 0; i < particleNum; i++) {
-                ((ServerWorld) worldIn).spawnParticle(ParticleTypes.ENCHANT, pos.getX() + i / particleNum, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01);
+                ((ServerWorld) worldIn).sendParticles(ParticleTypes.ENCHANT, pos.getX() + i / particleNum, pos.getY() + .6, pos.getZ() + .5, 1, 0, 0, 0, .01);
             }
             return ActionResultType.SUCCESS;
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(Constants.TRACKED_CONSTRUCT, AbstractFurnaceBlock.FACING));
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(Constants.TRACKED_CONSTRUCT, AbstractFurnaceBlock.FACING));
     }
 
     /**
@@ -80,7 +80,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     public int calculateLevel(World worldIn, BlockPos pos) {
         //Get number of water blocks, dirt blocks, leaf blocks, and wood blocks and multiply them by the number of plants
         //TODO Add config option to limit number of "valid" blocks to prevent people from making cubes of organic matter
-        return BlockPos.getAllInBox(pos.add(-3, -3, -3), pos.add(3, 3, 3))
+        return BlockPos.betweenClosedStream(pos.offset(-3, -3, -3), pos.offset(3, 3, 3))
                 .map(blockPos -> getStates(worldIn, blockPos))
                 .map(this::sumStates)
                 .reduce((objectPlantPair1, objectPlantPair2) -> Pair.of(objectPlantPair1.getLeft() + objectPlantPair2.getLeft(), objectPlantPair1.getRight() + objectPlantPair2.getRight()))
@@ -91,7 +91,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(AbstractFurnaceBlock.FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return this.defaultBlockState().setValue(AbstractFurnaceBlock.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     /**
@@ -103,7 +103,7 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     private Pair<Integer, Integer> sumStates(Pair<BlockState, FluidState> pair) {
         int containsObject = 0;
         int containsPlant = 0;
-        if (AstralTags.GARDEN_OBJECTS.contains(pair.getLeft().getBlock()) || FluidTags.WATER.contains(pair.getRight().getFluid())) {
+        if (AstralTags.GARDEN_OBJECTS.contains(pair.getLeft().getBlock()) || FluidTags.WATER.contains(pair.getRight().getType())) {
             containsObject = 1;
         }
         if (AstralTags.GARDEN_PLANTS.contains(pair.getLeft().getBlock())) {
@@ -117,9 +117,9 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     }
 
     @Override
-    public void onReplaced(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
+    public void onRemove(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState newState, boolean isMoving) {
         MentalConstructController.onReplaced(worldIn, pos, this, AstralMentalConstructs.GARDEN.get());
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
+        super.onRemove(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
@@ -129,12 +129,12 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
-        return state.get(Constants.TRACKED_CONSTRUCT);
+    public boolean hasAnalogOutputSignal(BlockState state) {
+        return state.getValue(Constants.TRACKED_CONSTRUCT);
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
-        return MentalConstructController.getComparatorInputOverride(blockState, (int) Math.ceil(Garden.getConversionRatio(calculateLevel(worldIn, pos))), super.getComparatorInputOverride(blockState, worldIn, pos));
+    public int getAnalogOutputSignal(BlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+        return MentalConstructController.getComparatorInputOverride(blockState, (int) Math.ceil(Garden.getConversionRatio(calculateLevel(worldIn, pos))), super.getAnalogOutputSignal(blockState, worldIn, pos));
     }
 }

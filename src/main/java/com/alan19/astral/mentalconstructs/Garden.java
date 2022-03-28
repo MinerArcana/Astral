@@ -44,14 +44,14 @@ public class Garden extends MentalConstruct {
 
     @Override
     public void performEffect(PlayerEntity player, int level) {
-        final float newSaturation = player.getFoodStats().getSaturationLevel();
+        final float newSaturation = player.getFoodData().getSaturationLevel();
         saturationCounter += (Math.max(0, saturationSnapshot - newSaturation));
-        if (saturationCounter >= getConversionRatio(level) && player.getFoodStats().needFood()) {
+        if (saturationCounter >= getConversionRatio(level) && player.getFoodData().needsFood()) {
             saturationCounter = saturationCounter - getConversionRatio(level);
-            player.getFoodStats().addStats(1, 0);
+            player.getFoodData().eat(1, 0);
         }
 
-        if (ModCompat.IS_BOTANIA_LOADED && player.ticksExisted % Math.round(getConversionRatio(level) * 10) == 0) {
+        if (ModCompat.IS_BOTANIA_LOADED && player.tickCount % Math.round(getConversionRatio(level) * 10) == 0) {
             addMana(player, 1);
         }
         saturationSnapshot = newSaturation;
@@ -76,7 +76,7 @@ public class Garden extends MentalConstruct {
 
     private List<ItemStack> getManaItems(PlayerEntity player) {
         final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
-        curiosItems.addAll(player.inventory.mainInventory);
+        curiosItems.addAll(player.inventory.items);
         return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
     }
 

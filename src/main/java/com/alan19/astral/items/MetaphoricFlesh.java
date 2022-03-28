@@ -4,6 +4,6 @@ import net.minecraft.item.Item;
 
 public class MetaphoricFlesh extends Item {
     public MetaphoricFlesh() {
-        super(new Properties().group(AstralItems.ASTRAL_ITEMS));
+        super(new Properties().tab(AstralItems.ASTRAL_ITEMS));
     }
 }

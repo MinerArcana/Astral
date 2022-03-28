@@ -40,10 +40,10 @@ import java.util.UUID;
  * https://github.com/Vazkii/Botania/blob/eed14c95cccea7c496fe674327d0ec8b0e999cc9/src/main/java/vazkii/botania/common/entity/EntityManaBurst.java#L49
  */
 public class IntentionBeam extends ThrowableEntity {
-    private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Integer> beamLevel = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> maxDistance = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.VARINT);
-    private static final DataParameter<Boolean> touchedBlock = EntityDataManager.createKey(IntentionBeam.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Optional<UUID>> playerUUID = EntityDataManager.defineId(IntentionBeam.class, DataSerializers.OPTIONAL_UUID);
+    private static final DataParameter<Integer> beamLevel = EntityDataManager.defineId(IntentionBeam.class, DataSerializers.INT);
+    private static final DataParameter<Integer> maxDistance = EntityDataManager.defineId(IntentionBeam.class, DataSerializers.INT);
+    private static final DataParameter<Boolean> touchedBlock = EntityDataManager.defineId(IntentionBeam.class, DataSerializers.BOOLEAN);
 
     public IntentionBeam(EntityType<? extends ThrowableEntity> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -51,51 +51,51 @@ public class IntentionBeam extends ThrowableEntity {
 
     public IntentionBeam(int beamLevel, int maxDistance, PlayerEntity playerEntity, World worldIn) {
         super(AstralEntities.INTENTION_BEAM_ENTITY.get(), worldIn);
-        dataManager.set(IntentionBeam.beamLevel, beamLevel);
-        dataManager.set(IntentionBeam.maxDistance, maxDistance);
-        dataManager.set(IntentionBeam.playerUUID, Optional.of(playerEntity.getUniqueID()));
-        dataManager.set(IntentionBeam.touchedBlock, false);
+        entityData.set(IntentionBeam.beamLevel, beamLevel);
+        entityData.set(IntentionBeam.maxDistance, maxDistance);
+        entityData.set(IntentionBeam.playerUUID, Optional.of(playerEntity.getUUID()));
+        entityData.set(IntentionBeam.touchedBlock, false);
     }
 
     protected void onHit(RayTraceResult result) {
         if (result.getType() == RayTraceResult.Type.BLOCK) {
             final BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) result;
-            final BlockState blockState = world.getBlockState(blockRayTraceResult.getPos());
+            final BlockState blockState = level.getBlockState(blockRayTraceResult.getBlockPos());
             final IIntentionTrackerBehavior intentionTrackerBehavior = AstralAPI.getIntentionTrackerBehavior(blockState.getBlock());
-            if (intentionTrackerBehavior != null && dataManager.get(playerUUID).isPresent()) {
-                intentionTrackerBehavior.onIntentionBeamHit(world.getPlayerByUuid(dataManager.get(playerUUID).get()), dataManager.get(beamLevel), blockRayTraceResult, blockState);
+            if (intentionTrackerBehavior != null && entityData.get(playerUUID).isPresent()) {
+                intentionTrackerBehavior.onIntentionBeamHit(level.getPlayerByUUID(entityData.get(playerUUID).get()), entityData.get(beamLevel), blockRayTraceResult, blockState);
                 remove();
             }
-            else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(dataManager.get(beamLevel)).contains(blockState.getMaterial())){
-                dataManager.set(touchedBlock, true);
+            else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(entityData.get(beamLevel)).contains(blockState.getMaterial())) {
+                entityData.set(touchedBlock, true);
                 remove();
             }
         }
     }
 
     public void setPlayer(PlayerEntity player) {
-        dataManager.set(playerUUID, Optional.of(player.getUniqueID()));
+        entityData.set(playerUUID, Optional.of(player.getUUID()));
     }
 
     public void setLevel(int level) {
-        dataManager.set(beamLevel, level);
+        entityData.set(beamLevel, level);
     }
 
     public void setMaxDistance(int distance) {
-        dataManager.set(maxDistance, distance);
+        entityData.set(maxDistance, distance);
     }
 
     @Override
-    public boolean handleFluidAcceleration(@Nonnull ITag<Fluid> fluidTag, double p_210500_2_) {
+    public boolean updateFluidHeightAndDoFluidPushing(@Nonnull ITag<Fluid> fluidTag, double p_210500_2_) {
         return false;
     }
 
     @Override
-    protected void registerData() {
-        dataManager.register(playerUUID, Optional.empty());
-        dataManager.register(beamLevel, 0);
-        dataManager.register(maxDistance, 32);
-        dataManager.register(touchedBlock, false);
+    protected void defineSynchedData() {
+        entityData.define(playerUUID, Optional.empty());
+        entityData.define(beamLevel, 0);
+        entityData.define(maxDistance, 32);
+        entityData.define(touchedBlock, false);
     }
 
     @Override
@@ -104,28 +104,28 @@ public class IntentionBeam extends ThrowableEntity {
     }
 
     @Override
-    public void writeAdditional(@Nonnull CompoundNBT compound) {
-        if (dataManager.get(playerUUID).isPresent()) {
-            compound.putUniqueId("playerID", dataManager.get(playerUUID).get());
+    public void addAdditionalSaveData(@Nonnull CompoundNBT compound) {
+        if (entityData.get(playerUUID).isPresent()) {
+            compound.putUUID("playerID", entityData.get(playerUUID).get());
         }
-        compound.putInt("beamLevel", dataManager.get(beamLevel));
-        compound.putInt("maxDistance", dataManager.get(maxDistance));
-        compound.putBoolean("touchedBlock", dataManager.get(touchedBlock));
+        compound.putInt("beamLevel", entityData.get(beamLevel));
+        compound.putInt("maxDistance", entityData.get(maxDistance));
+        compound.putBoolean("touchedBlock", entityData.get(touchedBlock));
     }
 
     @Override
-    public void readAdditional(@Nonnull CompoundNBT compound) {
+    public void readAdditionalSaveData(@Nonnull CompoundNBT compound) {
         if (compound.contains("playerID")) {
-            dataManager.set(playerUUID, Optional.of(compound.getUniqueId("playerID")));
+            entityData.set(playerUUID, Optional.of(compound.getUUID("playerID")));
         }
-        dataManager.set(beamLevel, compound.getInt("beamLevel"));
-        dataManager.set(maxDistance, compound.getInt("maxDistance"));
-        dataManager.set(touchedBlock, compound.getBoolean("touchedBlock"));
+        entityData.set(beamLevel, compound.getInt("beamLevel"));
+        entityData.set(maxDistance, compound.getInt("maxDistance"));
+        entityData.set(touchedBlock, compound.getBoolean("touchedBlock"));
     }
 
     @Override
     @Nonnull
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -134,15 +134,15 @@ public class IntentionBeam extends ThrowableEntity {
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void setVelocity(double x, double y, double z) {
-        this.setMotion(x, y, z);
-        if (this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F) {
+    public void lerpMotion(double x, double y, double z) {
+        this.setDeltaMovement(x, y, z);
+        if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             float f = MathHelper.sqrt(x * x + z * z);
-            this.rotationPitch = (float) (MathHelper.atan2(y, f) * (double) (180F / (float) Math.PI));
-            this.rotationYaw = (float) (MathHelper.atan2(x, z) * (double) (180F / (float) Math.PI));
-            this.prevRotationPitch = this.rotationPitch;
-            this.prevRotationYaw = this.rotationYaw;
-            this.setLocationAndAngles(this.getPosX(), this.getPosY(), this.getPosZ(), this.rotationYaw, this.rotationPitch);
+            this.xRot = (float) (MathHelper.atan2(y, f) * (double) (180F / (float) Math.PI));
+            this.yRot = (float) (MathHelper.atan2(x, z) * (double) (180F / (float) Math.PI));
+            this.xRotO = this.xRot;
+            this.yRotO = this.yRot;
+            this.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, this.xRot);
         }
 
     }
@@ -152,13 +152,13 @@ public class IntentionBeam extends ThrowableEntity {
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.rand.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
-        this.setMotion(vec3d);
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
-        this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-        this.prevRotationYaw = this.rotationYaw;
-        this.prevRotationPitch = this.rotationPitch;
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        this.setDeltaMovement(vec3d);
+        float f = MathHelper.sqrt(getHorizontalDistanceSqr(vec3d));
+        this.yRot = (float) (MathHelper.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        this.yRotO = this.yRot;
+        this.xRotO = this.xRot;
     }
 
     /**
@@ -168,63 +168,63 @@ public class IntentionBeam extends ThrowableEntity {
     public void tick() {
         super.tick();
         if (isAlive()) {
-            if (world instanceof ServerWorld && ticksExisted % 5 == 0 && dataManager.get(playerUUID).isPresent()) {
-                final ServerWorld world = (ServerWorld) this.world;
-                final ServerPlayerEntity player = (ServerPlayerEntity) world.getEntityByUuid(dataManager.get(playerUUID).get());
+            if (level instanceof ServerWorld && tickCount % 5 == 0 && entityData.get(playerUUID).isPresent()) {
+                final ServerWorld world = (ServerWorld) this.level;
+                final ServerPlayerEntity player = (ServerPlayerEntity) world.getEntity(entityData.get(playerUUID).get());
                 if (player != null) {
-                    world.getWorldServer().spawnParticle(player, AstralParticles.INTENTION_BEAM_PARTICLE.get(), true, getPosX(), getPosY(), getPosZ(), 2, (rand.nextDouble() - rand.nextDouble()) * .5, (rand.nextDouble() - rand.nextDouble()), (rand.nextDouble() - rand.nextDouble()) * .5, 0);
+                    world.getWorldServer().sendParticles(player, AstralParticles.INTENTION_BEAM_PARTICLE.get(), true, getX(), getY(), getZ(), 2, (random.nextDouble() - random.nextDouble()) * .5, (random.nextDouble() - random.nextDouble()), (random.nextDouble() - random.nextDouble()) * .5, 0);
                 }
             }
-            if (ticksExisted >= dataManager.get(maxDistance) * 4) {
+            if (tickCount >= entityData.get(maxDistance) * 4) {
                 this.remove();
                 return;
             }
-            Vector3d vec3d = this.getMotion();
-            RayTraceResult raytraceresult = ProjectileHelper.func_234618_a_(this, this::func_230298_a_);
+            Vector3d vec3d = this.getDeltaMovement();
+            RayTraceResult raytraceresult = ProjectileHelper.getHitResult(this, this::canHitEntity);
             if (raytraceresult.getType() != RayTraceResult.Type.MISS && !ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
                 this.onHit(raytraceresult);
             }
 
-            double d0 = this.getPosX() + vec3d.x;
-            double d1 = this.getPosY() + vec3d.y;
-            double d2 = this.getPosZ() + vec3d.z;
-            float f = MathHelper.sqrt(horizontalMag(vec3d));
-            this.rotationYaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
+            double d0 = this.getX() + vec3d.x;
+            double d1 = this.getY() + vec3d.y;
+            double d2 = this.getZ() + vec3d.z;
+            float f = MathHelper.sqrt(getHorizontalDistanceSqr(vec3d));
+            this.yRot = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
 
-            this.rotationPitch = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-            while (this.rotationPitch - this.prevRotationPitch < -180.0F) {
-                this.prevRotationPitch -= 360.0F;
+            this.xRot = (float) (MathHelper.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+            while (this.xRot - this.xRotO < -180.0F) {
+                this.xRotO -= 360.0F;
             }
 
-            while (this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-                this.prevRotationPitch += 360.0F;
+            while (this.xRot - this.xRotO >= 180.0F) {
+                this.xRotO += 360.0F;
             }
 
-            while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
-                this.prevRotationYaw -= 360.0F;
+            while (this.yRot - this.yRotO < -180.0F) {
+                this.yRotO -= 360.0F;
             }
 
-            while (this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-                this.prevRotationYaw += 360.0F;
+            while (this.yRot - this.yRotO >= 180.0F) {
+                this.yRotO += 360.0F;
             }
 
-            this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-            this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
-            if (!this.hasNoGravity()) {
-                this.setMotion(this.getMotion().add(0.0D, -0.06F, 0.0D));
+            this.xRot = MathHelper.lerp(0.2F, this.xRotO, this.xRot);
+            this.yRot = MathHelper.lerp(0.2F, this.yRotO, this.yRot);
+            if (!this.isNoGravity()) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.06F, 0.0D));
             }
 
-            this.setPosition(d0, d1, d2);
+            this.setPos(d0, d1, d2);
         }
     }
 
     @Override
     public void remove() {
-        if (world instanceof ServerWorld) {
-            ((ServerWorld)world).spawnParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getPosX(), getPosY(), getPosZ(), 5, rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), rand.nextDouble() / 4);
+        if (level instanceof ServerWorld) {
+            ((ServerWorld) level).sendParticles(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getX(), getY(), getZ(), 5, random.nextDouble(), random.nextDouble(), random.nextDouble(), random.nextDouble() / 4);
         }
-        if (dataManager.get(playerUUID).isPresent()) {
-            final PlayerEntity player = world.getPlayerByUuid(dataManager.get(playerUUID).get());
+        if (entityData.get(playerUUID).isPresent()) {
+            final PlayerEntity player = level.getPlayerByUUID(entityData.get(playerUUID).get());
             if (player != null) {
                 player.getCapability(AstralAPI.beamTrackerCapability).ifPresent(IBeamTracker::clearIntentionBeam);
             }
@@ -233,7 +233,7 @@ public class IntentionBeam extends ThrowableEntity {
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 }

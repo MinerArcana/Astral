@@ -25,10 +25,10 @@ public class InnerRealmEvents {
     @SubscribeEvent
     public static void cancelInnerRealmEntry(EntityTravelToDimensionEvent event) {
         if (event.getDimension() == AstralDimensions.INNER_REALM) {
-            if (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).isPotionActive(AstralEffects.ASTRAL_TRAVEL.get()) || !(event.getEntity() instanceof LivingEntity)) {
+            if (event.getEntity() instanceof LivingEntity && !((LivingEntity) event.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || !(event.getEntity() instanceof LivingEntity)) {
                 event.setCanceled(true);
                 if (event.getEntity() instanceof PlayerEntity) {
-                    event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL), event.getEntity().getUniqueID());
+                    event.getEntity().sendMessage(new TranslationTextComponent(Constants.INVALID_WITHDRAWAL), event.getEntity().getUUID());
                 }
             }
         }
@@ -42,23 +42,23 @@ public class InnerRealmEvents {
     @SubscribeEvent
     public static void dropNonAstralItems(EntityTravelToDimensionEvent event) {
         final Entity entity = event.getEntity();
-        if (entity.getEntityWorld().getDimensionKey() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayerEntity) {
+        if (entity.getCommandSenderWorld().dimension() == AstralDimensions.INNER_REALM && entity instanceof ServerPlayerEntity) {
             ServerPlayerEntity playerEntity = (ServerPlayerEntity) entity;
-            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getEntityWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUniqueID()), (ServerWorld) playerEntity.getEntityWorld()));
+            AstralAPI.getOverworldPsychicInventory((ServerWorld) playerEntity.getCommandSenderWorld()).ifPresent(iPsychicInventory -> dropAllNonAstralItems(playerEntity, iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()), (ServerWorld) playerEntity.getCommandSenderWorld()));
         }
     }
 
     private static void dropAllNonAstralItems(PlayerEntity playerEntity, PsychicInventoryInstance inventoryOfPlayer, ServerWorld entityWorld) {
         IntStream.range(0, inventoryOfPlayer.getAstralMainInventory().getSlots())
                 .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralMainInventory().getStackInSlot(i).getItem()))
-                .forEach(i -> Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getAstralMainInventory().extractItem(i, 64, false)));
+                .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralMainInventory().extractItem(i, 64, false)));
 
         IntStream.range(0, inventoryOfPlayer.getAstralArmorInventory().getSlots())
                 .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralArmorInventory().getStackInSlot(i).getItem()))
-                .forEach(i -> Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getAstralArmorInventory().extractItem(i, 64, false)));
+                .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralArmorInventory().extractItem(i, 64, false)));
 
         IntStream.range(0, inventoryOfPlayer.getAstralHandsInventory().getSlots())
                 .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralHandsInventory().getStackInSlot(i).getItem()))
-                .forEach(i -> Block.spawnAsEntity(entityWorld, playerEntity.getPosition(), inventoryOfPlayer.getAstralHandsInventory().extractItem(i, 64, false)));
+                .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralHandsInventory().extractItem(i, 64, false)));
     }
 }

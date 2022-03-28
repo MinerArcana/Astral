@@ -34,18 +34,18 @@ public class DeleteIntentionBeam {
         contextSupplier.get().enqueueWork(() -> {
             final ServerPlayerEntity sender = contextSupplier.get().getSender();
             //Player is only teleported if they have Astral Travel
-            if (sender != null && sender.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
-                sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getServerWorld()).ifPresent(intentionBeam -> {
-                    final BlockPos destinationPos = new BlockPos(intentionBeam.getPosX(), intentionBeam.getPosY() - sender.getEyeHeight(), intentionBeam.getPosZ());
-                    final double teleportDistance = Math.sqrt(new BlockPos(sender.getPosX(), sender.getPosYEye(), sender.getPosZ()).distanceSq(intentionBeam.getPosX(), intentionBeam.getPosY(), intentionBeam.getPosZ(), true));
+            if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
+                sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getLevel()).ifPresent(intentionBeam -> {
+                    final BlockPos destinationPos = new BlockPos(intentionBeam.getX(), intentionBeam.getY() - sender.getEyeHeight(), intentionBeam.getZ());
+                    final double teleportDistance = Math.sqrt(new BlockPos(sender.getX(), sender.getEyeY(), sender.getZ()).distSqr(intentionBeam.getX(), intentionBeam.getY(), intentionBeam.getZ(), true));
                     final int xpCost = (int) Math.floor(5 + teleportDistance / 10);
                     //Teleport if teleport distance is greater than 1, and if sender
-                    if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getServerWorld().getBlockState(destinationPos).hasOpaqueCollisionShape(sender.getServerWorld(), destinationPos) && !sender.getServerWorld().getBlockState(intentionBeam.getPosition()).hasOpaqueCollisionShape(sender.getServerWorld(), intentionBeam.getPosition())) {
-                        sender.teleportKeepLoaded(intentionBeam.getPosX(), intentionBeam.getPosY() - sender.getEyeHeight(), intentionBeam.getPosZ());
+                    if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getLevel().getBlockState(destinationPos).isCollisionShapeFullBlock(sender.getLevel(), destinationPos) && !sender.getLevel().getBlockState(intentionBeam.blockPosition()).isCollisionShapeFullBlock(sender.getLevel(), intentionBeam.blockPosition())) {
+                        sender.teleportToWithTicket(intentionBeam.getX(), intentionBeam.getY() - sender.getEyeHeight(), intentionBeam.getZ());
                         ExperienceHelper.drainPlayerXP(sender, xpCost);
-                        Random rand = sender.getRNG();
-                        sender.getServerWorld().spawnParticle(AstralParticles.INTENTION_BEAM_PARTICLE.get(), sender.getPosX() + (rand.nextDouble() - rand.nextDouble()), sender.getPosY() + (rand.nextDouble() - rand.nextDouble()), sender.getPosZ() + (rand.nextDouble() - rand.nextDouble()), 7, 0, 0, 0, .1);
-                        intentionBeam.playSound(SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, 1F, 1F);
+                        Random rand = sender.getRandom();
+                        sender.getLevel().sendParticles(AstralParticles.INTENTION_BEAM_PARTICLE.get(), sender.getX() + (rand.nextDouble() - rand.nextDouble()), sender.getY() + (rand.nextDouble() - rand.nextDouble()), sender.getZ() + (rand.nextDouble() - rand.nextDouble()), 7, 0, 0, 0, .1);
+                        intentionBeam.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT, 1F, 1F);
                     }
                     intentionBeam.remove();
                 }));

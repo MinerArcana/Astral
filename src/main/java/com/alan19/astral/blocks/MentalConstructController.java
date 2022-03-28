@@ -15,13 +15,13 @@ import javax.annotation.Nonnull;
 public interface MentalConstructController {
 
     static int getComparatorInputOverride(BlockState blockState, int redstoneLevel, int defaultOverrideValue) {
-        return blockState.get(Constants.TRACKED_CONSTRUCT) ? redstoneLevel : defaultOverrideValue;
+        return blockState.getValue(Constants.TRACKED_CONSTRUCT) ? redstoneLevel : defaultOverrideValue;
     }
 
     int calculateLevel(World world, BlockPos pos);
 
     static void tick(BlockState state, @Nonnull ServerWorld worldIn, @Nonnull BlockPos pos, int level, MentalConstructType type) {
-        if (state.get(Constants.TRACKED_CONSTRUCT) && worldIn.getDimensionKey() == AstralDimensions.INNER_REALM) {
+        if (state.getValue(Constants.TRACKED_CONSTRUCT) && worldIn.dimension() == AstralDimensions.INNER_REALM) {
             AstralAPI.getConstructTracker(worldIn).ifPresent(tracker -> tracker.updateAllPlayers(type, worldIn, pos, level));
         }
     }
@@ -36,7 +36,7 @@ public interface MentalConstructController {
     static void onReplaced(@Nonnull World worldIn, @Nonnull BlockPos pos, Block block, MentalConstructType type) {
         if (worldIn instanceof ServerWorld) {
             AstralAPI.getConstructTracker((ServerWorld) worldIn).ifPresent(tracker -> tracker.resetConstructEffect(type, worldIn, pos));
-            worldIn.updateComparatorOutputLevel(pos, block);
+            worldIn.updateNeighbourForOutputSignal(pos, block);
         }
     }
 }

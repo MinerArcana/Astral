@@ -8,12 +8,12 @@ public class NonRotatingBipedModel extends BipedModel<PhysicalBodyEntity> {
     }
 
     @Override
-    public void setRotationAngles(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         //Don't rotate
     }
 
     @Override
-    public void setLivingAnimations(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
+    public void prepareMobModel(PhysicalBodyEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
         //Don't animate
     }
 }

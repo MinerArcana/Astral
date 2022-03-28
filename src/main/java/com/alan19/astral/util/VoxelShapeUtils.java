@@ -32,7 +32,7 @@ public class VoxelShapeUtils {
      */
     public static void printSimplified(String name, VoxelShape shape) {
         Astral.LOGGER.info("Simplified: " + name);
-        shape.simplify().toBoundingBoxList().forEach(box -> print(box.minX * 16, box.minY * 16, box.minZ * 16, box.maxX * 16, box.maxY * 16, box.maxZ * 16));
+        shape.optimize().toAabbs().forEach(box -> print(box.minX * 16, box.minY * 16, box.minZ * 16, box.maxX * 16, box.maxY * 16, box.maxZ * 16));
     }
 
     /**
@@ -145,12 +145,12 @@ public class VoxelShapeUtils {
     public static VoxelShape rotate(VoxelShape shape, UnaryOperator<AxisAlignedBB> rotateFunction) {
         List<VoxelShape> rotatedPieces = new ArrayList<>();
         //Explode the voxel shape into bounding boxes
-        List<AxisAlignedBB> sourceBoundingBoxes = shape.toBoundingBoxList();
+        List<AxisAlignedBB> sourceBoundingBoxes = shape.toAabbs();
         //Rotate them and convert them each back into a voxel shape
         for (AxisAlignedBB sourceBoundingBox : sourceBoundingBoxes) {
             //Make the bounding box be centered around the middle, and then move it back after rotating
-            rotatedPieces.add(VoxelShapes.create(rotateFunction.apply(sourceBoundingBox.offset(fromOrigin.x, fromOrigin.y, fromOrigin.z))
-                    .offset(-fromOrigin.x, -fromOrigin.z, -fromOrigin.z)));
+            rotatedPieces.add(VoxelShapes.create(rotateFunction.apply(sourceBoundingBox.move(fromOrigin.x, fromOrigin.y, fromOrigin.z))
+                    .move(-fromOrigin.x, -fromOrigin.z, -fromOrigin.z)));
         }
         //return the recombined rotated voxel shape
         return combine(rotatedPieces);
@@ -187,7 +187,7 @@ public class VoxelShapeUtils {
      * @return A {@link VoxelShape} including everything that is not part of any of the input shapes.
      */
     public static VoxelShape exclude(VoxelShape... shapes) {
-        return batchCombine(VoxelShapes.fullCube(), IBooleanFunction.ONLY_FIRST, true, shapes);
+        return batchCombine(VoxelShapes.block(), IBooleanFunction.ONLY_FIRST, true, shapes);
     }
 
     /**
@@ -204,9 +204,9 @@ public class VoxelShapeUtils {
     public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, Collection<VoxelShape> shapes) {
         VoxelShape combinedShape = initial;
         for (VoxelShape shape : shapes) {
-            combinedShape = VoxelShapes.combine(combinedShape, shape, function);
+            combinedShape = VoxelShapes.joinUnoptimized(combinedShape, shape, function);
         }
-        return simplify ? combinedShape.simplify() : combinedShape;
+        return simplify ? combinedShape.optimize() : combinedShape;
     }
 
     /**
@@ -223,9 +223,9 @@ public class VoxelShapeUtils {
     public static VoxelShape batchCombine(VoxelShape initial, IBooleanFunction function, boolean simplify, VoxelShape... shapes) {
         VoxelShape combinedShape = initial;
         for (VoxelShape shape : shapes) {
-            combinedShape = VoxelShapes.combine(combinedShape, shape, function);
+            combinedShape = VoxelShapes.joinUnoptimized(combinedShape, shape, function);
         }
-        return simplify ? combinedShape.simplify() : combinedShape;
+        return simplify ? combinedShape.optimize() : combinedShape;
     }
 
     //TODO: Document, figures out the slope, currently has hardcoded shift and rotation based on our most common one we perform to models ahead of time
@@ -242,7 +242,7 @@ public class VoxelShapeUtils {
                 print(-maxX + shiftX, -maxY + shiftY, maxZ + shiftZ, -minX + shiftX, -minY + shiftY, minZ + shiftZ);
                 return VoxelShapes.empty();
             }
-            return Block.makeCuboidShape(-maxX + shiftX, -maxY + shiftY, maxZ + shiftZ, -minX + shiftX, -minY + shiftY, minZ + shiftZ);
+            return Block.box(-maxX + shiftX, -maxY + shiftY, maxZ + shiftZ, -minX + shiftX, -minY + shiftY, minZ + shiftZ);
         }
         else if (print) {
             Vec3f min = rotateVector(minX, minY, minZ, rotateAngleX, rotateAngleY, rotateAngleZ).mul(-1, -1, 1);
@@ -288,7 +288,7 @@ public class VoxelShapeUtils {
         //Mekanism.logger.info("Shift: {}, {}, {}", shiftX, shiftY, shiftZ);
         //Mekanism.logger.info("Positions: {}, {}, {}, {}, {}, {}", startX, startY, startZ, endX, endY, endZ);
 
-        ShapeCreator shapeCreator = (x, y, z) -> Block.makeCuboidShape(x - 0.5F, y - 0.5F, z - 0.5F, x + 0.5F, y + 0.5F, z + 0.5F);
+        ShapeCreator shapeCreator = (x, y, z) -> Block.box(x - 0.5F, y - 0.5F, z - 0.5F, x + 0.5F, y + 0.5F, z + 0.5F);
         //float xHalf = -(minX + maxX) / 2F;
         //float yHalf = -(minY + maxY) / 2F;
         //float zHalf = (minZ + maxZ) / 2F;

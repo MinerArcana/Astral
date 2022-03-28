@@ -40,23 +40,23 @@ import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 @SuppressWarnings("deprecated")
 public class OfferingBrazier extends Block {
 
-    protected static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
-    protected static final VoxelShape COLUMN_SHAPE = Block.makeCuboidShape(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D);
-    protected static final VoxelShape TOP_SHAPE = Block.makeCuboidShape(0, 4, 0, 15, 6, 15);
-    protected static final VoxelShape NORTH = Block.makeCuboidShape(0, 6, 0, 16, 8, 2);
-    protected static final VoxelShape SOUTH = Block.makeCuboidShape(0, 6, 14, 16, 8, 16);
-    protected static final VoxelShape EAST = Block.makeCuboidShape(14, 6, 0, 16, 8, 16);
-    protected static final VoxelShape WEST = Block.makeCuboidShape(0, 6, 0, 2, 8, 16);
+    protected static final VoxelShape BASE_SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
+    protected static final VoxelShape COLUMN_SHAPE = Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D);
+    protected static final VoxelShape TOP_SHAPE = Block.box(0, 4, 0, 15, 6, 15);
+    protected static final VoxelShape NORTH = Block.box(0, 6, 0, 16, 8, 2);
+    protected static final VoxelShape SOUTH = Block.box(0, 6, 14, 16, 8, 16);
+    protected static final VoxelShape EAST = Block.box(14, 6, 0, 16, 8, 16);
+    protected static final VoxelShape WEST = Block.box(0, 6, 0, 2, 8, 16);
     protected static final VoxelShape SHAPE = VoxelShapes.or(BASE_SHAPE, COLUMN_SHAPE, TOP_SHAPE, NORTH, SOUTH, EAST, WEST);
 
     public OfferingBrazier() {
         super(Block.Properties
-                .create(Material.ROCK)
-                .hardnessAndResistance(3.5f)
-                .setLightLevel(value -> value.get(LIT) ? 13 : 0)
-                .notSolid()
+                .of(Material.STONE)
+                .strength(3.5f)
+                .lightLevel(value -> value.getValue(LIT) ? 13 : 0)
+                .noOcclusion()
         );
-        setDefaultState(this.getStateContainer().getBaseState().with(LIT, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(LIT, false));
     }
 
     @Nonnull
@@ -67,8 +67,8 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder.add(LIT));
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder.add(LIT));
     }
 
     @Override
@@ -83,24 +83,24 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public void onBlockPlacedBy(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
-        super.onBlockPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
+    public void setPlacedBy(@Nonnull World world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
+        super.setPlacedBy(world, blockPos, blockState, livingEntity, itemStack);
         if (livingEntity instanceof PlayerEntity) {
-            TileEntity tileEntity = world.getTileEntity(blockPos);
+            TileEntity tileEntity = world.getBlockEntity(blockPos);
             if (tileEntity instanceof OfferingBrazierTileEntity) {
-                ((OfferingBrazierTileEntity) tileEntity).setUUID(livingEntity.getUniqueID());
+                ((OfferingBrazierTileEntity) tileEntity).setUUID(livingEntity.getUUID());
             }
         }
     }
 
     @Nonnull
     @Override
-    public ActionResultType onBlockActivated(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
-        TileEntity entity = world.getTileEntity(blockPos);
+    public ActionResultType use(@Nonnull BlockState blockState, World world, @Nonnull BlockPos blockPos, @Nonnull PlayerEntity playerEntity, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
+        TileEntity entity = world.getBlockEntity(blockPos);
         if (entity instanceof OfferingBrazierTileEntity) {
             //If the block does not have a bound player, sets the bound player to the player
             if (!((OfferingBrazierTileEntity) entity).getBoundPlayer().isPresent()) {
-                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUniqueID());
+                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUUID());
             }
             //Sneak click to bind a player, regular right click inserts/extracts
             if (!playerEntity.isCrouching()) {
@@ -108,48 +108,48 @@ public class OfferingBrazier extends Block {
                 return ActionResultType.SUCCESS;
             }
             else if (playerEntity.isCrouching()) {
-                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUniqueID());
+                ((OfferingBrazierTileEntity) entity).setUUID(playerEntity.getUUID());
                 return ActionResultType.SUCCESS;
             }
         }
-        return super.onBlockActivated(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
+        return super.use(blockState, world, blockPos, playerEntity, hand, blockRayTraceResult);
     }
 
     @Override
-    public void onReplaced(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof OfferingBrazierTileEntity) {
-                tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> IntStream.range(0, itemHandler.getSlots()).forEach(i -> Block.spawnAsEntity(worldIn, pos, itemHandler.getStackInSlot(i))));
+                tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(itemHandler -> IntStream.range(0, itemHandler.getSlots()).forEach(i -> Block.popResource(worldIn, pos, itemHandler.getStackInSlot(i))));
 
-                worldIn.updateComparatorOutputLevel(pos, this);
+                worldIn.updateNeighbourForOutputSignal(pos, this);
             }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (!entityIn.isImmuneToFire() && state.get(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
-            entityIn.attackEntityFrom(DamageSource.IN_FIRE, 1.0F);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.fireImmune() && state.getValue(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
+            entityIn.hurt(DamageSource.IN_FIRE, 1.0F);
         }
 
-        super.onEntityCollision(state, worldIn, pos, entityIn);
+        super.entityInside(state, worldIn, pos, entityIn);
 
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, @Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Random rand) {
-        if (stateIn.get(LIT)) {
+        if (stateIn.getValue(LIT)) {
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = pos.getY();
             double d2 = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
-                worldIn.playSound(d0, d1, d2, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                worldIn.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
+            TileEntity tileEntity = worldIn.getBlockEntity(pos);
             boolean lastItem = false;
             if (tileEntity instanceof OfferingBrazierTileEntity) {
                 final LazyOptional<IItemHandler> capability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
@@ -167,13 +167,13 @@ public class OfferingBrazier extends Block {
     }
 
     @Override
-    public boolean hasComparatorInputOverride(@Nonnull BlockState state) {
+    public boolean hasAnalogOutputSignal(@Nonnull BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(@Nonnull BlockState blockState, World worldIn, @Nonnull BlockPos pos) {
-        final TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public int getAnalogOutputSignal(@Nonnull BlockState blockState, World worldIn, @Nonnull BlockPos pos) {
+        final TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if (tileEntity instanceof OfferingBrazierTileEntity) {
             final IItemHandler brazierInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(ItemStackHandler::new);
             int i = 0;

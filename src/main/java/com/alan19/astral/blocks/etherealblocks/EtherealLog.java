@@ -17,16 +17,16 @@ import javax.annotation.Nonnull;
 
 public class EtherealLog extends RotatedPillarBlock implements Ethereal {
     public EtherealLog() {
-        super(AbstractBlock.Properties.create(Material.WOOD, state -> state.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.SAND)
-                .hardnessAndResistance(2.0F)
+        super(AbstractBlock.Properties.of(Material.WOOD, state -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.SAND)
+                .strength(2.0F)
                 .sound(SoundType.WOOD)
-                .notSolid());
+                .noOcclusion());
     }
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -48,12 +48,12 @@ public class EtherealLog extends RotatedPillarBlock implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

@@ -17,31 +17,31 @@ public class TravelingMedicine extends Item {
      */
     public TravelingMedicine() {
         super(new Item.Properties()
-                .group(AstralItems.ASTRAL_ITEMS)
+                .tab(AstralItems.ASTRAL_ITEMS)
                 .food(new Food.Builder()
-                        .fastToEat()
-                        .setAlwaysEdible()
-                        .saturation(-2F)
-                        .hunger(1)
+                        .fast()
+                        .alwaysEat()
+                        .saturationMod(-2F)
+                        .nutrition(1)
                         .effect(() -> new EffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), AstralConfig.getEffectDuration().travelingMedicineDuration.get(), 0), 1)
                         .build())
-                .maxStackSize(1));
+                .stacksTo(1));
     }
 
     @Override
     @Nonnull
-    public UseAction getUseAction(@Nonnull ItemStack stack) {
+    public UseAction getUseAnimation(@Nonnull ItemStack stack) {
         return UseAction.DRINK;
     }
 
     @Override
     @Nonnull
-    public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity entityLiving) {
         if (entityLiving instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) entityLiving;
-            playerEntity.addItemStackToInventory(new ItemStack(Items.BOWL));
+            playerEntity.addItem(new ItemStack(Items.BOWL));
         }
-        super.onItemUseFinish(stack, worldIn, entityLiving);
+        super.finishUsingItem(stack, worldIn, entityLiving);
         return ItemStack.EMPTY;
     }
 }

@@ -16,17 +16,17 @@ public class SyncPacketGrabbedItem {
     }
 
     public static SyncPacketGrabbedItem decode(PacketBuffer packetBuffer) {
-        return new SyncPacketGrabbedItem(packetBuffer.readItemStack());
+        return new SyncPacketGrabbedItem(packetBuffer.readItem());
     }
 
     public static void encode(SyncPacketGrabbedItem syncPacketGrabbedItem, PacketBuffer packetBuffer) {
-        packetBuffer.writeItemStack(syncPacketGrabbedItem.itemStack);
+        packetBuffer.writeItem(syncPacketGrabbedItem.itemStack);
     }
 
     public static void handle(SyncPacketGrabbedItem syncPacketGrabbedItem, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
             ClientPlayerEntity player = Minecraft.getInstance().player;
-            player.inventory.setItemStack(syncPacketGrabbedItem.itemStack);
+            player.inventory.setCarried(syncPacketGrabbedItem.itemStack);
         });
         contextSupplier.get().setPacketHandled(true);
     }

@@ -16,17 +16,17 @@ import javax.annotation.Nonnull;
 public class EtherealLeaves extends LeavesBlock implements Ethereal {
     public EtherealLeaves() {
         super(Block.Properties
-                .create(Material.LEAVES)
-                .hardnessAndResistance(0.2F)
-                .tickRandomly()
-                .sound(SoundType.PLANT)
-                .notSolid());
+                .of(Material.LEAVES)
+                .strength(0.2F)
+                .randomTicks()
+                .sound(SoundType.GRASS)
+                .noOcclusion());
     }
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -48,12 +48,12 @@ public class EtherealLeaves extends LeavesBlock implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

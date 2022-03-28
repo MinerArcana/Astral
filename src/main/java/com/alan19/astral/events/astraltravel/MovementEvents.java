@@ -24,7 +24,7 @@ public class MovementEvents {
 
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
-        if (event.player.isPotionActive(AstralEffects.ASTRAL_TRAVEL.get())) {
+        if (event.player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
             final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.sleepManagerCapability);
             if (iSleepManagerLazyOptional.isPresent()) {
                 final ISleepManager sleepManager = iSleepManagerLazyOptional.orElseGet(SleepManager::new);
@@ -41,7 +41,7 @@ public class MovementEvents {
 
     public static void handleSleep(PlayerEntity player, ISleepManager sleepManager) {
         sleepManager.addSleep();
-        player.getDataManager().set(Entity.POSE, Pose.SLEEPING);
+        player.getEntityData().set(Entity.DATA_POSE, Pose.SLEEPING);
         if (sleepManager.isEntityTraveling()) {
             finishSleeping(player, sleepManager);
         }
@@ -54,15 +54,15 @@ public class MovementEvents {
         final boolean goingToInnerRealm = sleepManager.isGoingToInnerRealm();
         if (goingToInnerRealm) {
             if (player instanceof ServerPlayerEntity) {
-                AstralAPI.getInnerRealmTeleporter((ServerWorld) player.getEntityWorld()).ifPresent(cap -> cap.teleport((ServerPlayerEntity) player));
+                AstralAPI.getInnerRealmTeleporter((ServerWorld) player.getCommandSenderWorld()).ifPresent(cap -> cap.teleport((ServerPlayerEntity) player));
             }
             sleepManager.setGoingToInnerRealm(false);
         }
         else {
-            player.setMotion(0, 10, 0);
+            player.setDeltaMovement(0, 10, 0);
             player.move(MoverType.SELF, new Vector3d(0, 1, 0));
         }
-        if (player.world.isRemote()) {
+        if (player.level.isClientSide()) {
             RenderingUtils.reloadRenderers();
         }
     }

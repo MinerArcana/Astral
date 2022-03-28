@@ -27,12 +27,12 @@ public class PatchouliBooks extends PatchouliBookProvider {
         final BookBuilder bookBuilder = createBookBuilder("astronomicon", "Astronomicon", "Mechanics of Astral Travel");
         bookBuilder.setModel(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
         bookBuilder.setSubtitle("Mechanics of Astral Travel");
-        bookBuilder.setCreativeTab(AstralItems.ASTRAL_ITEMS.getPath());
+        bookBuilder.setCreativeTab(AstralItems.ASTRAL_ITEMS.getRecipeFolderName());
 
         final CategoryBuilder astralWorlds = bookBuilder.addCategory("astral_worlds", "Astral Worlds", "Astral Arts provide access to many Astral Worlds", String.valueOf(new ResourceLocation(Astral.MOD_ID, "textures/mob_effect/astral_travel.png")));
 
         final ItemStack potionItemStack = new ItemStack(Items.POTION);
-        final EntryBuilder astralTravelEntry = astralWorlds.addEntry("astral_travel", "Astral Travel", PotionUtils.addPotionToItemStack(potionItemStack.copy(), AstralPotions.ASTRAL_TRAVEL_POTION.getBasePotion().get()));
+        final EntryBuilder astralTravelEntry = astralWorlds.addEntry("astral_travel", "Astral Travel", PotionUtils.setPotion(potionItemStack.copy(), AstralPotions.ASTRAL_TRAVEL_POTION.getBasePotion().get()));
         astralTravelEntry.addSimpleTextPage(String.format("While Astral Traveling your spirit soars across the land and through the skies, free from gravity. Your physical goods stay with your physical body. There are resources to be collected while Astral Traveling, search high in the sky over oceans to find %s.", FormatHelper.internalLink("etheric_isles", "Etheric Isles")));
 
         final EntryBuilder innerRealmEntry = astralWorlds.addEntry("inner_realm", "Inner Realm", new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get()));
@@ -73,10 +73,10 @@ public class PatchouliBooks extends PatchouliBookProvider {
         introspectionMedicineEntry.addCraftingPage(new ResourceLocation(Astral.MOD_ID, "introspection_medicine"));
 
         final ItemStack feverweedAndSnowberryBrew = new ItemStack(Items.POTION);
-        PotionUtils.appendEffects(feverweedAndSnowberryBrew, Stream.concat(AstralPotions.FEVERWEED_BREW.getBasePotion().get().getEffects().stream(), AstralPotions.SNOWBERRY_BREW.getBasePotion().get().getEffects().stream()).collect(Collectors.toList()));
+        PotionUtils.setCustomEffects(feverweedAndSnowberryBrew, Stream.concat(AstralPotions.FEVERWEED_BREW.getBasePotion().get().getEffects().stream(), AstralPotions.SNOWBERRY_BREW.getBasePotion().get().getEffects().stream()).collect(Collectors.toList()));
         final EntryBuilder brewPage = medicinesAndPotions.addEntry("feverweed_and_snowberry_brews", "Snowberry & Feverweed Brews", feverweedAndSnowberryBrew);
         brewPage.setAdvancement("minecraft:nether/brew_potion");
-        brewPage.addSpotlightPage(PotionUtils.addPotionToItemStack(potionItemStack, Potions.THICK)).setText("Have you ever wanted the effects of Feverweed or Snowberries but for a longer or stronger effect? Now you can! These brews use Thick Potions as their base, and have the two effects at level II for 30 seconds as the starting potion.");
+        brewPage.addSpotlightPage(PotionUtils.setPotion(potionItemStack, Potions.THICK)).setText("Have you ever wanted the effects of Feverweed or Snowberries but for a longer or stronger effect? Now you can! These brews use Thick Potions as their base, and have the two effects at level II for 30 seconds as the starting potion.");
         brewPage.addSimpleTextPage("Adding Redstone lowers the effects to level I but increases the duration to 60 seconds." + FormatHelper.newParagraph() + "Adding Glowstone increases the effects to level III but decreases the duration to 20 seconds.");
 
         final CategoryBuilder erratas = bookBuilder.addCategory("errata_and_sundries", "Errata and Sundries", "There are many miscellaneous blocks and items that can help with Astral Travel and building in the Inner Realm. These are the rare physical tools which help with physical workings.", new ItemStack(AstralItems.OFFERING_BRAZIER_ITEM.get()));

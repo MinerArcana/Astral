@@ -21,27 +21,27 @@ public class AstralTravelEffect extends Effect {
      * @param amplifier          The level of the effect
      */
     @Override
-    public void performEffect(LivingEntity entityLivingBaseIn, int amplifier) {
-        if (!entityLivingBaseIn.getEntityWorld().isRemote() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth() && !entityLivingBaseIn.isPotionActive(AstralEffects.MIND_VENOM.get())) {
+    public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
+        if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth() && !entityLivingBaseIn.hasEffect(AstralEffects.MIND_VENOM.get())) {
             if (entityLivingBaseIn instanceof PlayerEntity) {
                 PlayerEntity playerEntity = (PlayerEntity) entityLivingBaseIn;
-                if (playerEntity.experienceTotal > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
+                if (playerEntity.totalExperience > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
                     entityLivingBaseIn.heal((amplifier * 0.5F) + 1.0F);
                     ((PlayerEntity) entityLivingBaseIn).giveExperiencePoints(-1);
                 }
-                playerEntity.getFoodStats().setFoodLevel(15);
-                playerEntity.getFoodStats().foodSaturationLevel = 0;
+                playerEntity.getFoodData().setFoodLevel(15);
+                playerEntity.getFoodData().saturationLevel = 0;
             }
         }
     }
 
     @Override
-    public boolean isReady(int duration, int amplifier) {
+    public boolean isDurationEffectTick(int duration, int amplifier) {
         return (duration % (60 - (amplifier * 5))) == 0;
     }
 
     @Override
-    public double getAttributeModifierAmount(int amplifier, @Nonnull AttributeModifier modifier) {
+    public double getAttributeModifierValue(int amplifier, @Nonnull AttributeModifier modifier) {
         return 3 * (double) (amplifier + 1);
     }
 }

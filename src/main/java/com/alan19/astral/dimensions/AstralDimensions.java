@@ -11,11 +11,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralDimensions {
-    public static final RegistryKey<World> INNER_REALM = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(Astral.MOD_ID, "inner_realm"));
+    public static final RegistryKey<World> INNER_REALM = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(Astral.MOD_ID, "inner_realm"));
 
 
     public static boolean isEntityNotInInnerRealm(Entity entity) {
-        return entity.getEntityWorld().getDimensionKey() != INNER_REALM;
+        return entity.getCommandSenderWorld().dimension() != INNER_REALM;
     }
 
 

@@ -25,9 +25,9 @@ public class BrazierRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void registerRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
-        createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.fromItems(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
-        createRecipe("bucket", new ItemStack(BUCKET), Ingredient.fromItems(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
+    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+        createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.of(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
+        createRecipe("bucket", new ItemStack(BUCKET), Ingredient.of(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
     }
 
     private void allowThroughBrazier(@Nonnull Consumer<IFinishedRecipe> consumer, Item item, String path, Ingredient ingredient) {
@@ -60,9 +60,9 @@ public class BrazierRecipeProvider extends RecipeProvider {
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             json.addProperty("cookTime", cookTime);
-            json.add("input", input.serialize());
+            json.add("input", input.toJson());
 
             JsonObject resultObject = serializeItemStack(output);
             json.add("result", resultObject);
@@ -83,25 +83,25 @@ public class BrazierRecipeProvider extends RecipeProvider {
 
         @Override
         @Nonnull
-        public ResourceLocation getID() {
+        public ResourceLocation getId() {
             return id;
         }
 
         @Override
         @Nonnull
-        public IRecipeSerializer<?> getSerializer() {
+        public IRecipeSerializer<?> getType() {
             return AstralRecipeSerializer.BRAZIER_DESTROY_SERIALIZER.get();
         }
 
         @Nullable
         @Override
-        public JsonObject getAdvancementJson() {
+        public JsonObject serializeAdvancement() {
             return null;
         }
 
         @Nullable
         @Override
-        public ResourceLocation getAdvancementID() {
+        public ResourceLocation getAdvancementId() {
             return null;
         }
     }

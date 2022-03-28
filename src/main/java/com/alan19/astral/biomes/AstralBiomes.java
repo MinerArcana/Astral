@@ -11,7 +11,7 @@ public class AstralBiomes {
     public static final DeferredRegister<Biome> BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, Astral.MOD_ID);
 
     static {
-        BIOMES.register("psyscape", BiomeMaker::makeVoidBiome);
+        BIOMES.register("psyscape", BiomeMaker::theVoidBiome);
     }
 
     public static void register(IEventBus modBus) {

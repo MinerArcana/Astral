@@ -18,14 +18,14 @@ public class GenerateMultipleFeature extends Feature<MultipleRandomFeatureConfig
 
     @Override
     @ParametersAreNonnullByDefault
-    public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, MultipleRandomFeatureConfig config) {
+    public boolean place(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, MultipleRandomFeatureConfig config) {
         final float aFloat = rand.nextFloat();
         boolean atLeastOneGenerated = false;
         for (ConfiguredRandomFeatureList configuredRandomFeatureList : config.features) {
-            if (aFloat < configuredRandomFeatureList.chance && configuredRandomFeatureList.generate(reader, generator, rand, pos)) {
+            if (aFloat < configuredRandomFeatureList.chance && configuredRandomFeatureList.place(reader, generator, rand, pos)) {
                 atLeastOneGenerated = true;
             }
         }
-        return atLeastOneGenerated || config.defaultFeature.get().generate(reader, generator, rand, pos);
+        return atLeastOneGenerated || config.defaultFeature.get().place(reader, generator, rand, pos);
     }
 }

@@ -27,13 +27,13 @@ public class PhysicalBodyTracking {
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         final PlayerEntity player = event.getPlayer();
         if (player instanceof ServerPlayerEntity) {
-            final ServerWorld serverWorld = ((ServerPlayerEntity) player).getServerWorld();
+            final ServerWorld serverWorld = ((ServerPlayerEntity) player).getLevel();
             AstralAPI.getBodyTracker(serverWorld).ifPresent(cap -> {
-                if (cap.getBodyTrackerMap().containsKey(player.getUniqueID())) {
-                    final INBT uuidNBT = cap.getBodyTrackerMap().get(player.getUniqueID()).get("UUID");
+                if (cap.getBodyTrackerMap().containsKey(player.getUUID())) {
+                    final INBT uuidNBT = cap.getBodyTrackerMap().get(player.getUUID()).get("UUID");
                     if (uuidNBT != null) {
-                        final UUID uuid = NBTUtil.readUniqueId(uuidNBT);
-                        final Entity entity = serverWorld.getEntityByUuid(uuid);
+                        final UUID uuid = NBTUtil.loadUUID(uuidNBT);
+                        final Entity entity = serverWorld.getEntity(uuid);
                         if (entity != null) {
                             entity.remove();
                         }
@@ -48,14 +48,14 @@ public class PhysicalBodyTracking {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         final PlayerEntity player = event.getPlayer();
         if (player instanceof ServerPlayerEntity) {
-            final ServerWorld serverWorld = ((ServerPlayerEntity) player).getServerWorld();
+            final ServerWorld serverWorld = ((ServerPlayerEntity) player).getLevel();
             AstralAPI.getBodyTracker(serverWorld).ifPresent(cap -> {
-                if (cap.getBodyTrackerMap().containsKey(player.getUniqueID())) {
-                    final CompoundNBT bodyNBT = cap.getBodyTrackerMap().get(player.getUniqueID());
-                    final ServerWorld dimension = serverWorld.getServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(bodyNBT.getString("Dimension"))));
+                if (cap.getBodyTrackerMap().containsKey(player.getUUID())) {
+                    final CompoundNBT bodyNBT = cap.getBodyTrackerMap().get(player.getUUID());
+                    final ServerWorld dimension = serverWorld.getServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))));
                     final INBT bodyUUID = bodyNBT.get("UUID");
-                    if (dimension != null && bodyUUID != null && dimension.getEntityByUuid(NBTUtil.readUniqueId(bodyUUID)) == null) {
-                        EntityType.loadEntityUnchecked(bodyNBT, dimension).ifPresent(serverWorld::addEntity);
+                    if (dimension != null && bodyUUID != null && dimension.getEntity(NBTUtil.loadUUID(bodyUUID)) == null) {
+                        EntityType.create(bodyNBT, dimension).ifPresent(serverWorld::addFreshEntity);
                     }
                 }
             });

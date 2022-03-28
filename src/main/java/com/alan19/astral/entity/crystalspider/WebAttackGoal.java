@@ -37,7 +37,7 @@ public class WebAttackGoal extends Goal {
             this.maxRangedAttackTime = maxAttackTime;
             this.attackRadius = maxAttackDistanceIn;
             this.maxAttackDistance = maxAttackDistanceIn * maxAttackDistanceIn;
-            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
     }
 
@@ -45,8 +45,8 @@ public class WebAttackGoal extends Goal {
      * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
      * method as well.
      */
-    public boolean shouldExecute() {
-        LivingEntity livingentity = this.entityHost.getAttackTarget();
+    public boolean canUse() {
+        LivingEntity livingentity = this.entityHost.getTarget();
         if (livingentity != null && livingentity.isAlive()) {
             this.attackTarget = livingentity;
             return true;
@@ -59,14 +59,14 @@ public class WebAttackGoal extends Goal {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean shouldContinueExecuting() {
-        return this.shouldExecute() || !this.entityHost.getNavigator().noPath();
+    public boolean canContinueToUse() {
+        return this.canUse() || !this.entityHost.getNavigation().isDone();
     }
 
     /**
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
-    public void resetTask() {
+    public void stop() {
         this.attackTarget = null;
         this.seeTime = 0;
     }
@@ -75,8 +75,8 @@ public class WebAttackGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        double d0 = this.entityHost.getDistanceSq(this.attackTarget.getPosX(), this.attackTarget.getPosY(), this.attackTarget.getPosZ());
-        boolean flag = this.entityHost.getEntitySenses().canSee(this.attackTarget);
+        double d0 = this.entityHost.distanceToSqr(this.attackTarget.getX(), this.attackTarget.getY(), this.attackTarget.getZ());
+        boolean flag = this.entityHost.getSensing().canSee(this.attackTarget);
         if (flag) {
             this.seeTime++;
         }
@@ -85,13 +85,13 @@ public class WebAttackGoal extends Goal {
         }
 
         if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 5) {
-            this.entityHost.getNavigator().clearPath();
+            this.entityHost.getNavigation().stop();
         }
         else {
-            this.entityHost.getNavigator().tryMoveToEntityLiving(this.attackTarget, this.entityMoveSpeed);
+            this.entityHost.getNavigation().moveTo(this.attackTarget, this.entityMoveSpeed);
         }
 
-        this.entityHost.getLookController().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
+        this.entityHost.getLookControl().setLookAt(this.attackTarget, 30.0F, 30.0F);
         if (--this.rangedAttackTime == 0) {
             if (!flag) {
                 return;
@@ -99,7 +99,7 @@ public class WebAttackGoal extends Goal {
 
             float f = MathHelper.sqrt(d0) / this.attackRadius;
             float lvt_5_1_ = MathHelper.clamp(f, 0.1F, 1.0F);
-            this.rangedAttackEntityHost.attackEntityWithRangedAttack(this.attackTarget, lvt_5_1_);
+            this.rangedAttackEntityHost.performRangedAttack(this.attackTarget, lvt_5_1_);
             this.rangedAttackTime = MathHelper.floor(f * (float) (this.maxRangedAttackTime - this.attackIntervalMin) + (float) this.attackIntervalMin);
         }
         else if (this.rangedAttackTime < 0) {

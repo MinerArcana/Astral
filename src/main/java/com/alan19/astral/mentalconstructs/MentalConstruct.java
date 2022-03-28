@@ -33,7 +33,7 @@ public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct
     }
 
     public void setDimensionKey(@Nonnull World dimensionKey) {
-        this.dimensionKey = dimensionKey.getDimensionKey();
+        this.dimensionKey = dimensionKey.dimension();
     }
 
     public BlockPos getConstructPos() {
@@ -63,7 +63,7 @@ public abstract class MentalConstruct extends ForgeRegistryEntry<MentalConstruct
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        dimensionKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(nbt.getString("world")));
+        dimensionKey = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(nbt.getString("world")));
         constructPos = NBTUtil.readBlockPos(nbt.getCompound("pos"));
         level = nbt.getInt("level");
     }

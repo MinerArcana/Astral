@@ -15,7 +15,7 @@ public class AstralParticles {
 
     public static final RegistryObject<ParticleType<BlockParticleData>> ETHEREAL_REPLACE_PARTICLE = PARTICLES.register("ethereal_replace_particle", () -> new ParticleType<BlockParticleData>(false, BlockParticleData.DESERIALIZER) {
         @Override
-        public Codec func_230522_e_() {
+        public Codec codec() {
             return null;
         }
     });

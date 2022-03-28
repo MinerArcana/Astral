@@ -21,11 +21,11 @@ public class SendClaimedChunkMessage {
     }
 
     public static SendClaimedChunkMessage decode(PacketBuffer packetBuffer) {
-        return new SendClaimedChunkMessage(packetBuffer.readCompoundTag());
+        return new SendClaimedChunkMessage(packetBuffer.readNbt());
     }
 
     public static void encode(SendClaimedChunkMessage sendClaimedChunkMessage, PacketBuffer packetBuffer) {
-        packetBuffer.writeCompoundTag(sendClaimedChunkMessage.nbt);
+        packetBuffer.writeNbt(sendClaimedChunkMessage.nbt);
     }
 
     /**

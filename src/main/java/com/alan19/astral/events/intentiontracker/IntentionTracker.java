@@ -16,10 +16,10 @@ public class IntentionTracker {
     public static void onInput(InputEvent event){
         ClientPlayerEntity player = Minecraft.getInstance().player;
         if (player != null) {
-            if (ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
+            if (ClientSetup.INTENTION_TRACKER_BUTTON.consumeClick()) {
                 AstralNetwork.sendIntentionBeam();
             }
-            else if (!ClientSetup.INTENTION_TRACKER_BUTTON.isPressed()) {
+            else if (!ClientSetup.INTENTION_TRACKER_BUTTON.consumeClick()) {
                 AstralNetwork.deleteIntentionBeam();
             }
         }

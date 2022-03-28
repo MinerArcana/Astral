@@ -4,6 +4,6 @@ import net.minecraft.item.Item;
 
 public class PhantomEdge extends Item {
     public PhantomEdge() {
-        super(new Properties().group(AstralItems.ASTRAL_ITEMS));
+        super(new Properties().tab(AstralItems.ASTRAL_ITEMS));
     }
 }

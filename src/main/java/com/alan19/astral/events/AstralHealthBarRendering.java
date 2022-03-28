@@ -31,32 +31,32 @@ public class AstralHealthBarRendering {
     private static long lastSystemTime;
 
     public static void drawTexturedModalRect(MatrixStack matrixStack, int x, int y, int textureX, int textureY, int width, int height) {
-        Minecraft.getInstance().ingameGUI.blit(matrixStack, x, y, textureX, textureY, width, height);
+        Minecraft.getInstance().gui.blit(matrixStack, x, y, textureX, textureY, width, height);
     }
 
     public static void renderAstralHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
-        int scaledWidth = mc.getMainWindow().getScaledWidth();
-        int scaledHeight = mc.getMainWindow().getScaledHeight();
+        int scaledWidth = mc.getWindow().getGuiScaledWidth();
+        int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
-        mc.getProfiler().startSection("health");
-        GlStateManager.enableBlend();
-        mc.getTextureManager().bindTexture(player.isPotionActive(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
+        mc.getProfiler().push("health");
+        GlStateManager._enableBlend();
+        mc.getTextureManager().bind(player.hasEffect(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
         int health = MathHelper.ceil(player.getHealth());
-        int ticks = mc.ingameGUI.getTicks();
+        int ticks = mc.gui.getGuiTicks();
         boolean highlight = healthUpdateCounter > (long) ticks && (healthUpdateCounter - (long) ticks) / 3L % 2L == 1L;
-        if (health < playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = Util.milliTime();
+        if (health < playerHealth && player.invulnerableTime > 0) {
+            lastSystemTime = Util.getMillis();
             healthUpdateCounter = (long) ticks + 20;
 
         }
-        else if (health > playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = Util.milliTime();
+        else if (health > playerHealth && player.invulnerableTime > 0) {
+            lastSystemTime = Util.getMillis();
             healthUpdateCounter = (long) ticks + 10;
         }
 
-        if (Util.milliTime() - lastSystemTime > 1000L) {
+        if (Util.getMillis() - lastSystemTime > 1000L) {
             playerHealth = health;
-            lastSystemTime = Util.milliTime();
+            lastSystemTime = Util.getMillis();
         }
 
         playerHealth = health;
@@ -78,7 +78,7 @@ public class AstralHealthBarRendering {
             left_height += 10 - rowHeight;
 
         int regen = -1;
-        if (player.isPotionActive(Effects.REGENERATION)) {
+        if (player.hasEffect(Effects.REGENERATION)) {
             regen = ticks % 25;
         }
 
@@ -155,17 +155,17 @@ public class AstralHealthBarRendering {
 
         }
 
-        GlStateManager.disableBlend();
-        mc.getTextureManager().bindTexture(GUI_ICONS_LOCATION);
-        mc.getProfiler().endSection();
+        GlStateManager._disableBlend();
+        mc.getTextureManager().bind(GUI_ICONS_LOCATION);
+        mc.getProfiler().pop();
     }
 
     public static void renderAstralScreenFade(MatrixStack matrixStack, int sleep) {
         Minecraft mc = Minecraft.getInstance();
-        GlStateManager.enableBlend();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableDepthTest();
-        GlStateManager.disableAlphaTest();
+        GlStateManager._enableBlend();
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager._disableDepthTest();
+        GlStateManager._disableAlphaTest();
         int sleepTime = Math.toIntExact((long) (sleep * (100.0 / AstralConfig.getTravelingSettings().startupTime.get())));
         float opacity = (float) sleepTime / 100.0F;
 
@@ -174,44 +174,44 @@ public class AstralHealthBarRendering {
         }
 
         int color = (int) (220.0F * opacity) << 24 | 1052704;
-        int scaledWidth = mc.getMainWindow().getScaledWidth();
-        int scaledHeight = mc.getMainWindow().getScaledHeight();
+        int scaledWidth = mc.getWindow().getGuiScaledWidth();
+        int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
         AbstractGui.fill(matrixStack, 0, 0, scaledWidth, scaledHeight, color);
-        GlStateManager.enableAlphaTest();
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
-        GlStateManager.disableAlphaTest();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableLighting();
-        GlStateManager.enableAlphaTest();
+        GlStateManager._enableAlphaTest();
+        GlStateManager._enableDepthTest();
+        GlStateManager._enableBlend();
+        GlStateManager._blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+        GlStateManager._disableAlphaTest();
+        GlStateManager._color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager._disableLighting();
+        GlStateManager._enableAlphaTest();
 
     }
 
     public static void renderMindVenomHearts(MatrixStack matrixStack, Minecraft mc, PlayerEntity player) {
-        int scaledWidth = mc.getMainWindow().getScaledWidth();
-        int scaledHeight = mc.getMainWindow().getScaledHeight();
+        int scaledWidth = mc.getWindow().getGuiScaledWidth();
+        int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
-        mc.getProfiler().startSection("health");
-        GlStateManager.enableBlend();
-        mc.getTextureManager().bindTexture(player.isPotionActive(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
+        mc.getProfiler().push("health");
+        GlStateManager._enableBlend();
+        mc.getTextureManager().bind(player.hasEffect(AstralEffects.MIND_VENOM.get()) ? VENOM_HEART_TEXTURE : HEART_TEXTURE);
         int health = MathHelper.ceil(player.getHealth());
-        int ticks = mc.ingameGUI.getTicks();
+        int ticks = mc.gui.getGuiTicks();
         boolean highlight = healthUpdateCounter > (long) ticks && (healthUpdateCounter - (long) ticks) / 3L % 2L == 1L;
-        if (health < playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = Util.milliTime();
+        if (health < playerHealth && player.invulnerableTime > 0) {
+            lastSystemTime = Util.getMillis();
             healthUpdateCounter = (long) ticks + 20;
 
         }
-        else if (health > playerHealth && player.hurtResistantTime > 0) {
-            lastSystemTime = Util.milliTime();
+        else if (health > playerHealth && player.invulnerableTime > 0) {
+            lastSystemTime = Util.getMillis();
             healthUpdateCounter = (long) ticks + 10;
         }
 
-        if (Util.milliTime() - lastSystemTime > 1000L) {
+        if (Util.getMillis() - lastSystemTime > 1000L) {
             playerHealth = health;
-            lastSystemTime = Util.milliTime();
+            lastSystemTime = Util.getMillis();
         }
 
         playerHealth = health;
@@ -233,7 +233,7 @@ public class AstralHealthBarRendering {
             left_height += 10 - rowHeight;
 
         int regen = -1;
-        if (player.isPotionActive(Effects.REGENERATION)) {
+        if (player.hasEffect(Effects.REGENERATION)) {
             regen = ticks % 25;
         }
 
@@ -310,8 +310,8 @@ public class AstralHealthBarRendering {
 
         }
 
-        GlStateManager.disableBlend();
-        mc.getTextureManager().bindTexture(GUI_ICONS_LOCATION);
-        mc.getProfiler().endSection();
+        GlStateManager._disableBlend();
+        mc.getTextureManager().bind(GUI_ICONS_LOCATION);
+        mc.getProfiler().pop();
     }
 }

@@ -49,7 +49,7 @@ public class BodyTracker implements IBodyTracker {
     public void setBodyNBT(UUID uuid, CompoundNBT nbt, ServerWorld world) {
         // TODO Refactor parameters to take a ServerPlayerEntity
         bodyTrackerMap.put(uuid, nbt);
-        final ServerPlayerEntity player = world.getServer().getPlayerList().getPlayerByUUID(uuid);
+        final ServerPlayerEntity player = world.getServer().getPlayerList().getPlayer(uuid);
         if (player != null) {
             updatePlayer(player);
         }
@@ -70,7 +70,7 @@ public class BodyTracker implements IBodyTracker {
             // This calculation decreases the player's max HP to the body's current HP
             maxHPAttributeInstance.removeModifier(HEALTH_ID);
             float healthModifier = newMaxHealth - playerEntity.getMaxHealth();
-            maxHPAttributeInstance.applyPersistentModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
+            maxHPAttributeInstance.addPermanentModifier(new AttributeModifier(HEALTH_ID, "physical body health", healthModifier, AttributeModifier.Operation.ADDITION));
             if (playerEntity.getHealth() > newMaxHealth) {
                 playerEntity.setHealth(newMaxHealth);
             }
@@ -84,10 +84,10 @@ public class BodyTracker implements IBodyTracker {
      * @param playerEntity The player to update
      */
     public void updatePlayer(ServerPlayerEntity playerEntity) {
-        if (bodyTrackerMap.containsKey(playerEntity.getUniqueID())) {
-            final float bodyHealth = bodyTrackerMap.get(playerEntity.getUniqueID()).getFloat("Health");
+        if (bodyTrackerMap.containsKey(playerEntity.getUUID())) {
+            final float bodyHealth = bodyTrackerMap.get(playerEntity.getUUID()).getFloat("Health");
             if (bodyHealth <= 0) {
-                playerEntity.onKillCommand();
+                playerEntity.kill();
             }
             else {
                 setPlayerMaxHealthTo(playerEntity, bodyHealth);
@@ -104,39 +104,39 @@ public class BodyTracker implements IBodyTracker {
     @Override
     public void mergePlayerWithBody(ServerPlayerEntity serverPlayerEntity, ServerWorld world) {
         // Reset player motion
-        serverPlayerEntity.setMotion(0, 0, 0);
-        serverPlayerEntity.isAirBorne = false;
+        serverPlayerEntity.setDeltaMovement(0, 0, 0);
+        serverPlayerEntity.hasImpulse = false;
         serverPlayerEntity.fallDistance = 0;
 
         // Get the inventory and transfer items
-        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
+        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUUID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
 
         // Teleport the player
-        if (bodyTrackerMap.containsKey(serverPlayerEntity.getUniqueID())) {
-            final CompoundNBT bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUniqueID());
+        if (bodyTrackerMap.containsKey(serverPlayerEntity.getUUID())) {
+            final CompoundNBT bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUUID());
             final ListNBT posNBT = bodyNBT.getList("Pos", net.minecraftforge.common.util.Constants.NBT.TAG_DOUBLE);
             final BlockPos pos = new BlockPos(posNBT.getDouble(0), posNBT.getDouble(1), posNBT.getDouble(2));
-            TeleportationTools.performTeleport(serverPlayerEntity, RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
+            TeleportationTools.performTeleport(serverPlayerEntity, RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
 
             // Kill the body, reset player stats, and remove the body from the tracker
-            findBody(world, bodyNBT).ifPresent(LivingEntity::onKillCommand);
+            findBody(world, bodyNBT).ifPresent(LivingEntity::kill);
             resetPlayerStats(serverPlayerEntity, bodyNBT);
-            bodyTrackerMap.remove(serverPlayerEntity.getUniqueID());
+            bodyTrackerMap.remove(serverPlayerEntity.getUUID());
         }
         //If body is not found, teleport player to their spawn location (bed or world spawn)
         else {
-            RegistryKey<World> playerSpawnDimension = serverPlayerEntity.func_241141_L_();
+            RegistryKey<World> playerSpawnDimension = serverPlayerEntity.getRespawnDimension();
             //Teleport to bed
-            if (serverPlayerEntity.getBedPosition().isPresent()) {
-                BlockPos bedPos = serverPlayerEntity.getBedPosition().get();
+            if (serverPlayerEntity.getSleepingPos().isPresent()) {
+                BlockPos bedPos = serverPlayerEntity.getSleepingPos().get();
                 TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, bedPos, null);
-                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED), serverPlayerEntity.getUniqueID());
+                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_BED), serverPlayerEntity.getUUID());
             }
             //Teleport to spawn
             else {
-                BlockPos serverSpawn = serverPlayerEntity.getServerWorld().getSpawnPoint();
+                BlockPos serverSpawn = serverPlayerEntity.getLevel().getSharedSpawnPos();
                 TeleportationTools.performTeleport(serverPlayerEntity, playerSpawnDimension, serverSpawn, null);
-                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN), serverPlayerEntity.getUniqueID());
+                serverPlayerEntity.sendMessage(new TranslationTextComponent(Constants.SLEEPWALKING_SPAWN), serverPlayerEntity.getUUID());
             }
             resetPlayerStats(serverPlayerEntity);
         }
@@ -150,11 +150,11 @@ public class BodyTracker implements IBodyTracker {
      * @return Optional.empty() if the body cannot be found, an optional with the body if it is found
      */
     public Optional<PhysicalBodyEntity> findBody(ServerWorld world, CompoundNBT bodyNBT) {
-        final ServerWorld bodyWorld = world.getServer().getWorld(RegistryKey.getOrCreateKey(Registry.WORLD_KEY, new ResourceLocation(bodyNBT.getString("Dimension"))));
+        final ServerWorld bodyWorld = world.getServer().getLevel(RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))));
         final INBT id = bodyNBT.get("UUID");
         // Add null checks to avoid NPEs if entity is not found
         if (id != null && bodyWorld != null) {
-            return Optional.ofNullable((PhysicalBodyEntity) bodyWorld.getEntityByUuid(NBTUtil.readUniqueId(id)));
+            return Optional.ofNullable((PhysicalBodyEntity) bodyWorld.getEntity(NBTUtil.loadUUID(id)));
         }
         return Optional.empty();
     }
@@ -172,7 +172,7 @@ public class BodyTracker implements IBodyTracker {
             maxHealthAttribute.removeModifier(HEALTH_ID);
         }
         playerEntity.setHealth(bodyNBT.getFloat("Health"));
-        playerEntity.getFoodStats().setFoodLevel(bodyNBT.getInt("Hunger"));
+        playerEntity.getFoodData().setFoodLevel(bodyNBT.getInt("Hunger"));
     }
 
     /**
@@ -187,7 +187,7 @@ public class BodyTracker implements IBodyTracker {
             maxHealthAttribute.removeModifier(HEALTH_ID);
         }
         playerEntity.setHealth(playerEntity.getMaxHealth());
-        playerEntity.getFoodStats().setFoodLevel(20);
+        playerEntity.getFoodData().setFoodLevel(20);
     }
 
 
@@ -200,7 +200,7 @@ public class BodyTracker implements IBodyTracker {
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        nbt.keySet().forEach(s -> bodyTrackerMap.put(UUID.fromString(s), nbt.getCompound(s)));
+        nbt.getAllKeys().forEach(s -> bodyTrackerMap.put(UUID.fromString(s), nbt.getCompound(s)));
     }
 
 }

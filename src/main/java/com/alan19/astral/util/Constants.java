@@ -34,7 +34,7 @@ public class Constants {
     public static final BooleanProperty CAPPED_LEVEL = BooleanProperty.create("capped_level");
     public static final AttributeModifier SPIRITUAL_MOB_MODIFER = new AttributeModifier(UUID.fromString("0acc71d8-4489-4df5-880f-6bc95fa988ff"), "adds some astral damage for spiritul entities", 4, AttributeModifier.Operation.ADDITION);
 
-    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).alternative(MatchTool.builder(ItemPredicate.Builder.create().tag(Tags.Items.SHEARS)));
+    public static final Alternative.Builder SILK_TOUCH_OR_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1)))).or(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS)));
 
     public static final ToolType SWORDS = ToolType.get("sword");
     public static final ToolType SHEARS = ToolType.get("shears");

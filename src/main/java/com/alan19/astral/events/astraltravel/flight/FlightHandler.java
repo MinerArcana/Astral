@@ -19,7 +19,7 @@ public class FlightHandler {
 
     //Copied from Entity.java
     private static Vector3d getAbsoluteMotion(Vector3d relative, float facing) {
-        double d0 = relative.lengthSquared();
+        double d0 = relative.lengthSqr();
         if (d0 < 1.0E-7D) {
             return Vector3d.ZERO;
         }
@@ -33,8 +33,8 @@ public class FlightHandler {
 
     //Move the player with a certain vector
     public static void moveEntity(Entity entity, Vector3d vec3d) {
-        Vector3d adjustedVec = getAbsoluteMotion(vec3d, entity.rotationYaw);
-        entity.setMotion(adjustedVec);
+        Vector3d adjustedVec = getAbsoluteMotion(vec3d, entity.yRot);
+        entity.setDeltaMovement(adjustedVec);
     }
 
 
@@ -82,17 +82,17 @@ public class FlightHandler {
      * @return The movement vector with a vertical component
      */
     public static Vector3d generateVerticalVector(PlayerEntity player, int closestY, Vector3d nextMovement, IHeightAdjustmentCapability heightAdjustmentCapability) {
-        if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : (travelingSettings.baseSpeed.get() / 8), 0))
+        if (InputHandler.isHoldingUp(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() > Math.floor(player.getY()) - closestY && !InputHandler.isHoldingDown(player))) {
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getY() - closestY) : (travelingSettings.baseSpeed.get() / 8), 0))
             ;
         }
-        else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.getPosY()) - closestY && !InputHandler.isHoldingDown(player))) {
-            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getPosY() - closestY) : -(travelingSettings.baseSpeed.get() / 8), 0));
+        else if (InputHandler.isHoldingDown(player) || (heightAdjustmentCapability.isActive() && heightAdjustmentCapability.getHeightDifference() < Math.floor(player.getY()) - closestY && !InputHandler.isHoldingDown(player))) {
+            nextMovement = nextMovement.add(new Vector3d(0, heightAdjustmentCapability.isActive() ? -getAdjustedVerticalSpeed(heightAdjustmentCapability.getHeightDifference(), player.getY() - closestY) : -(travelingSettings.baseSpeed.get() / 8), 0));
         }
         else {
             //Smooth flying up and down
-            Vector3d motion = player.getMotion();
-            player.setMotion(new Vector3d(motion.getX(), heightAdjustmentCapability.isActive() ? motion.getY() : 0, motion.getZ()));
+            Vector3d motion = player.getDeltaMovement();
+            player.setDeltaMovement(new Vector3d(motion.x(), heightAdjustmentCapability.isActive() ? motion.y() : 0, motion.z()));
         }
         return nextMovement;
     }
@@ -107,30 +107,30 @@ public class FlightHandler {
      * @return The movement vector with a XZ component
      */
     public static Vector3d generateCardinalDirectionVector(PlayerEntity player, int closestY, MovementType movementType, Vector3d nextMovement) {
-        final EffectInstance astralTravelInstance = player.getActivePotionEffect(AstralEffects.ASTRAL_TRAVEL.get());
+        final EffectInstance astralTravelInstance = player.getEffect(AstralEffects.ASTRAL_TRAVEL.get());
         int amplifier = astralTravelInstance != null ? astralTravelInstance.getAmplifier() : 0;
         if (!(InputHandler.isHoldingForwards(player) && InputHandler.isHoldingBackwards(player))) {
             if (InputHandler.isHoldingForwards(player)) {
-                nextMovement = nextMovement.add(0, 0, calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier));
+                nextMovement = nextMovement.add(0, 0, calculateSpeedForward(player.getY(), closestY, movementType, amplifier));
             }
             if (InputHandler.isHoldingBackwards(player)) {
-                nextMovement = nextMovement.add(new Vector3d(0, 0, -calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier) * 0.8F));
+                nextMovement = nextMovement.add(new Vector3d(0, 0, -calculateSpeedForward(player.getY(), closestY, movementType, amplifier) * 0.8F));
             }
         }
         if (InputHandler.isHoldingLeft(player)) {
-            nextMovement = nextMovement.add(new Vector3d(calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
+            nextMovement = nextMovement.add(new Vector3d(calculateSpeedForward(player.getY(), closestY, movementType, amplifier), 0, 0));
         }
         if (InputHandler.isHoldingRight(player)) {
-            nextMovement = nextMovement.add(new Vector3d(-calculateSpeedForward(player.getPosY(), closestY, movementType, amplifier), 0, 0));
+            nextMovement = nextMovement.add(new Vector3d(-calculateSpeedForward(player.getY(), closestY, movementType, amplifier), 0, 0));
         }
         return nextMovement;
     }
 
     public static void activateHoverCapability(PlayerEntity player, int closestY, IHeightAdjustmentCapability heightAdjustmentCapability) {
-        if (player.world.isRemote()) {
+        if (player.level.isClientSide()) {
             if (InputHandler.isHoldingSprint(player) && !heightAdjustmentCapability.isActive()) {
                 heightAdjustmentCapability.activate();
-                heightAdjustmentCapability.setHeightDifference((int) Math.min(travelingSettings.heightPenaltyLimit.get(), player.getPosY() - closestY));
+                heightAdjustmentCapability.setHeightDifference((int) Math.min(travelingSettings.heightPenaltyLimit.get(), player.getY() - closestY));
             }
             else if (!InputHandler.isHoldingSprint(player) && heightAdjustmentCapability.isActive()) {
                 heightAdjustmentCapability.deactivate();
@@ -202,9 +202,9 @@ public class FlightHandler {
      * @return The Y coordinate of the closest block under the player, or -1 if no blocks are found
      */
     private static int getClosestBlockUnderPlayer(PlayerEntity player) {
-        BlockPos pos = player.getPosition();
-        while (pos.getY() >= 0 && !player.getEntityWorld().getBlockState(pos).hasOpaqueCollisionShape(player.world, pos)) {
-            pos = pos.down();
+        BlockPos pos = player.blockPosition();
+        while (pos.getY() >= 0 && !player.getCommandSenderWorld().getBlockState(pos).isCollisionShapeFullBlock(player.level, pos)) {
+            pos = pos.below();
         }
         return pos.getY();
     }

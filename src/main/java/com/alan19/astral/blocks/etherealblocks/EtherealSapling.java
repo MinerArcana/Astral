@@ -17,13 +17,13 @@ import javax.annotation.Nonnull;
 
 public class EtherealSapling extends SaplingBlock implements Ethereal {
     public EtherealSapling() {
-        super(new EtherealTree(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0f).sound(SoundType.PLANT).notSolid());
+        super(new EtherealTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0f).sound(SoundType.GRASS).noOcclusion());
     }
 
     @Nonnull
     @Override
-    public BlockRenderType getRenderType(@Nonnull BlockState state) {
-        return Ethereal.getRenderType(super.getRenderType(state));
+    public BlockRenderType getRenderShape(@Nonnull BlockState state) {
+        return Ethereal.getRenderType(super.getRenderShape(state));
     }
 
     @Override
@@ -45,17 +45,17 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
     }
 
     @Override
-    public int getOpacity(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    public int getLightBlock(@Nonnull BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return Ethereal.getOpacity();
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos) {
         return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
     }
 
     @Override
-    public PushReaction getPushReaction(@Nonnull BlockState state) {
+    public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
 }

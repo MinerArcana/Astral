@@ -28,26 +28,26 @@ public class BlockTagsGenerator extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
-        getOrCreateBuilder(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, Tags.Blocks.DIRT, AstralTags.ETHERIC_GROWTHS);
-        getOrCreateBuilder(AstralTags.GARDEN_PLANTS).addTags(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
-        getOrCreateBuilder(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
-        getOrCreateBuilder(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());
-        getOrCreateBuilder(AstralTags.SMALL_ETHERIC_GROWTHS).add(getAllBlocksOfType(EthericGrowth.class));
-        getOrCreateBuilder(AstralTags.LARGE_ETHERIC_GROWTHS).add(getAllBlocksOfType(TallEthericGrowth.class));
-        getOrCreateBuilder(AstralTags.ETHERIC_GROWTHS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
-        getOrCreateBuilder(BlockTags.LOGS).add(ETHEREAL_LOG.get(), ETHEREAL_WOOD.get(), STRIPPED_ETHEREAL_LOG.get(), STRIPPED_ETHEREAL_WOOD.get());
-        getOrCreateBuilder(BlockTags.PLANKS).add(ETHEREAL_PLANKS.get());
-        getOrCreateBuilder(BlockTags.LEAVES).add(ETHEREAL_LEAVES.get());
-        getOrCreateBuilder(BlockTags.SAPLINGS).add(ETHEREAL_SAPLING.get());
-        getOrCreateBuilder(BlockTags.FLOWERS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
-        getOrCreateBuilder(BlockTags.SMALL_FLOWERS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS);
-        getOrCreateBuilder(BlockTags.TALL_FLOWERS).addTags(AstralTags.LARGE_ETHERIC_GROWTHS);
-        getOrCreateBuilder(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
-        getOrCreateBuilder(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
-        getOrCreateBuilder(Tags.Blocks.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
-        getOrCreateBuilder(AstralTags.SNOWBERRY_SUSTAIN).add(Blocks.SNOW_BLOCK, Blocks.COARSE_DIRT, Blocks.GRAVEL, Blocks.PACKED_ICE, Blocks.DIRT, Blocks.GRASS_BLOCK);
-        getOrCreateBuilder(AstralTags.FEVERWEED_SUSTAIN).add(Blocks.PODZOL, Blocks.MYCELIUM);
+    protected void addTags() {
+        tag(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, Tags.Blocks.DIRT, AstralTags.ETHERIC_GROWTHS);
+        tag(AstralTags.GARDEN_PLANTS).addTags(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
+        tag(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
+        tag(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());
+        tag(AstralTags.SMALL_ETHERIC_GROWTHS).add(getAllBlocksOfType(EthericGrowth.class));
+        tag(AstralTags.LARGE_ETHERIC_GROWTHS).add(getAllBlocksOfType(TallEthericGrowth.class));
+        tag(AstralTags.ETHERIC_GROWTHS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
+        tag(BlockTags.LOGS).add(ETHEREAL_LOG.get(), ETHEREAL_WOOD.get(), STRIPPED_ETHEREAL_LOG.get(), STRIPPED_ETHEREAL_WOOD.get());
+        tag(BlockTags.PLANKS).add(ETHEREAL_PLANKS.get());
+        tag(BlockTags.LEAVES).add(ETHEREAL_LEAVES.get());
+        tag(BlockTags.SAPLINGS).add(ETHEREAL_SAPLING.get());
+        tag(BlockTags.FLOWERS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS, AstralTags.LARGE_ETHERIC_GROWTHS);
+        tag(BlockTags.SMALL_FLOWERS).addTags(AstralTags.SMALL_ETHERIC_GROWTHS);
+        tag(BlockTags.TALL_FLOWERS).addTags(AstralTags.LARGE_ETHERIC_GROWTHS);
+        tag(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
+        tag(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
+        tag(Tags.Blocks.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
+        tag(AstralTags.SNOWBERRY_SUSTAIN).add(Blocks.SNOW_BLOCK, Blocks.COARSE_DIRT, Blocks.GRAVEL, Blocks.PACKED_ICE, Blocks.DIRT, Blocks.GRASS_BLOCK);
+        tag(AstralTags.FEVERWEED_SUSTAIN).add(Blocks.PODZOL, Blocks.MYCELIUM);
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {
