@@ -27,7 +27,7 @@ public class AstralBrewProvider extends BrewProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    public void registerRecipes(Consumer<net.minecraft.data.recipes.FinishedRecipe> consumer) {
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.ASTRAL_TRAVEL.get(), Ingredient.of(Items.NETHER_WART), Ingredient.of(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()), Ingredient.of(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.SNOWBERRY_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.SNOWBERRY.get()), Ingredient.of(Items.GLOWSTONE_DUST));
         createBotanicalBreweryRecipe(consumer, AstralBotaniaBrews.FEVERWEED_BREW.get(), Ingredient.of(Items.REDSTONE), Ingredient.of(AstralItems.FEVERWEED.get()), Ingredient.of(Items.GLOWSTONE_DUST));

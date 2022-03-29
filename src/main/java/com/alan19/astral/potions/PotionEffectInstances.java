@@ -9,7 +9,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import java.util.List;
 
 import static com.alan19.astral.effects.AstralEffects.MIND_VENOM;
-import static net.minecraft.potion.Effects.*;
+import static net.minecraft.world.effect.MobEffects.*;
 
 public class PotionEffectInstances {
     private static final EffectDurations effectDuration = AstralConfig.getEffectDuration();

@@ -14,7 +14,7 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(final GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        generator.addProvider(new LootTables(generator));
+        generator.addProvider(new AstralLootTables(generator));
         final Advancements advancements = new Advancements(generator);
         generator.addProvider(advancements);
         generator.addProvider(new EnglishLocalizaton(generator, advancements));

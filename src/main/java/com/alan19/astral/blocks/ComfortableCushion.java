@@ -7,7 +7,6 @@ import com.alan19.astral.mentalconstructs.Garden;
 import com.alan19.astral.tags.AstralTags;
 import com.alan19.astral.util.Constants;
 import com.alan19.astral.util.VoxelShapeUtils;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -112,10 +111,10 @@ public class ComfortableCushion extends Block implements MentalConstructControll
     private Pair<Integer, Integer> sumStates(Pair<BlockState, FluidState> pair) {
         int containsObject = 0;
         int containsPlant = 0;
-        if (AstralTags.GARDEN_OBJECTS.contains(pair.getLeft().getBlock()) || FluidTags.WATER.contains(pair.getRight().getType())) {
+        if (pair.getLeft().is(AstralTags.GARDEN_OBJECTS) || pair.getRight().is(FluidTags.WATER)) {
             containsObject = 1;
         }
-        if (AstralTags.GARDEN_PLANTS.contains(pair.getLeft().getBlock())) {
+        if (pair.getLeft().is(AstralTags.GARDEN_PLANTS)) {
             containsPlant = 1;
         }
         return Pair.of(containsObject, containsPlant);

@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.ScheduledTick;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -78,7 +79,7 @@ public class EthericPowder extends PressurePlateBlock {
                 worldIn.setBlock(pos, blockState, 3);
             }
             if (canTrigger) {
-                worldIn.getBlockTicks().scheduleTick(new BlockPos(pos), this, 30);
+                worldIn.getBlockTicks().schedule(ScheduledTick.probe(this, pos));
             }
         }
         else {
@@ -110,7 +111,7 @@ public class EthericPowder extends PressurePlateBlock {
     }
 
     @Override
-    public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         return state.getValue(TripWireHookBlock.POWERED) ? 7 : 0;
     }
 }

@@ -2,15 +2,11 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.TallGrassBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -38,16 +34,16 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
     public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
         if (worldIn.isEmptyBlock(pos.above())) {
             if (this == AstralBlocks.GENTLEGRASS.get()) {
-                AstralBlocks.TALL_GENTLEGRASS.get().placeAt(worldIn, pos, 2);
+                DoublePlantBlock.placeAt(worldIn, AstralBlocks.TALL_GENTLEGRASS.get().defaultBlockState(), pos, 2);
             }
             else if (this == AstralBlocks.WILDWEED.get()) {
-                AstralBlocks.TALL_WILDWEED.get().placeAt(worldIn, pos, 2);
+                DoublePlantBlock.placeAt(worldIn, AstralBlocks.TALL_WILDWEED.get().defaultBlockState(), pos, 2);
             }
             else if (this == AstralBlocks.CYANGRASS.get()) {
-                AstralBlocks.TALL_CYANGRASS.get().placeAt(worldIn, pos, 2);
+                DoublePlantBlock.placeAt(worldIn, AstralBlocks.CYANGRASS.get().defaultBlockState(), pos, 2);
             }
             else if (this == AstralBlocks.REDBULB.get()) {
-                AstralBlocks.TALL_REDBULB.get().placeAt(worldIn, pos, 2);
+                DoublePlantBlock.placeAt(worldIn, AstralBlocks.TALL_REDBULB.get().defaultBlockState(), pos, 2);
             }
         }
     }
@@ -83,6 +79,6 @@ public class EthericGrowth extends TallGrassBlock implements Ethereal {
 
     @Override
     protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
-        return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
+        return state.is(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON);
     }
 }

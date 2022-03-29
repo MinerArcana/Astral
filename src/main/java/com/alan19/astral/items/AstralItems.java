@@ -10,9 +10,9 @@ import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 
@@ -76,7 +76,7 @@ public class AstralItems {
     public static final RegistryObject<ItemNameBlockItem> ETHEREAL_SPAWNER_ITEM = ITEMS.register("ethereal_spawner", () -> convertToBlockItem(ETHEREAL_SPAWNER.get()));
 
     /**
-     * Converts a block into a BlockNamedItem that belongs to the Astral tab
+     * Converts a block into a BlockTagKeyItem that belongs to the Astral tab
      *
      * @param block The block to be converted
      * @return A converted block

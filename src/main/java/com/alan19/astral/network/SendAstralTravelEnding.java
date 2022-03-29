@@ -2,7 +2,7 @@ package com.alan19.astral.network;
 
 import com.alan19.astral.util.RenderingUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

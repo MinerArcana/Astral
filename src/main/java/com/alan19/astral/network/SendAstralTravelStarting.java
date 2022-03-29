@@ -6,8 +6,8 @@ import com.alan19.astral.api.sleepmanager.SleepManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSidedProvider;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.common.util.LogicalSidedProvider;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.function.Supplier;

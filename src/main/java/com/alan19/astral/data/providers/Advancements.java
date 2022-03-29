@@ -12,12 +12,12 @@ import com.google.gson.GsonBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.advancements.criterion.*;
 import net.minecraft.commands.CommandFunction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.advancements.AdvancementProvider;
+import net.minecraft.data.worldgen.StructureFeatures;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -233,7 +232,7 @@ public class Advancements extends AdvancementProvider {
 
         enterStronghold = Advancement.Builder.advancement()
                 .parent(magicalPuissance)
-                .addCriterion("seeing_through_other_eyes", LocationTrigger.TriggerInstance.located(LocationPredicate.inFeature(StructureFeature.STRONGHOLD)))
+                .addCriterion("seeing_through_other_eyes", LocationTrigger.TriggerInstance.located(LocationPredicate.inFeature(StructureFeatures.STRONGHOLD.unwrapKey().get())))
                 .display(new DisplayBuilder(Items.ENDER_EYE, "seeing_through_other_eyes").build())
                 .rewards(enlightenmentKeyReward)
                 .save(consumer, new ResourceLocation(Astral.MOD_ID, "seeing_through_other_eyes").toString());
@@ -264,7 +263,7 @@ public class Advancements extends AdvancementProvider {
 
         relativeDistance = Advancement.Builder.advancement()
                 .parent(dimensionalTravel)
-                .addCriterion("nether_travel", NetherTravelTrigger.TriggerInstance.travelledThroughNether(DistancePredicate.horizontal(MinMaxBounds.Floats.atLeast(7000))))
+                .addCriterion("nether_travel", DistanceTrigger.TriggerInstance.travelledThroughNether(DistancePredicate.horizontal(MinMaxBounds.Doubles.atLeast(7000))))
                 .display(new DisplayBuilder(Items.MAP, "relative_distance").build())
                 .rewards(enlightenmentKeyReward)
                 .save(consumer, new ResourceLocation(Astral.MOD_ID, "relative_distance").toString());

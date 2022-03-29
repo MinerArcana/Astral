@@ -2,9 +2,9 @@ package com.alan19.astral.data.providers;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.HashCache;
-import net.minecraft.data.worldgen.biome.BiomeReport;
+import net.minecraft.data.tags.BiomeTagsProvider;
 
-public class AstralBiomeProvider extends BiomeReport {
+public class AstralBiomeProvider extends BiomeTagsProvider {
     public AstralBiomeProvider(DataGenerator generator) {
         super(generator);
     }

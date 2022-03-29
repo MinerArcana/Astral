@@ -33,7 +33,7 @@ public class FlightHandler {
 
     //Move the player with a certain vector
     public static void moveEntity(Entity entity, Vec3 vec3d) {
-        Vec3 adjustedVec = getAbsoluteMotion(vec3d, entity.yRot);
+        Vec3 adjustedVec = getAbsoluteMotion(vec3d, entity.getYRot());
         entity.setDeltaMovement(adjustedVec);
     }
 

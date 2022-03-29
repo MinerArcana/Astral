@@ -26,7 +26,7 @@ public class Recipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
 
         ShapelessRecipeBuilder.shapeless(INTROSPECTION_MEDICINE.get())
                 .requires(Tags.Items.MUSHROOMS)
@@ -130,7 +130,7 @@ public class Recipes extends RecipeProvider {
         createTwoByTwoRecipe(consumer, METAPHORIC_FLESH_BLOCK_ITEM.get(), METAPHORIC_FLESH.get(), 1);
 
         ShapelessNBTRecipeBuilder.shapelessRecipe(Constants.getAstronomicon())
-                .addIngredient(AstralTags.BASIC_ASTRAL_PLANTS)
+                .addIngredient(Ingredient.of(AstralTags.BASIC_ASTRAL_PLANTS))
                 .addIngredient(Ingredient.of(Items.PAPER), 3)
                 .addCriterion("basic_astral_plants", has(AstralTags.BASIC_ASTRAL_PLANTS))
                 .addCondition(new ModLoadedCondition("patchouli"))

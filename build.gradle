@@ -90,11 +90,10 @@ sourceSets {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.32'
     compileClasspath fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-    compileClasspath fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.16.5-1.0.3-Snapshot.4")
-    compileClasspath fg.deobf("vazkii.botania:Botania:1.16.5-416")
-    compileClasspath fg.deobf("top.theillusivec4.curios:curios-forge:1.16.5-4.0.5.1")
-    runtimeOnly fg.deobf("com.telepathicgrunt:Blame:1.16.5-3.2.1-forge")
-    implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3188120")
+    compileClasspath fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.18.1-1.0.5-Snapshot.1")
+    compileClasspath fg.deobf("vazkii.botania:Botania:1.18.2-430-SNAPSHOT")
+    compileClasspath fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
+    implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3544525")
 }
 
 // I believe this is for using datagens with forge tags

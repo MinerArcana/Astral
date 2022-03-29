@@ -5,7 +5,7 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.entity.projectile.IntentionBeam;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

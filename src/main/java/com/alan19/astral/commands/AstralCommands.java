@@ -55,7 +55,7 @@ public class AstralCommands {
                 final PsychicInventoryInstance playerInventory = iPsychicInventory.getInventoryOfPlayer(target.getUUID());
                 //Insert directly into player inventory if they are using their inner realm inventory
                 if (playerInventory.getInventoryType() == InventoryType.ASTRAL && target.level.dimension() == AstralDimensions.INNER_REALM) {
-                    target.inventory.add(itemStack);
+                    target.getInventory().add(itemStack);
                 }
                 else {
                     ItemHandlerHelper.insertItemStacked(playerInventory.getInnerRealmMain(), itemStack, false);

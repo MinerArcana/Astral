@@ -20,7 +20,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -41,7 +40,7 @@ import javax.annotation.Nullable;
 public class TravelEffects {
     @SubscribeEvent
     public static void mobsTargetPhysicalBody(EntityJoinWorldEvent event) {
-        if (!event.getWorld().isClientSide() && event.getEntity() instanceof Enemy && !AstralTags.NEUTRAL_MOBS.contains(event.getEntity().getType())) {
+        if (!event.getWorld().isClientSide() && event.getEntity() instanceof Enemy && !event.getEntity().getType().is(AstralTags.NEUTRAL_MOBS)) {
             Mob mobEntity = (Mob) event.getEntity();
             mobEntity.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(mobEntity, PhysicalBodyEntity.class, true));
         }
@@ -74,7 +73,7 @@ public class TravelEffects {
      */
     @SubscribeEvent
     public static void doNotTargetAstrals(LivingSetAttackTargetEvent event) {
-        if (event.getEntityLiving() instanceof Mob && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving()) && !(AstralTags.SPIRITUAL_BEINGS.contains(event.getTarget().getType()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType()))) {
+        if (event.getEntityLiving() instanceof Mob && isAstralVsNonAstral(event.getTarget(), event.getEntityLiving()) && !(event.getEntity().getType().is(AstralTags.SPIRITUAL_BEINGS) || event.getEntity().getType().is(AstralTags.SPIRITUAL_BEINGS))) {
             Mob mobEntity = (Mob) event.getEntityLiving();
             mobEntity.setTarget(null);
         }
@@ -95,12 +94,12 @@ public class TravelEffects {
         }
 
         //Replace Astral entity's Physical Damage with Astral damage
-        if (event.getSource().getEntity() instanceof LivingEntity && (isEntityAstral((LivingEntity) event.getSource().getEntity()) || AstralTags.SPIRITUAL_BEINGS.contains(event.getSource().getEntity().getType()) && isEntityAstral(event.getEntityLiving())) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
+        if (event.getSource().getEntity() instanceof LivingEntity && (isEntityAstral((LivingEntity) event.getSource().getEntity()) || event.getEntity().getType().is(AstralTags.SPIRITUAL_BEINGS) && isEntityAstral(event.getEntityLiving())) && !IAstralDamage.canDamageTypeDamageAstral(event.getSource())) {
             event.setCanceled(true);
             IAstralBeing.attackEntityAsMobWithAstralDamage((LivingEntity) event.getSource().getEntity(), event.getEntity());
         }
         //Cancel Astral Damage against non Astral entities and Physical Damage against Astral Entities
-        final boolean isTargetNotSpiritualEntity = !(event.getEntityLiving() != null && AstralTags.SPIRITUAL_BEINGS.contains(event.getEntityLiving().getType()));
+        final boolean isTargetNotSpiritualEntity = !(event.getEntityLiving() != null && event.getEntity().getType().is(AstralTags.SPIRITUAL_BEINGS));
         final boolean isTargetAstral = isEntityAstral(entityLiving);
         if (isTargetNotSpiritualEntity && (isTargetAstral && !IAstralDamage.canDamageTypeDamageAstral(event.getSource()) || !isTargetAstral && IAstralDamage.isDamageAstral(event.getSource()))) {
             event.setCanceled(true);
@@ -130,8 +129,7 @@ public class TravelEffects {
     @SubscribeEvent
     public static void astralBlockInteraction(PlayerInteractEvent.RightClickBlock event) {
         if (isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
-            Block targetedBlock = event.getWorld().getBlockState(event.getPos()).getBlock();
-            if (!AstralTags.ASTRAL_INTERACT.contains(targetedBlock)) {
+            if (!event.getWorld().getBlockState(event.getPos()).is(AstralTags.ASTRAL_INTERACT)) {
                 event.setUseBlock(Event.Result.DENY);
             }
             else {
@@ -143,24 +141,24 @@ public class TravelEffects {
     @SubscribeEvent
     public static void astralBreakBlock(BlockEvent.BreakEvent event) {
         //Placeholder properties
-        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
+        if (!event.getState().is(AstralTags.ASTRAL_INTERACT) && isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralHarvestSpeed(PlayerEvent.BreakSpeed event) {
-        if (!AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
+        if (!event.getState().is(AstralTags.ASTRAL_INTERACT) && isEntityAstral(event.getPlayer()) && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void astralPlaceBlockEvent(BlockEvent.EntityPlaceEvent event) {
-        if (event.getEntity() instanceof LivingEntity && !AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && isEntityAstral((LivingEntity) event.getEntity()) && AstralDimensions.isEntityNotInInnerRealm(event.getEntity())) {
+        if (event.getEntity() instanceof LivingEntity && !event.getState().is(AstralTags.ASTRAL_INTERACT) && isEntityAstral((LivingEntity) event.getEntity()) && AstralDimensions.isEntityNotInInnerRealm(event.getEntity())) {
             event.setCanceled(true);
         }
-        if (event.getEntity() instanceof LivingEntity && AstralTags.ASTRAL_INTERACT.contains(event.getState().getBlock()) && !isEntityAstral((LivingEntity) event.getEntity())) {
+        if (event.getEntity() instanceof LivingEntity && event.getState().is(AstralTags.ASTRAL_INTERACT) && !isEntityAstral((LivingEntity) event.getEntity())) {
             event.setCanceled(true);
         }
     }
@@ -168,7 +166,7 @@ public class TravelEffects {
     @SubscribeEvent
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         Level world = event.getEntityLiving().level;
-        if (!world.isClientSide() && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer()) && isEntityAstral(event.getEntityLiving()) && !AstralTags.ASTRAL_PICKUP.contains(event.getItem().getItem().getItem())) {
+        if (!world.isClientSide() && AstralDimensions.isEntityNotInInnerRealm(event.getPlayer()) && isEntityAstral(event.getEntityLiving()) && !event.getItem().getItem().is(AstralTags.ASTRAL_PICKUP)) {
             event.setCanceled(true);
         }
     }
@@ -188,7 +186,7 @@ public class TravelEffects {
             return livingEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && sleepManager.isEntityTraveling();
         }
         else {
-            return livingEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(livingEntity.getType());
+            return livingEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || livingEntity.getType().is(AstralTags.ETHEREAL_BEINGS);
         }
     }
 

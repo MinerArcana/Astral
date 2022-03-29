@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class AstralPotions {
 
-    private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTION_TYPES, Astral.MOD_ID);
+    private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, Astral.MOD_ID);
 
     public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion", () -> new Potion(PotionEffectInstances.BASE_ASTRAL_TRAVEL_INSTANCE.toArray(new MobEffectInstance[]{})), () -> Ingredient.of(AstralItems.TRAVELING_MEDICINE.get(), AstralItems.ETHERIC_POWDER_ITEM.get()))
             .addLongBrew(() -> new Potion(PotionEffectInstances.LONG_ASTRAL_TRAVEL_INSTANCE.toArray(new MobEffectInstance[]{})))

@@ -3,8 +3,8 @@ package com.alan19.astral.mentalconstructs;
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 public class AstralMentalConstructs {
     public static final DeferredRegister<MentalConstructType> MENTAL_CONSTRUCTS = DeferredRegister.create(AstralAPI.MENTAL_CONSTRUCT_TYPES.get(), Astral.MOD_ID);

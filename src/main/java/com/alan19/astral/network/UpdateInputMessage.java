@@ -3,7 +3,7 @@ package com.alan19.astral.network;
 import com.alan19.astral.events.astraltravel.flight.InputHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

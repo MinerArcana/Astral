@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -88,34 +88,35 @@ public class CrystalWebProjectileEntity extends ThrowableProjectile implements I
         double d0 = this.getX() + vec3d.x;
         double d1 = this.getY() + vec3d.y;
         double d2 = this.getZ() + vec3d.z;
-        float f = Mth.sqrt(getHorizontalDistanceSqr(vec3d));
-        this.yRot = (float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
+        this.updateRotation();
+        double f = vec3d.horizontalDistance();
+        setYRot((float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI)));
 
-        this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
+        setXRot((float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI)));
 
-        while (this.xRot - this.xRotO < -180.0F) {
+        while (this.getXRot() - this.xRotO < -180.0F) {
             this.xRotO -= 360.0F;
         }
 
-        while (this.xRot - this.xRotO >= 180.0F) {
+        while (this.getXRot() - this.xRotO >= 180.0F) {
             this.xRotO += 360.0F;
         }
 
-        while (this.yRot - this.yRotO < -180.0F) {
+        while (this.getYRot() - this.yRotO < -180.0F) {
             this.yRotO -= 360.0F;
         }
 
-        while (this.yRot - this.yRotO >= 180.0F) {
+        while (this.getYRot() - this.yRotO >= 180.0F) {
             this.yRotO += 360.0F;
         }
 
-        this.xRot = Mth.lerp(0.2F, this.xRotO, this.xRot);
-        this.yRot = Mth.lerp(0.2F, this.yRotO, this.yRot);
+        setXRot(Mth.lerp(0.2F, this.xRotO, this.getXRot()));
+        setYRot(Mth.lerp(0.2F, this.yRotO, this.getYRot()));
         if (this.level.getBlockStates(this.getBoundingBox()).noneMatch(BlockBehaviour.BlockStateBase::isAir)) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         else if (this.isInWaterOrBubble()) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         else {
             this.setDeltaMovement(vec3d.scale(0.99F));
@@ -135,12 +136,12 @@ public class CrystalWebProjectileEntity extends ThrowableProjectile implements I
     public void lerpMotion(double x, double y, double z) {
         this.setDeltaMovement(x, y, z);
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-            float f = Mth.sqrt(x * x + z * z);
-            this.xRot = (float) (Mth.atan2(y, f) * (double) (180F / (float) Math.PI));
-            this.yRot = (float) (Mth.atan2(x, z) * (double) (180F / (float) Math.PI));
-            this.xRotO = this.xRot;
-            this.yRotO = this.yRot;
-            this.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, this.xRot);
+            float f = Mth.sqrt((float) (x * x + z * z));
+            setXRot((float) (Mth.atan2(y, f) * (double) (180F / (float) Math.PI)));
+            setYRot((float) (Mth.atan2(x, z) * (double) (180F / (float) Math.PI)));
+            this.xRotO = this.getXRot();
+            this.yRotO = this.getYRot();
+            this.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         }
 
     }
@@ -150,13 +151,13 @@ public class CrystalWebProjectileEntity extends ThrowableProjectile implements I
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
-        float f = Mth.sqrt(getHorizontalDistanceSqr(vec3d));
-        this.yRot = (float) (Mth.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
-        this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-        this.yRotO = this.yRot;
-        this.xRotO = this.xRot;
+        double f = vec3d.horizontalDistance();
+        setYRot((float) (Mth.atan2(vec3d.x, z) * (180F / (float) Math.PI)));
+        setYRot((float) (Mth.atan2(vec3d.y, f) * (180F / (float) Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
     public void onHit(HitResult result) {
@@ -170,10 +171,10 @@ public class CrystalWebProjectileEntity extends ThrowableProjectile implements I
                 ((LivingEntity) entity).addEffect(new MobEffectInstance(AstralEffects.MIND_VENOM.get(), 100));
             }
             this.doEnchantDamageEffects(this.projectileOwner, entity);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         else if (resultType == HitResult.Type.BLOCK && !this.level.isClientSide) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
 
     }
@@ -232,11 +233,11 @@ public class CrystalWebProjectileEntity extends ThrowableProjectile implements I
     }
 
     @Override
-    public void remove() {
+    public void remove(RemovalReason pReason) {
         if (getY() >= 128) {
             setWeb(level, blockPosition());
         }
-        super.remove();
+        super.remove(pReason);
     }
 
     private void setWeb(Level world, BlockPos pos) {
