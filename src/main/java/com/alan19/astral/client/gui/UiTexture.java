@@ -3,9 +3,9 @@ package com.alan19.astral.client.gui;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Based off https://github.com/Lazzzzz/tirphycraft-1.15.2/blob/master/src/main/java/laz/tirphycraft/client/draw/UiTexture.java
@@ -22,7 +22,7 @@ public class UiTexture {
     }
 
     public void bindTexture() {
-        Minecraft.getInstance().textureManager.bind(texture);
+        Minecraft.getInstance().textureManager.bindForSetup(texture);
     }
 
     public IDrawable getFullArea() {
@@ -62,7 +62,7 @@ public class UiTexture {
 
             Tesselator tesselator = Tesselator.getInstance();
             BufferBuilder bufferBuilder = tesselator.getBuilder();
-            bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_TEX);
+            bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             bufferBuilder.vertex(xi, yi, 0D).uv(ui, vi).endVertex();
             bufferBuilder.vertex(xi, yf, 0D).uv(ui, vf).endVertex();
             bufferBuilder.vertex(xf, yf, 0D).uv(uf, vf).endVertex();

@@ -177,9 +177,8 @@ public class PhysicalBodyEntity extends LivingEntity {
      */
     @Override
     public void tick() {
-        if (level instanceof ServerLevel) {
-            ServerLevel serverWorld = (ServerLevel) level;
-            serverWorld.setChunkForced(this.xChunk, this.zChunk, true);
+        if (level instanceof ServerLevel serverWorld) {
+            serverWorld.setChunkForced(this.chunkPosition().x, this.chunkPosition().z, true);
             if (level.getGameTime() % AstralConfig.getTravelingSettings().syncInterval.get() == 0 && isAlive()) {
                 setBodyLinkInfo(serverWorld);
                 AstralAPI.getBodyTracker(serverWorld).ifPresent(tracker -> tracker.setBodyNBT(getUUID(), serializeNBT(), serverWorld));

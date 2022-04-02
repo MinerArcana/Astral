@@ -1,14 +1,13 @@
 package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
@@ -21,7 +20,7 @@ import javax.annotation.Nonnull;
 
 public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
     public TallEthericGrowth() {
-        super(Block.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0).sound(SoundType.GRASS));
+        super(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noCollission().strength(0).sound(SoundType.GRASS));
     }
 
     @Nonnull
@@ -55,7 +54,7 @@ public class TallEthericGrowth extends DoublePlantBlock implements Ethereal {
 
     @Override
     protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
-        return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
+        return state.is(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON);
     }
 
     @Override

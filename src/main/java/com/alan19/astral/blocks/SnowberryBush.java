@@ -3,7 +3,6 @@ package com.alan19.astral.blocks;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.items.AstralItems;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -16,7 +15,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,8 +43,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
     @Override
     @ParametersAreNonnullByDefault
     protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
-        Block block = state.getBlock();
-        return AstralTags.SNOWBERRY_SUSTAIN.contains(block);
+        return state.is(AstralTags.SNOWBERRY_SUSTAIN);
     }
 
     @Override

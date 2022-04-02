@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class CrystalWeb extends EtherealBlock {
@@ -58,12 +57,15 @@ public class CrystalWeb extends EtherealBlock {
         super.tick(state, worldIn, pos, rand);
         final int moonPhase = worldIn.dimensionType().moonPhase(worldIn.getDayTime());
         //Spread in a direction based on moon phasae
-        final Integer spreadGenerations = state.getValue(GENERATION);
+        final int spreadGenerations = state.getValue(GENERATION);
         // TODO Make this configurable
         // Controls how many generations the web can spread
-        Integer maxGenerations = 10;
-        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).getPrecipitation() == Biome.Precipitation.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.betweenClosedStream(pos.offset(-2, -2, -2), pos.offset(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
-            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos).filter(worldIn::isEmptyBlock).map(BlockPos::immutable).collect(Collectors.toList());
+        int maxGenerations = 10;
+        if (spreadGenerations < maxGenerations && worldIn.getBiome(pos).value().getPrecipitation() == Biome.Precipitation.RAIN && rand.nextInt(AstralConfig.getWorldgenSettings().crystalWebSpreadChance.get()) == 0 && pos.getY() >= 128 && BlockPos.betweenClosedStream(pos.offset(-2, -2, -2), pos.offset(2, 2, 2)).filter(blockPos -> worldIn.getBlockState(blockPos).getBlock() == this).count() <= 4) {
+            final List<BlockPos> collect = getBoxForMoonPhase(moonPhase, pos)
+                    .filter(worldIn::isEmptyBlock)
+                    .map(BlockPos::immutable)
+                    .toList();
             if (!collect.isEmpty()) {
                 final BlockPos newWebPos = collect.get(rand.nextInt(collect.size()));
                 worldIn.setBlock(newWebPos, AstralBlocks.CRYSTAL_WEB.get().defaultBlockState().setValue(GENERATION, spreadGenerations + 1), 3);
@@ -76,26 +78,17 @@ public class CrystalWeb extends EtherealBlock {
     }
 
     public Stream<BlockPos> getBoxForMoonPhase(int moonPhase, BlockPos center) {
-        switch (moonPhase) {
-            case 0:
-                return BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().north());
-            case 1:
-                return BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().east(3));
-            case 2:
-                return BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().west());
-            case 3:
-                return BlockPos.betweenClosedStream(center.north().below().west(), center.north(3).above().west(3));
-            case 4:
-                return BlockPos.betweenClosedStream(center.west().below().south(), center.west(3).above().north());
-            case 5:
-                return BlockPos.betweenClosedStream(center.west().below().north(), center.west(3).above().south(3));
-            case 6:
-                return BlockPos.betweenClosedStream(center.west().below().south(), center.east().above().south(3));
-            case 7:
-                return BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().south());
-            default:
-                throw new IllegalStateException("Unexpected value: " + moonPhase);
-        }
+        return switch (moonPhase) {
+            case 0 -> BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().north());
+            case 1 -> BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().east(3));
+            case 2 -> BlockPos.betweenClosedStream(center.north().below().east(), center.north(3).above().west());
+            case 3 -> BlockPos.betweenClosedStream(center.north().below().west(), center.north(3).above().west(3));
+            case 4 -> BlockPos.betweenClosedStream(center.west().below().south(), center.west(3).above().north());
+            case 5 -> BlockPos.betweenClosedStream(center.west().below().north(), center.west(3).above().south(3));
+            case 6 -> BlockPos.betweenClosedStream(center.west().below().south(), center.east().above().south(3));
+            case 7 -> BlockPos.betweenClosedStream(center.east().below().south(), center.east(3).above().south());
+            default -> throw new IllegalStateException("Unexpected value: " + moonPhase);
+        };
     }
 
     @Override

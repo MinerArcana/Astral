@@ -33,11 +33,10 @@ public class EnlightenmentKey extends Item {
     @Nonnull
     public InteractionResult useOn(UseOnContext context) {
         Level world = context.getLevel();
-        if (world.dimension() == AstralDimensions.INNER_REALM && world instanceof ServerLevel) {
-            ServerLevel serverWorld = (ServerLevel) world;
+        if (world.dimension() == AstralDimensions.INNER_REALM && world instanceof ServerLevel serverWorld) {
             ChunkPos meridianChunk = new ChunkPos(context.getClickedPos());
             if (world.getBlockState(context.getClickedPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
-                BlockState meridianBlockState = world.getBlockState(context.getClickedPos()).getBlockState();
+                BlockState meridianBlockState = world.getBlockState(context.getClickedPos());
                 int meridianDirection = meridianBlockState.getValue(AstralMeridian.DIRECTION);
                 // Break the wall on the player's side, and let the capability break it on the other side since the other side may be claimed by another player
                 InnerRealmUtils.destroyWall(serverWorld, meridianChunk, meridianDirection);

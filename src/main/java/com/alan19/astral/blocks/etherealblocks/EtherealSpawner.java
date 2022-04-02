@@ -25,7 +25,7 @@ public class EtherealSpawner extends SpawnerBlock implements Ethereal {
     }
 
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockGetter worldIn) {
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return new EtherealMobSpawnerTileEntity();
     }
 

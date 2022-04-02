@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
@@ -21,7 +22,7 @@ import java.util.Random;
 
 public class MetaphoricFleshBlock extends EtherealBlock implements Ethereal {
     public MetaphoricFleshBlock() {
-        super(Block.Properties.of(Material.GRASS, MaterialColor.COLOR_RED).strength(2.0F).noOcclusion().randomTicks());
+        super(BlockBehaviour.Properties.of(Material.GRASS, MaterialColor.COLOR_RED).strength(2.0F).noOcclusion().randomTicks());
     }
 
     @Override

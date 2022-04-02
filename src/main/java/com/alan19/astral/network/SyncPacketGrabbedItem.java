@@ -26,7 +26,7 @@ public class SyncPacketGrabbedItem {
     public static void handle(SyncPacketGrabbedItem syncPacketGrabbedItem, Supplier<NetworkEvent.Context> contextSupplier) {
         contextSupplier.get().enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
-            player.inventory.setCarried(syncPacketGrabbedItem.itemStack);
+            player.inventoryMenu.setCarried(syncPacketGrabbedItem.itemStack);
         });
         contextSupplier.get().setPacketHandled(true);
     }

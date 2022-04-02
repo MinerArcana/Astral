@@ -2,7 +2,6 @@ package com.alan19.astral.items;
 
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.item.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -42,8 +41,7 @@ public class TravelingMedicine extends Item {
     @Override
     @Nonnull
     public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull Level worldIn, @Nonnull LivingEntity entityLiving) {
-        if (entityLiving instanceof Player) {
-            Player playerEntity = (Player) entityLiving;
+        if (entityLiving instanceof Player playerEntity) {
             playerEntity.addItem(new ItemStack(Items.BOWL));
         }
         super.finishUsingItem(stack, worldIn, entityLiving);

@@ -10,13 +10,11 @@ import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
-import java.util.stream.Collectors;
 
 import static com.alan19.astral.blocks.AstralBlocks.*;
 
@@ -29,7 +27,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
 
     @Override
     protected void addTags() {
-        tag(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, Tags.Blocks.DIRT, AstralTags.ETHERIC_GROWTHS);
+        tag(AstralTags.GARDEN_OBJECTS).addTags(BlockTags.LOGS, BlockTags.LEAVES, BlockTags.DIRT, AstralTags.ETHERIC_GROWTHS);
         tag(AstralTags.GARDEN_PLANTS).addTags(BlockTags.BEE_GROWABLES, BlockTags.FLOWER_POTS, BlockTags.FLOWERS, AstralTags.ETHERIC_GROWTHS);
         tag(BlockTags.BEE_GROWABLES).add(SNOWBERRY_BUSH.get());
         tag(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON).add(ETHER_DIRT.get(), ETHER_GRASS.get());
@@ -45,12 +43,14 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         tag(BlockTags.TALL_FLOWERS).addTags(AstralTags.LARGE_ETHERIC_GROWTHS);
         tag(BlockTags.BUTTONS).add(ETHERIC_POWDER.get());
         tag(AstralTags.ASTRAL_INTERACT).add(ArrayUtils.addAll(getAllBlocksOfType(Ethereal.class), ETHERIC_POWDER.get()));
-        tag(Tags.Blocks.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
+        tag(BlockTags.DIRT).add(ETHER_DIRT.get(), ETHER_GRASS.get());
         tag(AstralTags.SNOWBERRY_SUSTAIN).add(Blocks.SNOW_BLOCK, Blocks.COARSE_DIRT, Blocks.GRAVEL, Blocks.PACKED_ICE, Blocks.DIRT, Blocks.GRASS_BLOCK);
         tag(AstralTags.FEVERWEED_SUSTAIN).add(Blocks.PODZOL, Blocks.MYCELIUM);
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(METAPHORIC_STONE.get(), METAPHORIC_BONE_BLOCK.get());
+        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ETHER_DIRT.get(), ETHER_GRASS.get());
     }
 
     private Block[] getAllBlocksOfType(Class<?> aClass) {
-        return BLOCKS.getEntries().stream().map(RegistryObject::get).filter(aClass::isInstance).collect(Collectors.toList()).toArray(new Block[]{});
+        return BLOCKS.getEntries().stream().map(RegistryObject::get).filter(aClass::isInstance).toList().toArray(new Block[]{});
     }
 }
