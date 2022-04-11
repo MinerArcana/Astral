@@ -35,7 +35,7 @@ public class DeleteIntentionBeam {
             final ServerPlayer sender = contextSupplier.get().getSender();
             //Player is only teleported if they have Astral Travel
             if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-                sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.getIntentionBeam(sender.getLevel()).ifPresent(intentionBeam -> {
+                sender.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).ifPresent(tracker -> tracker.getIntentionBeam(sender.getLevel()).ifPresent(intentionBeam -> {
                     final BlockPos destinationPos = new BlockPos(intentionBeam.getX(), intentionBeam.getY() - sender.getEyeHeight(), intentionBeam.getZ());
                     final double teleportDistance = Math.sqrt(new BlockPos(sender.getX(), sender.getEyeY(), sender.getZ()).distSqr(intentionBeam.getX(), intentionBeam.getY(), intentionBeam.getZ(), true));
                     final int xpCost = (int) Math.floor(5 + teleportDistance / 10);

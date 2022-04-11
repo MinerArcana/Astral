@@ -8,7 +8,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -76,7 +75,7 @@ public class InnerRealmChunkClaim implements IInnerRealmChunkClaim {
         // Iterate over each key (player UUID) add the UUID and the ListNBT converted to a list of ChunkPos as entries to the HashMap
         for (String s : nbt.getAllKeys()) {
             List<ChunkPos> list = new ArrayList<>();
-            for (Tag inbt : nbt.getList(s, Constants.NBT.TAG_COMPOUND)) {
+            for (Tag inbt : nbt.getList(s, Tag.TAG_COMPOUND)) {
                 ChunkPos pos = new ChunkPos(NbtUtils.readBlockPos((CompoundTag) inbt));
                 list.add(pos);
             }

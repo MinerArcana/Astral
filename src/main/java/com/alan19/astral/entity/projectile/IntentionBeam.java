@@ -226,7 +226,7 @@ public class IntentionBeam extends ThrowableProjectile {
         if (entityData.get(playerUUID).isPresent()) {
             final Player player = level.getPlayerByUUID(entityData.get(playerUUID).get());
             if (player != null) {
-                player.getCapability(AstralAPI.beamTrackerCapability).ifPresent(IBeamTracker::clearIntentionBeam);
+                player.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).ifPresent(IBeamTracker::clearIntentionBeam);
             }
         }
         super.remove();

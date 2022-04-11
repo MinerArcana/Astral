@@ -88,7 +88,7 @@ sourceSets {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.32'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
     compileClasspath fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compileClasspath fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.18.1-1.0.5-Snapshot.1")
     compileClasspath fg.deobf("vazkii.botania:Botania:1.18.2-430-SNAPSHOT")

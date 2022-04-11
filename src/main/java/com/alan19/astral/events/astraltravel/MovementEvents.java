@@ -25,7 +25,7 @@ public class MovementEvents {
     @SubscribeEvent
     public static void astralFlight(TickEvent.PlayerTickEvent event) {
         if (event.player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.sleepManagerCapability);
+            final LazyOptional<ISleepManager> iSleepManagerLazyOptional = event.player.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY);
             if (iSleepManagerLazyOptional.isPresent()) {
                 final ISleepManager sleepManager = iSleepManagerLazyOptional.orElseGet(SleepManager::new);
                 if (sleepManager.isEntityTraveling()) {

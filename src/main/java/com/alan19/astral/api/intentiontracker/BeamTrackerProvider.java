@@ -26,7 +26,7 @@ public class BeamTrackerProvider implements ICapabilitySerializable<CompoundTag>
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.beamTrackerCapability ? beamTrackerLazyOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.BEAM_TRACKER_CAPABILITY ? beamTrackerLazyOptional.cast() : LazyOptional.empty();
     }
 
     @Override

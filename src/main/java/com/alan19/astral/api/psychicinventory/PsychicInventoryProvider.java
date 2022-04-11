@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class PsychicInventoryProvider implements ICapabilitySerializable<CompoundTag> {
-    private final IPsychicInventory psychicInventory;
-    private final LazyOptional<IPsychicInventory> psychicInventoryOptional;
+    private final PsychicInventory psychicInventory;
+    private final LazyOptional<IPsychicInventory> optional;
 
     public PsychicInventoryProvider() {
         this(new PsychicInventory());
@@ -20,13 +20,13 @@ public class PsychicInventoryProvider implements ICapabilitySerializable<Compoun
 
     public PsychicInventoryProvider(PsychicInventory psychicInventory) {
         this.psychicInventory = psychicInventory;
-        this.psychicInventoryOptional = LazyOptional.of(() -> psychicInventory);
+        this.optional = LazyOptional.of(() -> psychicInventory);
     }
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.psychicInventoryCapability ? psychicInventoryOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.PSYCHIC_INVENTORY_CAPABILITY ? optional.cast() : LazyOptional.empty();
     }
 
     @Override

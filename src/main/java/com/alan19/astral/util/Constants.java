@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.predicates.AlternativeLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ToolType;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.UUID;
@@ -36,10 +35,7 @@ public class Constants {
 
     public static final AlternativeLootItemCondition.Builder SILK_TOUCH_OR_SHEARS = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1)))).or(MatchTool.toolMatches(ItemPredicate.Builder.item().of(Tags.Items.SHEARS)));
 
-    public static final ToolType SWORDS = ToolType.get("sword");
-    public static final ToolType SHEARS = ToolType.get("shears");
-
     public static ItemStack getAstronomicon() {
-        return PatchouliAPI.instance.getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
+        return PatchouliAPI.get().getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
     }
 }

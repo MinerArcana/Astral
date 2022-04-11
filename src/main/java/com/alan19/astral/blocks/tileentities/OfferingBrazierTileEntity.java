@@ -14,8 +14,7 @@ import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.TickingBlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OfferingBrazierTileEntity extends BlockEntity implements TickableBlockEntity {
+public class OfferingBrazierTileEntity extends BlockEntity implements TickingBlockEntity {
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
@@ -172,7 +171,7 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickableBl
                 }
                 else {
                     final Block blockFromItem = Block.byItem(stack.getItem());
-                    return !AbstractFurnaceBlockEntity.isFuel(stack) && !blockFromItem.hasTileEntity(blockFromItem.defaultBlockState()) && super.isItemValid(slot, stack);
+                    return !AbstractFurnaceBlockEntity.isFuel(stack) && !blockFromItem.defaultBlockState().hasBlockEntity() && super.isItemValid(slot, stack);
                 }
             }
         };
@@ -211,15 +210,15 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickableBl
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundTag tag) {
+    public void handleUpdateTag(CompoundTag tag) {
         final IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(this::createHandler);
         ((ItemStackHandler) itemHandler).setStackInSlot(0, ItemStack.of(tag.getCompound("fuel")));
         ((ItemStackHandler) itemHandler).setStackInSlot(1, ItemStack.of(tag.getCompound("item")));
     }
 
     @Override
-    public void load(@Nonnull BlockState state, @Nonnull CompoundTag nbt) {
-        super.load(state, nbt);
+    public void load(@Nonnull CompoundTag nbt) {
+        super.load(nbt);
         burnTicks = nbt.getInt("burnTicks");
         progress = nbt.getInt("progress");
         boolean boundPlayerExists = nbt.getBoolean("boundPlayerExists");
@@ -234,8 +233,8 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickableBl
 
     @Override
     @Nonnull
-    public CompoundTag save(@Nonnull CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(@Nonnull CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("burnTicks", burnTicks);
         nbt.putInt("progress", progress);
         nbt.putBoolean("boundPlayerExists", boundPlayer.isPresent());
@@ -246,6 +245,5 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickableBl
                 nbt.put("brazierInventory", ((ItemStackHandler) iItemHandler).serializeNBT());
             }
         });
-        return nbt;
     }
 }

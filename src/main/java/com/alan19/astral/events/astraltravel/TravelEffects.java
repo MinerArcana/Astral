@@ -181,8 +181,8 @@ public class TravelEffects {
      * @return Whether the entity should be receving the benefits of Astral Travel
      */
     public static boolean isEntityAstral(LivingEntity livingEntity) {
-        if (livingEntity instanceof Player && livingEntity.getCapability(AstralAPI.sleepManagerCapability).isPresent()) {
-            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.sleepManagerCapability).orElseGet(SleepManager::new);
+        if (livingEntity instanceof Player && livingEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).isPresent()) {
+            final ISleepManager sleepManager = livingEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).orElseGet(SleepManager::new);
             return livingEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && sleepManager.isEntityTraveling();
         }
         else {

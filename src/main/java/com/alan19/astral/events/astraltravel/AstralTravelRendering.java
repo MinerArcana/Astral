@@ -54,7 +54,7 @@ public class AstralTravelRendering {
                     AstralHealthBarRendering.renderAstralHearts(event.getMatrixStack(), minecraft, playerEntity);
                 }
             }
-            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(iSleepManager -> {
+            playerEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
                 if (playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
                     AstralHealthBarRendering.renderAstralScreenFade(event.getMatrixStack(), iSleepManager.getSleep());
                 }

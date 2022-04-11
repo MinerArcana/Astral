@@ -6,8 +6,6 @@ import com.alan19.astral.entity.IAstralBeing;
 import com.alan19.astral.entity.projectile.CrystalWebProjectileEntity;
 import com.alan19.astral.events.astraltravel.TravelEffects;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,6 +14,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -53,9 +52,8 @@ public class CrystalSpiderEntity extends Spider implements IAstralBeing, RangedA
         return CaveSpider.createCaveSpider().add(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), 2);
     }
 
-
     @Override
-    public boolean causeFallDamage(float distance, float damageMultiplier) {
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, DamageSource pSource) {
         return false;
     }
 
@@ -118,7 +116,7 @@ public class CrystalSpiderEntity extends Spider implements IAstralBeing, RangedA
         final double x = target.getX() - getX();
         final double y = target.getY(0.3333333333333333D) - crystalWebProjectileEntity.getY();
         final double z = target.getZ() - getZ();
-        crystalWebProjectileEntity.shoot(x, y + Mth.sqrt(x * x + z * z) * 0.2F, z, .5F, 10F);
+        crystalWebProjectileEntity.shoot(x, y + Mth.sqrt((float) (x * x + z * z)) * 0.2F, z, .5F, 10F);
         level.playSound(null, getX(), getY(), getZ(), SoundEvents.LLAMA_SPIT, getSoundSource(), 1.0F, 2.0F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.2F);
         level.addFreshEntity(crystalWebProjectileEntity);
     }

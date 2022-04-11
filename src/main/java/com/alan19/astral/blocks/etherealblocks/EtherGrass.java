@@ -19,7 +19,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,7 +31,6 @@ public class EtherGrass extends GrassBlock implements Ethereal, BonemealableBloc
     public EtherGrass() {
         super(Properties.of(Material.GRASS)
                 .strength(.5f)
-                .harvestTool(ToolType.SHOVEL)
                 .sound(SoundType.GRASS)
                 .randomTicks()
                 .noOcclusion());
@@ -128,7 +126,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, BonemealableBloc
                     final Optional<Block> blockOptional = ethericGrowths.stream().skip(rand.nextInt(ethericGrowths.size())).findFirst();
                     BlockPos upPos = grassPos.immutable().above();
                     if (blockOptional.isPresent() && shouldPlant(worldIn, rand, grassPos, blockOptional.get(), upPos)) {
-                        setPlant(worldIn, blockOptional.get(), upPos);
+                        setPlant(worldIn, state, blockOptional.get(), upPos);
                         break;
                     }
                     else {
@@ -139,9 +137,9 @@ public class EtherGrass extends GrassBlock implements Ethereal, BonemealableBloc
         }
     }
 
-    private void setPlant(ServerLevel worldIn, Block block, BlockPos upPos) {
+    private void setPlant(ServerLevel worldIn, BlockState state, Block block, BlockPos upPos) {
         if (block instanceof TallEthericGrowth) {
-            ((TallEthericGrowth) block).placeAt(worldIn, upPos, 2);
+            DoublePlantBlock.placeAt(worldIn, state, upPos, 2);
         }
         else {
             worldIn.setBlockAndUpdate(upPos, block.defaultBlockState());

@@ -10,15 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.brew.Brew;
 import vazkii.botania.common.crafting.ModRecipeTypes;
 import vazkii.botania.data.recipes.BrewProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class AstralBrewProvider extends BrewProvider {
@@ -38,7 +36,7 @@ public class AstralBrewProvider extends BrewProvider {
     }
 
     //Copied it since inner class was private
-    private static class FinishedRecipe implements FinishedRecipe {
+    private static class FinishedBrewRecipe implements net.minecraft.data.recipes.FinishedRecipe {
         private final ResourceLocation id;
         private final Brew brew;
         private final Ingredient[] inputs;
@@ -51,24 +49,20 @@ public class AstralBrewProvider extends BrewProvider {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("brew", brew.getRegistryName().toString());
+            json.addProperty("brew", BotaniaAPI.instance().getBrewRegistry().getKey(brew).toString());
             JsonArray ingredients = new JsonArray();
-            Arrays.stream(inputs).map(Ingredient::toJson).forEach(ingredients::add);
+            for (Ingredient ingr : inputs) {
+                ingredients.add(ingr.toJson());
+            }
             json.add("ingredients", ingredients);
-            final JsonObject isBotaniaLoaded = CraftingHelper.serialize(new ModLoadedCondition("botania"));
-            JsonArray conditionArray = new JsonArray();
-            conditionArray.add(isBotaniaLoaded);
-            json.add("conditions", conditionArray);
         }
 
         @Override
-        @Nonnull
         public ResourceLocation getId() {
             return id;
         }
 
         @Override
-        @Nonnull
         public RecipeSerializer<?> getType() {
             return ModRecipeTypes.BREW_SERIALIZER;
         }

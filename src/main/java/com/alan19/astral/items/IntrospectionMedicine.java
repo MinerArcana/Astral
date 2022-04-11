@@ -2,7 +2,6 @@ package com.alan19.astral.items;
 
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.effects.AstralEffects;
-import net.minecraft.item.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +34,7 @@ public class IntrospectionMedicine extends Item {
             Player playerEntity = (Player) entityLiving;
             playerEntity.addItem(new ItemStack(Items.BOWL));
             playerEntity.addEffect(new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), Integer.MAX_VALUE));
-            playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(cap -> cap.setGoingToInnerRealm(true));
+            playerEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).ifPresent(cap -> cap.setGoingToInnerRealm(true));
         }
         super.finishUsingItem(stack, worldIn, entityLiving);
         return ItemStack.EMPTY;

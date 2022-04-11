@@ -22,13 +22,13 @@ public class SendIntentionBeam {
         contextSupplier.get().enqueueWork(() -> {
             final ServerPlayer sender = contextSupplier.get().getSender();
             if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-                final Boolean isBeamActive = sender.getCapability(AstralAPI.beamTrackerCapability).map(tracker -> tracker.getIntentionBeam(sender.getLevel()).isPresent()).orElse(false);
+                final Boolean isBeamActive = sender.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).map(tracker -> tracker.getIntentionBeam(sender.getLevel()).isPresent()).orElse(false);
                 if (!isBeamActive) {
                     final IntentionBeam beam = new IntentionBeam(0, 32, sender, sender.getLevel());
                     beam.setPos(sender.getX(), sender.getEyeY(), sender.getZ());
                     beam.shoot(sender.getLookAngle().x, sender.getLookAngle().y, sender.getLookAngle().z, .25f, 1);
                     sender.getLevel().addFreshEntity(beam);
-                    sender.getCapability(AstralAPI.beamTrackerCapability).ifPresent(tracker -> tracker.setIntentionBeam(beam));
+                    sender.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).ifPresent(tracker -> tracker.setIntentionBeam(beam));
                 }
             }
         });

@@ -52,7 +52,7 @@ public class StartAndEndHandling {
                     playerEntity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).addPermanentModifier(Constants.DISABLES_GRAVITY);
                 }
                 //Reset the sleep manager
-                playerEntity.getCapability(AstralAPI.sleepManagerCapability).ifPresent(sleepManager -> {
+                playerEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).ifPresent(sleepManager -> {
                     sleepManager.resetSleep();
                     if (playerEntity instanceof ServerPlayer && !playerEntity.level.isClientSide()) {
                         final ServerPlayer serverPlayerEntity = (ServerPlayer) playerEntity;

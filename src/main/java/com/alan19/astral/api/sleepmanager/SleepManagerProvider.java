@@ -26,7 +26,7 @@ public class SleepManagerProvider implements ICapabilitySerializable<CompoundTag
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.sleepManagerCapability ? sleepManagerOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.SLEEP_MANAGER_CAPABILITY ? sleepManagerOptional.cast() : LazyOptional.empty();
     }
 
     @Override

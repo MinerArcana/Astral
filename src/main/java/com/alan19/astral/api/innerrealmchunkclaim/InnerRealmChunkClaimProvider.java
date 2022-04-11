@@ -26,7 +26,7 @@ public class InnerRealmChunkClaimProvider implements ICapabilitySerializable<Com
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.chunkClaimCapability ? chunkClaimOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.INNER_REALM_CHUNK_CLAIM_CAPABILITY ? chunkClaimOptional.cast() : LazyOptional.empty();
     }
 
     @Override

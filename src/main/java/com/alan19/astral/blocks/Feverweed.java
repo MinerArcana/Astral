@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,7 +71,6 @@ public class Feverweed extends BushBlock {
     public boolean canSurvive(@Nonnull BlockState state, LevelReader worldIn, BlockPos pos) {
         BlockPos blockpos = pos.below();
         BlockState blockstate = worldIn.getBlockState(blockpos);
-        Block block = blockstate.getBlock();
-        return AstralTags.FEVERWEED_SUSTAIN.contains(block) || blockstate.canSustainPlant(worldIn, blockpos, Direction.UP, this);
+        return state.is(AstralTags.FEVERWEED_SUSTAIN) || blockstate.canSustainPlant(worldIn, blockpos, Direction.UP, this);
     }
 }

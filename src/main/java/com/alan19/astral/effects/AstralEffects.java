@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralEffects {
 
-    private static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.POTIONS, Astral.MOD_ID);
+    private static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, Astral.MOD_ID);
 
     public static final RegistryObject<MobEffect> MIND_VENOM = EFFECTS.register("mind_venom", MindVenomEffect::new);
     public static final RegistryObject<MobEffect> ASTRAL_TRAVEL = EFFECTS.register("astral_travel", () -> new AstralTravelEffect().addAttributeModifier(AstralModifiers.ASTRAL_ATTACK_DAMAGE.get(), Constants.ASTRAL_DAMAGE_BOOST.toString(), 0, AttributeModifier.Operation.ADDITION));

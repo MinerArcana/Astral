@@ -15,7 +15,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -28,49 +29,49 @@ public class AstralAPI {
     public static final Lazy<IForgeRegistry<MentalConstructType>> MENTAL_CONSTRUCT_TYPES = Lazy.of(() -> RegistryManager.ACTIVE.getRegistry(MentalConstructType.class));
     private static final Map<Block, IIntentionTrackerBehavior> INTENTION_TRACKER_BEHAVIORS = Maps.newHashMap();
 
-    @CapabilityInject(ISleepManager.class)
-    public static Capability<ISleepManager> sleepManagerCapability;
+    public static final Capability<ISleepManager> SLEEP_MANAGER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IPsychicInventory.class)
-    public static Capability<IPsychicInventory> psychicInventoryCapability;
+    public static final Capability<IPsychicInventory> PSYCHIC_INVENTORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IConstructTracker.class)
-    public static Capability<IConstructTracker> constructTrackerCapability;
+    public static final Capability<IConstructTracker> CONSTRUCT_TRACKER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IBodyTracker.class)
-    public static Capability<IBodyTracker> bodyTrackerCapability;
+    public static final Capability<IBodyTracker> BODY_TRACKER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IBeamTracker.class)
-    public static Capability<IBeamTracker> beamTrackerCapability;
+    public static final Capability<IBeamTracker> BEAM_TRACKER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IInnerRealmChunkClaim.class)
-    public static Capability<IInnerRealmChunkClaim> chunkClaimCapability;
+    public static final Capability<IInnerRealmChunkClaim> INNER_REALM_CHUNK_CLAIM_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-    @CapabilityInject(IInnerRealmTeleporter.class)
-    public static Capability<IInnerRealmTeleporter> teleporterCapability;
+    public static final Capability<IInnerRealmTeleporter> INNER_REALM_TELEPORTER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static LazyOptional<IBodyTracker> getBodyTracker(ServerLevel world) {
-        return getOverworld(world).getCapability(bodyTrackerCapability);
+        return getOverworld(world).getCapability(BODY_TRACKER_CAPABILITY);
     }
 
     public static LazyOptional<IPsychicInventory> getOverworldPsychicInventory(ServerLevel world) {
-        return getOverworld(world).getCapability(psychicInventoryCapability);
+        return getOverworld(world).getCapability(PSYCHIC_INVENTORY_CAPABILITY);
     }
 
     public static LazyOptional<ISleepManager> getSleepManager(Player playerEntity) {
-        return playerEntity.getCapability(sleepManagerCapability);
+        return playerEntity.getCapability(SLEEP_MANAGER_CAPABILITY);
     }
 
     public static LazyOptional<IConstructTracker> getConstructTracker(ServerLevel world) {
-        return getOverworld(world).getCapability(constructTrackerCapability);
+        return getOverworld(world).getCapability(CONSTRUCT_TRACKER_CAPABILITY);
     }
 
     public static LazyOptional<IInnerRealmChunkClaim> getChunkClaimTracker(ServerLevel world) {
-        return getOverworld(world).getCapability(chunkClaimCapability);
+        return getOverworld(world).getCapability(INNER_REALM_CHUNK_CLAIM_CAPABILITY);
     }
 
     public static LazyOptional<IInnerRealmTeleporter> getInnerRealmTeleporter(ServerLevel world) {
-        return getOverworld(world).getCapability(teleporterCapability);
+        return getOverworld(world).getCapability(INNER_REALM_TELEPORTER_CAPABILITY);
     }
 
     public static ServerLevel getOverworld(ServerLevel world) {

@@ -26,7 +26,7 @@ public class BodyTrackerProvider implements ICapabilitySerializable<CompoundTag>
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.bodyTrackerCapability ? bodyTrackerOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.BODY_TRACKER_CAPABILITY ? bodyTrackerOptional.cast() : LazyOptional.empty();
     }
 
     @Override

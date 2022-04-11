@@ -26,7 +26,7 @@ public class InnerRealmTeleporterProvider implements ICapabilitySerializable<Com
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.teleporterCapability ? teleporterOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.INNER_REALM_TELEPORTER_CAPABILITY ? teleporterOptional.cast() : LazyOptional.empty();
     }
 
     @Override

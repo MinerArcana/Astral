@@ -8,12 +8,11 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 import javax.annotation.Nonnull;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +28,29 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
         return new ArrayList<>(Arrays.asList(blockpos.east(), blockpos.west(), blockpos.north(), blockpos.south(), blockpos.north().east(), blockpos.north().west(), blockpos.south().east(), blockpos.south().west()));
     }
 
+    private int spawnSnowberries(@Nonnull LevelAccessor worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
+        worldIn.setBlock(generatingPos.below(), Blocks.SNOW_BLOCK.defaultBlockState(), 2);
+        worldIn.setBlock(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState(), 2);
+        spawned++;
+        for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
+            int layerLevel = rand.nextInt(4);
+            if (worldIn.isEmptyBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.defaultBlockState().canSurvive(worldIn, adjacentPos)) {
+                worldIn.setBlock(adjacentPos, Blocks.SNOW.getStateDefinition().any().setValue(BlockStateProperties.LAYERS, layerLevel), 2);
+            }
+        }
+        return spawned;
+    }
+
     @Override
-    @ParametersAreNonnullByDefault
-    public boolean place(WorldGenLevel worldIn, ChunkGenerator generator, Random rand, BlockPos pos, SnowberryFeatureConfig config) {
-/*
+    public boolean place(@Nonnull FeaturePlaceContext<SnowberryFeatureConfig> pContext) {
+        /*
             Attempt to pick positions for a snowberry bush 16 times. Adds those positions to an ArrayList and remove duplicates. Then trim the list so there are only 2 to 5 elements. Then place the bushes and add snow around them.
          */
         boolean generated = false;
+        final WorldGenLevel worldIn = pContext.level();
+        final Random rand = worldIn.getRandom();
+        final SnowberryFeatureConfig config = pContext.config();
+        final BlockPos pos = pContext.origin();
         if (rand.nextInt(config.getPatchChance()) == 0) {
             int spawned = 0;
             final int numberOfPlants = rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize();
@@ -61,18 +76,5 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
             }
         }
         return generated;
-    }
-
-    private int spawnSnowberries(@Nonnull LevelAccessor worldIn, @Nonnull Random rand, int spawned, BlockPos generatingPos) {
-        worldIn.setBlock(generatingPos.below(), Blocks.SNOW_BLOCK.defaultBlockState(), 2);
-        worldIn.setBlock(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState(), 2);
-        spawned++;
-        for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
-            int layerLevel = rand.nextInt(4);
-            if (worldIn.isEmptyBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.defaultBlockState().canSurvive(worldIn, adjacentPos)) {
-                worldIn.setBlock(adjacentPos, Blocks.SNOW.getStateDefinition().any().setValue(BlockStateProperties.LAYERS, layerLevel), 2);
-            }
-        }
-        return spawned;
     }
 }

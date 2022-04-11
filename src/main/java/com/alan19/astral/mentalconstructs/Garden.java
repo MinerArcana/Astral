@@ -14,7 +14,6 @@ import vazkii.botania.api.mana.IManaItem;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = Astral.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Garden extends MentalConstruct {
@@ -65,19 +64,19 @@ public class Garden extends MentalConstruct {
      */
     private void addMana(Player playerEntity, int manaToSend) {
         List<ItemStack> items = getManaItems(playerEntity);
-        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(itemStack, manaToSend));
+        items.stream().filter(stack -> canItemstackReceiveMana(manaToSend, stack)).findFirst().ifPresent(itemStack -> ((IManaItem) itemStack.getItem()).addMana(manaToSend));
     }
 
     private boolean canItemstackReceiveMana(int manaToSend, ItemStack stack) {
         final IManaItem manaItem = (IManaItem) stack.getItem();
-        return manaItem.getMana(stack) + manaToSend <= manaItem.getMaxMana(stack) && manaItem.canReceiveManaFromItem(stack, ItemStack.EMPTY);
+        return manaItem.getMana() + manaToSend <= manaItem.getMaxMana();
     }
 
 
     private List<ItemStack> getManaItems(Player player) {
         final List<ItemStack> curiosItems = player.getCapability(CuriosCapability.INVENTORY).map(Garden::getCuriosAsList).orElseGet(ArrayList::new);
-        curiosItems.addAll(player.inventory.items);
-        return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).collect(Collectors.toList());
+        curiosItems.addAll(player.getInventory().items);
+        return curiosItems.stream().filter(itemStack -> itemStack.getItem() instanceof IManaItem).toList();
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ConstructTrackerProvider implements ICapabilitySerializable<Compoun
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return cap == AstralAPI.constructTrackerCapability ? constructOptional.cast() : LazyOptional.empty();
+        return cap == AstralAPI.CONSTRUCT_TRACKER_CAPABILITY ? constructOptional.cast() : LazyOptional.empty();
     }
 
     @Override

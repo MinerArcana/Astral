@@ -1,26 +1,9 @@
 package com.alan19.astral;
 
 import com.alan19.astral.api.AstralAPI;
-import com.alan19.astral.api.NBTCapStorage;
-import com.alan19.astral.api.bodytracker.BodyTracker;
-import com.alan19.astral.api.bodytracker.IBodyTracker;
-import com.alan19.astral.api.constructtracker.ConstructTracker;
-import com.alan19.astral.api.constructtracker.IConstructTracker;
-import com.alan19.astral.api.heightadjustment.HeightAdjustmentCapability;
-import com.alan19.astral.api.heightadjustment.IHeightAdjustmentCapability;
-import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
-import com.alan19.astral.api.innerrealmchunkclaim.InnerRealmChunkClaim;
-import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporter;
-import com.alan19.astral.api.innerrealmteleporter.InnerRealmTeleporter;
-import com.alan19.astral.api.intentiontracker.BeamTracker;
-import com.alan19.astral.api.intentiontracker.IBeamTracker;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EtherealSaplingIntentionTrackerBehavior;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.EthericPowderIntentionTrackerBehavior;
 import com.alan19.astral.api.intentiontracker.intentiontrackerbehaviors.IndexOfKnowledgeIntentionTrackerBehavior;
-import com.alan19.astral.api.psychicinventory.IPsychicInventory;
-import com.alan19.astral.api.psychicinventory.PsychicInventory;
-import com.alan19.astral.api.sleepmanager.ISleepManager;
-import com.alan19.astral.api.sleepmanager.SleepManager;
 import com.alan19.astral.biomes.AstralBiomes;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.blocks.BlockRenderHandler;
@@ -59,7 +42,6 @@ import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -183,21 +165,5 @@ public class Astral {
             AstralConfiguredFeatures.registerConfiguredFeatures();
         });
 
-    }
-
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-
-        @SubscribeEvent
-        public static void init(final FMLCommonSetupEvent event) {
-            CapabilityManager.INSTANCE.register(IInnerRealmTeleporter.class, new NBTCapStorage<>(), InnerRealmTeleporter::new);
-            CapabilityManager.INSTANCE.register(IInnerRealmChunkClaim.class, new NBTCapStorage<>(), InnerRealmChunkClaim::new);
-            CapabilityManager.INSTANCE.register(IHeightAdjustmentCapability.class, new NBTCapStorage<>(), HeightAdjustmentCapability::new);
-            CapabilityManager.INSTANCE.register(IPsychicInventory.class, new NBTCapStorage<>(), PsychicInventory::new);
-            CapabilityManager.INSTANCE.register(ISleepManager.class, new NBTCapStorage<>(), SleepManager::new);
-            CapabilityManager.INSTANCE.register(IConstructTracker.class, new NBTCapStorage<>(), ConstructTracker::new);
-            CapabilityManager.INSTANCE.register(IBodyTracker.class, new NBTCapStorage<>(), BodyTracker::new);
-            CapabilityManager.INSTANCE.register(IBeamTracker.class, new NBTCapStorage<>(), BeamTracker::new);
-        }
     }
 }
