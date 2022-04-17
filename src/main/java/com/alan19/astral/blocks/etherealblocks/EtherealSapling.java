@@ -1,7 +1,7 @@
 package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.*;
+import com.alan19.astral.world.trees.EtherealTreeGrower;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 public class EtherealSapling extends SaplingBlock implements Ethereal {
     public EtherealSapling() {
-        super(new EtherealTree(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0f).sound(SoundType.GRASS).noOcclusion());
+        super(new EtherealTreeGrower(), BlockBehaviour.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0f).sound(SoundType.GRASS).noOcclusion());
     }
 
     @Nonnull
@@ -55,10 +55,11 @@ public class EtherealSapling extends SaplingBlock implements Ethereal {
 
     @Override
     protected boolean mayPlaceOn(BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos) {
-        return AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON.contains(state.getBlock());
+        return state.is(AstralTags.ETHEREAL_VEGETATION_PLANTABLE_ON);
     }
 
     @Override
+    @Nonnull
     public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
         return Ethereal.getPushReaction();
     }
