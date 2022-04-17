@@ -1,7 +1,7 @@
 package com.alan19.astral.events.astraltravel.flight;
 
+import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.api.heightadjustment.HeightAdjustmentCapability;
-import com.alan19.astral.api.heightadjustment.HeightAdjustmentProvider;
 import com.alan19.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.configs.TravelingSettings;
@@ -27,7 +27,7 @@ public class FlightHandler {
             Vec3 vec3d = (d0 > 1.0D ? relative.normalize() : relative).scale(1);
             float f = Mth.sin(facing * ((float) Math.PI / 180F));
             float f1 = Mth.cos(facing * ((float) Math.PI / 180F));
-            return new Vec3(vec3d.x * (double) f1 - vec3d.z * (double) f, vec3d.y, vec3d.z * (double) f1 + vec3d.x * (double) f);
+            return new Vec3(vec3d.x * f1 - vec3d.z * f, vec3d.y, vec3d.z * f1 + vec3d.x * f);
         }
     }
 
@@ -47,7 +47,7 @@ public class FlightHandler {
         //Gets closest block under player
         int closestY = getClosestBlockUnderPlayer(player);
         MovementType movementType = determineMovementType(player);
-        final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(HeightAdjustmentProvider.HEIGHT_ADJUSTMENT_CAPABILITY).orElseGet(HeightAdjustmentCapability::new);
+        final IHeightAdjustmentCapability heightAdjustmentCapability = player.getCapability(AstralAPI.HEIGHT_ADJUSTMENT_CAPABILITY).orElseGet(HeightAdjustmentCapability::new);
         activateHoverCapability(player, closestY, heightAdjustmentCapability);
         Vec3 nextMovement = generateMovementVector(player, closestY, movementType, heightAdjustmentCapability);
         //Only set velocity when player is pressing a key

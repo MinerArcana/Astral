@@ -11,7 +11,7 @@ import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -63,7 +63,7 @@ public class ShapelessNBTRecipeBuilder {
     /**
      * Adds an ingredient that can be any item in the given tag.
      */
-    public ShapelessNBTRecipeBuilder addIngredient(Tag<Item> tagIn) {
+    public ShapelessNBTRecipeBuilder addIngredient(TagKey<Item> tagIn) {
         return this.addIngredient(Ingredient.of(tagIn));
     }
 
@@ -117,14 +117,14 @@ public class ShapelessNBTRecipeBuilder {
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}.
+     * Builds this recipe into an {@link FinishedRecipe}.
      */
     public void build(Consumer<FinishedRecipe> consumerIn) {
         this.build(consumerIn, ForgeRegistries.ITEMS.getKey(this.result.getItem()));
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}. Use {@link #build(Consumer)} if save is the same as the ID for
+     * Builds this recipe into an {@link FinishedRecipe}. Use {@link #build(Consumer)} if save is the same as the ID for
      * the result.
      */
     public void build(Consumer<FinishedRecipe> consumerIn, String save) {
@@ -138,7 +138,7 @@ public class ShapelessNBTRecipeBuilder {
     }
 
     /**
-     * Builds this recipe into an {@link IFinishedRecipe}.
+     * Builds this recipe into an {@link FinishedRecipe}.
      */
     public void build(Consumer<FinishedRecipe> consumerIn, ResourceLocation id) {
         this.validate(id);
@@ -237,7 +237,7 @@ public class ShapelessNBTRecipeBuilder {
         }
 
         /**
-         * Gets the ID for the advancement associated with this recipe. Should not be null if {@link #getAdvancementJson}
+         * Gets the ID for the advancement associated with this recipe. Should not be null if {@link #advancementId}
          * is non-null.
          */
         @Nullable

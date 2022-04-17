@@ -1,20 +1,26 @@
 package com.alan19.astral.world;
 
 import com.alan19.astral.Astral;
-import com.alan19.astral.world.features.*;
-import com.alan19.astral.world.trees.EtherealTreeFeature;
+import com.alan19.astral.blocks.AstralBlocks;
+import com.alan19.astral.world.features.SnowberryFeature;
+import com.alan19.astral.world.features.SnowberryFeatureConfig;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.StructureSettings;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.RandomSpreadFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.BendingTrunkPlacer;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,11 +39,15 @@ public class AstralFeatures {
     private static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, Astral.MOD_ID);
 
     // Vegetation
-    public static final RegistryObject<EtherealTreeFeature> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new EtherealTreeFeature(TreeConfiguration.CODEC));
+    public static final RegistryObject<Feature<TreeConfiguration>> ETHEREAL_TREE = FEATURES.register("ethereal_tree", () -> new ConfiguredFeature<>(Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(AstralBlocks.ETHEREAL_WOOD.get().defaultBlockState()),
+            new BendingTrunkPlacer(5, 2, 0, 3, UniformInt.of(0, 2)),
+            BlockStateProvider.simple(AstralBlocks.ETHEREAL_LEAVES.get().defaultBlockState()),
+            new RandomSpreadFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), ConstantInt.of(3), 30),
+            new TwoLayersFeatureSize(1, 0, 1))
+            .dirt(BlockStateProvider.simple(AstralBlocks.ETHER_DIRT.get().defaultBlockState()))
+            .forceDirt()
+            .build()).feature());
     public static final RegistryObject<Feature<SnowberryFeatureConfig>> SNOWBERRY_FEATURE = FEATURES.register("snowberries", SnowberryFeature::new);
-    public static final RegistryObject<BuriedEtherealSpawnerFeature> BURIED_SPAWNER_FEATURE = FEATURES.register("buried_ethereal_spawner", () -> new BuriedEtherealSpawnerFeature(BuriedEtherealSpawnerConfig.CODEC));
-    public static final RegistryObject<GenerateMultipleFeature> GENERATE_MULTIPLE_FEATURE = FEATURES.register("generate_multiple_features", () -> new GenerateMultipleFeature(RandomFeatureConfiguration.CODEC));
-    public static final RegistryObject<StickyRandomPlacerFeature> STICKY_RANDOM_PLACER_FEATURE = FEATURES.register("sticky_random_placer", () -> new StickyRandomPlacerFeature(RandomPatchConfiguration.CODEC));
 
     public static void register(IEventBus modBus) {
         FEATURES.register(modBus);
@@ -46,7 +56,7 @@ public class AstralFeatures {
     // Adds features from biomes
     public static void addFeatures(BiomeLoadingEvent event) {
         if (event.getCategory() == Biome.BiomeCategory.TAIGA) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_SNOWBERRY);
+            event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
         }
         if (event.getCategory() == Biome.BiomeCategory.JUNGLE) {
             event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED);

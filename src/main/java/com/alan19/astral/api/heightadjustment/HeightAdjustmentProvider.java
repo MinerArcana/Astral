@@ -1,9 +1,9 @@
 package com.alan19.astral.api.heightadjustment;
 
+import com.alan19.astral.api.AstralAPI;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -11,29 +11,31 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class HeightAdjustmentProvider implements ICapabilitySerializable<CompoundTag> {
-    @CapabilityInject(IHeightAdjustmentCapability.class)
-    public static final Capability<IHeightAdjustmentCapability> HEIGHT_ADJUSTMENT_CAPABILITY = null;
 
-    private final IHeightAdjustmentCapability instance = HEIGHT_ADJUSTMENT_CAPABILITY.getDefaultInstance();
+    private final HeightAdjustmentCapability heightAdjustmentCapability;
+    private final LazyOptional<IHeightAdjustmentCapability> heightAdjustmentOptional;
+
+    public HeightAdjustmentProvider() {
+        this(new HeightAdjustmentCapability());
+    }
+
+    public HeightAdjustmentProvider(HeightAdjustmentCapability heightAdjustmentCapability) {
+        this.heightAdjustmentCapability = heightAdjustmentCapability;
+        this.heightAdjustmentOptional = LazyOptional.of(() -> heightAdjustmentCapability);
+    }
 
     @Nonnull
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == HEIGHT_ADJUSTMENT_CAPABILITY) {
-            return LazyOptional.of(() -> instance).cast();
-        }
-        else {
-            return LazyOptional.empty();
-        }
+        return cap == AstralAPI.HEIGHT_ADJUSTMENT_CAPABILITY ? heightAdjustmentOptional.cast() : LazyOptional.empty();
     }
 
     @Override
     public CompoundTag serializeNBT() {
-        return instance.serializeNBT();
+        return heightAdjustmentCapability.serializeNBT();
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        instance.deserializeNBT(nbt);
-
+        heightAdjustmentCapability.deserializeNBT(nbt);
     }
 }

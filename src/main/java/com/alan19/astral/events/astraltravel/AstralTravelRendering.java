@@ -3,7 +3,6 @@ package com.alan19.astral.events.astraltravel;
 import com.alan19.astral.Astral;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.effects.AstralEffects;
-import com.alan19.astral.events.AstralHealthBarRendering;
 import com.alan19.astral.util.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;

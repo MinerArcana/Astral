@@ -2,6 +2,7 @@ package com.alan19.astral.api;
 
 import com.alan19.astral.api.bodytracker.IBodyTracker;
 import com.alan19.astral.api.constructtracker.IConstructTracker;
+import com.alan19.astral.api.heightadjustment.IHeightAdjustmentCapability;
 import com.alan19.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
 import com.alan19.astral.api.innerrealmteleporter.IInnerRealmTeleporter;
 import com.alan19.astral.api.intentiontracker.IBeamTracker;
@@ -48,6 +49,9 @@ public class AstralAPI {
     });
 
     public static final Capability<IInnerRealmTeleporter> INNER_REALM_TELEPORTER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
+
+    public static final Capability<IHeightAdjustmentCapability> HEIGHT_ADJUSTMENT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     public static LazyOptional<IBodyTracker> getBodyTracker(ServerLevel world) {

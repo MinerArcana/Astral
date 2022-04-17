@@ -2,7 +2,6 @@ package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.tags.AstralTags;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +18,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -110,7 +110,7 @@ public class EtherGrass extends GrassBlock implements Ethereal, BonemealableBloc
     @ParametersAreNonnullByDefault
     public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
         final int numberOfPlants = rand.nextInt(8) + 8;
-        final Collection<Block> ethericGrowths = AstralTags.ETHERIC_GROWTHS.getValues();
+        final Collection<Block> ethericGrowths = ForgeRegistries.BLOCKS.tags().getTag(AstralTags.ETHERIC_GROWTHS).stream().toList();
         //Attempt to spawn 8-16 Etheric Growths
         for (int i = 0; i < numberOfPlants; i++) {
             //Keep track of current and previous blockpos

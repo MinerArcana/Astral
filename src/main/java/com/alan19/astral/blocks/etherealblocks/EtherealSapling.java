@@ -1,7 +1,6 @@
 package com.alan19.astral.blocks.etherealblocks;
 
 import com.alan19.astral.tags.AstralTags;
-import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;

@@ -5,7 +5,6 @@ import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.configs.AstralConfig;
 import com.alan19.astral.configs.WorldgenSettings;
 import com.alan19.astral.world.features.SnowberryFeatureConfig;
-import com.alan19.astral.world.trees.EtherealTree;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.Features;
@@ -34,7 +33,7 @@ public class AstralConfiguredFeatures {
     public static final ConfiguredFeature<?, ?> CONFIGURED_SNOWBERRY = AstralFeatures.SNOWBERRY_FEATURE
             .get()
             .configured(new SnowberryFeatureConfig(worldgenSettings.snowberryMinPatchSize.get(), worldgenSettings.snowberryMaxPatchSize.get(), worldgenSettings.snowberryPatchSpawnRate.get(), 60));
-    public static final NonNullLazy<ConfiguredFeature<?, ?>> CONFIGURED_ETHEREAL_TREE = () -> AstralFeatures.ETHEREAL_TREE.get().configured(EtherealTree.ETHEREAL_TREE_CONFIG.get()).squared();
+    public static final NonNullLazy<ConfiguredFeature<?, ?>> CONFIGURED_ETHEREAL_TREE = () -> AstralFeatures.ETHEREAL_TREE.get().configured(AstralFeatures.ETHEREAL_TREE_CONFIG.get()).squared();
 
     // Configured structures
     public static final ConfiguredStructureFeature<?, ?> CONFIGURED_ETHERIC_ISLE = AstralStructures.ETHERIC_ISLE.get().configured(FeatureConfiguration.NONE);
