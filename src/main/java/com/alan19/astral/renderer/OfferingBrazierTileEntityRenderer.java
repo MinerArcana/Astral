@@ -6,7 +6,6 @@ import com.mojang.math.Quaternion;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
@@ -16,10 +15,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 
-public class OfferingBrazierTileEntityRenderer extends BlockEntityRenderer<OfferingBrazierTileEntity> {
-    public OfferingBrazierTileEntityRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-    }
+public class OfferingBrazierTileEntityRenderer implements BlockEntityRenderer<OfferingBrazierTileEntity> {
 
     @Override
     public void render(@Nonnull OfferingBrazierTileEntity offeringBrazierTileEntity, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

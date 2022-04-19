@@ -4,33 +4,23 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.blocks.AstralBlocks;
 import com.alan19.astral.world.features.SnowberryFeature;
 import com.alan19.astral.world.features.SnowberryFeatureConfig;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.StructureFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.RandomSpreadFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.BendingTrunkPlacer;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AstralFeatures {
@@ -56,25 +46,11 @@ public class AstralFeatures {
     // Adds features from biomes
     public static void addFeatures(BiomeLoadingEvent event) {
         if (event.getCategory() == Biome.BiomeCategory.TAIGA) {
-            event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+            event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(AstralConfiguredFeatures.PLACED_SNOWBERRY);
         }
         if (event.getCategory() == Biome.BiomeCategory.JUNGLE) {
-            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.CONFIGURED_FEVERWEED);
-        }
-        if (event.getCategory() == Biome.BiomeCategory.OCEAN) {
-            event.getGeneration().getStructures().add(() -> AstralConfiguredFeatures.CONFIGURED_ETHERIC_ISLE);
+            event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AstralConfiguredFeatures.PLACED_FEVERWEED);
         }
     }
 
-    // Restricts Etheric Isles to non-superflat Overworld
-    public static void addDimensionSpacing(WorldEvent.Load event) {
-        if (event.getWorld() instanceof ServerLevel) {
-            ServerLevel serverWorld = (ServerLevel) event.getWorld();
-            if (!(serverWorld.getChunkSource().getGenerator() instanceof FlatLevelSource) && serverWorld.dimension().equals(Level.OVERWORLD)) {
-                Map<StructureFeature<?>, StructureFeatureConfiguration> tempMap = new HashMap<>(serverWorld.getChunkSource().generator.getSettings().structureConfig());
-                tempMap.put(AstralStructures.ETHERIC_ISLE.get(), StructureSettings.DEFAULTS.get(AstralStructures.ETHERIC_ISLE.get()));
-                serverWorld.getChunkSource().generator.getSettings().structureConfig = tempMap;
-            }
-        }
-    }
 }

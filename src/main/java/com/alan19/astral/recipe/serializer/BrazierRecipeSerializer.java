@@ -20,7 +20,7 @@ public class BrazierRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
     public BrazierRecipe fromJson(@Nonnull ResourceLocation recipeId, JsonObject json) {
         final int cookTime = json.get("cookTime").getAsInt();
         final Ingredient input = Ingredient.fromJson(json.get("input"));
-        final ItemStack result = ShapedRecipe.itemFromJson(json.getAsJsonObject("result"));
+        final ItemStack result = ShapedRecipe.itemStackFromJson(json.getAsJsonObject("result"));
         return new BrazierRecipe(AstralRecipeTypes.BRAZIER_RECIPE, recipeId, cookTime, result, input);
     }
 

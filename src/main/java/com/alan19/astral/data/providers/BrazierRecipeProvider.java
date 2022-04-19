@@ -4,6 +4,7 @@ import com.alan19.astral.Astral;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -24,7 +25,7 @@ public class BrazierRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> consumer) {
         createRecipe("potion", new ItemStack(GLASS_BOTTLE), Ingredient.of(POTION, EXPERIENCE_BOTTLE, GLASS_BOTTLE), consumer);
         createRecipe("bucket", new ItemStack(BUCKET), Ingredient.of(LAVA_BUCKET, WATER_BUCKET, MILK_BUCKET, COD_BUCKET, PUFFERFISH_BUCKET, SALMON_BUCKET, TROPICAL_FISH_BUCKET, BUCKET), consumer);
     }
@@ -34,24 +35,23 @@ public class BrazierRecipeProvider extends RecipeProvider {
     }
 
     private void createRecipe(String name, ItemStack output, Ingredient input, Consumer<FinishedRecipe> consumer) {
-        consumer.accept(new FinishedRecipe(new ResourceLocation(Astral.MOD_ID, "brazier/" + name), output, input));
+        consumer.accept(new FinishedBrazierRecipe(new ResourceLocation(Astral.MOD_ID, "brazier/" + name), output, input));
     }
 
-    //Copied it since inner class was private
-    private static class FinishedRecipe implements FinishedRecipe {
+    private static class FinishedBrazierRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final ItemStack output;
         private final Ingredient input;
         private final int cookTime;
 
-        private FinishedRecipe(ResourceLocation id, ItemStack output, Ingredient input, int cookTime) {
+        private FinishedBrazierRecipe(ResourceLocation id, ItemStack output, Ingredient input, int cookTime) {
             this.id = id;
             this.output = output;
             this.input = input;
             this.cookTime = cookTime;
         }
 
-        private FinishedRecipe(ResourceLocation id, ItemStack output, Ingredient input) {
+        private FinishedBrazierRecipe(ResourceLocation id, ItemStack output, Ingredient input) {
             this.id = id;
             this.output = output;
             this.input = input;

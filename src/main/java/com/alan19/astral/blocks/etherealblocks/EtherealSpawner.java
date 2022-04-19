@@ -1,6 +1,5 @@
 package com.alan19.astral.blocks.etherealblocks;
 
-import com.alan19.astral.blocks.tileentities.EtherealMobSpawnerTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;

@@ -26,7 +26,6 @@ import com.alan19.astral.particle.EtherealReplaceParticle;
 import com.alan19.astral.particle.IntentionBeamParticle;
 import com.alan19.astral.potions.AstralPotions;
 import com.alan19.astral.recipe.AstralRecipeSerializer;
-import com.alan19.astral.renderer.EtherealMobSpawnerRenderer;
 import com.alan19.astral.renderer.OfferingBrazierTileEntityRenderer;
 import com.alan19.astral.renderer.entity.PhysicalBodyEntityRenderer;
 import com.alan19.astral.util.ModCompat;

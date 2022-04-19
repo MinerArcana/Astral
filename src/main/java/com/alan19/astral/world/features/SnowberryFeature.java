@@ -51,6 +51,7 @@ public class SnowberryFeature extends Feature<SnowberryFeatureConfig> {
         final Random rand = worldIn.getRandom();
         final SnowberryFeatureConfig config = pContext.config();
         final BlockPos pos = pContext.origin();
+        // TODO Investigate if this is redundant
         if (rand.nextInt(config.getPatchChance()) == 0) {
             int spawned = 0;
             final int numberOfPlants = rand.nextInt(config.getMaxPatchSize() - config.getMinPatchSize()) + config.getMinPatchSize();

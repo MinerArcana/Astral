@@ -2,7 +2,6 @@ package com.alan19.astral.entity;
 
 import com.alan19.astral.events.astraldamage.AstralEntityDamage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -61,15 +61,14 @@ public interface IAstralBeing {
     }
 
     static void handleShieldBreak(LivingEntity self, Entity target) {
-        if (target instanceof Player) {
-            Player playerentity = (Player) target;
+        if (target instanceof Player player) {
             ItemStack mainHand = self.getMainHandItem();
-            ItemStack itemstack1 = playerentity.isUsingItem() ? playerentity.getUseItem() : ItemStack.EMPTY;
-            if (!mainHand.isEmpty() && !itemstack1.isEmpty() && mainHand.canDisableShield(itemstack1, playerentity, self) && itemstack1.isShield(playerentity)) {
-                float f2 = 0.25F + (float) EnchantmentHelper.getBlockEfficiency(self) * 0.05F;
+            ItemStack itemstack1 = player.isUsingItem() ? player.getUseItem() : ItemStack.EMPTY;
+            if (!mainHand.isEmpty() && !itemstack1.isEmpty() && mainHand.canDisableShield(itemstack1, player, self) && itemstack1.getItem() instanceof ShieldItem) {
+                float f2 = 0.25F + EnchantmentHelper.getBlockEfficiency(self) * 0.05F;
                 if (self.getCommandSenderWorld().getRandom().nextFloat() < f2) {
-                    playerentity.getCooldowns().addCooldown(mainHand.getItem(), 100);
-                    self.level.broadcastEntityEvent(playerentity, (byte) 30);
+                    player.getCooldowns().addCooldown(mainHand.getItem(), 100);
+                    self.level.broadcastEntityEvent(player, (byte) 30);
                 }
             }
         }
@@ -77,7 +76,7 @@ public interface IAstralBeing {
 
     static void handleKnockback(LivingEntity self, Entity target, float knockback) {
         if (knockback > 0.0F && target instanceof LivingEntity) {
-            ((LivingEntity) target).knockback(knockback * 0.5F, Mth.sin(self.yRot * ((float) Math.PI / 180F)), -Mth.cos(self.yRot * ((float) Math.PI / 180F)));
+            ((LivingEntity) target).knockback(knockback * 0.5F, Mth.sin(self.getYRot() * ((float) Math.PI / 180F)), -Mth.cos(self.getYRot() * ((float) Math.PI / 180F)));
             self.setDeltaMovement(self.getDeltaMovement().multiply(0.6D, 1.0D, 0.6D));
         }
     }

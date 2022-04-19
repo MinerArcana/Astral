@@ -137,12 +137,12 @@ public class IntentionBeam extends ThrowableProjectile {
     public void lerpMotion(double x, double y, double z) {
         this.setDeltaMovement(x, y, z);
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-            float f = Mth.sqrt(x * x + z * z);
-            this.xRot = (float) (Mth.atan2(y, f) * (double) (180F / (float) Math.PI));
-            this.yRot = (float) (Mth.atan2(x, z) * (double) (180F / (float) Math.PI));
-            this.xRotO = this.xRot;
-            this.yRotO = this.yRot;
-            this.moveTo(this.getX(), this.getY(), this.getZ(), this.yRot, this.xRot);
+            float f = Mth.sqrt((float) (x * x + z * z));
+            setXRot((float) (Mth.atan2(y, f) * (180F / (float) Math.PI)));
+            setYRot((float) (Mth.atan2(x, z) * (180F / (float) Math.PI)));
+            this.xRotO = this.getXRot();
+            this.yRotO = this.getYRot();
+            this.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), this.getXRot());
         }
 
     }
@@ -152,13 +152,13 @@ public class IntentionBeam extends ThrowableProjectile {
      */
     @Override
     public void shoot(double x, double y, double z, float velocity, float inaccuracy) {
-        Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy, this.random.nextGaussian() * (double) 0.0075F * (double) inaccuracy).scale(velocity);
+        Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy, this.random.nextGaussian() * 0.0075F * inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
-        float f = Mth.sqrt(getHorizontalDistanceSqr(vec3d));
-        this.yRot = (float) (Mth.atan2(vec3d.x, z) * (double) (180F / (float) Math.PI));
-        this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-        this.yRotO = this.yRot;
-        this.xRotO = this.xRot;
+        float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
+        setYRot((float) (Mth.atan2(vec3d.x, z) * (180F / (float) Math.PI)));
+        setXRot((float) (Mth.atan2(vec3d.y, f) * (180F / (float) Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
     /**
@@ -172,7 +172,7 @@ public class IntentionBeam extends ThrowableProjectile {
                 final ServerLevel world = (ServerLevel) this.level;
                 final ServerPlayer player = (ServerPlayer) world.getEntity(entityData.get(playerUUID).get());
                 if (player != null) {
-                    world.getWorldServer().sendParticles(player, AstralParticles.INTENTION_BEAM_PARTICLE.get(), true, getX(), getY(), getZ(), 2, (random.nextDouble() - random.nextDouble()) * .5, (random.nextDouble() - random.nextDouble()), (random.nextDouble() - random.nextDouble()) * .5, 0);
+                    world.sendParticles(player, AstralParticles.INTENTION_BEAM_PARTICLE.get(), true, getX(), getY(), getZ(), 2, (random.nextDouble() - random.nextDouble()) * .5, (random.nextDouble() - random.nextDouble()), (random.nextDouble() - random.nextDouble()) * .5, 0);
                 }
             }
             if (tickCount >= entityData.get(maxDistance) * 4) {
@@ -200,16 +200,16 @@ public class IntentionBeam extends ThrowableProjectile {
                 this.xRotO += 360.0F;
             }
 
-            while (this.yRot - this.yRotO < -180.0F) {
+            while (this.getYRot() - this.yRotO < -180.0F) {
                 this.yRotO -= 360.0F;
             }
 
-            while (this.yRot - this.yRotO >= 180.0F) {
+            while (this.getYRot() - this.yRotO >= 180.0F) {
                 this.yRotO += 360.0F;
             }
 
-            this.xRot = Mth.lerp(0.2F, this.xRotO, this.xRot);
-            this.yRot = Mth.lerp(0.2F, this.yRotO, this.yRot);
+            this.xRot = Mth.lerp(0.2F, this.xRotO, this.getXRot());
+            this.yRot = Mth.lerp(0.2F, this.yRotO, this.getYRot());
             if (!this.isNoGravity()) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.06F, 0.0D));
             }
@@ -219,7 +219,7 @@ public class IntentionBeam extends ThrowableProjectile {
     }
 
     @Override
-    public void remove() {
+    public void remove(RemovalReason pReason) {
         if (level instanceof ServerLevel) {
             ((ServerLevel) level).sendParticles(AstralParticles.INTENTION_BEAM_PARTICLE.get(), getX(), getY(), getZ(), 5, random.nextDouble(), random.nextDouble(), random.nextDouble(), random.nextDouble() / 4);
         }
@@ -229,7 +229,7 @@ public class IntentionBeam extends ThrowableProjectile {
                 player.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).ifPresent(IBeamTracker::clearIntentionBeam);
             }
         }
-        super.remove();
+        super.remove(pReason);
     }
 
     @Override
