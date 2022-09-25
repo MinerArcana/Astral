@@ -5,9 +5,11 @@ import com.alan19.astral.effects.AstralEffects;
 import com.alan19.astral.particle.AstralParticles;
 import com.alan19.astral.util.ExperienceHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Random;
@@ -37,7 +39,7 @@ public class DeleteIntentionBeam {
             if (sender != null && sender.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
                 sender.getCapability(AstralAPI.BEAM_TRACKER_CAPABILITY).ifPresent(tracker -> tracker.getIntentionBeam(sender.getLevel()).ifPresent(intentionBeam -> {
                     final BlockPos destinationPos = new BlockPos(intentionBeam.getX(), intentionBeam.getY() - sender.getEyeHeight(), intentionBeam.getZ());
-                    final double teleportDistance = Math.sqrt(new BlockPos(sender.getX(), sender.getEyeY(), sender.getZ()).distSqr(intentionBeam.getX(), intentionBeam.getY(), intentionBeam.getZ(), true));
+                    final double teleportDistance = Math.sqrt(new BlockPos(sender.getX(), sender.getEyeY(), sender.getZ()).distSqr(new Vec3i(intentionBeam.getX(), intentionBeam.getY(), intentionBeam.getZ())));
                     final int xpCost = (int) Math.floor(5 + teleportDistance / 10);
                     //Teleport if teleport distance is greater than 1, and if sender
                     if (teleportDistance > 1 && ExperienceHelper.getPlayerXP(sender) >= xpCost && !sender.getLevel().getBlockState(destinationPos).isCollisionShapeFullBlock(sender.getLevel(), destinationPos) && !sender.getLevel().getBlockState(intentionBeam.blockPosition()).isCollisionShapeFullBlock(sender.getLevel(), intentionBeam.blockPosition())) {
@@ -47,7 +49,7 @@ public class DeleteIntentionBeam {
                         sender.getLevel().sendParticles(AstralParticles.INTENTION_BEAM_PARTICLE.get(), sender.getX() + (rand.nextDouble() - rand.nextDouble()), sender.getY() + (rand.nextDouble() - rand.nextDouble()), sender.getZ() + (rand.nextDouble() - rand.nextDouble()), 7, 0, 0, 0, .1);
                         intentionBeam.playSound(SoundEvents.CHORUS_FRUIT_TELEPORT, 1F, 1F);
                     }
-                    intentionBeam.remove();
+                    intentionBeam.remove(Entity.RemovalReason.DISCARDED);
                 }));
             }
         });

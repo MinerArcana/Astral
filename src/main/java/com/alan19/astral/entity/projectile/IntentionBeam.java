@@ -14,7 +14,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
@@ -64,11 +65,11 @@ public class IntentionBeam extends ThrowableProjectile {
             final IIntentionTrackerBehavior intentionTrackerBehavior = AstralAPI.getIntentionTrackerBehavior(blockState.getBlock());
             if (intentionTrackerBehavior != null && entityData.get(playerUUID).isPresent()) {
                 intentionTrackerBehavior.onIntentionBeamHit(level.getPlayerByUUID(entityData.get(playerUUID).get()), entityData.get(beamLevel), blockRayTraceResult, blockState);
-                remove();
+                remove(RemovalReason.DISCARDED);
             }
             else if (blockState.getBlock() instanceof Ethereal || !IntentionBeamMaterials.getMaterialsForLevel(entityData.get(beamLevel)).contains(blockState.getMaterial())) {
                 entityData.set(touchedBlock, true);
-                remove();
+                remove(RemovalReason.DISCARDED);
             }
         }
     }
@@ -86,7 +87,7 @@ public class IntentionBeam extends ThrowableProjectile {
     }
 
     @Override
-    public boolean updateFluidHeightAndDoFluidPushing(@Nonnull Tag<Fluid> fluidTag, double p_210500_2_) {
+    public boolean updateFluidHeightAndDoFluidPushing(@NotNull TagKey<Fluid> pFluidTag, double pMotionScale) {
         return false;
     }
 
@@ -176,7 +177,7 @@ public class IntentionBeam extends ThrowableProjectile {
                 }
             }
             if (tickCount >= entityData.get(maxDistance) * 4) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 return;
             }
             Vec3 vec3d = this.getDeltaMovement();
@@ -188,15 +189,14 @@ public class IntentionBeam extends ThrowableProjectile {
             double d0 = this.getX() + vec3d.x;
             double d1 = this.getY() + vec3d.y;
             double d2 = this.getZ() + vec3d.z;
-            float f = Mth.sqrt(getHorizontalDistanceSqr(vec3d));
-            this.yRot = (float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI));
-
-            this.xRot = (float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI));
-            while (this.xRot - this.xRotO < -180.0F) {
+            float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
+            setYRot((float) (Mth.atan2(vec3d.x, vec3d.z) * (double) (180F / (float) Math.PI)));
+            setXRot((float) (Mth.atan2(vec3d.y, f) * (double) (180F / (float) Math.PI)));
+            while (this.getXRot() - this.xRotO < -180.0F) {
                 this.xRotO -= 360.0F;
             }
 
-            while (this.xRot - this.xRotO >= 180.0F) {
+            while (this.getXRot() - this.xRotO >= 180.0F) {
                 this.xRotO += 360.0F;
             }
 
@@ -208,8 +208,8 @@ public class IntentionBeam extends ThrowableProjectile {
                 this.yRotO += 360.0F;
             }
 
-            this.xRot = Mth.lerp(0.2F, this.xRotO, this.getXRot());
-            this.yRot = Mth.lerp(0.2F, this.yRotO, this.getYRot());
+            setXRot(Mth.lerp(0.2F, this.xRotO, this.getXRot()));
+            setYRot(Mth.lerp(0.2F, this.yRotO, this.getYRot()));
             if (!this.isNoGravity()) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.06F, 0.0D));
             }

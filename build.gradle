@@ -28,8 +28,7 @@ archivesBaseName = 'astral'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'parchment', version: '1.18.1-2022.03.06-1.18.2'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    mappings channel: 'parchment', version: '2022.06.05-1.18.2'
     runs {
         client {
             workingDirectory project.file('run')
@@ -89,11 +88,11 @@ sourceSets {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.36'
+    compileClasspath fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
     compileClasspath fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
     compileClasspath fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.18.1-1.0.5-Snapshot.1")
     compileClasspath fg.deobf("vazkii.botania:Botania:1.18.2-430-SNAPSHOT")
-    compileClasspath fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.6.3")
-    implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3544525")
+//    implementation fg.deobf("curse.maven:shutup-experimental-settings-407174:3544525")
 }
 
 // I believe this is for using datagens with forge tags
@@ -109,24 +108,24 @@ repositories {
         url "https://maven.blamejared.com/"
     }
     maven {
-        // for JEI
-        name "progwml6"
-        url "https://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        name "brassgoggledcoders"
-        url "https://maven.teamacronymcoders.com/"
-    }
-    //Gradle
-    maven {
         url = "https://maven.theillusivec4.top/"
     }
-    maven {
-        url = "https://www.cursemaven.com"
-    }
-    maven {
-        url "https://nexus.resourcefulbees.com/repository/maven-public/"
-    }
+
+//    maven {
+//        // for JEI
+//        name "progwml6"
+//        url "https://dvs1.progwml6.com/files/maven"
+//    }
+//    maven {
+//        name "brassgoggledcoders"
+//        url "https://maven.teamacronymcoders.com/"
+//    }
+//    maven {
+//        url = "https://www.cursemaven.com"
+//    }
+//    maven {
+//        url "https://nexus.resourcefulbees.com/repository/maven-public/"
+//    }
 }
 
 
