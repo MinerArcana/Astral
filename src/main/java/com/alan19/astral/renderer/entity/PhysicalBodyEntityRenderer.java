@@ -23,12 +23,19 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class PhysicalBodyEntityRenderer extends LivingEntityRenderer<PhysicalBodyEntity, PhysicalBodyModel> {
-    public PhysicalBodyEntityRenderer(EntityRendererProvider.Context p_174557_, PhysicalBodyModel p_174290_, float p_174291_) {
-        super(p_174557_, new PhysicalBodyModel(0f, true), .7f);
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel(p_174557_.bakeLayer(p_174558_ ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(p_174557_.bakeLayer(p_174558_ ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
-        this.addLayer(new CustomHeadLayer<>(this, p_174557_.getModelSet()));
-        this.addLayer(new ElytraLayer<>(this, p_174557_.getModelSet()));
+    public PhysicalBodyEntityRenderer(EntityRendererProvider.Context pContext, PhysicalBodyModel pModel, float pShadowRadius) {
+        super(pContext, new PhysicalBodyModel(pContext.bakeLayer(ModelLayers.PLAYER_SLIM), true), 0.5F);
+        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(pContext.bakeLayer(ModelLayers.PLAYER_SLIM_INNER_ARMOR)), new HumanoidModel<>(pContext.bakeLayer(ModelLayers.PLAYER_SLIM_OUTER_ARMOR))));
+        this.addLayer(new CustomHeadLayer<>(this, pContext.getModelSet()));
+        this.addLayer(new ElytraLayer<>(this, pContext.getModelSet()));
+
     }
+//    public PhysicalBodyEntityRenderer(EntityRendererProvider.Context p_174557_, PhysicalBodyModel p_174290_, float p_174291_) {
+//        super(p_174557_, new PhysicalBodyModel(0f, true), .7f);
+//        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel(p_174557_.bakeLayer(p_174558_ ? ModelLayers.PLAYER_SLIM_INNER_ARMOR : ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel(p_174557_.bakeLayer(p_174558_ ? ModelLayers.PLAYER_SLIM_OUTER_ARMOR : ModelLayers.PLAYER_OUTER_ARMOR))));
+//        this.addLayer(new CustomHeadLayer<>(this, p_174557_.getModelSet()));
+//        this.addLayer(new ElytraLayer<>(this, p_174557_.getModelSet()));
+//    }
 
 //    public PhysicalBodyEntityRenderer(EntityRenderDispatcher rendererManager) {
 //        super(rendererManager, new PhysicalBodyModel(0.0f, true), .7F);

@@ -50,15 +50,15 @@ public class InnerRealmEvents {
 
     private static void dropAllNonAstralItems(Player playerEntity, PsychicInventoryInstance inventoryOfPlayer, ServerLevel entityWorld) {
         IntStream.range(0, inventoryOfPlayer.getAstralMainInventory().getSlots())
-                .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralMainInventory().getStackInSlot(i).getItem()))
+                .filter(i -> !inventoryOfPlayer.getAstralMainInventory().getStackInSlot(i).is(AstralTags.ASTRAL_PICKUP))
                 .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralMainInventory().extractItem(i, 64, false)));
 
         IntStream.range(0, inventoryOfPlayer.getAstralArmorInventory().getSlots())
-                .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralArmorInventory().getStackInSlot(i).getItem()))
+                .filter(i -> !inventoryOfPlayer.getAstralArmorInventory().getStackInSlot(i).is(AstralTags.ASTRAL_PICKUP))
                 .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralArmorInventory().extractItem(i, 64, false)));
 
         IntStream.range(0, inventoryOfPlayer.getAstralHandsInventory().getSlots())
-                .filter(i -> !AstralTags.ASTRAL_PICKUP.contains(inventoryOfPlayer.getAstralHandsInventory().getStackInSlot(i).getItem()))
+                .filter(i -> !inventoryOfPlayer.getAstralHandsInventory().getStackInSlot(i).is(AstralTags.ASTRAL_PICKUP))
                 .forEach(i -> Block.popResource(entityWorld, playerEntity.blockPosition(), inventoryOfPlayer.getAstralHandsInventory().extractItem(i, 64, false)));
     }
 }

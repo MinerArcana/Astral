@@ -35,7 +35,7 @@ public class PhysicalBodyTracking {
                         final UUID uuid = NbtUtils.loadUUID(uuidNBT);
                         final Entity entity = serverWorld.getEntity(uuid);
                         if (entity != null) {
-                            entity.remove();
+                            entity.remove(Entity.RemovalReason.DISCARDED);
                         }
                     }
                 }

@@ -145,7 +145,7 @@ public class StartAndEndHandling {
 
                     final LazyOptional<IPsychicInventory> psychicInventory = AstralAPI.getOverworldPsychicInventory((ServerLevel) playerEntity.getCommandSenderWorld());
 
-                    psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()).setInventoryType(InventoryType.ASTRAL, playerEntity.inventory));
+                    psychicInventory.ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(playerEntity.getUUID()).setInventoryType(InventoryType.ASTRAL, playerEntity.getInventory()));
                 }
             }
         }

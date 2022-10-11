@@ -23,14 +23,13 @@ public class AstralTravelEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity entityLivingBaseIn, int amplifier) {
         if (!entityLivingBaseIn.getCommandSenderWorld().isClientSide() && entityLivingBaseIn.getHealth() < entityLivingBaseIn.getMaxHealth() && !entityLivingBaseIn.hasEffect(AstralEffects.MIND_VENOM.get())) {
-            if (entityLivingBaseIn instanceof Player) {
-                Player playerEntity = (Player) entityLivingBaseIn;
+            if (entityLivingBaseIn instanceof Player playerEntity) {
                 if (playerEntity.totalExperience > 0 && entityLivingBaseIn.getLastDamageSource() == null) {
                     entityLivingBaseIn.heal((amplifier * 0.5F) + 1.0F);
                     ((Player) entityLivingBaseIn).giveExperiencePoints(-1);
                 }
                 playerEntity.getFoodData().setFoodLevel(15);
-                playerEntity.getFoodData().saturationLevel = 0;
+                playerEntity.getFoodData().setSaturation(0);
             }
         }
     }

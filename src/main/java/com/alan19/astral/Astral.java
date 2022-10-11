@@ -33,6 +33,7 @@ import com.alan19.astral.world.AstralConfiguredFeatures;
 import com.alan19.astral.world.AstralFeatures;
 import com.alan19.astral.world.AstralStructures;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -55,6 +56,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.NewRegistryEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -104,7 +106,6 @@ public class Astral {
 
         modEventBus.addListener(this::newRegistry);
         forgeBus.addListener(AstralFeatures::addFeatures);
-        forgeBus.addListener(AstralFeatures::addDimensionSpacing);
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> modEventBus.addListener(ClientSetup::clientSetup));
     }
 
@@ -126,8 +127,7 @@ public class Astral {
 
     public void setRenderLayers(FMLClientSetupEvent event) {
         BlockRenderHandler.setRenderLayers();
-        ClientRegistry.bindTileEntityRenderer(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(AstralTiles.ETHEREAL_MOB_SPAWNER.get(), EtherealMobSpawnerRenderer::new);
+        event.enqueueWork(() -> BlockEntityRenderers.register(AstralTiles.OFFERING_BRAZIER.get(), OfferingBrazierTileEntityRenderer::new));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -137,7 +137,7 @@ public class Astral {
         Minecraft.getInstance().particleEngine.register(AstralParticles.INTENTION_BEAM_PARTICLE.get(), IntentionBeamParticle.Factory::new);
     }
 
-    public void newRegistry(RegistryEvent.NewRegistry newRegistry) {
+    public void newRegistry(NewRegistryEvent newRegistry) {
         makeRegistry("mental_constructs", MentalConstructType.class);
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         AstralMentalConstructs.register(modBus);

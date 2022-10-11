@@ -12,7 +12,6 @@ public class AstralTiles {
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Astral.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<OfferingBrazierTileEntity>> OFFERING_BRAZIER = TILE_ENTITIES.register("offering_brazier_tile", () -> BlockEntityType.Builder.of(OfferingBrazierTileEntity::new, AstralBlocks.OFFERING_BRAZIER.get()).build(null));
-    public static final RegistryObject<BlockEntityType<EtherealMobSpawnerTileEntity>> ETHEREAL_MOB_SPAWNER = TILE_ENTITIES.register("ethereal_mob_spawner", () -> BlockEntityType.Builder.of(EtherealMobSpawnerTileEntity::new, AstralBlocks.ETHEREAL_SPAWNER.get()).build(null));
 
     public static void register(IEventBus modBus) {
         TILE_ENTITIES.register(modBus);

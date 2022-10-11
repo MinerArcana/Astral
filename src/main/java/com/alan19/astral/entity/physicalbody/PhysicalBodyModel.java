@@ -1,10 +1,13 @@
 package com.alan19.astral.entity.physicalbody;
 
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 public class PhysicalBodyModel extends PlayerModel<PhysicalBodyEntity> {
-    public PhysicalBodyModel(float p_i46304_1_, boolean p_i46304_2_) {
-        super(p_i46304_1_, p_i46304_2_);
+
+
+    public PhysicalBodyModel(ModelPart pRoot, boolean pSlim) {
+        super(pRoot, pSlim);
     }
 
     @Override

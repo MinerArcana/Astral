@@ -3,9 +3,9 @@ package com.alan19.astral.blocks.tileentities;
 import com.alan19.astral.api.AstralAPI;
 import com.alan19.astral.network.AstralNetwork;
 import com.alan19.astral.recipe.AbstractBrazierRecipe;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -15,27 +15,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.TickingBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class OfferingBrazierTileEntity extends BlockEntity implements TickingBlockEntity {
+public class OfferingBrazierTileEntity extends BlockEntity {
     private final LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
     private int burnTicks = 0;
     private int progress = 0;
     private Optional<UUID> boundPlayer = Optional.empty();
     private ItemStack lastStack = ItemStack.EMPTY;
 
-    public OfferingBrazierTileEntity() {
-        super(AstralTiles.OFFERING_BRAZIER.get());
+    public OfferingBrazierTileEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(AstralTiles.OFFERING_BRAZIER.get(), pWorldPosition, pBlockState);
     }
 
     public Optional<UUID> getBoundPlayer() {
@@ -51,7 +53,6 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickingBlo
         return super.getCapability(cap, side);
     }
 
-    @Override
     public void tick() {
         if (level instanceof ServerLevel) {
             if (level.getGameTime() % 10 == 0) {
@@ -189,12 +190,6 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickingBlo
         }
     }
 
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), -1, this.getUpdateTag());
-    }
-
     @Override
     @Nonnull
     public CompoundTag getUpdateTag() {
@@ -232,7 +227,6 @@ public class OfferingBrazierTileEntity extends BlockEntity implements TickingBlo
     }
 
     @Override
-    @Nonnull
     public void saveAdditional(@Nonnull CompoundTag nbt) {
         super.saveAdditional(nbt);
         nbt.putInt("burnTicks", burnTicks);

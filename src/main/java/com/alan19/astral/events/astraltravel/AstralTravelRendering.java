@@ -33,31 +33,31 @@ public class AstralTravelRendering {
         }
     }
 
-    /**
-     * Make hearts white and remove the hunger bar when the player has the Astral potion effect
-     *
-     * @param event The game overlay render event to be cancelled if Astral Travel is active and the event is rendering food or health
-     */
-    @SubscribeEvent(receiveCanceled = true)
-    public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.getCameraEntity() instanceof Player) {
-            Player playerEntity = (Player) minecraft.getCameraEntity();
-            if (TravelEffects.isEntityAstral(playerEntity)) {
-                //Cancel rendering of hunger bar
-                if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
-                    event.setCanceled(true);
-                }
-                if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
-                    event.setCanceled(true);
-                    AstralHealthBarRendering.renderAstralHearts(event.getMatrixStack(), minecraft, playerEntity);
-                }
-            }
-            playerEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
-                if (playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
-                    AstralHealthBarRendering.renderAstralScreenFade(event.getMatrixStack(), iSleepManager.getSleep());
-                }
-            });
-        }
-    }
+//    /**
+//     * Make hearts white and remove the hunger bar when the player has the Astral potion effect
+//     *
+//     * @param event The game overlay render event to be cancelled if Astral Travel is active and the event is rendering food or health
+//     */
+//    @SubscribeEvent(receiveCanceled = true)
+//    public static void astralHUDRendering(RenderGameOverlayEvent.Pre event) {
+//        Minecraft minecraft = Minecraft.getInstance();
+//        if (minecraft.getCameraEntity() instanceof Player) {
+//            Player playerEntity = (Player) minecraft.getCameraEntity();
+//            if (TravelEffects.isEntityAstral(playerEntity)) {
+//                //Cancel rendering of hunger bar
+//                if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD) {
+//                    event.setCanceled(true);
+//                }
+//                if (event.getType() == RenderGameOverlayEvent.ElementType.HEALTH) {
+//                    event.setCanceled(true);
+//                    AstralHealthBarRendering.renderAstralHearts(event.getMatrixStack(), minecraft, playerEntity);
+//                }
+//            }
+//            playerEntity.getCapability(AstralAPI.SLEEP_MANAGER_CAPABILITY).ifPresent(iSleepManager -> {
+//                if (playerEntity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) && !iSleepManager.isEntityTraveling()) {
+//                    AstralHealthBarRendering.renderAstralScreenFade(event.getMatrixStack(), iSleepManager.getSleep());
+//                }
+//            });
+//        }
+//    }
 }

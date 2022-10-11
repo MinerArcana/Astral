@@ -11,10 +11,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,12 +36,16 @@ public class ClientSetup {
     public static void clientSetup(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(GuiEventHandler.class);
         EntityRenderDispatcher rendererManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        rendererManager.register(AstralEntities.PHYSICAL_BODY_ENTITY.get(), new PhysicalBodyEntityRenderer(rendererManager));
-        rendererManager.register(AstralEntities.CRYSTAL_SPIDER.get(), new CrystalSpiderRenderer(rendererManager));
-        rendererManager.register(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), new ThrownItemRenderer<>(rendererManager, itemRenderer, 1, true));
-        rendererManager.register(AstralEntities.INTENTION_BEAM_ENTITY.get(), new IntentionBeamRenderer(rendererManager));
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();;
         MenuScreens.register(AstralContainers.ASTRAL_INVENTORY_CONTAINER.get(), AstralInventoryScreen::new);
         registerKeybinds();
+    }
+
+    // TODO Register the models
+    public static void registerEntityModels(EntityRenderersEvent.RegisterRenderers event) {
+//        event.registerEntityRenderer(AstralEntities.PHYSICAL_BODY_ENTITY.get(), new PhysicalBodyEntityRenderer(rendererManager));
+//        event.registerEntityRenderer(AstralEntities.CRYSTAL_SPIDER.get(), new CrystalSpiderRenderer(rendererManager));
+//        event.registerEntityRenderer(AstralEntities.CRYSTAL_WEB_PROJECTILE_ENTITY.get(), new ThrownItemRenderer<>(rendererManager, itemRenderer, 1, true));
+//        event.registerEntityRenderer(AstralEntities.INTENTION_BEAM_ENTITY.get(), new IntentionBeamRenderer(rendererManager));
     }
 }

@@ -52,11 +52,9 @@ public interface Ethereal {
      * @param context The context of the shape query
      * @return usually a regular shape if the entity is Astral, empty if not
      */
+    // TODO Switch to mixins?
     static VoxelShape getCollisionShape(CollisionContext context, VoxelShape parentReturn) {
-        if (context.getEntity() instanceof LivingEntity && (((LivingEntity) context.getEntity()).hasEffect(AstralEffects.ASTRAL_TRAVEL.get()) || AstralTags.ETHEREAL_BEINGS.contains(context.getEntity().getType())) || context.getEntity() instanceof ItemEntity && AstralTags.ASTRAL_PICKUP.contains(((ItemEntity) context.getEntity()).getItem().getItem())) {
-            return parentReturn;
-        }
-        return Shapes.empty();
+        return parentReturn;
     }
 
     /**

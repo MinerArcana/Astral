@@ -109,12 +109,12 @@ public class BodyTracker implements IBodyTracker {
         serverPlayerEntity.fallDistance = 0;
 
         // Get the inventory and transfer items
-        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUUID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
+        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUUID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.getInventory()));
 
         // Teleport the player
         if (bodyTrackerMap.containsKey(serverPlayerEntity.getUUID())) {
             final CompoundTag bodyNBT = bodyTrackerMap.get(serverPlayerEntity.getUUID());
-            final ListTag posNBT = bodyNBT.getList("Pos", net.minecraftforge.common.util.Constants.NBT.TAG_DOUBLE);
+            final ListTag posNBT = bodyNBT.getList("Pos", Tag.TAG_DOUBLE);
             final BlockPos pos = new BlockPos(posNBT.getDouble(0), posNBT.getDouble(1), posNBT.getDouble(2));
             TeleportationTools.performTeleport(serverPlayerEntity, ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(bodyNBT.getString("Dimension"))), new BlockPos(pos.getX(), pos.getY(), pos.getZ()), Direction.UP);
 

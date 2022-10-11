@@ -17,8 +17,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -40,7 +41,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class OfferingBrazier extends AbstractFurnaceBlock {
+import static net.minecraft.world.level.block.AbstractFurnaceBlock.LIT;
+
+public class OfferingBrazier extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     protected static final VoxelShape BASE_SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D);
     protected static final VoxelShape COLUMN_SHAPE = Block.box(5.0D, 2.0D, 5.0D, 11.0D, 4.0D, 11.0D);
@@ -73,16 +76,6 @@ public class OfferingBrazier extends AbstractFurnaceBlock {
         super.createBlockStateDefinition(builder.add(LIT));
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockState state, BlockGetter world) {
-        return new OfferingBrazierTileEntity();
-    }
 
     @Override
     public void setPlacedBy(@Nonnull Level world, @Nonnull BlockPos blockPos, @Nonnull BlockState blockState, @Nullable LivingEntity livingEntity, @Nonnull ItemStack itemStack) {
@@ -193,5 +186,10 @@ public class OfferingBrazier extends AbstractFurnaceBlock {
             return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
         }
         return 0;
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new OfferingBrazierTileEntity(pPos, pState);
     }
 }

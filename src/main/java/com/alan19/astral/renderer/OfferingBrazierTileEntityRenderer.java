@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -16,6 +17,12 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 
 public class OfferingBrazierTileEntityRenderer implements BlockEntityRenderer<OfferingBrazierTileEntity> {
+
+    private BlockEntityRendererProvider.Context pContext;
+
+    public OfferingBrazierTileEntityRenderer(BlockEntityRendererProvider.Context pContext) {
+        this.pContext = pContext;
+    }
 
     @Override
     public void render(@Nonnull OfferingBrazierTileEntity offeringBrazierTileEntity, float partialTicks, @Nonnull PoseStack matrixStackIn, @Nonnull MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -34,7 +41,7 @@ public class OfferingBrazierTileEntityRenderer implements BlockEntityRenderer<Of
         if (!burning.isEmpty()) {
             matrixStackIn.pushPose();
             matrixStackIn.translate(0.5, 0.6, 0.5);
-            itemRenderer.renderStatic(burning, ItemTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            itemRenderer.renderStatic(burning, ItemTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 739245);
             matrixStackIn.popPose();
         }
         if (!fuel.isEmpty()) {
@@ -42,7 +49,7 @@ public class OfferingBrazierTileEntityRenderer implements BlockEntityRenderer<Of
             matrixStackIn.translate(0.5, 0.4, 0.5);
             matrixStackIn.scale(.5f, .5f, .5f);
             matrixStackIn.mulPose(new Quaternion(-90, 0, 0, true));
-            itemRenderer.renderStatic(fuel, ItemTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            itemRenderer.renderStatic(fuel, ItemTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, 41030595);
             matrixStackIn.popPose();
         }
     }
