@@ -7,10 +7,7 @@ import com.minerarcana.astral.tags.AstralTags;
 import com.minerarcana.astral.world.feature.AstralFeatures;
 import com.minerarcana.astral.world.feature.SnowberryPatchConfig;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -50,6 +47,10 @@ public class DataGenerators {
         JsonCodecProvider<BiomeModifier> biomeModifierProvider = getBiomeModifierProvider(event, generator);
         generator.addProvider(true, biomeModifierProvider);
         generator.addProvider(true, new AstralBlockTagProvider(generator, existingFileHelper));
+        generator.addProvider(true, new AstralBlockstates(generator, existingFileHelper));
+        generator.addProvider(true, new EnglishLocalizaton(generator));
+        generator.addProvider(true, new AstralLootTables(generator));
+        generator.addProvider(true, new ItemModels(generator, existingFileHelper));
     }
 
     @NotNull
@@ -61,9 +62,10 @@ public class DataGenerators {
                         HolderSet.direct(Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(AstralFeatures.PATCH_SNOWBERRIES.get(),
                                 new SnowberryPatchConfig(2,
                                         5,
-                                        9,
-                                        3,
-                                        16))), List.of(RarityFilter.onAverageOnceEvery(25),
+                                        5,
+                                        5,
+                                        16
+                                        ))), List.of(RarityFilter.onAverageOnceEvery(25),
                                 InSquarePlacement.spread(),
                                 HeightmapPlacement.onHeightmap(Heightmap.Types.WORLD_SURFACE_WG),
                                 BiomeFilter.biome())))),
@@ -72,17 +74,16 @@ public class DataGenerators {
                 HolderSet.direct(Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(Feature.RANDOM_PATCH,
                         FeatureUtils.simpleRandomPatchConfiguration(96, PlacementUtils.filtered(Feature.SIMPLE_BLOCK,
                                 new SimpleBlockConfiguration(BlockStateProvider.simple(AstralBlocks.FEVERWEED.get())),
-                                BlockPredicate.matchesTag(AstralTags.FEVERWEED_PLANTABLE_ON))))), List.of(RarityFilter.onAverageOnceEvery(10),
+                                BlockPredicate.allOf(BlockPredicate.ONLY_IN_AIR_PREDICATE, BlockPredicate.matchesTag(Direction.DOWN.getNormal(), AstralTags.FEVERWEED_PLANTABLE_ON)))))), List.of(RarityFilter.onAverageOnceEvery(10),
                         InSquarePlacement.spread(),
                         HeightmapPlacement.onHeightmap(Heightmap.Types.WORLD_SURFACE_WG),
                         BiomeFilter.biome())))),
                 GenerationStep.Decoration.VEGETAL_DECORATION));
-        JsonCodecProvider<BiomeModifier> biomeModifierProvider = JsonCodecProvider.forDatapackRegistry(generator,
+        return JsonCodecProvider.forDatapackRegistry(generator,
                 event.getExistingFileHelper(),
                 Astral.MOD_ID,
                 ops,
                 ForgeRegistries.Keys.BIOME_MODIFIERS,
                 modifierMap);
-        return biomeModifierProvider;
     }
 }
