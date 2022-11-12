@@ -35,8 +35,9 @@ public class SnowberryBushFeature extends Feature<SnowberryPatchConfig> {
         int tryCount = 0;
         while (tryCount < snowberryPatchConfig.tries() && generated < snowberryPatchConfig.maxCount()) {
             pos.setWithOffset(blockpos, randomsource.nextInt(j) - randomsource.nextInt(j), randomsource.nextInt(k) - randomsource.nextInt(k), randomsource.nextInt(j) - randomsource.nextInt(j));
-            if (AstralBlocks.SNOWBERRY_BUSH.get().canSurvive(worldgenlevel.getBlockState(pos), worldgenlevel, pos) && spawnSnowberries(worldgenlevel, randomsource, generated, pos) > 0) {
+            if (worldgenlevel.isEmptyBlock(pos) && AstralBlocks.SNOWBERRY_BUSH.get().canSurvive(worldgenlevel.getBlockState(pos), worldgenlevel, pos) && spawnSnowberries(worldgenlevel, randomsource, generated, pos) > 0) {
                 ++generatedCount;
+                System.out.println("Spawning Snowberry at " + blockpos);
             }
             ++tryCount;
         }

@@ -32,7 +32,7 @@ public class AstralItems {
                             .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 15, 1), 1)
                             .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 15, 1), 1)
                             .build())));
-    public static final RegistryObject<BlockItem> FEVERWEED = ITEMS.register("feverweed", () -> new BlockItem(AstralBlocks.FEVERWEED.get(),
+    public static final RegistryObject<BlockItem> FEVERWEED_ITEM = ITEMS.register("feverweed", () -> new BlockItem(AstralBlocks.FEVERWEED.get(),
             new Item.Properties()
                     .tab(AstralItems.ASTRAL_ITEMS)
                     .food(new FoodProperties.Builder()
