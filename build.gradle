@@ -128,6 +128,20 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    maven {
+        // for JEI
+        name "progwml6"
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
+    maven {
+        url = "https://maven.blamejared.com/"
+    }
 }
 
 dependencies {
@@ -137,8 +151,7 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.1.47'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
+    implementation fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 
     // Examples using mod jars from ./libs
