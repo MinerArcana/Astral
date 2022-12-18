@@ -1,6 +1,7 @@
 package com.minerarcana.astral;
 
 import com.minerarcana.astral.blocks.AstralBlocks;
+import com.minerarcana.astral.brews.AstralBotaniaBrews;
 import com.minerarcana.astral.items.AstralItems;
 import com.minerarcana.astral.potions.AstralPotions;
 import com.minerarcana.astral.world.feature.AstralFeatures;
@@ -14,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -41,6 +43,10 @@ public class Astral {
         AstralItems.ITEMS.register(modEventBus);
         AstralFeatures.FEATURES.register(modEventBus);
         AstralPotions.POTIONS.register(modEventBus);
+
+        if (ModList.get().isLoaded("botania")) {
+            AstralBotaniaBrews.BREWS.register(modEventBus);
+        }
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
