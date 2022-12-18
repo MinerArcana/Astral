@@ -2,6 +2,7 @@ package com.minerarcana.astral.world.feature;
 
 import com.minerarcana.astral.blocks.AstralBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -26,40 +27,39 @@ public class SnowberryBushFeature extends Feature<SnowberryPatchConfig> {
         RandomSource randomsource = pContext.random();
         BlockPos blockpos = pContext.origin();
         WorldGenLevel worldgenlevel = pContext.level();
-        int generatedCount = 0;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         int j = snowberryPatchConfig.xzSpread() + 1;
         int k = snowberryPatchConfig.ySpread() + 1;
 
         int generated = 0;
         int tryCount = 0;
-        while (tryCount < snowberryPatchConfig.tries() && generated < snowberryPatchConfig.maxCount()) {
+        int maxCount = randomsource.nextIntBetweenInclusive(snowberryPatchConfig.minCount(), snowberryPatchConfig.maxCount());
+        while (tryCount < snowberryPatchConfig.tries() && generated < maxCount) {
             pos.setWithOffset(blockpos, randomsource.nextInt(j) - randomsource.nextInt(j), randomsource.nextInt(k) - randomsource.nextInt(k), randomsource.nextInt(j) - randomsource.nextInt(j));
-            if (worldgenlevel.isEmptyBlock(pos) && AstralBlocks.SNOWBERRY_BUSH.get().canSurvive(worldgenlevel.getBlockState(pos), worldgenlevel, pos) && spawnSnowberries(worldgenlevel, randomsource, generated, pos) > 0) {
-                ++generatedCount;
+            if ((worldgenlevel.isEmptyBlock(pos) || worldgenlevel.getBlockState(pos).is(BlockTags.SNOW)) && AstralBlocks.SNOWBERRY_BUSH.get().canSurvive(worldgenlevel.getBlockState(pos), worldgenlevel, pos)) {
+                spawnSnowberries(worldgenlevel, randomsource, pos);
+                ++generated;
                 System.out.println("Spawning Snowberry at " + blockpos);
             }
             ++tryCount;
         }
 
-        return generatedCount > 0;
+        return generated > 0;
     }
 
     private List<BlockPos> getAdjacentBlocks(BlockPos blockpos) {
         return new ArrayList<>(Arrays.asList(blockpos.east(), blockpos.west(), blockpos.north(), blockpos.south(), blockpos.north().east(), blockpos.north().west(), blockpos.south().east(), blockpos.south().west()));
     }
 
-    private int spawnSnowberries(@Nonnull LevelAccessor worldIn, @Nonnull RandomSource rand, int spawned, BlockPos generatingPos) {
+    private void spawnSnowberries(@Nonnull LevelAccessor worldIn, @Nonnull RandomSource rand, BlockPos generatingPos) {
         worldIn.setBlock(generatingPos.below(), Blocks.SNOW_BLOCK.defaultBlockState(), 2);
         worldIn.setBlock(generatingPos, AstralBlocks.SNOWBERRY_BUSH.get().defaultBlockState(), 2);
-        spawned++;
         for (BlockPos adjacentPos : getAdjacentBlocks(generatingPos)) {
             int layerLevel = rand.nextInt(4);
             if (worldIn.isEmptyBlock(adjacentPos) && layerLevel > 0 && Blocks.SNOW.defaultBlockState().canSurvive(worldIn, adjacentPos)) {
                 worldIn.setBlock(adjacentPos, Blocks.SNOW.getStateDefinition().any().setValue(BlockStateProperties.LAYERS, layerLevel), 2);
             }
         }
-        return spawned;
     }
 
 }

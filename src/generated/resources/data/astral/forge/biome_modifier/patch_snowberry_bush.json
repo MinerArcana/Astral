@@ -7,8 +7,8 @@
       "config": {
         "max_count": 5,
         "min_count": 2,
-        "tries": 16,
-        "xz_spread": 5,
+        "tries": 128,
+        "xz_spread": 2,
         "y_spread": 5
       }
     },
