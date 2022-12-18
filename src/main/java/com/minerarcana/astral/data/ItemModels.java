@@ -6,7 +6,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
@@ -26,7 +25,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
 
     @Override
     protected void registerModels() {
-        forBlockItem(AstralItems.FEVERWEED_ITEM);
+        forBlockItemWithParent(AstralItems.FEVERWEED_ITEM);
         forItem(AstralItems.SNOWBERRIES);
     }
 
@@ -38,15 +37,15 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(new ResourceLocation(Astral.MOD_ID, "block/" + ForgeRegistries.BLOCKS.getKey(item.get().getBlock()).getPath())));
     }
 
-    private void forBlockItem(RegistryObject<? extends ItemNameBlockItem> item, ResourceLocation modelLocation) {
+    private void forBlockItem(RegistryObject<? extends BlockItem> item, ResourceLocation modelLocation) {
         getBuilder(item.getId().getPath()).parent(new ModelFile.UncheckedModelFile(modelLocation));
     }
 
-    private void forBlockItemWithParent(RegistryObject<? extends ItemNameBlockItem> item, ResourceLocation modelLocation) {
+    private void forBlockItemWithParent(RegistryObject<? extends BlockItem> item, ResourceLocation modelLocation) {
         singleTexture(item.getId().getPath(), generatedItem, "layer0", modelLocation);
     }
 
-    private void forBlockItemWithParent(RegistryObject<? extends ItemNameBlockItem> item) {
+    private void forBlockItemWithParent(RegistryObject<? extends BlockItem> item) {
         singleTexture(item.getId().getPath(), generatedItem, "layer0", modLoc("block/" + item.getId().getPath()));
     }
 

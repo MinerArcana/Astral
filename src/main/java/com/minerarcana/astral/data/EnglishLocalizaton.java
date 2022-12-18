@@ -2,8 +2,12 @@ package com.minerarcana.astral.data;
 
 import com.minerarcana.astral.Astral;
 import com.minerarcana.astral.items.AstralItems;
+import com.minerarcana.astral.potions.AstralPotions;
+import com.minerarcana.astral.potions.PotionRegistryGroup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class EnglishLocalizaton extends LanguageProvider {
 
@@ -15,5 +19,25 @@ public class EnglishLocalizaton extends LanguageProvider {
     protected void addTranslations() {
         add(AstralItems.SNOWBERRIES.get(), "Snowberries");
         add(AstralItems.FEVERWEED_ITEM.get(), "Feverweed");
+        processPotionFamily("Feverweed Brew", "Splashing Feverweed Brew", "Feverweed Mist", "Arrow of Feverweed", AstralPotions.FEVERWEED_BREW);
+        processPotionFamily("Snowberry Brew", "Splashing Snowberry Brew", "Snowberry Mist", "Arrow of Snowberry", AstralPotions.SNOWBERRY_BREW);
+        add("itemGroup.astral", "Astral");
     }
+
+    private void processPotionFamily(String potionName, String splashPotionName, String lingeringPotionName, String arrowName, PotionRegistryGroup potionRegistryGroup) {
+        potionRegistryGroup.getBasePotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
+        potionRegistryGroup.getLongPotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
+        potionRegistryGroup.getStrongPotion().ifPresent(potion -> add(potion, potionName, splashPotionName, lingeringPotionName, arrowName));
+    }
+
+    private void add(Potion potion, String potionName, String splashPotionName, String lingeringPotionName, String arrowName) {
+        String base = "item.minecraft";
+        String potionRegistryName = ForgeRegistries.POTIONS.getKey(potion).getPath();
+        add(base + ".potion.effect." + potionRegistryName, potionName);
+        add(base + ".splash_potion.effect." + potionRegistryName, splashPotionName);
+        add(base + ".lingering_potion.effect." + potionRegistryName, lingeringPotionName);
+        add(base + ".tipped_arrow.effect." + potionRegistryName, arrowName);
+    }
+
+
 }
