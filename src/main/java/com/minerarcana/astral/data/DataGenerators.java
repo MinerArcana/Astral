@@ -32,7 +32,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,9 +61,9 @@ public class DataGenerators {
                         HolderSet.direct(Holder.direct(new PlacedFeature(Holder.direct(new ConfiguredFeature<>(AstralFeatures.PATCH_SNOWBERRIES.get(),
                                 new SnowberryPatchConfig(2,
                                         5,
+                                        2,
                                         5,
-                                        5,
-                                        16
+                                        128
                                         ))), List.of(RarityFilter.onAverageOnceEvery(25),
                                 InSquarePlacement.spread(),
                                 HeightmapPlacement.onHeightmap(Heightmap.Types.WORLD_SURFACE_WG),
