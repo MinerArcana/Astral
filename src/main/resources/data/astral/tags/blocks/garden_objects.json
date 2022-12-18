@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#minecraft:logs",
-    "#minecraft:leaves",
-    "#forge:dirt",
-    "#astral:etheric_growths"
-  ]
-}

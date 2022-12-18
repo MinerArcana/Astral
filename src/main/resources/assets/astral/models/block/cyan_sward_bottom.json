@@ -1,6 +1,0 @@
-{
-  "parent": "block/cross",
-  "textures": {
-    "cross": "astral:block/cyan_sward_bottom"
-  }
-}

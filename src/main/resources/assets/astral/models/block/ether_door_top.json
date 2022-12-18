@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/door_top",
-  "textures": {
-    "bottom": "astral:block/ether_door_bottom",
-    "top": "astral:block/ether_door_top"
-  }
-}

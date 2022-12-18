@@ -1,1 +1,0 @@
-burn @p astral:key_of_enlightenment 1
