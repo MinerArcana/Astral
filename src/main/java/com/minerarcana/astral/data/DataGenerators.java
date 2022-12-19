@@ -50,7 +50,6 @@ public class DataGenerators {
         generator.addProvider(true, new EnglishLocalizaton(generator));
         generator.addProvider(true, new AstralLootTables(generator));
         generator.addProvider(true, new ItemModels(generator, existingFileHelper));
-        generator.addProvider(true, new AstralBrewProvider(generator));
     }
 
     @NotNull

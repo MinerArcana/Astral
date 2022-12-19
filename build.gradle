@@ -162,7 +162,7 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-5.1.1.0")
     implementation fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-78-SNAPSHOT")
     implementation fg.deobf("xyz.brassgoggledcoders:PatchouliProvider:1.19-1.0.7-Snapshot.2")
-    implementation fg.deobf("vazkii.botania:Botania:${mc_version}-437-FORGE-SNAPSHOT")
+    implementation fg.deobf("vazkii.botania:Botania:${mc_version}-436-FORGE")
 
 }
 
