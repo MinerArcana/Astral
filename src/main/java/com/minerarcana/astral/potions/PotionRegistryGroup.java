@@ -72,8 +72,6 @@ public class PotionRegistryGroup {
             BrewingRecipeRegistry.addRecipe(asPotion(potionBase), strongReagent.get(), potionToItemStack(strongPotion.get()));
             BrewingRecipeRegistry.addRecipe(asSplashPotion(potionBase), strongReagent.get(), potionToSplashPotionItemStack(strongPotion.get()));
         }
-
-
     }
 
     public PotionRegistryGroup register(DeferredRegister<Potion> potionRegistry) {

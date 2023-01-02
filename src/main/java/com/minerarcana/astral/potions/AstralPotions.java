@@ -25,11 +25,17 @@ public class AstralPotions {
             .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_SNOWBERRY_INSTANCE.toArray(new MobEffectInstance[]{})))
             .register(POTIONS);
 
+    public static final PotionRegistryGroup ASTRAL_TRAVEL_POTION = new PotionRegistryGroup("astral_travel_potion", () -> new Potion(PotionEffectInstances.BASE_ASTRAL_TRAVEL_INSTANCE.toArray(new MobEffectInstance[]{})), () -> Ingredient.of(AstralItems.TRAVELING_MEDICINE.get()))
+            .addLongBrew(() -> new Potion(PotionEffectInstances.LONG_ASTRAL_TRAVEL_INSTANCE.toArray(new MobEffectInstance[]{})))
+            .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_ASTRAL_TRAVEL_INSTANCE.toArray(new MobEffectInstance[]{})))
+            .register(POTIONS);
+
     @SubscribeEvent
     public static void registerRecipes(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             FEVERWEED_BREW.registerBrewingRecipes();
             SNOWBERRY_BREW.registerBrewingRecipes();
+            ASTRAL_TRAVEL_POTION.registerBrewingRecipes();
         });
     }
 

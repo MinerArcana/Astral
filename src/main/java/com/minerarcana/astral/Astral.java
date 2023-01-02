@@ -1,6 +1,8 @@
 package com.minerarcana.astral;
 
 import com.minerarcana.astral.blocks.AstralBlocks;
+import com.minerarcana.astral.effect.AstralEffects;
+import com.minerarcana.astral.entity.AstralAttributes;
 import com.minerarcana.astral.items.AstralItems;
 import com.minerarcana.astral.potions.AstralPotions;
 import com.minerarcana.astral.world.feature.AstralFeatures;
@@ -41,6 +43,8 @@ public class Astral {
         AstralItems.ITEMS.register(modEventBus);
         AstralFeatures.FEATURES.register(modEventBus);
         AstralPotions.POTIONS.register(modEventBus);
+        AstralEffects.EFFECTS.register(modEventBus);
+        AstralAttributes.ATTRIBUTES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

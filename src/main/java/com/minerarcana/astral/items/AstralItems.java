@@ -2,6 +2,7 @@ package com.minerarcana.astral.items;
 
 import com.minerarcana.astral.Astral;
 import com.minerarcana.astral.blocks.AstralBlocks;
+import com.minerarcana.astral.effect.AstralEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -43,4 +44,15 @@ public class AstralItems {
                             .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 15, 1), 1)
                             .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 15, 1), 1)
                             .build())));
+
+    public static final RegistryObject<Item> TRAVELING_MEDICINE = ITEMS.register("traveling_medicine", () -> new Item(new Item.Properties()
+            .tab(AstralItems.ASTRAL_ITEMS)
+            .food(new FoodProperties.Builder()
+                    .fast()
+                    .alwaysEat()
+                    .saturationMod(-2F)
+                    .nutrition(1)
+                    .effect(() -> new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), 1200, 0), 1)
+                    .build())
+            .stacksTo(1)));
 }

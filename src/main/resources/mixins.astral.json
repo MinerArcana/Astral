@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "com.minerarcana.astral.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "astral.refmap.json",
+  "mixins": [
+    "MixinEntity",
+    "MixinLivingEntity",
+    "MixinPlayer"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.0.1"
+}
