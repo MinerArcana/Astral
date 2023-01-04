@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "astral:snowberries"
+    },
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "astral:feverweed"
+    }
+  ],
+  "result": {
+    "item": "astral:traveling_medicine"
+  }
+}

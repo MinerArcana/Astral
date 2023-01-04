@@ -27,6 +27,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
     protected void registerModels() {
         forBlockItemWithParent(AstralItems.FEVERWEED_ITEM);
         forItem(AstralItems.SNOWBERRIES);
+        forItem(AstralItems.TRAVELING_MEDICINE);
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

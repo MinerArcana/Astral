@@ -1,6 +1,7 @@
 package com.minerarcana.astral.data;
 
 import com.minerarcana.astral.Astral;
+import com.minerarcana.astral.effect.AstralEffects;
 import com.minerarcana.astral.items.AstralItems;
 import com.minerarcana.astral.potions.AstralPotions;
 import com.minerarcana.astral.potions.PotionRegistryGroup;
@@ -19,8 +20,11 @@ public class EnglishLocalizaton extends LanguageProvider {
     protected void addTranslations() {
         add(AstralItems.SNOWBERRIES.get(), "Snowberries");
         add(AstralItems.FEVERWEED_ITEM.get(), "Feverweed");
+        add(AstralItems.TRAVELING_MEDICINE.get(), "Traveling Medicine");
         processPotionFamily("Feverweed Brew", "Splashing Feverweed Brew", "Feverweed Mist", "Arrow of Feverweed", AstralPotions.FEVERWEED_BREW);
         processPotionFamily("Snowberry Brew", "Splashing Snowberry Brew", "Snowberry Mist", "Arrow of Snowberry", AstralPotions.SNOWBERRY_BREW);
+        processPotionFamily("Potion of Astral Travel", "Splash Potion of Astral Travel", "Lingering Potion of Astral Travel", "Arrow of Astral Travel", AstralPotions.ASTRAL_TRAVEL_POTION);
+        add(AstralEffects.ASTRAL_TRAVEL.get(), "Astral Travel");
         add("itemGroup.astral", "Astral");
     }
 
