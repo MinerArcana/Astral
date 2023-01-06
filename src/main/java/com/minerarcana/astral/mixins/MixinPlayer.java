@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public class MixinPlayer {
-    @Inject(at = @At("HEAD"), method = "isSwimming()Z", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/world/entity/player/Player;isSwimming()Z", cancellable = true)
     private void isSwimming(CallbackInfoReturnable<Boolean> cir) {
         Player player = (Player) (Object) this;
         if (!player.getAbilities().flying && !player.isSpectator() && (Minecraft.getInstance().options.keySprint.isDown()) && player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
