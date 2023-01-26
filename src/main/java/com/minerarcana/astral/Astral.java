@@ -6,7 +6,6 @@ import com.minerarcana.astral.entity.AstralAttributes;
 import com.minerarcana.astral.items.AstralItems;
 import com.minerarcana.astral.potions.AstralPotions;
 import com.minerarcana.astral.world.feature.AstralFeatures;
-import com.minerarcana.astral.world.feature.dimensions.AstralDimensions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -46,7 +45,6 @@ public class Astral {
         AstralPotions.POTIONS.register(modEventBus);
         AstralEffects.EFFECTS.register(modEventBus);
         AstralAttributes.ATTRIBUTES.register(modEventBus);
-        AstralDimensions.register();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
