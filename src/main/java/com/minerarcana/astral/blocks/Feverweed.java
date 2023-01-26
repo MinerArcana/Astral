@@ -25,6 +25,7 @@ public class Feverweed extends BushBlock {
     }
 
     //Mushroom spread code but ignores light levels
+    @SuppressWarnings("deprecation")
     @Override
     public void tick(@Nonnull BlockState state, @Nonnull ServerLevel worldIn, @Nonnull BlockPos pos, RandomSource random) {
         if (random.nextInt(25) == 0) {

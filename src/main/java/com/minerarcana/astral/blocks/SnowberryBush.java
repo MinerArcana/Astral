@@ -91,6 +91,7 @@ public class SnowberryBush extends SweetBerryBushBlock {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     @ParametersAreNonnullByDefault
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {

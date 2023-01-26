@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:overworld",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": {
+      "sea_level": 0,
+      "disable_mob_generation": false,
+      "aquifers_enabled": false,
+      "ore_veins_enabled": false,
+      "legacy_random_source": false,
+      "default_block": {
+        "Name": "minecraft:stone"
+      },
+      "default_fluid": {
+        "Name": "minecraft:stone"
+      },
+      "noise": {
+        "min_y": 0,
+        "height": 0,
+        "size_horizontal": 0,
+        "size_vertical": 0
+      },
+      "noise_router": {},
+      "spawn_target": [],
+      "surface_rule": {
+        "type": "minecraft:block",
+        "result_state": {
+          "Name": "minecraft:stone"
+        }
+      }
+    },
+    "biome_source": {}
+  }
+}
