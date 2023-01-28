@@ -1,7 +1,6 @@
 package com.minerarcana.astral.mixins;
 
 import com.minerarcana.astral.effect.AstralEffects;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -9,18 +8,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public class MixinPlayer {
-    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/world/entity/player/Player;isSwimming()Z", cancellable = true)
-    private void isSwimming(CallbackInfoReturnable<Boolean> cir) {
-        Player player = (Player) (Object) this;
-        if (!player.getAbilities().flying && !player.isSpectator() && (Minecraft.getInstance().options.keySprint.isDown()) && player.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            cir.setReturnValue(true);
-        }
-    }
-
     /**
      * Make player move in direction they are looking at when they have Astral Travel
      *
