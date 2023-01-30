@@ -28,6 +28,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forBlockItemWithParent(AstralItems.FEVERWEED_ITEM);
         forItem(AstralItems.SNOWBERRIES);
         forItem(AstralItems.TRAVELING_MEDICINE);
+        singleTexture("astronomicon", mcLoc("item/handheld"), "layer0", modLoc("item/astronomicon"));
     }
 
     private void forItem(RegistryObject<? extends Item> item) {

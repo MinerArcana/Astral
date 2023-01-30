@@ -3,6 +3,7 @@ package com.minerarcana.astral.items;
 import com.minerarcana.astral.Astral;
 import com.minerarcana.astral.blocks.AstralBlocks;
 import com.minerarcana.astral.effect.AstralEffects;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -11,12 +12,13 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import vazkii.patchouli.api.PatchouliAPI;
 
 public class AstralItems {
     public static final CreativeModeTab ASTRAL_ITEMS = new CreativeModeTab("astral") {
         @Override
         public @NotNull ItemStack makeIcon() {
-            return new ItemStack(SNOWBERRIES.get());
+            return getAstronomicon();
         }
     };
 
@@ -55,4 +57,19 @@ public class AstralItems {
                     .effect(() -> new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), 1200, 0), 1)
                     .build())
             .stacksTo(1)));
+
+    //TODO Update this to instead enter Inner Realm
+    public static final RegistryObject<Item> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", () -> new Item(new Item.Properties()
+            .tab(AstralItems.ASTRAL_ITEMS)
+            .food(new FoodProperties.Builder()
+                    .fast()
+                    .alwaysEat()
+                    .saturationMod(-2F)
+                    .nutrition(1)
+                    .effect(() -> new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), 1200, 0), 1)
+                    .build())));
+
+    public static ItemStack getAstronomicon() {
+        return PatchouliAPI.get().getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
+    }
 }

@@ -51,6 +51,7 @@ public class DataGenerators {
         generator.addProvider(true, new AstralLootTables(generator));
         generator.addProvider(true, new ItemModels(generator, existingFileHelper));
         generator.addProvider(true, new AstralRecipes(generator));
+        generator.addProvider(true, new AstralBooks(generator));
     }
 
     @NotNull

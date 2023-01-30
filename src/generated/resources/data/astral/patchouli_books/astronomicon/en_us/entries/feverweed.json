@@ -1,0 +1,29 @@
+{
+  "category": "astral:natural_resources",
+  "icon": "astral:feverweed",
+  "name": "Feverweed",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This spiral growing grass can be found on the surface of Jungles or other Hot and Wet Biomes.",
+      "title": "Feverweed Patches"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "astral:feverweed",
+      "text": "Consuming this inflicts Hunger II and Luck II for 15 seconds.",
+      "title": "Feverweed"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "You can grow Feverweed by planting it on Grass or Dirt blocks and wait for it to spread slowly. It spreads similarly to a mushroom, but will spread regardless of light level",
+      "title": "Cultivating Feverweed"
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "astral:textures/book_images/feverweed_generation.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "category": "astral:medicines_and_potions",
+  "icon": "astral:traveling_medicine",
+  "name": "Traveling Medicine",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Made from $(l:snowberries)Snowberries$(/l), Sugar, and $(l:feverweed)Feverweed$(/l) this is the starting source of $(l:astral_travel)Astral Travel$(/l). The Brewing Stand will allow more advanced forms of this medicine."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "astral:traveling_medicine"
+    }
+  ]
+}
