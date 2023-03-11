@@ -31,7 +31,7 @@ public class AstralLootTables extends LootTableProvider {
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, @Nonnull ValidationContext validationtracker) {
-        map.forEach((name, table) -> LootTables.validate(validationtracker, name, table));
+    protected void validate(Map<ResourceLocation, LootTable> map, @Nonnull ValidationContext validationTracker) {
+        map.forEach((name, table) -> LootTables.validate(validationTracker, name, table));
     }
 }

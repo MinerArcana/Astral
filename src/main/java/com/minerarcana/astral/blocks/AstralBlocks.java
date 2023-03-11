@@ -13,4 +13,6 @@ public class AstralBlocks {
     public static final RegistryObject<SnowberryBush> SNOWBERRY_BUSH = BLOCKS.register("snowberry_bush", SnowberryBush::new);
     public static final RegistryObject<Feverweed> FEVERWEED = BLOCKS.register("feverweed", Feverweed::new);
 
+    public static final RegistryObject<EgoMembrane> EGO_MEMBRANE = BLOCKS.register("ego_membrane", EgoMembrane::new);
+    public static final RegistryObject<AstralMeridian> ASTRAL_MERIDIAN = BLOCKS.register("astral_meridian", AstralMeridian::new);
 }
