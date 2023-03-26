@@ -6,7 +6,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
-import net.minecraftforge.client.ForgeRenderTypes;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -24,9 +23,9 @@ public class AstralBlockstates extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         getVariantBuilder(AstralBlocks.SNOWBERRY_BUSH.get()).forAllStates(state -> ConfiguredModel.builder().modelFile(new ModelFile.ExistingModelFile(new ResourceLocation(Astral.MOD_ID, "block/snowberry_bush_" + state.getValue(SweetBerryBushBlock.AGE)), exFileHelper)).build());
-
+        simpleBlock(AstralBlocks.ASTRAL_MERIDIAN.get());
+        simpleBlock(AstralBlocks.EGO_MEMBRANE.get());
         simpleCross(AstralBlocks.FEVERWEED);
-
     }
 
     private void simpleCross(RegistryObject<? extends Block> block) {

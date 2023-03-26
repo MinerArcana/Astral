@@ -1,4 +1,8 @@
-// 1.19.2	2022-11-11T19:33:40.1423538	Block States: astral
+// 1.19.2	2023-03-25T22:55:40.233702	Block States: astral
+1700cb2d9704c89a4217f307081b5b2445c0ff95 assets/astral/blockstates/astral_meridian.json
+484cf06677d300d193d0a94fb48fbdc3e9216929 assets/astral/blockstates/ego_membrane.json
 0e99eded435caeb54ce8736afb7a79f440b1847b assets/astral/blockstates/feverweed.json
 8e9648e0c674e53224d78690b05ce1d9fa162207 assets/astral/blockstates/snowberry_bush.json
+677ff623380a6c19320216e567bb66a6f5246ec6 assets/astral/models/block/astral_meridian.json
+f3782293543639f4601ff25d607fb3f93d7b63fd assets/astral/models/block/ego_membrane.json
 6a7101044cb384387bb87b214c8f3f9e126403ff assets/astral/models/block/feverweed.json

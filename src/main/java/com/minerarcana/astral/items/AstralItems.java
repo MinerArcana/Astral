@@ -58,7 +58,6 @@ public class AstralItems {
                     .build())
             .stacksTo(1)));
 
-    //TODO Update this to instead enter Inner Realm
     public static final RegistryObject<Item> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", () -> new IntrospectionMedicine(new Item.Properties()
             .tab(AstralItems.ASTRAL_ITEMS)
             .food(new FoodProperties.Builder()
@@ -68,6 +67,8 @@ public class AstralItems {
                     .nutrition(1)
                     .effect(() -> new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), 1200, 0), 1)
                     .build())));
+    public static final RegistryObject<Item> KEY_OF_ENLIGHTENMENT = ITEMS.register("key_of_enlightenment", KeyOfEnlightenment::new);
+
 
     public static ItemStack getAstronomicon() {
         return PatchouliAPI.get().getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));
