@@ -59,7 +59,7 @@ public class AstralItems {
             .stacksTo(1)));
 
     //TODO Update this to instead enter Inner Realm
-    public static final RegistryObject<Item> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", () -> new Item(new Item.Properties()
+    public static final RegistryObject<Item> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", () -> new IntrospectionMedicine(new Item.Properties()
             .tab(AstralItems.ASTRAL_ITEMS)
             .food(new FoodProperties.Builder()
                     .fast()
