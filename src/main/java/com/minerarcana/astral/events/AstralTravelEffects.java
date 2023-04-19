@@ -1,12 +1,17 @@
 package com.minerarcana.astral.events;
 
 import com.minerarcana.astral.Astral;
+import com.minerarcana.astral.api.AstralCapabilities;
 import com.minerarcana.astral.effect.AstralEffects;
+import com.minerarcana.astral.effect.AstralTravelEffect;
 import com.minerarcana.astral.tags.AstralTags;
 import com.minerarcana.astral.world.feature.dimensions.AstralDimensions;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -76,5 +81,44 @@ public class AstralTravelEffects {
     public static void astralPickupEvent(EntityItemPickupEvent event) {
         boolean cancelled = AstralDimensions.isEntityNotInInnerRealm(event.getEntity()) && isEntityAstral(event.getEntity()) && !event.getItem().getItem().is(AstralTags.ASTRAL_CAN_PICKUP);
         event.setCanceled(cancelled);
+    }
+
+    /**
+     * When the player gets access to the Astral travel effect, disable their gravity and tell the sleep manager that
+     * they are falling asleep.
+     * Notifies the client that an entity is getting Astral Travel
+     *
+     * @param event The event that contains information about the player and the effect applied
+     */
+    @SubscribeEvent
+    public static void astralTravelAdded(MobEffectEvent.Added event) {
+        //Only players need the startup effects
+        if (event.getEffectInstance().getEffect().equals(AstralEffects.ASTRAL_TRAVEL.get()) && event.getEntity() instanceof Player && !event.getEntity().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
+            AstralCapabilities.getBodyTracker(event.getEntity().getLevel()).ifPresent(bodyTracker -> bodyTracker.setBodyNBT((Player) event.getEntity()));
+        }
+    }
+
+    /**
+     * When the Astral Travel potion effect ends, remove the player's flying abilities, teleport them to the body,
+     * transfer the body's inventory into the player's inventory, and then kill it.
+     *
+     * @param entityLiving The entity that with the potion effect
+     */
+    public static void astralTravelEnd(ServerPlayer entityLiving) {
+        AstralCapabilities.getBodyTracker(entityLiving.getLevel()).ifPresent(bodyTracker -> bodyTracker.mergePlayerWithBody(entityLiving));
+    }
+
+    @SubscribeEvent
+    public static void astralTravelExpire(MobEffectEvent.Expired event) {
+        if (event.getEffectInstance() != null && event.getEffectInstance().getEffect() instanceof AstralTravelEffect && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            astralTravelEnd(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public static void astralTravelRemove(MobEffectEvent.Expired event) {
+        if (event.getEffectInstance() != null && event.getEffectInstance().getEffect() instanceof AstralTravelEffect && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            astralTravelEnd(serverPlayer);
+        }
     }
 }

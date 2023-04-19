@@ -1,6 +1,7 @@
 package com.minerarcana.astral.events;
 
 import com.minerarcana.astral.Astral;
+import com.minerarcana.astral.api.bodytracker.BodyTrackerProvider;
 import com.minerarcana.astral.api.innerrealmchunkclaim.IInnerRealmChunkClaim;
 import com.minerarcana.astral.api.innerrealmchunkclaim.InnerRealmChunkClaimProvider;
 import com.minerarcana.astral.api.innerrealmcubegen.IInnerRealmCubeGen;
@@ -37,6 +38,7 @@ public class CapabilityEventHandler {
         if (world != null) {
             e.addCapability(InnerRealmTeleporterProvider.KEY, new InnerRealmTeleporterProvider());
             e.addCapability(InnerRealmChunkClaimProvider.KEY, new InnerRealmChunkClaimProvider());
+            e.addCapability(BodyTrackerProvider.KEY, new BodyTrackerProvider());
         }
     }
 

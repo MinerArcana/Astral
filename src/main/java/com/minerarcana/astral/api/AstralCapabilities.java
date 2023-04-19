@@ -1,5 +1,6 @@
 package com.minerarcana.astral.api;
 
+import com.minerarcana.astral.api.bodytracker.BodyTracker;
 import com.minerarcana.astral.api.innerrealmchunkclaim.InnerRealmChunkClaim;
 import com.minerarcana.astral.api.innerrealmcubegen.InnerRealmCubeGen;
 import com.minerarcana.astral.api.innerrealmteleporter.InnerRealmTeleporter;
@@ -17,6 +18,8 @@ public class AstralCapabilities {
     });
     public static final Capability<InnerRealmChunkClaim> CHUNK_CLAIM_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<BodyTracker> BODY_TRACKER_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static LazyOptional<InnerRealmChunkClaim> getChunkClaimTracker(Level world) {
         return getOverworld(world).getCapability(CHUNK_CLAIM_CAPABILITY);
@@ -26,6 +29,9 @@ public class AstralCapabilities {
         return getOverworld(world).getCapability(TELEPORTER_CAPABILITY);
     }
 
+    public static LazyOptional<BodyTracker> getBodyTracker(Level world) {
+        return getOverworld(world).getCapability(BODY_TRACKER_CAPABILITY);
+    }
 
     public static ServerLevel getOverworld(Level world) {
         return world.getServer().getLevel(Level.OVERWORLD);
