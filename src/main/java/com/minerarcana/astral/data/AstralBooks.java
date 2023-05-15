@@ -35,11 +35,11 @@ public class AstralBooks extends PatchouliBookProvider {
         final EntryBuilder astralTravelEntry = astralWorlds.addEntry("astral_travel", "Astral Travel", PotionUtils.setPotion(potionItemStack.copy(), AstralPotions.ASTRAL_TRAVEL_POTION.getBasePotion().get()));
         astralTravelEntry.addSimpleTextPage(String.format("While Astral Traveling your spirit soars across the land and through the skies, free from gravity. Your physical goods stay with your physical body. There are resources to be collected while Astral Traveling, search high in the sky over oceans to find %s.", FormatHelper.internalLink("etheric_isles", "Etheric Isles")));
 
-//        final EntryBuilder innerRealmEntry = astralWorlds.addEntry("inner_realm", "Inner Realm", new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get()));
-//        innerRealmEntry.addSimpleTextPage("While introspective your focus is in your Mindscape. Each Inner realm begins as a certain volume of space. The Ego Membranes define the limits of your inner realm.");
-//        innerRealmEntry.addSpotlightPage(new ItemStack(AstralItems.ENLIGHTENMENT_KEY.get())).setText("In each Ego Membrane wall there will be an Astral Meridian block which can be used with Keys of Enlightenment to expand your sense of self and give you more room and you can shift right click them with an empty hand to leave and return your focus to your body.");
-//        innerRealmEntry.addSimpleTextPage(String.format("While in your Inner Realm you have access to your Astral Inventory with the resources gathered from %s and the creatures which live among them. Some resources can be transferred from the waking world via the Offering Brazier.", FormatHelper.internalLink("etheric_isles", "Etheric Isles")));
-//        innerRealmEntry.addSimpleTextPage("These resources are needed to create Mental Constructs.");
+        final EntryBuilder innerRealmEntry = astralWorlds.addEntry("inner_realm", "Inner Realm", new ItemStack(AstralItems.KEY_OF_ENLIGHTENMENT.get()));
+        innerRealmEntry.addSimpleTextPage("While introspective your focus is in your Mindscape. Each Inner realm begins as a certain volume of space. The Ego Membranes define the limits of your inner realm.");
+        innerRealmEntry.addSpotlightPage(new ItemStack(AstralItems.KEY_OF_ENLIGHTENMENT.get())).setText("In each Ego Membrane wall there will be an Astral Meridian block which can be used with Keys of Enlightenment to expand your sense of self and give you more room and you can shift right click them with an empty hand to leave and return your focus to your body.");
+        innerRealmEntry.addSimpleTextPage(String.format("While in your Inner Realm you have access to your Astral Inventory with the resources gathered from %s and the creatures which live among them. Some resources can be transferred from the waking world via the Offering Brazier.", FormatHelper.internalLink("etheric_isles", "Etheric Isles")));
+        innerRealmEntry.addSimpleTextPage("These resources are needed to create Mental Constructs.");
 
         final ItemNameBlockItem snowberryItemStack = AstralItems.SNOWBERRIES.get();
         final CategoryBuilder naturalResources = bookBuilder.addCategory("natural_resources", "Natural Resources", "There's a few Resources added to the Material Overworld you'll need - Feverweed and Snowberries.", new ItemStack(snowberryItemStack));

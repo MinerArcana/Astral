@@ -4,6 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -30,7 +31,7 @@ public class InnerRealmCubeGen implements IInnerRealmCubeGen {
      * @return true if the chunk is successfully claimed, false if the chunk has already been claimed.
      */
     @Override
-    public boolean claimChunk(Player player, ChunkPos chunk) {
+    public boolean claimChunk(ServerPlayer player, ChunkPos chunk) {
         UUID playerID = player.getUUID();
         // Player fails to claim chunk if the chunk has been claimed
         if (claimedChunksMap.entrySet().stream().flatMap(uuidListEntry -> uuidListEntry.getValue().stream()).toList().contains(chunk)) {

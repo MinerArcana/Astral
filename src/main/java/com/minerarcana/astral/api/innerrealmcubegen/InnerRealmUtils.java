@@ -41,7 +41,7 @@ public final class InnerRealmUtils {
     }
 
     // Make 14 block cubes with an Astral Meridian block in the center, except on the XZ plane
-    public static void generateInnerRealmChunk(Level world, ChunkPos chunk) {
+    public static void generateInnerRealmChunk(ServerLevel world, ChunkPos chunk) {
         Level innerRealm = getInnerRealm(world);
         //XZ plane
         BlockPos.betweenClosedStream(chunk.getWorldPosition().offset(0, innerRealm.getSeaLevel(), 0), chunk.getWorldPosition().offset(15, innerRealm.getSeaLevel(), 15))
@@ -81,7 +81,7 @@ public final class InnerRealmUtils {
                 });
     }
 
-    public static void destroyWall(Level world, ChunkPos chunk, int meridianDirection) {
+    public static void destroyWall(ServerLevel world, ChunkPos chunk, int meridianDirection) {
         Level innerRealm = getInnerRealm(world);
         switch (meridianDirection) {
             //North
@@ -106,7 +106,7 @@ public final class InnerRealmUtils {
         }
     }
 
-    private static ServerLevel getInnerRealm(Level world) {
+    private static ServerLevel getInnerRealm(ServerLevel world) {
         return world.getServer().getLevel(AstralDimensions.INNER_REALM);
     }
 }

@@ -116,7 +116,7 @@ public class AstralTravelEffects {
     }
 
     @SubscribeEvent
-    public static void astralTravelRemove(MobEffectEvent.Expired event) {
+    public static void astralTravelRemove(MobEffectEvent.Remove event) {
         if (event.getEffectInstance() != null && event.getEffectInstance().getEffect() instanceof AstralTravelEffect && event.getEntity() instanceof ServerPlayer serverPlayer) {
             astralTravelEnd(serverPlayer);
         }

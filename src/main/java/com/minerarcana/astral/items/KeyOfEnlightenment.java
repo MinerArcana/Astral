@@ -5,11 +5,12 @@ import com.minerarcana.astral.api.innerrealmcubegen.InnerRealmUtils;
 import com.minerarcana.astral.blocks.AstralBlocks;
 import com.minerarcana.astral.blocks.AstralMeridian;
 import com.minerarcana.astral.world.feature.dimensions.AstralDimensions;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +29,7 @@ public class KeyOfEnlightenment extends Item {
      */
     @Override
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
-        Level level = pContext.getLevel();
-        if (level.dimension() == AstralDimensions.INNER_REALM) {
+        if (pContext.getLevel() instanceof ServerLevel level && pContext.getPlayer() instanceof ServerPlayer player && level.dimension() == AstralDimensions.INNER_REALM) {
             ChunkPos meridianChunk = new ChunkPos(pContext.getClickedPos());
             if (level.getBlockState(pContext.getClickedPos()).getBlock() == AstralBlocks.ASTRAL_MERIDIAN.get()) {
                 BlockState meridianBlockState = level.getBlockState(pContext.getClickedPos());
@@ -37,7 +37,7 @@ public class KeyOfEnlightenment extends Item {
                 // Break the wall on the player's side, and let the capability break it on the other side since the other side may be claimed by another player
                 InnerRealmUtils.destroyWall(level, meridianChunk, meridianDirection);
                 LevelChunk chunkToGenerateBoxIn = InnerRealmUtils.getAdjacentChunk(pContext.getClickedPos(), meridianDirection, level);
-                AstralCapabilities.getChunkClaimTracker(level).ifPresent(cap -> cap.claimChunk(pContext.getPlayer(), chunkToGenerateBoxIn.getPos()));
+                AstralCapabilities.getChunkClaimTracker(level).ifPresent(cap -> cap.claimChunk(player, chunkToGenerateBoxIn.getPos()));
                 pContext.getItemInHand().setCount(pContext.getItemInHand().getCount() - 1);
                 return InteractionResult.CONSUME;
             }

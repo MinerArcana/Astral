@@ -24,8 +24,10 @@ public class TeleportationTools {
     @ParametersAreNonnullByDefault
     public static void performTeleport(ServerPlayer player, ResourceKey<Level> dimension, BlockPos dest, @Nullable Direction direction) {
         ServerLevel destWorld = player.getServer().getLevel(dimension);
-        player.teleportTo(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, direction.toYRot(), player.getXRot());
+        player.teleportTo(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, player.getYHeadRot(), player.getXRot());
         // Resync some things that Vanilla is missing:
+        // TODO Sync potion effects
         player.connection.send(new ClientboundSetExperiencePacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
+
     }
 }

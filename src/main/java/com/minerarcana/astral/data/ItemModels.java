@@ -29,6 +29,7 @@ public class ItemModels extends ModelProvider<ItemModelBuilder> {
         forItem(AstralItems.SNOWBERRIES);
         forItem(AstralItems.TRAVELING_MEDICINE);
         forItem(AstralItems.KEY_OF_ENLIGHTENMENT);
+        forItem(AstralItems.INTROSPECTION_MEDICINE);
         singleTexture("astronomicon", mcLoc("item/handheld"), "layer0", modLoc("item/astronomicon"));
     }
 

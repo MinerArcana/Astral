@@ -131,7 +131,6 @@ public class BodyTracker implements IBodyTracker {
      * Merges a player who has Astral Travel with their body. This means the player is teleported back to their body, switches to using their regular inventory, and lose the modifiers provided by Astral Travel. If there is no record on their body, teleport them back to their spawn point.
      *
      * @param serverPlayerEntity The player to attempt to merge with their body
-     * @param world              The ServerWorld object used to find the body and access the Psychic Inventory
      */
     @Override
     public void mergePlayerWithBody(ServerPlayer serverPlayerEntity) {

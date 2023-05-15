@@ -25,7 +25,8 @@ public class IntrospectionMedicine extends Item {
             AstralCapabilities.getInnerRealmTeleporter(pLevel).ifPresent(innerRealmTeleporter -> innerRealmTeleporter.teleport(playerEntity));
         }
         super.finishUsingItem(pStack, pLevel, pLivingEntity);
-        return ItemStack.EMPTY;
+        pStack.shrink(1);
+        return pStack;
 
     }
 

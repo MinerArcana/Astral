@@ -1,34 +1,34 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "astral:traveling_medicine"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "snowberries": {
+    "feverweed": {
       "conditions": {
         "items": [
           {
             "items": [
-              "astral:snowberries"
+              "astral:feverweed"
             ]
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "astral:introspection_medicine"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
-      "snowberries",
+      "feverweed",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "astral:traveling_medicine"
+      "astral:introspection_medicine"
     ]
   }
 }

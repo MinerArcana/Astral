@@ -60,6 +60,7 @@ public class AstralItems {
 
     public static final RegistryObject<Item> INTROSPECTION_MEDICINE = ITEMS.register("introspection_medicine", () -> new IntrospectionMedicine(new Item.Properties()
             .tab(AstralItems.ASTRAL_ITEMS)
+            .stacksTo(1)
             .food(new FoodProperties.Builder()
                     .fast()
                     .alwaysEat()

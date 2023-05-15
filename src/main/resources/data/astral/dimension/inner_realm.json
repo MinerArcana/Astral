@@ -3,7 +3,7 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "minecraft:beach",
+      "biome": "minecraft:the_void",
       "lakes": false,
       "features": false,
       "layers": [],

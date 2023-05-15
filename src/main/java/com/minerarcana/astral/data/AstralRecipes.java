@@ -6,6 +6,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -25,7 +26,15 @@ public class AstralRecipes extends RecipeProvider {
                 .requires(AstralItems.SNOWBERRIES.get())
                 .requires(Items.BOWL)
                 .requires(AstralItems.FEVERWEED_ITEM.get())
-                .unlockedBy("bowl", has(Items.BOWL))
+                .unlockedBy("snowberries", has(AstralItems.SNOWBERRIES.get()))
+                .save(consumer);
+
+        ShapelessRecipeBuilder.shapeless(AstralItems.INTROSPECTION_MEDICINE.get())
+                .requires(Items.BOWL)
+                .requires(AstralItems.FEVERWEED_ITEM.get())
+                .requires(Tags.Items.MUSHROOMS)
+                .requires(Items.POISONOUS_POTATO)
+                .unlockedBy("feverweed", has(AstralItems.FEVERWEED_ITEM.get()))
                 .save(consumer);
     }
 
