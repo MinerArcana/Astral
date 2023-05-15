@@ -5,12 +5,8 @@
         "items": [
           {
             "items": [
+              "astral:feverweed",
               "astral:snowberries"
-            ]
-          },
-          {
-            "items": [
-              "astral:feverweed"
             ]
           }
         ]
@@ -19,18 +15,18 @@
     }
   },
   "display": {
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "background": "astral:textures/block/ether_dirt.png",
     "description": {
       "translate": "astral.advancement.root.desc"
     },
     "frame": "task",
-    "hidden": true,
+    "hidden": false,
     "icon": {
       "item": "patchouli:guide_book",
       "nbt": "{\"patchouli:book\":\"astral:astronomicon\"}"
     },
-    "show_toast": false,
+    "show_toast": true,
     "title": {
       "translate": "astral.advancement.root.name"
     }

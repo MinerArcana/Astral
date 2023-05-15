@@ -149,12 +149,12 @@ public class AstralAdvancements extends AdvancementProvider {
     private void registerAdvancements(Consumer<Advancement> consumer) {
         root = Advancement.Builder.advancement()
                 .display(new DisplayBuilder(AstralItems.getAstronomicon(), "root")
-                        .hidden(true)
-                        .showToast(false)
-                        .announceToChat(false)
+                        .hidden(false)
+                        .showToast(true)
+                        .announceToChat(true)
                         .background(new ResourceLocation("astral:textures/block/ether_dirt.png"))
                         .build())
-                .addCriterion("start_astral", InventoryChangeTrigger.TriggerInstance.hasItems(AstralItems.SNOWBERRIES.get(), AstralItems.FEVERWEED_ITEM.get()))
+                .addCriterion("start_astral", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(AstralItems.FEVERWEED_ITEM.get(), AstralItems.SNOWBERRIES.get()).build()))
                 .save(consumer, "astral:root");
 
         craftTravelingMedicine = Advancement.Builder.advancement()
