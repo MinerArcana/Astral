@@ -14,21 +14,24 @@ import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class EnglishLocalizaton extends LanguageProvider {
-    private final Advancements advancements;
+    private final AstralAdvancements astralAdvancements;
 
 
-    public EnglishLocalizaton(DataGenerator gen, Advancements advancements) {
+    public EnglishLocalizaton(DataGenerator gen, AstralAdvancements astralAdvancements) {
         super(gen, Astral.MOD_ID, "en_us");
-        this.advancements = advancements;
+        this.astralAdvancements = astralAdvancements;
     }
 
     @Override
     protected void addTranslations() {
+        addAdvancements();
         add(AstralItems.SNOWBERRIES.get(), "Snowberries");
         add(AstralItems.FEVERWEED_ITEM.get(), "Feverweed");
         add(AstralItems.TRAVELING_MEDICINE.get(), "Traveling Medicine");
         add(AstralItems.KEY_OF_ENLIGHTENMENT.get(), "Key of Enlightenment");
         add(AstralItems.INTROSPECTION_MEDICINE.get(), "Introspection Medicine");
+        add(AstralItems.SLEEPLESS_EYE.get(), "Sleepless Eye");
+        add(AstralItems.PHANTOM_EDGE.get(), "Phantom Edge");
         add(AstralBlocks.ASTRAL_MERIDIAN.get(), "Astral Meridian");
         add(AstralBlocks.EGO_MEMBRANE.get(), "Ego Membrane");
         processPotionFamily("Feverweed Brew", "Splashing Feverweed Brew", "Feverweed Mist", "Arrow of Feverweed", AstralPotions.FEVERWEED_BREW);
@@ -39,27 +42,28 @@ public class EnglishLocalizaton extends LanguageProvider {
     }
 
     private void addAdvancements() {
-        add(advancements.getRoot(), "Astral", "A journey of introspection and projection");
-        add(advancements.getCraftTravelingMedicine(), "Are you experienced", "Craft Traveling Medicine to fly");
-        add(advancements.getBecomeAstral(), "Steps on the Wind", "Become a spooky Astral ghost");
-        add(advancements.getBrewStrongAstralPotion(), "Mile Stride", "Brew Potion of Astral Travel II for faster flight");
-        add(advancements.getInnerRealm(), "Withdrawal", "Enter the Inner Realm");
-        add(advancements.getMagicalPuissance(), "Magical Puissance", "A trove of activities to expand your mind");
-        add(advancements.getBrewingInsight(), "Improved Medicines", "Expand your mind by brewing a potion");
-        add(advancements.getAutonomousInsight(), "Questioning Intelligence", "Expand your mind by creating an Iron Golem");
-        add(advancements.getCraftIntrospectionMedicine(), "Compartmentalization", "Craft Introspection Medicine");
-        add(advancements.getEnchantingInsight(), "Imparting the Spirit", "Expand your mind with the knowledge of enchantments");
-        add(advancements.getMedicalInsight(), "Minds Renewed", "Expand your mind by curing a Zombie Villager");
-        add(advancements.getEnterStronghold(), "Seeing Through Other Eyes", "Expand your mind by following the Eye of Ender to its destination");
-        add(advancements.getRadiantPower(), "Radiant Power", "Expand your mind by unlocking the full power of the beacon");
-        add(advancements.getDimensionalTravel(), "Dimensional Travel", "A list of transdimensional mind expanding tasks");
-        add(advancements.getInfiniteExpanse(), "Infinite Expanse", "Expand your mind with images of The End");
-        add(advancements.getRelativeDistance(), "Relative Distance", "Expand your mind by traveling to faraway lands through The Nether");
-        add(advancements.getSpectralWorld(), "Spectral World", "Expand your mind with images of The Nether");
-        add(advancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
-        add(advancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
-        add(advancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
-        add(advancements.getEtherealHunter(), "Ethereal Hunter", "Kill any entity while Astral");
+        add(astralAdvancements.getRoot(), "Astral", "A journey of introspection and projection");
+        add(astralAdvancements.getCraftTravelingMedicine(), "Are you experienced", "Craft Traveling Medicine to fly");
+        add(astralAdvancements.getBecomeAstral(), "Steps on the Wind", "Become a spooky Astral ghost");
+        add(astralAdvancements.getBrewStrongAstralPotion(), "Mile Stride", "Brew Potion of Astral Travel II for faster flight");
+        add(astralAdvancements.getInnerRealm(), "Withdrawal", "Enter the Inner Realm");
+        add(astralAdvancements.getMagicalPuissance(), "Magical Puissance", "A trove of activities to expand your mind");
+        add(astralAdvancements.getBrewingInsight(), "Improved Medicines", "Expand your mind by brewing a potion");
+        add(astralAdvancements.getAutonomousInsight(), "Questioning Intelligence", "Expand your mind by creating an Iron Golem");
+        add(astralAdvancements.getCraftIntrospectionMedicine(), "Compartmentalization", "Craft Introspection Medicine");
+        add(astralAdvancements.getEnchantingInsight(), "Imparting the Spirit", "Expand your mind with the knowledge of enchantments");
+        add(astralAdvancements.getMedicalInsight(), "Minds Renewed", "Expand your mind by curing a Zombie Villager");
+        add(astralAdvancements.getEnterStronghold(), "Seeing Through Other Eyes", "Expand your mind by following the Eye of Ender to its destination");
+        add(astralAdvancements.getRadiantPower(), "Radiant Power", "Expand your mind by unlocking the full power of the beacon");
+        add(astralAdvancements.getDimensionalTravel(), "Dimensional Travel", "A list of transdimensional mind expanding tasks");
+        add(astralAdvancements.getInfiniteExpanse(), "Infinite Expanse", "Expand your mind with images of The End");
+        add(astralAdvancements.getRelativeDistance(), "Relative Distance", "Expand your mind by traveling to faraway lands through The Nether");
+        add(astralAdvancements.getSpectralWorld(), "Spectral World", "Expand your mind with images of The Nether");
+        add(astralAdvancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
+        add(astralAdvancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
+        add(astralAdvancements.getEtherealHunter(), "Ethereal Hunter", "Kill any entity while Astral");
+        // TODO Readd when reimplemented
+        // add(astralAdvancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
     }
 
 

@@ -1,0 +1,39 @@
+{
+  "parent": "astral:dimensional_travel",
+  "criteria": {
+    "nether_travel": {
+      "conditions": {
+        "distance": {
+          "horizontal": {
+            "min": 7000.0
+          }
+        }
+      },
+      "trigger": "minecraft:nether_travel"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.relative_distance.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:map"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.relative_distance.name"
+    }
+  },
+  "requirements": [
+    [
+      "nether_travel"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

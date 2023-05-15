@@ -1,0 +1,35 @@
+{
+  "parent": "astral:dimensional_travel",
+  "criteria": {
+    "enter_the_end": {
+      "conditions": {
+        "to": "minecraft:the_end"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.infinite_expanse.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:end_stone"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.infinite_expanse.name"
+    }
+  },
+  "requirements": [
+    [
+      "enter_the_end"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

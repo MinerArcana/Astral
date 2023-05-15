@@ -1,3 +1,5 @@
-// 1.19.2	2022-11-11T19:12:42.7456252	LootTables
+// 1.19.2	2023-05-15T00:17:35.8053691	LootTables
 6bff0dddd9645de7439d68685fce258343de367c data/astral/loot_tables/blocks/feverweed.json
 f38c5c6b02285d6dc054d0e3c24719071d2b2861 data/astral/loot_tables/blocks/snowberry_bush.json
+f1ef81271a87b6b521df864e08d8a626b6136b77 data/astral/loot_tables/inject/chests/shipwreck_supply.json
+e818c26bfd50e108700b604e69d35bc33cf4a441 data/astral/loot_tables/inject/phantom.json

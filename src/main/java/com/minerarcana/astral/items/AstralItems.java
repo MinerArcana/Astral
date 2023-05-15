@@ -69,7 +69,8 @@ public class AstralItems {
                     .effect(() -> new MobEffectInstance(AstralEffects.ASTRAL_TRAVEL.get(), 1200, 0), 1)
                     .build())));
     public static final RegistryObject<Item> KEY_OF_ENLIGHTENMENT = ITEMS.register("key_of_enlightenment", KeyOfEnlightenment::new);
-
+    public static final RegistryObject<Item> SLEEPLESS_EYE = ITEMS.register("sleepless_eye", () -> new Item(new Item.Properties().tab(ASTRAL_ITEMS)));
+    public static final RegistryObject<Item> PHANTOM_EDGE = ITEMS.register("phantom_edge", () -> new Item(new Item.Properties().tab(ASTRAL_ITEMS)));
 
     public static ItemStack getAstronomicon() {
         return PatchouliAPI.get().getBookStack(new ResourceLocation(Astral.MOD_ID, "astronomicon"));

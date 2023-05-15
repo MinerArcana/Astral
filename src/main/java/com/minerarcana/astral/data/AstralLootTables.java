@@ -27,7 +27,7 @@ public class AstralLootTables extends LootTableProvider {
     @Override
     @Nonnull
     protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-        return ImmutableList.of(Pair.of(AstralBlockLootTables::new, LootContextParamSets.BLOCK));
+        return ImmutableList.of(Pair.of(AstralBlockLootTables::new, LootContextParamSets.BLOCK), Pair.of(AstralChestLootTables::new, LootContextParamSets.CHEST), Pair.of(AstralEntityLootTables::new, LootContextParamSets.ENTITY));
     }
 
     @Override

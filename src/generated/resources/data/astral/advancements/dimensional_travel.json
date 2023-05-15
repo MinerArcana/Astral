@@ -1,0 +1,31 @@
+{
+  "parent": "astral:withdrawal",
+  "criteria": {
+    "none": {
+      "conditions": {
+        "to": "astral:inner_realm"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "astral.advancement.dimensional_travel.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:end_portal_frame"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "astral.advancement.dimensional_travel.name"
+    }
+  },
+  "requirements": [
+    [
+      "none"
+    ]
+  ]
+}

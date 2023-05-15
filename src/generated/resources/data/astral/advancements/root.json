@@ -1,0 +1,43 @@
+{
+  "criteria": {
+    "start_astral": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "astral:snowberries"
+            ]
+          },
+          {
+            "items": [
+              "astral:feverweed"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "astral:textures/block/ether_dirt.png",
+    "description": {
+      "translate": "astral.advancement.root.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "patchouli:guide_book",
+      "nbt": "{\"patchouli:book\":\"astral:astronomicon\"}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "astral.advancement.root.name"
+    }
+  },
+  "requirements": [
+    [
+      "start_astral"
+    ]
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "parent": "astral:are_you_experienced",
+  "criteria": {
+    "mile_stride": {
+      "conditions": {
+        "potion": "astral:strong_astral_travel_potion"
+      },
+      "trigger": "minecraft:brewed_potion"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.mile_stride.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:potion",
+      "nbt": "{Potion:\"astral:strong_astral_travel_potion\"}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.mile_stride.name"
+    }
+  },
+  "requirements": [
+    [
+      "mile_stride"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

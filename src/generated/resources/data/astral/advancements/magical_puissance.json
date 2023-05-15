@@ -1,0 +1,31 @@
+{
+  "parent": "astral:withdrawal",
+  "criteria": {
+    "none": {
+      "conditions": {
+        "to": "astral:inner_realm"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "astral.advancement.magical_puissance.desc"
+    },
+    "frame": "task",
+    "hidden": true,
+    "icon": {
+      "item": "minecraft:experience_bottle"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "astral.advancement.magical_puissance.name"
+    }
+  },
+  "requirements": [
+    [
+      "none"
+    ]
+  ]
+}

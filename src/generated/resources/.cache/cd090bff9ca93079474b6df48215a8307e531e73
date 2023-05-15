@@ -1,4 +1,4 @@
-// 1.19.2	2023-01-28T01:56:50.5800486	Patchouli Book Provider
+// 1.19.2	2023-05-14T22:43:21.809651	Patchouli Book Provider
 5bd2e9327b29d9647ab332c6bc61750a2c90a890 data/astral/patchouli_books/astronomicon/book.json
 23676bf4897419eae038bba0a543848621d548cd data/astral/patchouli_books/astronomicon/en_us/categories/astral_worlds.json
 bb85213b179a1ff3daaca39a65be3164b2669de3 data/astral/patchouli_books/astronomicon/en_us/categories/medicines_and_potions.json
@@ -6,6 +6,7 @@ bb85213b179a1ff3daaca39a65be3164b2669de3 data/astral/patchouli_books/astronomico
 13fbfe220b6e59c6a97c9de2a307b30b59703d92 data/astral/patchouli_books/astronomicon/en_us/entries/astral_travel.json
 87fe95a0a52891672eb423dd67e00c45e50dce0c data/astral/patchouli_books/astronomicon/en_us/entries/feverweed.json
 71c4e6174bd520a031bc5e78a85bd50ff3451307 data/astral/patchouli_books/astronomicon/en_us/entries/feverweed_and_snowberry_brews.json
+e3c345d6d0fcd811c5e36fa1197440788a4c2dad data/astral/patchouli_books/astronomicon/en_us/entries/inner_realm.json
 59ae92f06b0dc92f9ac1ff490bd42d7071e15d06 data/astral/patchouli_books/astronomicon/en_us/entries/introspection_medicine.json
 77edbe2adb6f15dbc994e2456ecfa7f924420381 data/astral/patchouli_books/astronomicon/en_us/entries/snowberries.json
 b0b108926699737c84d04e1ff6839e8d66768cf1 data/astral/patchouli_books/astronomicon/en_us/entries/traveling_medicine.json

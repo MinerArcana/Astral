@@ -1,0 +1,54 @@
+{
+  "parent": "astral:steps_on_the_wind",
+  "criteria": {
+    "have_astral_travel": {
+      "conditions": {
+        "effects": {
+          "astral:astral_travel": {}
+        }
+      },
+      "trigger": "minecraft:effects_changed"
+    },
+    "kill_spiritual": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "#astral:attuned_mobs"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:player_killed_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.ethereal_hunter.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "astral:sleepless_eye"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.ethereal_hunter.name"
+    }
+  },
+  "requirements": [
+    [
+      "have_astral_travel"
+    ],
+    [
+      "kill_spiritual"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

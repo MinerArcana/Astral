@@ -1,0 +1,33 @@
+{
+  "parent": "astral:magical_puissance",
+  "criteria": {
+    "improved_medicines": {
+      "conditions": {},
+      "trigger": "minecraft:brewed_potion"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.improved_medicines.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:brewing_stand"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.improved_medicines.name"
+    }
+  },
+  "requirements": [
+    [
+      "improved_medicines"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

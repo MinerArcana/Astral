@@ -1,0 +1,43 @@
+{
+  "parent": "astral:magical_puissance",
+  "criteria": {
+    "questioning_intelligence": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:iron_golem"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:summoned_entity"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.questioning_intelligence.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:carved_pumpkin"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.questioning_intelligence.name"
+    }
+  },
+  "requirements": [
+    [
+      "questioning_intelligence"
+    ]
+  ],
+  "rewards": {
+    "experience": 5,
+    "function": "astral:give_key"
+  }
+}

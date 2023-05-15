@@ -45,13 +45,17 @@ public class DataGenerators {
 
         JsonCodecProvider<BiomeModifier> biomeModifierProvider = getBiomeModifierProvider(event, generator);
         generator.addProvider(true, biomeModifierProvider);
-        generator.addProvider(true, new AstralBlockTagProvider(generator, existingFileHelper));
+        AstralBlockTagProvider blockTagProvider = new AstralBlockTagProvider(generator, existingFileHelper);
+        generator.addProvider(true, blockTagProvider);
         generator.addProvider(true, new AstralBlockstates(generator, existingFileHelper));
-        generator.addProvider(true, new EnglishLocalizaton(generator));
+        AstralAdvancements astralAdvancements = new AstralAdvancements(generator);
+        generator.addProvider(true, astralAdvancements);
+        generator.addProvider(true, new EnglishLocalizaton(generator, astralAdvancements));
         generator.addProvider(true, new AstralLootTables(generator));
         generator.addProvider(true, new ItemModels(generator, existingFileHelper));
         generator.addProvider(true, new AstralRecipes(generator));
         generator.addProvider(true, new AstralBooks(generator));
+        generator.addProvider(true, new AstralItemTagProvider(generator, blockTagProvider, existingFileHelper));
     }
 
     @NotNull

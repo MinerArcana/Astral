@@ -1,0 +1,37 @@
+{
+  "parent": "astral:root",
+  "criteria": {
+    "craft_traveling_medicine": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "astral:traveling_medicine"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.are_you_experienced.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "astral:traveling_medicine"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.are_you_experienced.name"
+    }
+  },
+  "requirements": [
+    [
+      "craft_traveling_medicine"
+    ]
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "parent": "astral:root",
+  "criteria": {
+    "craft_introspection_medicine": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "astral:introspection_medicine"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "astral.advancement.compartmentalization.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "astral:introspection_medicine"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "astral.advancement.compartmentalization.name"
+    }
+  },
+  "requirements": [
+    [
+      "craft_introspection_medicine"
+    ]
+  ]
+}

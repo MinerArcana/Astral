@@ -1,7 +1,9 @@
-// 1.19.2	2023-05-14T22:29:37.1095053	Astral item models
+// 1.19.2	2023-05-15T00:14:10.8581691	Astral item models
 d925175b0cd86e2424c79c784b85dc890205d3e0 assets/astral/models/item/astronomicon.json
 2d1d83302f2c2191c744ee297d0c73242e982c44 assets/astral/models/item/feverweed.json
 3e48224794402260fd09d96682f8016bd7b16af6 assets/astral/models/item/introspection_medicine.json
 5bbf53767494982cdd2b2006e702ec5075440319 assets/astral/models/item/key_of_enlightenment.json
+9919026b784fa7efe1b5fdc0efbee54f7f28a724 assets/astral/models/item/phantom_edge.json
+256d603183ac5e5767ff52c621e5595cbe221038 assets/astral/models/item/sleepless_eye.json
 e1323465631d4dbc614899185310c1701db21932 assets/astral/models/item/snowberries.json
 c68f87e60a0153a7d34bc7e7ec52cbb05045f773 assets/astral/models/item/traveling_medicine.json
