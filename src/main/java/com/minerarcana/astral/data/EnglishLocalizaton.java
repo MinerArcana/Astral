@@ -3,12 +3,15 @@ package com.minerarcana.astral.data;
 import com.minerarcana.astral.Astral;
 import com.minerarcana.astral.blocks.AstralBlocks;
 import com.minerarcana.astral.effect.AstralEffects;
+import com.minerarcana.astral.entity.AstralAttributes;
 import com.minerarcana.astral.items.AstralItems;
 import com.minerarcana.astral.potions.AstralPotions;
 import com.minerarcana.astral.potions.PotionRegistryGroup;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -62,6 +65,7 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(astralAdvancements.getVoidSubstance(), "Substance of the Void", "Expand your mind by warping through an End Gateway");
         add(astralAdvancements.getYourWings(), "Wings of Your Own", "Expand your mind by studying the structure of an Elytra");
         add(astralAdvancements.getEtherealHunter(), "Ethereal Hunter", "Kill any entity while Astral");
+        add(AstralAttributes.ASTRAL_ATTACK_DAMAGE.get(), "Astral Damage");
         // TODO Readd when reimplemented
         // add(astralAdvancements.getReaperCreeper(), "Reaper Creeper", "Obtain Etheric Powder, a device that allows Astral beings to affect the world");
     }
@@ -80,6 +84,10 @@ public class EnglishLocalizaton extends LanguageProvider {
         add(base + ".splash_potion.effect." + potionRegistryName, splashPotionName);
         add(base + ".lingering_potion.effect." + potionRegistryName, lingeringPotionName);
         add(base + ".tipped_arrow.effect." + potionRegistryName, arrowName);
+    }
+
+    private void add(Attribute attribute, String description) {
+        add(attribute.getDescriptionId(), description);
     }
 
     /**

@@ -2,14 +2,20 @@ package com.minerarcana.astral.api.innerrealmteleporter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.TicketType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.EntityTeleportEvent.TeleportCommand;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.EnumSet;
 
 public class TeleportationTools {
 
@@ -23,11 +29,42 @@ public class TeleportationTools {
      */
     @ParametersAreNonnullByDefault
     public static void performTeleport(ServerPlayer player, ResourceKey<Level> dimension, BlockPos dest, @Nullable Direction direction) {
-        ServerLevel destWorld = player.getServer().getLevel(dimension);
-        player.teleportTo(destWorld, dest.getX() + .5, dest.getY() + .5, dest.getZ() + .5, player.getYHeadRot(), player.getXRot());
-        // Resync some things that Vanilla is missing:
-        // TODO Sync potion effects
-        player.connection.send(new ClientboundSetExperiencePacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
+        ServerLevel pLevel = player.getServer().getLevel(dimension);
+        double pX = dest.getX();
+        double pY = dest.getY();
+        double pZ = dest.getZ();
+        TeleportCommand event = ForgeEventFactory.onEntityTeleportCommand(player, pX, pY, pZ);
+        if (!event.isCanceled()) {
+            pX = event.getTargetX();
+            pY = event.getTargetY();
+            pZ = event.getTargetZ();
+
+            float pYaw = player.getYRot();
+            float pPitch = player.getXRot();
+            float f = Mth.wrapDegrees(pYaw);
+            float f1 = Mth.wrapDegrees(pPitch);
+            ChunkPos chunkpos = new ChunkPos(new BlockPos(pX, pY, pZ));
+
+            pLevel.getChunkSource().addRegionTicket(TicketType.POST_TELEPORT, chunkpos, 1, player.getId());
+            player.stopRiding();
+            if (player.isSleeping()) {
+                player.stopSleepInBed(true, true);
+            }
+
+            if (pLevel == player.level) {
+                player.connection.teleport(pX, pY, pZ, f, f1, EnumSet.noneOf(ClientboundPlayerPositionPacket.RelativeArgument.class));
+            } else {
+                player.teleportTo(pLevel, pX, pY, pZ, f, f1);
+            }
+
+            player.setYHeadRot(f);
+
+            if (!player.isFallFlying()) {
+                player.setDeltaMovement(player.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D));
+                player.setOnGround(true);
+            }
+
+        }
 
     }
 }
