@@ -28,32 +28,4 @@ public class AstralTravelEffect extends MobEffect {
             return super.getAttributeModifierValue(amplifier, modifier);
         }
     }
-
-    /**
-     * Gets the number of air blocks below the player
-     *
-     * @param player The player to check
-     * @return The number of air blocks below the player
-     */
-    private static int getNumberOfAirBlocksBelowPlayer(LivingEntity player) {
-        BlockPos pos = player.getOnPos();
-        int count = 0;
-        while (pos.getY() >= 0 && !player.getLevel().getBlockState(pos).isCollisionShapeFullBlock(player.getLevel(), pos)) {
-            pos = pos.below();
-            count++;
-        }
-        return count;
-    }
-
-//    @Override
-//    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
-//        pLivingEntity.getAttribute(ForgeMod.SWIM_SPEED.get()).removeModifier(UUID.fromString("8b3f1ef2-f396-11ed-a05b-0242ac120003"));
-//        pLivingEntity.getAttribute(ForgeMod.SWIM_SPEED.get()).addTransientModifier(new AttributeModifier(UUID.fromString("8b3f1ef2-f396-11ed-a05b-0242ac120003"), "astral travel swim modifier", -Math.min(64, getNumberOfAirBlocksBelowPlayer(pLivingEntity)) * 1.295 / 64, AttributeModifier.Operation.ADDITION));
-//        super.applyEffectTick(pLivingEntity, pAmplifier);
-//    }
-//
-//    @Override
-//    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
-//        return true;
-//    }
 }
