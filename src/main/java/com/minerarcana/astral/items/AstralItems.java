@@ -32,8 +32,8 @@ public class AstralItems {
                             .saturationMod(-1F)
                             .nutrition(1)
                             .fast()
-                            .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 15, 1), 1)
-                            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 15, 1), 1)
+                            .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 300, 1), 1)
+                            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 300, 1), 1)
                             .build())));
     public static final RegistryObject<BlockItem> FEVERWEED_ITEM = ITEMS.register("feverweed", () -> new BlockItem(AstralBlocks.FEVERWEED.get(),
             new Item.Properties()
@@ -43,8 +43,8 @@ public class AstralItems {
                             .saturationMod(-1F)
                             .nutrition(1)
                             .fast()
-                            .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 15, 1), 1)
-                            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 15, 1), 1)
+                            .effect(() -> new MobEffectInstance(MobEffects.CONFUSION, 300, 1), 1)
+                            .effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 300, 1), 1)
                             .build())));
 
     public static final RegistryObject<Item> TRAVELING_MEDICINE = ITEMS.register("traveling_medicine", () -> new Item(new Item.Properties()
