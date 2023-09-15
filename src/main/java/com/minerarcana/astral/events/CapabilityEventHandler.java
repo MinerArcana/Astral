@@ -8,6 +8,8 @@ import com.minerarcana.astral.api.innerrealmcubegen.IInnerRealmCubeGen;
 import com.minerarcana.astral.api.innerrealmcubegen.InnerRealmCubeGenProvider;
 import com.minerarcana.astral.api.innerrealmteleporter.IInnerRealmTeleporter;
 import com.minerarcana.astral.api.innerrealmteleporter.InnerRealmTeleporterProvider;
+import com.minerarcana.astral.api.psychicinventory.PsychicInventory;
+import com.minerarcana.astral.api.psychicinventory.PsychicInventoryProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -39,6 +41,7 @@ public class CapabilityEventHandler {
             e.addCapability(InnerRealmTeleporterProvider.KEY, new InnerRealmTeleporterProvider());
             e.addCapability(InnerRealmChunkClaimProvider.KEY, new InnerRealmChunkClaimProvider());
             e.addCapability(BodyTrackerProvider.KEY, new BodyTrackerProvider());
+            e.addCapability(PsychicInventoryProvider.KEY, new PsychicInventoryProvider());
         }
     }
 

@@ -26,6 +26,7 @@ public class InnerRealmTeleporter implements IInnerRealmTeleporter {
             return pos;
         });
         TeleportationTools.performTeleport(player, AstralDimensions.INNER_REALM, new BlockPos(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ()), Direction.UP);
+
     }
 
     @Override

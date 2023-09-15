@@ -2,6 +2,7 @@ package com.minerarcana.astral.events;
 
 import com.minerarcana.astral.Astral;
 import com.minerarcana.astral.api.AstralCapabilities;
+import com.minerarcana.astral.api.psychicinventory.InventoryType;
 import com.minerarcana.astral.effect.AstralEffects;
 import com.minerarcana.astral.effect.AstralTravelEffect;
 import com.minerarcana.astral.tags.AstralTags;
@@ -93,8 +94,12 @@ public class AstralTravelEffects {
     @SubscribeEvent
     public static void astralTravelAdded(MobEffectEvent.Added event) {
         //Only players need the startup effects
-        if (event.getEffectInstance().getEffect().equals(AstralEffects.ASTRAL_TRAVEL.get()) && event.getEntity() instanceof Player && !event.getEntity().hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
-            AstralCapabilities.getBodyTracker(event.getEntity().getLevel()).ifPresent(bodyTracker -> bodyTracker.setBodyNBT((Player) event.getEntity()));
+        LivingEntity entity = event.getEntity();
+        if (event.getEffectInstance().getEffect().equals(AstralEffects.ASTRAL_TRAVEL.get()) && entity instanceof Player && !entity.hasEffect(AstralEffects.ASTRAL_TRAVEL.get())) {
+            AstralCapabilities.getBodyTracker(entity.getLevel()).ifPresent(bodyTracker -> {
+                AstralCapabilities.getPsychicInventory(entity.getLevel()).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(entity.getUUID()).setInventoryType(InventoryType.ASTRAL, ((Player) entity).getInventory()));
+                bodyTracker.setBodyNBT((Player) entity);
+            });
         }
     }
 

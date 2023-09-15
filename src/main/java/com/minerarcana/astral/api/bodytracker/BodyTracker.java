@@ -1,7 +1,9 @@
 package com.minerarcana.astral.api.bodytracker;
 
 
+import com.minerarcana.astral.api.AstralCapabilities;
 import com.minerarcana.astral.api.innerrealmteleporter.TeleportationTools;
+import com.minerarcana.astral.api.psychicinventory.InventoryType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -139,8 +141,7 @@ public class BodyTracker implements IBodyTracker {
 //        serverPlayerEntity.isFallFlying() = false;
         serverPlayerEntity.fallDistance = 0;
 
-        // TODO Get the inventory and transfer items
-//        AstralAPI.getOverworldPsychicInventory(world).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUniqueID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.inventory));
+        AstralCapabilities.getPsychicInventory(serverPlayerEntity.level).ifPresent(iPsychicInventory -> iPsychicInventory.getInventoryOfPlayer(serverPlayerEntity.getUUID()).setInventoryType(InventoryType.PHYSICAL, serverPlayerEntity.getInventory()));
 
         // Teleport the player
         if (bodyTrackerMap.containsKey(serverPlayerEntity.getUUID())) {
