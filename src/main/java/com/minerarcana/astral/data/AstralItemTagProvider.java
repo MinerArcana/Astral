@@ -17,6 +17,6 @@ public class AstralItemTagProvider extends ItemTagsProvider {
     @Override
     protected void addTags() {
         tag(AstralTags.ASTRAL_CAN_PICKUP).add(AstralItems.KEY_OF_ENLIGHTENMENT.get(), AstralItems.SLEEPLESS_EYE.get(), AstralItems.PHANTOM_EDGE.get());
-
+        tag(AstralTags.ASTRAL_PLANTS).add(AstralItems.FEVERWEED_ITEM.get(), AstralItems.SNOWBERRIES.get());
     }
 }

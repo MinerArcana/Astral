@@ -16,6 +16,7 @@ public class AstralTags {
 
     public static final TagKey<Block> ASTRAL_INTERACTABLE = BlockTags.create(new ResourceLocation(Astral.MOD_ID, "astral_interactable"));
     public static final TagKey<Item> ASTRAL_CAN_PICKUP = ItemTags.create(new ResourceLocation(Astral.MOD_ID, "astral_can_pickup"));
+    public static final TagKey<Item> ASTRAL_PLANTS = ItemTags.create(new ResourceLocation(Astral.MOD_ID, "astral_plants"));
 
 
     // A combination of Spiritual and Ethereal Mobs

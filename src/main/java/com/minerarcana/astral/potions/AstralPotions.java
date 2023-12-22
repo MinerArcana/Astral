@@ -18,7 +18,8 @@ public class AstralPotions {
     public static final PotionRegistryGroup FEVERWEED_BREW = new PotionRegistryGroup("feverweed_brew", () -> new Potion(PotionEffectInstances.BASE_FEVERWEED_INSTANCE.toArray(new MobEffectInstance[]{})), () -> Ingredient.of(AstralItems.FEVERWEED_ITEM.get()))
             .setBase(Potions.THICK)
             .addLongBrew(() -> new Potion(PotionEffectInstances.LONG_FEVERWEED_INSTANCE.toArray(new MobEffectInstance[]{})))
-            .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_FEVERWEED_INSTANCE.toArray(new MobEffectInstance[]{}))).register(POTIONS);
+            .addStrongBrew(() -> new Potion(PotionEffectInstances.STRONG_FEVERWEED_INSTANCE.toArray(new MobEffectInstance[]{})))
+            .register(POTIONS);
     public static final PotionRegistryGroup SNOWBERRY_BREW = new PotionRegistryGroup("snowberry_brew", () -> new Potion(PotionEffectInstances.SNOWBERRY_BASE_INSTANCE.toArray(new MobEffectInstance[]{})), () -> Ingredient.of(AstralItems.SNOWBERRIES.get()))
             .setBase(Potions.THICK)
             .addLongBrew(() -> new Potion(PotionEffectInstances.LONG_SNOWBERRY_INSTANCE.toArray(new MobEffectInstance[]{})))
